@@ -1571,7 +1571,11 @@ local meetingChunkDir = WHISPER_TMP .. "/meeting_chunks"
 local meetingTranscript = {}
 local meetingNotepad = nil
 local meetingTranscribeTimer = nil
-local meetingChunkIndex = 0
+local meetingChunkStates = {}
+local meetingPendingTranscriptions = 0
+local meetingStopping = false
+local meetingSavingOutput = false
+local saveMeetingOutput
 
 -- Check if BlackHole virtual audio driver is installed
 local function hasBlackHole()
@@ -1744,7 +1748,13 @@ local function meetingNotepadHTML(meetingTitle)
     function appendTranscript(time, text) {
         let div = document.createElement('div');
         div.className = 'chunk';
-        div.innerHTML = '<div class="chunk-time">' + time + '</div>' + text;
+        let timeDiv = document.createElement('div');
+        timeDiv.className = 'chunk-time';
+        timeDiv.textContent = time;
+        let textDiv = document.createElement('div');
+        textDiv.textContent = text;
+        div.appendChild(timeDiv);
+        div.appendChild(textDiv);
         let container = document.getElementById('transcript');
         container.appendChild(div);
         container.scrollTop = container.scrollHeight;
@@ -1805,8 +1815,25 @@ local function setNotepadStatus(msg)
     meetingNotepad:evaluateJavaScript("setStatus('" .. escaped .. "')")
 end
 
+local function maybeFinalizeMeetingSave()
+    if not meetingStopping or meetingSavingOutput or meetingPendingTranscriptions > 0 then return end
+    meetingSavingOutput = true
+    setNotepadStatus("Saving meeting notes...")
+    getMeetingNotes(function(notes)
+        saveMeetingOutput(notes, function(filepath)
+            meetingStopping = false
+            updateMenuBar()
+            hs.notify.new({
+                title = "Meeting notes saved",
+                informativeText = filepath,
+            }):send()
+        end)
+    end)
+end
+
 -- Transcribe a meeting chunk
 local function transcribeMeetingChunk(chunkPath, chunkIdx)
+    meetingPendingTranscriptions = meetingPendingTranscriptions + 1
     local elapsed = math.floor(hs.timer.secondsSinceEpoch() - meetingStartTime)
     local min = math.floor(elapsed / 60)
     local sec = elapsed % 60
@@ -1814,8 +1841,11 @@ local function transcribeMeetingChunk(chunkPath, chunkIdx)
 
     local model = getModelPath()
     local task = hs.task.new(WHISPER_BIN, function(code, stdout, stderr)
+        meetingPendingTranscriptions = math.max(0, meetingPendingTranscriptions - 1)
+        meetingChunkStates[chunkPath] = "done"
         if code ~= 0 then
             log("meeting: transcription failed for chunk " .. chunkIdx)
+            maybeFinalizeMeetingSave()
             return
         end
         local text = stdout:gsub("%[.*%]", ""):gsub("^%s+", ""):gsub("%s+$", "")
@@ -1824,6 +1854,7 @@ local function transcribeMeetingChunk(chunkPath, chunkIdx)
             appendTranscriptToNotepad(timeStr, text)
             log("meeting: chunk " .. chunkIdx .. " → " .. #text .. " chars")
         end
+        maybeFinalizeMeetingSave()
     end, {
         "-m", model,
         "-f", chunkPath,
@@ -1831,31 +1862,41 @@ local function transcribeMeetingChunk(chunkPath, chunkIdx)
         "-t", "4",
     })
     task:setEnvironment({ HOME = HOME, PATH = "/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin" })
-    task:start()
+    if not task:start() then
+        meetingPendingTranscriptions = math.max(0, meetingPendingTranscriptions - 1)
+        meetingChunkStates[chunkPath] = "done"
+        log("meeting: failed to start transcription task for chunk " .. chunkIdx)
+        maybeFinalizeMeetingSave()
+    end
 end
 
--- Check for new meeting chunks and transcribe them
-local function processMeetingChunks()
-    if not meetingRecording then return end
+local function getMeetingChunkFiles()
     local chunks = {}
     local ok, iter, dir = pcall(hs.fs.dir, meetingChunkDir)
-    if not ok then return end
+    if not ok then return chunks end
     for file in iter, dir do
         if file:match("%.wav$") then table.insert(chunks, file) end
     end
     table.sort(chunks)
+    return chunks
+end
 
-    -- Transcribe any new chunks (skip the last one, it's still being written)
+-- Check for new meeting chunks and transcribe them
+local function processMeetingChunks(includeLastChunk)
+    if not meetingRecording and not meetingStopping then return end
+    local chunks = getMeetingChunkFiles()
     for i, chunk in ipairs(chunks) do
-        if i > meetingChunkIndex and i < #chunks then
-            meetingChunkIndex = i
-            transcribeMeetingChunk(meetingChunkDir .. "/" .. chunk, i)
+        local chunkPath = meetingChunkDir .. "/" .. chunk
+        local canTranscribe = includeLastChunk or i < #chunks
+        if canTranscribe and not meetingChunkStates[chunkPath] then
+            meetingChunkStates[chunkPath] = "queued"
+            transcribeMeetingChunk(chunkPath, i)
         end
     end
 end
 
 -- Save meeting output as markdown
-local function saveMeetingOutput(notes, callback)
+saveMeetingOutput = function(notes, callback)
     os.execute("mkdir -p '" .. MEETINGS_DIR .. "'")
     local filename = os.date("%Y-%m-%d-%H%M") .. ".md"
     local filepath = MEETINGS_DIR .. "/" .. filename
@@ -1940,7 +1981,10 @@ startMeeting = function()
     meetingRecording = true
     meetingStartTime = hs.timer.secondsSinceEpoch()
     meetingTranscript = {}
-    meetingChunkIndex = 0
+    meetingChunkStates = {}
+    meetingPendingTranscriptions = 0
+    meetingStopping = false
+    meetingSavingOutput = false
 
     os.execute("rm -rf '" .. meetingChunkDir .. "'")
     os.execute("mkdir -p '" .. meetingChunkDir .. "'")
@@ -1965,7 +2009,9 @@ startMeeting = function()
     meetingFfmpegTask:start()
 
     -- Periodically check for new chunks and transcribe
-    meetingTranscribeTimer = hs.timer.doEvery(MEETING_CHUNK_SECONDS + 2, processMeetingChunks)
+    meetingTranscribeTimer = hs.timer.doEvery(MEETING_CHUNK_SECONDS + 2, function()
+        processMeetingChunks(false)
+    end)
 
     updateMenuBar()
     hs.notify.new({ title = "local-whisper", informativeText = "Meeting recording started" }):send()
@@ -1985,41 +2031,12 @@ stopMeeting = function()
 
     -- Stop transcription timer
     if meetingTranscribeTimer then meetingTranscribeTimer:stop(); meetingTranscribeTimer = nil end
+    meetingStopping = true
 
-    -- Process any remaining chunks
     setNotepadStatus("Transcribing final chunks...")
     hs.timer.doAfter(2, function()
-        -- Transcribe remaining chunks
-        meetingChunkIndex = 0  -- reset to process all
-        local chunks = {}
-        local ok, iter, dir = pcall(hs.fs.dir, meetingChunkDir)
-        if ok then
-            for file in iter, dir do
-                if file:match("%.wav$") then table.insert(chunks, file) end
-            end
-        end
-        table.sort(chunks)
-
-        -- Count already-transcribed chunks and only do remaining
-        local alreadyDone = #meetingTranscript
-        local remaining = #chunks - alreadyDone
-        if remaining > 0 then
-            setNotepadStatus("Transcribing " .. remaining .. " remaining chunks...")
-        end
-
-        -- Wait a bit for final transcriptions, then save
-        local waitTime = math.max(remaining * 3, 2)
-        hs.timer.doAfter(waitTime, function()
-            getMeetingNotes(function(notes)
-                saveMeetingOutput(notes, function(filepath)
-                    updateMenuBar()
-                    hs.notify.new({
-                        title = "Meeting notes saved",
-                        informativeText = filepath,
-                    }):send()
-                end)
-            end)
-        end)
+        processMeetingChunks(true)
+        maybeFinalizeMeetingSave()
     end)
 
     updateMenuBar()
