@@ -1564,13 +1564,15 @@ end)
 --------------------------------------------------------------------------------
 
 local MEETINGS_DIR = CONFIG_DIR .. "/meetings"
-local MEETING_CHUNK_SECONDS = 30
+local MEETING_CHUNK_SECONDS = 8
+local MEETING_TRANSCRIBE_POLL_SECONDS = 2
 -- meetingRecording and meetingStartTime are forward-declared before buildMenuBarMenu
 local meetingFfmpegTask = nil
 local meetingChunkDir = WHISPER_TMP .. "/meeting_chunks"
 local meetingTranscript = {}
 local meetingNotepad = nil
 local meetingTranscribeTimer = nil
+local meetingControlTimer = nil
 local meetingChunkStates = {}
 local meetingPendingTranscriptions = 0
 local meetingStopping = false
@@ -1640,10 +1642,31 @@ local function meetingNotepadHTML(meetingTitle)
         color: #e94560;
         font-weight: 600;
     }
+    .header-right {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
     .timer {
         font-size: 12px;
         color: #888;
         font-family: monospace;
+    }
+    .stop-btn {
+        border: none;
+        border-radius: 6px;
+        background: #e94560;
+        color: #fff;
+        font-size: 11px;
+        font-weight: 600;
+        padding: 6px 10px;
+        cursor: pointer;
+    }
+    .stop-btn:hover { background: #f15c74; }
+    .stop-btn:disabled {
+        background: #5b2a34;
+        color: #c9a7af;
+        cursor: default;
     }
     .tabs {
         display: flex;
@@ -1669,6 +1692,12 @@ local function meetingNotepadHTML(meetingTitle)
         overflow: hidden;
     }
     .panel.active { display: flex; flex-direction: column; }
+    .notes-hint {
+        padding: 10px 14px 0 14px;
+        font-size: 11px;
+        line-height: 1.4;
+        color: #7f8aa3;
+    }
     #notes {
         flex: 1;
         background: #1a1a2e;
@@ -1690,6 +1719,11 @@ local function meetingNotepadHTML(meetingTitle)
         overflow-y: auto;
         color: #bbb;
         white-space: pre-wrap;
+    }
+    .transcript-empty {
+        padding: 12px 14px;
+        color: #6e7890;
+        font-size: 12px;
     }
     .chunk {
         margin-bottom: 8px;
@@ -1714,20 +1748,27 @@ local function meetingNotepadHTML(meetingTitle)
 <body>
     <div class="header">
         <h2>]] .. meetingTitle .. [[</h2>
-        <span class="timer" id="timer">0:00</span>
+        <div class="header-right">
+            <span class="timer" id="timer">0:00</span>
+            <button class="stop-btn" id="stop-btn" onclick="requestStop()">Stop &amp; Save</button>
+        </div>
     </div>
     <div class="tabs">
         <div class="tab active" onclick="switchTab('notes')">My Notes</div>
         <div class="tab" onclick="switchTab('transcript')">Live Transcript</div>
     </div>
     <div class="panel active" id="panel-notes">
+        <div class="notes-hint">Use this pane for your own notes. The live transcript appears in the Transcript tab every few seconds.</div>
         <textarea id="notes" placeholder="Type your meeting notes here...&#10;&#10;Tips:&#10;- Key decisions&#10;- Action items&#10;- Questions to follow up"></textarea>
     </div>
     <div class="panel" id="panel-transcript">
+        <div class="transcript-empty" id="transcript-empty">Listening... first transcript chunk should appear in about ]] .. tostring(MEETING_CHUNK_SECONDS) .. [[ seconds.</div>
         <div id="transcript"></div>
     </div>
-    <div class="status" id="status">Recording from BlackHole 2ch...</div>
+    <div class="status" id="status">Recording from BlackHole 2ch... waiting for first transcript chunk.</div>
 <script>
+    window.stopRequested = false;
+
     function switchTab(name) {
         document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
         document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
@@ -1746,6 +1787,8 @@ local function meetingNotepadHTML(meetingTitle)
 
     // Called from Lua to append transcript chunks
     function appendTranscript(time, text) {
+        let empty = document.getElementById('transcript-empty');
+        if (empty) empty.remove();
         let div = document.createElement('div');
         div.className = 'chunk';
         let timeDiv = document.createElement('div');
@@ -1762,6 +1805,20 @@ local function meetingNotepadHTML(meetingTitle)
 
     function setStatus(msg) {
         document.getElementById('status').textContent = msg;
+    }
+
+    function requestStop() {
+        window.stopRequested = true;
+        let button = document.getElementById('stop-btn');
+        button.disabled = true;
+        button.textContent = 'Stopping...';
+        setStatus('Stopping meeting and saving notes...');
+    }
+
+    function setStoppingState() {
+        let button = document.getElementById('stop-btn');
+        button.disabled = true;
+        button.textContent = 'Stopping...';
     }
 
     function getNotes() {
@@ -1815,6 +1872,20 @@ local function setNotepadStatus(msg)
     meetingNotepad:evaluateJavaScript("setStatus('" .. escaped .. "')")
 end
 
+local function setNotepadStoppingState()
+    if not meetingNotepad then return end
+    meetingNotepad:evaluateJavaScript("setStoppingState()")
+end
+
+local function pollMeetingControls()
+    if not meetingNotepad or not meetingRecording or meetingStopping then return end
+    meetingNotepad:evaluateJavaScript("window.stopRequested === true", function(result, err)
+        if result == true or result == "true" or result == 1 then
+            stopMeeting()
+        end
+    end)
+end
+
 local function maybeFinalizeMeetingSave()
     if not meetingStopping or meetingSavingOutput or meetingPendingTranscriptions > 0 then return end
     meetingSavingOutput = true
@@ -1822,6 +1893,7 @@ local function maybeFinalizeMeetingSave()
     getMeetingNotes(function(notes)
         saveMeetingOutput(notes, function(filepath)
             meetingStopping = false
+            if meetingControlTimer then meetingControlTimer:stop(); meetingControlTimer = nil end
             updateMenuBar()
             hs.notify.new({
                 title = "Meeting notes saved",
@@ -1839,7 +1911,7 @@ local function transcribeMeetingChunk(chunkPath, chunkIdx)
     local sec = elapsed % 60
     local timeStr = string.format("%d:%02d", min, sec)
 
-    local model = getModelPath()
+    local model = getPartialModelPath()
     local task = hs.task.new(WHISPER_BIN, function(code, stdout, stderr)
         meetingPendingTranscriptions = math.max(0, meetingPendingTranscriptions - 1)
         meetingChunkStates[chunkPath] = "done"
@@ -2009,9 +2081,11 @@ startMeeting = function()
     meetingFfmpegTask:start()
 
     -- Periodically check for new chunks and transcribe
-    meetingTranscribeTimer = hs.timer.doEvery(MEETING_CHUNK_SECONDS + 2, function()
+    meetingTranscribeTimer = hs.timer.doEvery(MEETING_TRANSCRIBE_POLL_SECONDS, function()
         processMeetingChunks(false)
     end)
+    if meetingControlTimer then meetingControlTimer:stop(); meetingControlTimer = nil end
+    meetingControlTimer = hs.timer.doEvery(0.5, pollMeetingControls)
 
     updateMenuBar()
     hs.notify.new({ title = "local-whisper", informativeText = "Meeting recording started" }):send()
@@ -2031,7 +2105,9 @@ stopMeeting = function()
 
     -- Stop transcription timer
     if meetingTranscribeTimer then meetingTranscribeTimer:stop(); meetingTranscribeTimer = nil end
+    if meetingControlTimer then meetingControlTimer:stop(); meetingControlTimer = nil end
     meetingStopping = true
+    setNotepadStoppingState()
 
     setNotepadStatus("Transcribing final chunks...")
     hs.timer.doAfter(2, function()
