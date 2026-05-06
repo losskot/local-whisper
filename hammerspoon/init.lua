@@ -1566,6 +1566,8 @@ end)
 local MEETINGS_DIR = CONFIG_DIR .. "/meetings"
 local MEETING_CHUNK_SECONDS = 8
 local MEETING_TRANSCRIBE_POLL_SECONDS = 2
+local MEETING_AGGREGATE_NAME = "local-whisper Output"
+local MEETING_HELPER_BIN = CONFIG_DIR .. "/bin/aggregate-audio"
 -- meetingRecording and meetingStartTime are forward-declared before buildMenuBarMenu
 local meetingFfmpegTask = nil
 local meetingChunkDir = WHISPER_TMP .. "/meeting_chunks"
@@ -1577,12 +1579,27 @@ local meetingChunkStates = {}
 local meetingPendingTranscriptions = 0
 local meetingStopping = false
 local meetingSavingOutput = false
+local meetingPriorOutputUID = nil
 local saveMeetingOutput
 
--- Check if BlackHole virtual audio driver is installed
+-- Run the aggregate-audio helper synchronously; returns (stdout, exitCode).
+local function runAudioHelper(...)
+    if not hs.fs.attributes(MEETING_HELPER_BIN) then return nil, -1 end
+    local args = { ... }
+    local quoted = {}
+    for _, a in ipairs(args) do table.insert(quoted, "'" .. tostring(a):gsub("'", "'\\''") .. "'") end
+    local cmd = "'" .. MEETING_HELPER_BIN .. "' " .. table.concat(quoted, " ")
+    local out, ok, _, code = hs.execute(cmd)
+    if out then out = out:gsub("%s+$", "") end
+    if ok then return out, 0 end
+    return out, code or -1
+end
+
+-- Check that everything meeting mode needs is in place.
 local function hasBlackHole()
-    local bh = hs.audiodevice.findInputByName("BlackHole 2ch")
-    return bh ~= nil
+    if not hs.audiodevice.findInputByName("BlackHole 2ch") then return false end
+    if not hs.fs.attributes(MEETING_HELPER_BIN) then return false end
+    return true
 end
 
 -- Get BlackHole device string for ffmpeg (audio-only via avfoundation)
@@ -1596,19 +1613,58 @@ local function getBlackHoleDevice()
     return nil
 end
 
--- Show BlackHole setup instructions
+-- Show setup instructions when meeting mode wasn't enabled at install time.
 local function showBlackHoleSetup()
-    local msg = "Meeting mode requires BlackHole (free virtual audio driver).\n\n"
-        .. "Step 1: Install BlackHole\n"
-        .. "  brew install blackhole-2ch\n"
-        .. "  (Reboot after install)\n\n"
-        .. "Step 2: Create Multi-Output Device\n"
-        .. "  1. Open Audio MIDI Setup (Spotlight → 'Audio MIDI')\n"
-        .. "  2. Click '+' at bottom left → Create Multi-Output Device\n"
-        .. "  3. Check both your speakers/headphones AND BlackHole 2ch\n"
-        .. "  4. Set this Multi-Output as your system output\n\n"
-        .. "This routes audio to both your ears and BlackHole for recording."
+    local msg = "Meeting mode is disabled.\n\n"
+        .. "To enable it, re-run the installer and answer 'y' when asked\n"
+        .. "about meeting recording mode:\n\n"
+        .. "  cd ~/code/local-free-openwhisper && ./install.sh\n\n"
+        .. "The installer will:\n"
+        .. "  1. Install BlackHole 2ch (virtual audio driver)\n"
+        .. "  2. Build a small helper at ~/.local-whisper/bin/aggregate-audio\n"
+        .. "  3. Create a Multi-Output Device automatically\n\n"
+        .. "No manual Audio MIDI Setup steps required."
     hs.dialog.blockAlert("Meeting Mode Setup", msg, "OK")
+end
+
+-- Switch system default output to the aggregate so audio flows to both
+-- the user's speakers and BlackHole. Saves the previous default for
+-- restoration on stopMeeting. Idempotent: if already on the aggregate
+-- (or if helper missing), leaves it alone.
+local function switchToAggregateOutput()
+    local prior, code = runAudioHelper("default-uid")
+    if code ~= 0 or not prior or prior == "" then return false end
+    local aggUid, aggCode = runAudioHelper("aggregate-uid")
+    if aggCode ~= 0 or not aggUid or aggUid == "" then
+        log("meeting: aggregate device not found; run installer with meeting mode enabled")
+        return false
+    end
+    if prior == aggUid then
+        meetingPriorOutputUID = nil
+        return true
+    end
+    meetingPriorOutputUID = prior
+    local _, setCode = runAudioHelper("set-default", aggUid)
+    if setCode ~= 0 then
+        log("meeting: failed to switch system output to aggregate")
+        meetingPriorOutputUID = nil
+        return false
+    end
+    log("meeting: switched system output to aggregate (was " .. prior .. ")")
+    return true
+end
+
+-- Restore the system default output saved by switchToAggregateOutput.
+local function restorePriorOutput()
+    if not meetingPriorOutputUID then return end
+    local prior = meetingPriorOutputUID
+    meetingPriorOutputUID = nil
+    local _, code = runAudioHelper("set-default", prior)
+    if code == 0 then
+        log("meeting: restored system output to " .. prior)
+    else
+        log("meeting: failed to restore system output to " .. prior)
+    end
 end
 
 -- Notepad HTML
@@ -1778,12 +1834,16 @@ local function meetingNotepadHTML(meetingTitle)
 
     // Timer
     let startTime = Date.now();
-    setInterval(() => {
+    let timerInterval = setInterval(() => {
         let elapsed = Math.floor((Date.now() - startTime) / 1000);
         let min = Math.floor(elapsed / 60);
         let sec = elapsed % 60;
         document.getElementById('timer').textContent = min + ':' + (sec < 10 ? '0' : '') + sec;
     }, 1000);
+
+    function stopTimer() {
+        if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+    }
 
     // Called from Lua to append transcript chunks
     function appendTranscript(time, text) {
@@ -1813,12 +1873,21 @@ local function meetingNotepadHTML(meetingTitle)
         button.disabled = true;
         button.textContent = 'Stopping...';
         setStatus('Stopping meeting and saving notes...');
+        stopTimer();
     }
 
     function setStoppingState() {
         let button = document.getElementById('stop-btn');
         button.disabled = true;
         button.textContent = 'Stopping...';
+        stopTimer();
+    }
+
+    function setSavedState() {
+        let button = document.getElementById('stop-btn');
+        button.disabled = true;
+        button.textContent = 'Saved';
+        stopTimer();
     }
 
     function getNotes() {
@@ -1877,6 +1946,11 @@ local function setNotepadStoppingState()
     meetingNotepad:evaluateJavaScript("setStoppingState()")
 end
 
+local function setNotepadSavedState()
+    if not meetingNotepad then return end
+    meetingNotepad:evaluateJavaScript("setSavedState()")
+end
+
 local function pollMeetingControls()
     if not meetingNotepad or not meetingRecording or meetingStopping then return end
     meetingNotepad:evaluateJavaScript("window.stopRequested === true", function(result, err)
@@ -1894,6 +1968,8 @@ local function maybeFinalizeMeetingSave()
         saveMeetingOutput(notes, function(filepath)
             meetingStopping = false
             if meetingControlTimer then meetingControlTimer:stop(); meetingControlTimer = nil end
+            restorePriorOutput()
+            setNotepadSavedState()
             updateMenuBar()
             hs.notify.new({
                 title = "Meeting notes saved",
@@ -2063,20 +2139,41 @@ startMeeting = function()
 
     log("meeting: start")
 
+    -- Route system audio through the aggregate so BlackHole receives it.
+    switchToAggregateOutput()
+
     -- Show notepad
     showMeetingNotepad()
 
-    -- Start recording from BlackHole
+    -- Record system audio (via BlackHole) AND the user's microphone, mixed
+    -- into one mono stream so a single ffmpeg process produces chunks.
     local bhDevice = getBlackHoleDevice()
-    meetingFfmpegTask = hs.task.new(FFMPEG, function(code, out, err)
-        log("meeting: ffmpeg exited " .. tostring(code))
-    end, {
-        "-f", "avfoundation", "-i", bhDevice,
+    local micDev = hs.audiodevice.defaultInputDevice()
+    local micName = micDev and micDev:name() or nil
+    if micName == "BlackHole 2ch" then micName = nil end
+
+    local args = { "-f", "avfoundation", "-i", bhDevice }
+    if micName then
+        table.insert(args, "-f")
+        table.insert(args, "avfoundation")
+        table.insert(args, "-i")
+        table.insert(args, ":" .. micName)
+        table.insert(args, "-filter_complex")
+        table.insert(args, "[0:a][1:a]amix=inputs=2:duration=longest:dropout_transition=0")
+        log("meeting: capturing system audio + mic '" .. micName .. "'")
+    else
+        log("meeting: capturing system audio only (no default input device)")
+    end
+    for _, a in ipairs({
         "-ac", "1", "-ar", "16000",
         "-f", "segment", "-segment_time", tostring(MEETING_CHUNK_SECONDS),
         "-segment_format", "wav",
-        meetingChunkDir .. "/chunk_%04d.wav"
-    })
+        meetingChunkDir .. "/chunk_%04d.wav",
+    }) do table.insert(args, a) end
+
+    meetingFfmpegTask = hs.task.new(FFMPEG, function(code, out, err)
+        log("meeting: ffmpeg exited " .. tostring(code))
+    end, args)
     meetingFfmpegTask:setEnvironment({ HOME = HOME, PATH = "/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin" })
     meetingFfmpegTask:start()
 

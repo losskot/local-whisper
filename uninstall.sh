@@ -51,6 +51,14 @@ if [[ -f "$HAMMERSPOON_DIR/local_whisper_actions.lua" ]]; then
     ok "Removed ~/.hammerspoon/local_whisper_actions.lua"
 fi
 
+# ─── Aggregate audio device (meeting mode) ──────────────────────────────────
+HELPER_BIN="$CONFIG_DIR/bin/aggregate-audio"
+if [[ -x "$HELPER_BIN" ]]; then
+    if "$HELPER_BIN" delete &>/dev/null; then
+        ok "Removed 'local-whisper Output' Multi-Output Device"
+    fi
+fi
+
 # ─── Config directory ────────────────────────────────────────────────────────
 if [[ -d "$CONFIG_DIR" ]]; then
     rm -rf "$CONFIG_DIR"

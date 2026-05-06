@@ -183,16 +183,24 @@ info "Step 5/6: Running setup (permissions, trigger key, audio device)..."
 echo ""
 bash "$SCRIPT_DIR/setup.sh"
 
-# ─── Step 6: Optional — BlackHole for meeting recording ──────────────────────
+# ─── Step 6: Optional — meeting recording mode ───────────────────────────────
 echo ""
 info "Step 6/6: Meeting recording mode (optional)"
 echo ""
-echo "  Meeting mode captures system audio during calls and generates"
-echo "  transcripts + AI summaries. Requires BlackHole (free virtual audio driver)."
+echo "  Adds 'Meeting Mode' to the menu bar — captures system audio during"
+echo "  calls (Zoom, Meet, Teams, etc.), produces a live transcript and"
+echo "  Ollama summary."
 echo ""
-read -r -p "  Install BlackHole for meeting recording? [y/N]: " INSTALL_BH
+echo "  Requires BlackHole 2ch (free virtual audio driver). On opt-in, this"
+echo "  installer also builds a small Swift helper that creates a"
+echo "  Multi-Output Device automatically — no Audio MIDI Setup needed."
+echo ""
+echo "  Skip if you only want hold-to-dictate. Re-run this installer later"
+echo "  to enable it."
+echo ""
+read -r -p "  Enable meeting recording mode? [y/N]: " ENABLE_MEETING
 
-if [[ "$INSTALL_BH" =~ ^[Yy]$ ]]; then
+if [[ "$ENABLE_MEETING" =~ ^[Yy]$ ]]; then
     if brew list --cask blackhole-2ch &>/dev/null; then
         ok "BlackHole 2ch already installed"
     else
@@ -201,19 +209,36 @@ if [[ "$INSTALL_BH" =~ ^[Yy]$ ]]; then
         ok "BlackHole 2ch installed"
     fi
 
-    echo ""
-    echo -e "  ${BOLD}One manual step needed:${NC} create a Multi-Output Device"
-    echo ""
-    echo "  1. Audio MIDI Setup will open (or find it via Spotlight)"
-    echo "  2. Click '+' at bottom left → Create Multi-Output Device"
-    echo "  3. Check BOTH your speakers/headphones AND BlackHole 2ch"
-    echo "  4. Right-click the new device → Use This Device For Sound Output"
-    echo ""
-    echo "  This routes audio to both your ears and BlackHole for recording."
-    echo ""
-    open "/Applications/Utilities/Audio MIDI Setup.app" 2>/dev/null || true
-    read -r -p "  Press Enter when done..."
-    ok "Meeting mode ready — start from the menu bar icon"
+    HELPER_SRC="$SCRIPT_DIR/tools/aggregate-audio.swift"
+    HELPER_BIN_DIR="$CONFIG_DIR/bin"
+    HELPER_BIN="$HELPER_BIN_DIR/aggregate-audio"
+    if [[ ! -f "$HELPER_SRC" ]]; then
+        error "Missing $HELPER_SRC — meeting mode helper cannot be built."
+        exit 1
+    fi
+    mkdir -p "$HELPER_BIN_DIR"
+    info "Building audio helper (swiftc)..."
+    if swiftc -O "$HELPER_SRC" -o "$HELPER_BIN"; then
+        ok "Helper installed at $HELPER_BIN"
+    else
+        error "Failed to build audio helper. Is the Xcode Command Line Tools package installed?"
+        error "  xcode-select --install"
+        exit 1
+    fi
+
+    info "Creating 'local-whisper Output' Multi-Output Device..."
+    if AGG_UID=$("$HELPER_BIN" create 2>&1); then
+        ok "Aggregate device ready (UID: $AGG_UID)"
+        echo ""
+        echo "  Meeting mode will switch your system output to this device only"
+        echo "  while a meeting is recording, then switch back when you stop."
+        echo "  No further setup needed — start meetings from the menu bar."
+    else
+        warn "Could not create aggregate device automatically:"
+        warn "  $AGG_UID"
+        warn "If you just installed BlackHole, you may need to reboot first,"
+        warn "then re-run this installer."
+    fi
 else
-    ok "Skipped (you can set up meeting mode later from the menu bar)"
+    ok "Skipped — meeting mode disabled. Re-run installer to enable."
 fi
