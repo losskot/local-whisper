@@ -1564,22 +1564,37 @@ end)
 --------------------------------------------------------------------------------
 
 local MEETINGS_DIR = CONFIG_DIR .. "/meetings"
-local MEETING_CHUNK_SECONDS = 8
+local MEETING_CHUNK_SECONDS = 8                       -- step between window starts
+local MEETING_OVERLAP_SECONDS = 4                     -- audio reused at the head of each window for context
 local MEETING_TRANSCRIBE_POLL_SECONDS = 2
+local MEETING_WINDOW_TIMEOUT_SECONDS = 60             -- watchdog: kill task if it runs longer than this
+local MEETING_PCM_BYTES_PER_SEC = 16000 * 2           -- 16 kHz, mono, 16-bit
 local MEETING_AGGREGATE_NAME = "local-whisper Output"
 local MEETING_HELPER_BIN = CONFIG_DIR .. "/bin/aggregate-audio"
 -- meetingRecording and meetingStartTime are forward-declared before buildMenuBarMenu
 local meetingFfmpegTask = nil
 local meetingChunkDir = WHISPER_TMP .. "/meeting_chunks"
+local meetingPcmPath = meetingChunkDir .. "/recording.pcm"
 local meetingTranscript = {}
 local meetingNotepad = nil
 local meetingTranscribeTimer = nil
 local meetingControlTimer = nil
-local meetingChunkStates = {}
+local meetingNextWindowIdx = 1
+local meetingLastEmittedText = ""
+local meetingStopFlushed = false
+local meetingWindowQueue = {}        -- pending windows waiting to slice+transcribe
+local meetingProcessing = false      -- one slice+whisper pipeline at a time
 local meetingPendingTranscriptions = 0
 local meetingStopping = false
 local meetingSavingOutput = false
 local meetingPriorOutputUID = nil
+-- Strong refs to in-flight hs.task objects so they can't be garbage-collected
+-- before their callbacks fire. Hammerspoon's hs.task wraps a Lua userdata
+-- whose __gc tears down the callback; without this table, locals in the
+-- slice/whisper closures may be reaped between spawn and completion and
+-- silently drop the callback. Keyed by an opaque token; cleared in callback.
+local meetingActiveTasks = {}
+local meetingActiveTasksSeq = 0
 local saveMeetingOutput
 
 -- Run the aggregate-audio helper synchronously; returns (stdout, exitCode).
@@ -1627,22 +1642,56 @@ local function showBlackHoleSetup()
     hs.dialog.blockAlert("Meeting Mode Setup", msg, "OK")
 end
 
--- Switch system default output to the aggregate so audio flows to both
--- the user's speakers and BlackHole. Saves the previous default for
--- restoration on stopMeeting. Idempotent: if already on the aggregate
--- (or if helper missing), leaves it alone.
+-- Pick a sensible audible fallback output (anything that's not the
+-- aggregate and not BlackHole). Used when the user is stranded on the
+-- aggregate (e.g., a previous meeting got stuck and didn't restore).
+local function pickFallbackOutput()
+    local out, code = runAudioHelper("list")
+    if code ~= 0 or not out then return nil end
+    for line in out:gmatch("[^\n]+") do
+        local uid, name = line:match("^([^\t]+)\t(.+)$")
+        if uid and name
+           and uid ~= "com.local-whisper.aggregate-output"
+           and not name:find("BlackHole") then
+            return uid
+        end
+    end
+    return nil
+end
+
+-- Switch system default output to a freshly-built aggregate so audio
+-- flows to both the user's current speakers and BlackHole. Always
+-- recreates the aggregate so it tracks the user's current audible
+-- device (handles disconnected monitors, headphones plugged in mid-day,
+-- etc.). Saves the previous default for restoration on stopMeeting.
 local function switchToAggregateOutput()
     local prior, code = runAudioHelper("default-uid")
-    if code ~= 0 or not prior or prior == "" then return false end
-    local aggUid, aggCode = runAudioHelper("aggregate-uid")
-    if aggCode ~= 0 or not aggUid or aggUid == "" then
-        log("meeting: aggregate device not found; run installer with meeting mode enabled")
+    if code ~= 0 or not prior or prior == "" then
+        log("meeting: cannot read system default output")
         return false
     end
-    if prior == aggUid then
-        meetingPriorOutputUID = nil
-        return true
+
+    -- If the user is already stranded on our aggregate (previous meeting
+    -- failed to restore), pick a fallback as the audible side first so
+    -- the recreated aggregate has a real audible sub-device.
+    if prior == "com.local-whisper.aggregate-output" then
+        local fallback = pickFallbackOutput()
+        if not fallback then
+            log("meeting: stranded on aggregate, no audible fallback available")
+            return false
+        end
+        log("meeting: stranded on aggregate, falling back to " .. fallback)
+        runAudioHelper("set-default", fallback)
+        prior = fallback
     end
+
+    -- Tear down the old aggregate and rebuild against current default.
+    local aggUid, aggCode = runAudioHelper("recreate")
+    if aggCode ~= 0 or not aggUid or aggUid == "" then
+        log("meeting: aggregate recreate failed (helper missing or BlackHole gone)")
+        return false
+    end
+
     meetingPriorOutputUID = prior
     local _, setCode = runAudioHelper("set-default", aggUid)
     if setCode ~= 0 then
@@ -1650,8 +1699,22 @@ local function switchToAggregateOutput()
         meetingPriorOutputUID = nil
         return false
     end
-    log("meeting: switched system output to aggregate (was " .. prior .. ")")
+    log("meeting: rebuilt aggregate, switched system output to it (was " .. prior .. ")")
     return true
+end
+
+-- On Hammerspoon load, if we boot with system default already on the
+-- aggregate, a previous meeting got stuck and never restored. Drop us
+-- onto a sensible fallback so the user has audible sound at startup.
+local function recoverIfStrandedOnAggregate()
+    if not hs.fs.attributes(MEETING_HELPER_BIN) then return end
+    local prior = runAudioHelper("default-uid")
+    if prior ~= "com.local-whisper.aggregate-output" then return end
+    local fallback = pickFallbackOutput()
+    if fallback then
+        runAudioHelper("set-default", fallback)
+        log("meeting: startup recovery — switched stranded output to " .. fallback)
+    end
 end
 
 -- Restore the system default output saved by switchToAggregateOutput.
@@ -1979,68 +2042,202 @@ local function maybeFinalizeMeetingSave()
     end)
 end
 
--- Transcribe a meeting chunk
-local function transcribeMeetingChunk(chunkPath, chunkIdx)
-    meetingPendingTranscriptions = meetingPendingTranscriptions + 1
-    local elapsed = math.floor(hs.timer.secondsSinceEpoch() - meetingStartTime)
-    local min = math.floor(elapsed / 60)
-    local sec = elapsed % 60
-    local timeStr = string.format("%d:%02d", min, sec)
+-- Bounds (in seconds) of the Nth transcription window. Windows after the
+-- first start MEETING_OVERLAP_SECONDS earlier than the previous one ended,
+-- giving whisper context across word boundaries.
+local function meetingWindowBounds(idx)
+    if idx == 1 then return 0, MEETING_CHUNK_SECONDS end
+    local startSec = MEETING_CHUNK_SECONDS * (idx - 1) - MEETING_OVERLAP_SECONDS
+    local endSec   = MEETING_CHUNK_SECONDS * idx
+    return startSec, endSec
+end
 
-    local model = getPartialModelPath()
-    local task = hs.task.new(WHISPER_BIN, function(code, stdout, stderr)
+-- Remove the duplicated overlap region from the start of `curr`. Whisper's
+-- output for the same audio shifts with context, so an exact suffix/prefix
+-- match almost never fires. Instead: search for the last K words of `prev`
+-- anywhere in the first half of `curr`, and strip everything up to and
+-- including that match. K decreases from 6 down to 3 to allow for word
+-- drops; below 3 false-positive risk on common phrases is too high.
+local function stripOverlap(prev, curr)
+    if prev == "" or curr == "" then return curr end
+    local function words(s)
+        local out = {}
+        for w in s:gmatch("%S+") do table.insert(out, w) end
+        return out
+    end
+    local function norm(w)
+        local s = w:lower():gsub("^[%p]+", ""):gsub("[%p]+$", "")
+        return s  -- discard gsub's replacement-count second return value
+    end
+    local p, c = words(prev), words(curr)
+    if #p < 3 or #c < 3 then return curr end
+    local searchLimit = math.min(#c - 1, math.max(8, math.floor(#c * 0.6)))
+    for k = math.min(6, #p), 3, -1 do
+        local tail = {}
+        for i = #p - k + 1, #p do table.insert(tail, norm(p[i])) end
+        for startPos = 1, searchLimit - k + 1 do
+            local match = true
+            for j = 1, k do
+                if norm(c[startPos + j - 1]) ~= tail[j] then match = false; break end
+            end
+            if match then
+                local out = {}
+                for i = startPos + k, #c do table.insert(out, c[i]) end
+                return table.concat(out, " ")
+            end
+        end
+    end
+    return curr
+end
+
+local sliceAndTranscribeWindow  -- forward decl
+
+-- Pop the next pending window off the queue and run it. Whisper.cpp on
+-- Apple Silicon Metal doesn't tolerate concurrent invocations well (they
+-- deadlock racing for the GPU), so the pipeline serializes here.
+local function processNextWindow()
+    if meetingProcessing then return end
+    if #meetingWindowQueue == 0 then return end
+    local job = table.remove(meetingWindowQueue, 1)
+    meetingProcessing = true
+    sliceAndTranscribeWindow(job.idx, job.startSec, job.endSec)
+end
+
+-- Slice [startSec, endSec) from the growing PCM recording into a temp WAV,
+-- then run whisper on it; on success, dedupe overlap and append to the
+-- transcript. Two-stage hs.task pipeline: ffmpeg → whisper. Serialized
+-- via meetingProcessing/meetingWindowQueue.
+sliceAndTranscribeWindow = function(idx, startSec, endSec)
+    local windowPath = string.format("%s/window_%04d.wav", meetingChunkDir, idx)
+    local outPrefix  = string.format("%s/window_%04d", meetingChunkDir, idx)
+    local outTxtPath = outPrefix .. ".txt"
+    local startLabelSec = MEETING_CHUNK_SECONDS * (idx - 1)
+    local timeStr = string.format("%d:%02d",
+        math.floor(startLabelSec / 60), startLabelSec % 60)
+
+    -- pending count was already incremented by enqueueWindow
+
+    local released = false
+    local taskToken
+    local watchdog
+    local function release(reason)
+        if released then return end
+        released = true
+        if watchdog then watchdog:stop(); watchdog = nil end
+        if taskToken then meetingActiveTasks[taskToken] = nil; taskToken = nil end
+        os.remove(windowPath)
+        os.remove(outTxtPath)
         meetingPendingTranscriptions = math.max(0, meetingPendingTranscriptions - 1)
-        meetingChunkStates[chunkPath] = "done"
+        meetingProcessing = false
+        if reason then log("meeting: window " .. idx .. " released: " .. reason) end
+        maybeFinalizeMeetingSave()
+        processNextWindow()
+    end
+
+    -- Single shell pipeline: ffmpeg slices PCM → whisper writes -otxt file.
+    -- Replaces the previous nested hs.task (slice's callback spawning whisper),
+    -- which was hanging on the second window — whisper exited cleanly but the
+    -- inner hs.task callback never fired. With one task we get one reliable
+    -- exit callback; whisper output is read from the file, not piped stdout.
+    local model = getModelPath()
+    local function shquote(s) return "'" .. s:gsub("'", "'\\''") .. "'" end
+    local cmd = string.format(
+        "set -e\n" ..
+        "%s -y -hide_banner -loglevel error -f s16le -ar 16000 -ac 1 -ss %.3f -i %s -t %.3f %s\n" ..
+        "%s -m %s -f %s -otxt -of %s --no-prints -t 4 -l auto >/dev/null 2>&1\n",
+        shquote(FFMPEG), startSec, shquote(meetingPcmPath), endSec - startSec, shquote(windowPath),
+        shquote(WHISPER_BIN), shquote(model), shquote(windowPath), shquote(outPrefix)
+    )
+
+    meetingActiveTasksSeq = meetingActiveTasksSeq + 1
+    taskToken = "win_" .. idx .. "_" .. meetingActiveTasksSeq
+
+    local task = hs.task.new("/bin/sh", function(code, _stdout, _stderr)
+        if released then return end  -- watchdog already handled this
         if code ~= 0 then
-            log("meeting: transcription failed for chunk " .. chunkIdx)
-            maybeFinalizeMeetingSave()
+            log("meeting: window " .. idx .. " pipeline exited " .. tostring(code))
+            release(nil)
             return
         end
-        local text = stdout:gsub("%[.*%]", ""):gsub("^%s+", ""):gsub("%s+$", "")
-        if text ~= "" and not isHallucination(text) then
-            table.insert(meetingTranscript, { time = timeStr, text = text })
-            appendTranscriptToNotepad(timeStr, text)
-            log("meeting: chunk " .. chunkIdx .. " → " .. #text .. " chars")
+        local ok, err = pcall(function()
+            local f = io.open(outTxtPath, "r")
+            if not f then
+                log("meeting: window " .. idx .. " no output file")
+                return
+            end
+            local raw = f:read("*all") or ""
+            f:close()
+            local text = raw:gsub("%[.*%]", ""):gsub("^%s+", ""):gsub("%s+$", "")
+            if text == "" or isHallucination(text) then return end
+            local emit = stripOverlap(meetingLastEmittedText, text)
+            meetingLastEmittedText = text
+            if emit ~= "" then
+                table.insert(meetingTranscript, { time = timeStr, text = emit })
+                appendTranscriptToNotepad(timeStr, emit)
+                log("meeting: window " .. idx .. " → " .. #emit .. " chars (raw " .. #text .. ")")
+            end
+        end)
+        if not ok then
+            log("meeting: window " .. idx .. " emit error: " .. tostring(err))
         end
-        maybeFinalizeMeetingSave()
-    end, {
-        "-m", model,
-        "-f", chunkPath,
-        "--no-prints",
-        "-t", "4",
-    })
+        release(nil)
+    end, { "-c", cmd })
     task:setEnvironment({ HOME = HOME, PATH = "/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin" })
+    meetingActiveTasks[taskToken] = task
+
+    -- Watchdog: if a window's pipeline runs longer than the timeout (whisper
+    -- hangs, OS-level pipe stuck, whatever), kill it and release the lock so
+    -- subsequent windows aren't blocked forever.
+    watchdog = hs.timer.doAfter(MEETING_WINDOW_TIMEOUT_SECONDS, function()
+        if released then return end
+        log("meeting: window " .. idx .. " timed out after " .. MEETING_WINDOW_TIMEOUT_SECONDS .. "s, killing")
+        if task and task:isRunning() then task:terminate() end
+        release("watchdog timeout")
+    end)
+
+    log("meeting: window " .. idx .. " starting [" .. string.format("%.1f, %.1f", startSec, endSec) .. "]")
     if not task:start() then
-        meetingPendingTranscriptions = math.max(0, meetingPendingTranscriptions - 1)
-        meetingChunkStates[chunkPath] = "done"
-        log("meeting: failed to start transcription task for chunk " .. chunkIdx)
-        maybeFinalizeMeetingSave()
+        release("pipeline failed to start")
     end
 end
 
-local function getMeetingChunkFiles()
-    local chunks = {}
-    local ok, iter, dir = pcall(hs.fs.dir, meetingChunkDir)
-    if not ok then return chunks end
-    for file in iter, dir do
-        if file:match("%.wav$") then table.insert(chunks, file) end
-    end
-    table.sort(chunks)
-    return chunks
+-- Enqueue a window job and inc the pending count up front (so save logic
+-- waits for it). Actual slicing+whisper runs serialized via processNextWindow.
+local function enqueueWindow(idx, startSec, endSec)
+    meetingPendingTranscriptions = meetingPendingTranscriptions + 1
+    table.insert(meetingWindowQueue, { idx = idx, startSec = startSec, endSec = endSec })
 end
 
--- Check for new meeting chunks and transcribe them
-local function processMeetingChunks(includeLastChunk)
+-- Tick: enqueue any windows whose audio has fully arrived in recording.pcm.
+local function emitReadyWindows()
     if not meetingRecording and not meetingStopping then return end
-    local chunks = getMeetingChunkFiles()
-    for i, chunk in ipairs(chunks) do
-        local chunkPath = meetingChunkDir .. "/" .. chunk
-        local canTranscribe = includeLastChunk or i < #chunks
-        if canTranscribe and not meetingChunkStates[chunkPath] then
-            meetingChunkStates[chunkPath] = "queued"
-            transcribeMeetingChunk(chunkPath, i)
-        end
+    local attr = hs.fs.attributes(meetingPcmPath)
+    if not attr or attr.size <= 0 then return end
+    local recordedSec = attr.size / MEETING_PCM_BYTES_PER_SEC
+    local startSec, endSec = meetingWindowBounds(meetingNextWindowIdx)
+    while recordedSec >= endSec do
+        log(string.format("meeting: enqueue window %d [%.1f, %.1f] (recorded %.1fs, queue=%d, processing=%s)",
+            meetingNextWindowIdx, startSec, endSec, recordedSec,
+            #meetingWindowQueue, tostring(meetingProcessing)))
+        enqueueWindow(meetingNextWindowIdx, startSec, endSec)
+        meetingNextWindowIdx = meetingNextWindowIdx + 1
+        startSec, endSec = meetingWindowBounds(meetingNextWindowIdx)
     end
+    processNextWindow()
+end
+
+-- Stop-time flush: enqueue one last partial window for [next.start, recording-end).
+local function emitFinalPartialWindow()
+    if meetingStopFlushed then return end
+    meetingStopFlushed = true
+    local attr = hs.fs.attributes(meetingPcmPath)
+    if not attr or attr.size <= 0 then return end
+    local recordedSec = attr.size / MEETING_PCM_BYTES_PER_SEC
+    local startSec, _ = meetingWindowBounds(meetingNextWindowIdx)
+    if recordedSec - startSec < 1.0 then return end  -- skip tail under 1s
+    enqueueWindow(meetingNextWindowIdx, startSec, recordedSec)
+    meetingNextWindowIdx = meetingNextWindowIdx + 1
+    processNextWindow()
 end
 
 -- Save meeting output as markdown
@@ -2129,7 +2326,11 @@ startMeeting = function()
     meetingRecording = true
     meetingStartTime = hs.timer.secondsSinceEpoch()
     meetingTranscript = {}
-    meetingChunkStates = {}
+    meetingNextWindowIdx = 1
+    meetingLastEmittedText = ""
+    meetingStopFlushed = false
+    meetingWindowQueue = {}
+    meetingProcessing = false
     meetingPendingTranscriptions = 0
     meetingStopping = false
     meetingSavingOutput = false
@@ -2146,13 +2347,15 @@ startMeeting = function()
     showMeetingNotepad()
 
     -- Record system audio (via BlackHole) AND the user's microphone, mixed
-    -- into one mono stream so a single ffmpeg process produces chunks.
+    -- into a single growing raw PCM file. A Lua-side slicer (emitReadyWindows)
+    -- pulls overlapping windows out of this file and runs whisper on them,
+    -- so words straddling chunk boundaries don't get cut.
     local bhDevice = getBlackHoleDevice()
     local micDev = hs.audiodevice.defaultInputDevice()
     local micName = micDev and micDev:name() or nil
     if micName == "BlackHole 2ch" then micName = nil end
 
-    local args = { "-f", "avfoundation", "-i", bhDevice }
+    local args = { "-y", "-f", "avfoundation", "-i", bhDevice }
     if micName then
         table.insert(args, "-f")
         table.insert(args, "avfoundation")
@@ -2166,9 +2369,8 @@ startMeeting = function()
     end
     for _, a in ipairs({
         "-ac", "1", "-ar", "16000",
-        "-f", "segment", "-segment_time", tostring(MEETING_CHUNK_SECONDS),
-        "-segment_format", "wav",
-        meetingChunkDir .. "/chunk_%04d.wav",
+        "-f", "s16le",
+        meetingPcmPath,
     }) do table.insert(args, a) end
 
     meetingFfmpegTask = hs.task.new(FFMPEG, function(code, out, err)
@@ -2177,10 +2379,8 @@ startMeeting = function()
     meetingFfmpegTask:setEnvironment({ HOME = HOME, PATH = "/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin" })
     meetingFfmpegTask:start()
 
-    -- Periodically check for new chunks and transcribe
-    meetingTranscribeTimer = hs.timer.doEvery(MEETING_TRANSCRIBE_POLL_SECONDS, function()
-        processMeetingChunks(false)
-    end)
+    -- Periodically slice ready overlapping windows out of the growing PCM
+    meetingTranscribeTimer = hs.timer.doEvery(MEETING_TRANSCRIBE_POLL_SECONDS, emitReadyWindows)
     if meetingControlTimer then meetingControlTimer:stop(); meetingControlTimer = nil end
     meetingControlTimer = hs.timer.doEvery(0.5, pollMeetingControls)
 
@@ -2200,15 +2400,16 @@ stopMeeting = function()
     end
     meetingFfmpegTask = nil
 
-    -- Stop transcription timer
+    -- Stop the slice/poll timers
     if meetingTranscribeTimer then meetingTranscribeTimer:stop(); meetingTranscribeTimer = nil end
     if meetingControlTimer then meetingControlTimer:stop(); meetingControlTimer = nil end
     meetingStopping = true
     setNotepadStoppingState()
 
-    setNotepadStatus("Transcribing final chunks...")
+    setNotepadStatus("Transcribing final window...")
     hs.timer.doAfter(2, function()
-        processMeetingChunks(true)
+        emitReadyWindows()         -- catch any complete windows still pending
+        emitFinalPartialWindow()   -- flush trailing audio shorter than a full step
         maybeFinalizeMeetingSave()
     end)
 
@@ -2223,6 +2424,57 @@ end
 if type(hs.microphoneState) == "function" and not hs.microphoneState() then
     log("requesting microphone permission")
     hs.microphoneState(true)
+end
+
+-- If a previous Hammerspoon session left us stranded on the meeting
+-- aggregate (e.g., the meeting got stuck and never restored), drop us
+-- onto an audible fallback so the user has sound at startup.
+recoverIfStrandedOnAggregate()
+
+-- Global state-dump callable from outside Hammerspoon via:
+--   /Applications/Hammerspoon.app/Contents/Frameworks/hs/hs -c "meetingDoctor()"
+-- Used by tools/meeting-doctor.sh. Prints a one-shot snapshot of meeting
+-- state — exactly what's needed to debug a stuck meeting without poking
+-- around init.lua internals.
+function _G.meetingDoctor()
+    local lines = {}
+    local function add(k, v) table.insert(lines, k .. "=" .. tostring(v)) end
+    add("meetingRecording", meetingRecording)
+    add("meetingStopping", meetingStopping)
+    add("meetingSavingOutput", meetingSavingOutput)
+    add("meetingProcessing", meetingProcessing)
+    add("meetingPendingTranscriptions", meetingPendingTranscriptions)
+    add("meetingNextWindowIdx", meetingNextWindowIdx)
+    add("meetingQueueLen", #meetingWindowQueue)
+    add("meetingPriorOutputUID", meetingPriorOutputUID or "<nil>")
+    add("meetingFfmpegRunning", meetingFfmpegTask and meetingFfmpegTask:isRunning() or false)
+    local active = 0
+    for _ in pairs(meetingActiveTasks) do active = active + 1 end
+    add("meetingActiveTasks", active)
+    local activeKeys = {}
+    for k, t in pairs(meetingActiveTasks) do
+        table.insert(activeKeys, k .. "(running=" .. tostring(t and t:isRunning()) .. ")")
+    end
+    add("meetingActiveTasksDetail", table.concat(activeKeys, ","))
+    local attr = hs.fs.attributes(meetingPcmPath)
+    add("recordingPcmBytes", attr and attr.size or 0)
+    if attr and attr.size > 0 then
+        add("recordingPcmSeconds", string.format("%.1f", attr.size / MEETING_PCM_BYTES_PER_SEC))
+    end
+    return table.concat(lines, "\n")
+end
+
+-- Also restore on Hammerspoon shutdown / reload, in case a meeting is
+-- mid-flight when the user reloads config.
+hs.shutdownCallback = function()
+    if meetingRecording or meetingStopping then
+        if meetingFfmpegTask and meetingFfmpegTask:isRunning() then
+            meetingFfmpegTask:interrupt()
+        end
+        if meetingPriorOutputUID then
+            runAudioHelper("set-default", meetingPriorOutputUID)
+        end
+    end
 end
 
 -- Create default preferred langs file if it doesn't exist

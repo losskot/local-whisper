@@ -139,6 +139,12 @@ func createAggregate() -> (uid: String, alreadyExisted: Bool)? {
         FileHandle.standardError.write(Data("error: AudioHardwareCreateAggregateDevice failed (status \(status))\n".utf8))
         return nil
     }
+    // Poll until the system's device list publishes the new aggregate.
+    // Without this, an immediate set-default lookup can miss it.
+    for _ in 0..<40 {
+        if findDevice(byName: AGGREGATE_NAME) != nil { break }
+        Thread.sleep(forTimeInterval: 0.05)
+    }
     return (deviceUID(newID) ?? AGGREGATE_UID, false)
 }
 
@@ -178,6 +184,23 @@ case "create":
 case "delete":
     if !deleteAggregate() { exit(1) }
     print("ok")
+
+case "recreate":
+    // Tear down any existing aggregate, then create fresh against the
+    // current default output. Used at meeting start so the aggregate
+    // always reflects the user's current audible device (handles
+    // disconnects, headphone changes, etc.).
+    if deleteAggregate() {
+        // Wait for the device list to publish the removal — without this,
+        // createAggregate's "already exists" check finds a zombie and
+        // skips the actual creation.
+        for _ in 0..<40 {
+            if findDevice(byName: AGGREGATE_NAME) == nil { break }
+            Thread.sleep(forTimeInterval: 0.05)
+        }
+    }
+    guard let r = createAggregate() else { exit(1) }
+    print(r.uid)
 
 case "set-default":
     guard args.count == 3 else { usageAndExit() }
