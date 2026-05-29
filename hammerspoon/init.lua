@@ -195,7 +195,7 @@ end
 
 local function getLang()
     local lang = readFile(LANG_FILE):gsub("%s+", "")
-    if lang == "en" or lang == "pt" or lang == "auto" then return lang end
+    if lang == "en" or lang == "ru" or lang == "uk" or lang == "auto" then return lang end
     return "en"
 end
 
@@ -207,13 +207,13 @@ end
 
 local function getPreferredLangs()
     local content = readFile(PREFERRED_LANGS_FILE):gsub("%s+$", "")
-    if content == "" then return {"en", "pt"} end
+    if content == "" then return {"en"} end
     local langs = {}
     for lang in content:gmatch("[^,]+") do
         lang = lang:match("^%s*(.-)%s*$")
         if lang ~= "" then table.insert(langs, lang) end
     end
-    return #langs > 0 and langs or {"en", "pt"}
+    return #langs > 0 and langs or {"en"}
 end
 
 local function getEnterMode()
@@ -352,7 +352,7 @@ end
 
 -- Cycle helpers
 local function cycleLang()
-    local cycle = { en = "pt", pt = "auto", auto = "en" }
+    local cycle = { en = "ru", ru = "uk", uk = "auto", auto = "en" }
     local next = cycle[getLang()] or "en"
     writeFile(LANG_FILE, next)
     return next
@@ -1055,7 +1055,7 @@ local function buildMenuBarMenu()
                 title = icon .. " " .. preview .. "  " .. timeStr,
                 fn = function()
                     hs.pasteboard.setContents(entry.text)
-                    hs.eventtap.keyStroke({"cmd"}, "v")
+                    hs.eventtap.keyStroke({"cmd"}, 9)  -- keycode 9 = V (ANSI)
                     hs.notify.new({ title = "Pasted", informativeText = entry.text }):send()
                 end,
             })
@@ -1220,7 +1220,7 @@ local function insertTextAtCursor(text, mode)
     if mode == "paste" then
         local oldClipboard = hs.pasteboard.getContents()
         hs.pasteboard.setContents(text)
-        hs.eventtap.keyStroke({"cmd"}, "v")
+        hs.eventtap.keyStroke({"cmd"}, 9)  -- keycode 9 = V (ANSI), works regardless of keyboard layout
         hs.timer.doAfter(0.3, function()
             if oldClipboard then hs.pasteboard.setContents(oldClipboard) end
         end)
@@ -1305,6 +1305,10 @@ local function insertTranscribedText(text, detectedLang)
     end
 end
 
+-- Max seconds per whisper call — keeps each segment within whisper's sweet spot
+-- and prevents the model from losing the beginning of long recordings.
+local FINAL_SEGMENT_SECS = 55
+
 local function doFinalTranscription()
     local chunks = getChunkFiles()
     if #chunks < 2 then
@@ -1315,95 +1319,138 @@ local function doFinalTranscription()
 
     setOverlayText("Transcribing...")
 
-    local concatFile = WHISPER_TMP .. "/concat.txt"
-    local f = io.open(concatFile, "w")
-    for _, chunk in ipairs(chunks) do
-        f:write("file '" .. chunk .. "'\n")
-    end
-    f:close()
-
-    local finalWav = WHISPER_TMP .. "/final.wav"
     local lang = getLang()
     local preferred = getPreferredLangs()
+    local promptArgs = getPromptArgs()
 
-    local concatTask = hs.task.new(FFMPEG, function(code)
-        if code ~= 0 then
-            log("final: concat failed")
-            setOverlayText("Error: concat failed")
-            hs.timer.doAfter(2, hideOverlay)
+    -- Split 1-second chunks into groups of FINAL_SEGMENT_SECS
+    local segmentGroups = {}
+    local i = 1
+    while i <= #chunks do
+        local group = {}
+        for j = i, math.min(i + FINAL_SEGMENT_SECS - 1, #chunks) do
+            table.insert(group, chunks[j])
+        end
+        table.insert(segmentGroups, group)
+        i = i + FINAL_SEGMENT_SECS
+    end
+
+    local totalSegs = #segmentGroups
+    local allTexts = {}
+    local detectedLangOverall = nil
+    local segIdx = 0
+
+    local function finishAll()
+        local finalText = table.concat(allTexts, " "):gsub("^%s+", ""):gsub("%s+$", ""):gsub("%s+", " ")
+        log("final combined (" .. totalSegs .. " seg(s)): '" .. finalText .. "'")
+        if finalText == "" then
+            hideOverlay()
+            return
+        end
+        insertTranscribedText(finalText, detectedLangOverall)
+    end
+
+    local function transcribeNextSegment()
+        segIdx = segIdx + 1
+        if segIdx > totalSegs then
+            finishAll()
             return
         end
 
-        local promptArgs = getPromptArgs()
+        local group = segmentGroups[segIdx]
+        local n = segIdx
 
-        if lang == "auto" then
-            -- Auto mode: run without --no-prints to capture detected language from stderr
-            local autoArgs = { "-m", getModelPath(), "-f", finalWav, "-l", "auto", "-nt" }
-            for _, a in ipairs(promptArgs) do table.insert(autoArgs, a) end
-            local whisperTask = hs.task.new(WHISPER_BIN, function(code2, out2, err2)
-                if code2 ~= 0 then
-                    log("final: whisper failed")
-                    setOverlayText("Error: transcription failed")
-                    hs.timer.doAfter(2, hideOverlay)
-                    return
-                end
-
-                -- Parse detected language from whisper stderr
-                local detected = (err2 or ""):match("auto%-detected language:%s*(%w+)")
-                log("auto-detected: " .. tostring(detected))
-
-                local inPreferred = false
-                if detected then
-                    for _, pl in ipairs(preferred) do
-                        if detected == pl then inPreferred = true; break end
-                    end
-                end
-
-                if inPreferred then
-                    local text = (out2 or ""):gsub("^%s+", ""):gsub("%s+$", ""):gsub("%s+", " ")
-                    log("final (auto/" .. detected .. "): '" .. text .. "'")
-                    insertTranscribedText(text, detected)
-                else
-                    -- Detected language not in preferred list — re-transcribe with first preferred
-                    local fallback = preferred[1]
-                    log("auto-detect got '" .. tostring(detected) .. "', re-running with " .. fallback)
-                    setOverlayText("Re-transcribing (" .. fallback:upper() .. ")...")
-                    local retryArgs = { "-m", getModelPath(), "-f", finalWav, "-l", fallback, "-nt", "--no-prints" }
-                    for _, a in ipairs(promptArgs) do table.insert(retryArgs, a) end
-                    local retryTask = hs.task.new(WHISPER_BIN, function(code3, out3)
-                        if code3 ~= 0 then
-                            log("final: retry whisper failed")
-                            setOverlayText("Error: transcription failed")
-                            hs.timer.doAfter(2, hideOverlay)
-                            return
-                        end
-                        local text = (out3 or ""):gsub("^%s+", ""):gsub("%s+$", ""):gsub("%s+", " ")
-                        log("final (retry/" .. fallback .. "): '" .. text .. "'")
-                        insertTranscribedText(text, fallback)
-                    end, retryArgs)
-                    retryTask:start()
-                end
-            end, autoArgs)
-            whisperTask:start()
-        else
-            -- Specific language mode
-            local langArgs = { "-m", getModelPath(), "-f", finalWav, "-l", lang, "-nt", "--no-prints" }
-            for _, a in ipairs(promptArgs) do table.insert(langArgs, a) end
-            local whisperTask = hs.task.new(WHISPER_BIN, function(code2, out2)
-                if code2 ~= 0 then
-                    log("final: whisper failed")
-                    setOverlayText("Error: transcription failed")
-                    hs.timer.doAfter(2, hideOverlay)
-                    return
-                end
-                local text = (out2 or ""):gsub("^%s+", ""):gsub("%s+$", ""):gsub("%s+", " ")
-                log("final: '" .. text .. "'")
-                insertTranscribedText(text)
-            end, langArgs)
-            whisperTask:start()
+        if totalSegs > 1 then
+            setOverlayText(string.format("Transcribing %d/%d...", n, totalSegs))
         end
-    end, { "-y", "-f", "concat", "-safe", "0", "-i", concatFile, "-c", "copy", finalWav })
-    concatTask:start()
+
+        local concatFile = WHISPER_TMP .. "/seg_concat_" .. n .. ".txt"
+        local segWav    = WHISPER_TMP .. "/seg_" .. n .. ".wav"
+
+        local f = io.open(concatFile, "w")
+        for _, chunk in ipairs(group) do
+            f:write("file '" .. chunk .. "'\n")
+        end
+        f:close()
+
+        local concatTask = hs.task.new(FFMPEG, function(code)
+            if code ~= 0 then
+                log("final: seg " .. n .. " concat failed")
+                transcribeNextSegment()  -- skip bad segment, keep going
+                return
+            end
+
+            local function onSegmentText(text, detected)
+                if text ~= "" and not isHallucination(text) then
+                    table.insert(allTexts, text)
+                end
+                if detected and not detectedLangOverall then
+                    detectedLangOverall = detected
+                end
+                transcribeNextSegment()
+            end
+
+            -- For auto mode, detect language on first segment then reuse for speed
+            local effectiveLang = lang
+            if lang == "auto" and detectedLangOverall then
+                effectiveLang = detectedLangOverall
+            end
+
+            if effectiveLang == "auto" then
+                local autoArgs = { "-m", getModelPath(), "-f", segWav, "-l", "auto", "-nt" }
+                for _, a in ipairs(promptArgs) do table.insert(autoArgs, a) end
+                local wTask = hs.task.new(WHISPER_BIN, function(code2, out2, err2)
+                    if code2 ~= 0 then
+                        log("final: seg " .. n .. " whisper failed")
+                        transcribeNextSegment()
+                        return
+                    end
+                    local detected = (err2 or ""):match("auto%-detected language:%s*(%w+)")
+                    log("seg " .. n .. " auto-detected: " .. tostring(detected))
+
+                    local inPreferred = false
+                    if detected then
+                        for _, pl in ipairs(preferred) do
+                            if detected == pl then inPreferred = true; break end
+                        end
+                    end
+
+                    if inPreferred then
+                        local text = (out2 or ""):gsub("^%s+", ""):gsub("%s+$", ""):gsub("%s+", " ")
+                        onSegmentText(text, detected)
+                    else
+                        local fallback = preferred[1]
+                        log("seg " .. n .. " auto-detect got '" .. tostring(detected) .. "', retry with " .. fallback)
+                        local retryArgs = { "-m", getModelPath(), "-f", segWav, "-l", fallback, "-nt", "--no-prints" }
+                        for _, a in ipairs(promptArgs) do table.insert(retryArgs, a) end
+                        local retryTask = hs.task.new(WHISPER_BIN, function(code3, out3)
+                            local text = (out3 or ""):gsub("^%s+", ""):gsub("%s+$", ""):gsub("%s+", " ")
+                            onSegmentText(text, fallback)
+                        end, retryArgs)
+                        retryTask:start()
+                    end
+                end, autoArgs)
+                wTask:start()
+            else
+                local langArgs = { "-m", getModelPath(), "-f", segWav, "-l", effectiveLang, "-nt", "--no-prints" }
+                for _, a in ipairs(promptArgs) do table.insert(langArgs, a) end
+                local wTask = hs.task.new(WHISPER_BIN, function(code2, out2)
+                    if code2 ~= 0 then
+                        log("final: seg " .. n .. " whisper failed")
+                        transcribeNextSegment()
+                        return
+                    end
+                    local text = (out2 or ""):gsub("^%s+", ""):gsub("%s+$", ""):gsub("%s+", " ")
+                    log("final seg " .. n .. "/" .. totalSegs .. ": '" .. text .. "'")
+                    onSegmentText(text, effectiveLang)
+                end, langArgs)
+                wTask:start()
+            end
+        end, { "-y", "-f", "concat", "-safe", "0", "-i", concatFile, "-c", "copy", segWav })
+        concatTask:start()
+    end
+
+    transcribeNextSegment()
 end
 
 --------------------------------------------------------------------------------
