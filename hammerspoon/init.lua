@@ -1311,6 +1311,15 @@ local FINAL_SEGMENT_SECS = 55
 
 local function doFinalTranscription()
     local chunks = getChunkFiles()
+
+    -- ДИАГНОСТИКА: логируем все чанки и состояние
+    log("final: START — total chunks=" .. #chunks .. ", partialBusy=" .. tostring(partialBusy))
+    if #chunks > 0 then
+        local first = chunks[1]:match("([^/]+)$") or chunks[1]
+        local last  = chunks[#chunks]:match("([^/]+)$") or chunks[#chunks]
+        log("final: first=" .. first .. "  last=" .. last .. "  duration≈" .. #chunks .. "s")
+    end
+
     if #chunks < 2 then
         log("final: not enough chunks, skipping")
         hideOverlay()
@@ -1336,11 +1345,19 @@ local function doFinalTranscription()
     end
 
     local totalSegs = #segmentGroups
+    log("final: segments=" .. totalSegs .. " (FINAL_SEGMENT_SECS=" .. FINAL_SEGMENT_SECS .. ")")
+    for si, grp in ipairs(segmentGroups) do
+        local gfirst = grp[1]:match("([^/]+)$") or grp[1]
+        local glast  = grp[#grp]:match("([^/]+)$") or grp[#grp]
+        log("final: seg " .. si .. " → " .. #grp .. " chunks (" .. gfirst .. " … " .. glast .. ")")
+    end
+
     local allTexts = {}
     local detectedLangOverall = nil
     local segIdx = 0
 
     local function finishAll()
+        log("final: finishAll — collected " .. #allTexts .. " text segment(s)")
         local finalText = table.concat(allTexts, " "):gsub("^%s+", ""):gsub("%s+$", ""):gsub("%s+", " ")
         log("final combined (" .. totalSegs .. " seg(s)): '" .. finalText .. "'")
         if finalText == "" then
@@ -1367,22 +1384,35 @@ local function doFinalTranscription()
         local concatFile = WHISPER_TMP .. "/seg_concat_" .. n .. ".txt"
         local segWav    = WHISPER_TMP .. "/seg_" .. n .. ".wav"
 
-        local f = io.open(concatFile, "w")
+        log("final: seg " .. n .. " writing concat list (" .. #group .. " files) → " .. concatFile)
+        local f, ferr = io.open(concatFile, "w")
+        if not f then
+            log("final: seg " .. n .. " ERROR opening concat file: " .. tostring(ferr))
+            transcribeNextSegment()
+            return
+        end
         for _, chunk in ipairs(group) do
             f:write("file '" .. chunk .. "'\n")
         end
         f:close()
 
+        log("final: seg " .. n .. " starting ffmpeg concat → " .. segWav)
         local concatTask = hs.task.new(FFMPEG, function(code)
             if code ~= 0 then
-                log("final: seg " .. n .. " concat failed")
+                log("final: seg " .. n .. " concat FAILED (code=" .. tostring(code) .. ")")
                 transcribeNextSegment()  -- skip bad segment, keep going
                 return
             end
+            local wavSize = (hs.fs.attributes(segWav) or {}).size or -1
+            log("final: seg " .. n .. " concat OK — wav size=" .. wavSize .. " bytes")
 
             local function onSegmentText(text, detected)
+                log("final: seg " .. n .. " onSegmentText hallucination=" .. tostring(isHallucination(text)) .. " len=" .. #text)
                 if text ~= "" and not isHallucination(text) then
                     table.insert(allTexts, text)
+                    log("final: seg " .. n .. " accepted text: '" .. text:sub(1, 120) .. "'")
+                else
+                    log("final: seg " .. n .. " REJECTED (empty or hallucination): '" .. text:sub(1, 80) .. "'")
                 end
                 if detected and not detectedLangOverall then
                     detectedLangOverall = detected
@@ -1396,12 +1426,15 @@ local function doFinalTranscription()
                 effectiveLang = detectedLangOverall
             end
 
+            log("final: seg " .. n .. " starting whisper lang=" .. effectiveLang .. " model=" .. getModelPath():match("([^/]+)$"))
+
             if effectiveLang == "auto" then
                 local autoArgs = { "-m", getModelPath(), "-f", segWav, "-l", "auto", "-nt" }
                 for _, a in ipairs(promptArgs) do table.insert(autoArgs, a) end
                 local wTask = hs.task.new(WHISPER_BIN, function(code2, out2, err2)
+                    log("final: seg " .. n .. " whisper(auto) exit=" .. tostring(code2) .. " outlen=" .. #(out2 or "") .. " errlen=" .. #(err2 or ""))
                     if code2 ~= 0 then
-                        log("final: seg " .. n .. " whisper failed")
+                        log("final: seg " .. n .. " whisper FAILED (auto)")
                         transcribeNextSegment()
                         return
                     end
@@ -1424,6 +1457,7 @@ local function doFinalTranscription()
                         local retryArgs = { "-m", getModelPath(), "-f", segWav, "-l", fallback, "-nt", "--no-prints" }
                         for _, a in ipairs(promptArgs) do table.insert(retryArgs, a) end
                         local retryTask = hs.task.new(WHISPER_BIN, function(code3, out3)
+                            log("final: seg " .. n .. " whisper(retry/" .. fallback .. ") exit=" .. tostring(code3) .. " outlen=" .. #(out3 or ""))
                             local text = (out3 or ""):gsub("^%s+", ""):gsub("%s+$", ""):gsub("%s+", " ")
                             onSegmentText(text, fallback)
                         end, retryArgs)
@@ -1435,8 +1469,9 @@ local function doFinalTranscription()
                 local langArgs = { "-m", getModelPath(), "-f", segWav, "-l", effectiveLang, "-nt", "--no-prints" }
                 for _, a in ipairs(promptArgs) do table.insert(langArgs, a) end
                 local wTask = hs.task.new(WHISPER_BIN, function(code2, out2)
+                    log("final: seg " .. n .. " whisper(" .. effectiveLang .. ") exit=" .. tostring(code2) .. " outlen=" .. #(out2 or ""))
                     if code2 ~= 0 then
-                        log("final: seg " .. n .. " whisper failed")
+                        log("final: seg " .. n .. " whisper FAILED")
                         transcribeNextSegment()
                         return
                     end
@@ -1456,6 +1491,8 @@ end
 --------------------------------------------------------------------------------
 -- Auto-stop on silence
 --------------------------------------------------------------------------------
+
+local stopRecording -- forward declaration (defined below in Start/stop section)
 
 local function checkSilence()
     if not isRecording then return end
@@ -1527,10 +1564,11 @@ local function startRecording()
     silentChunkCount = 0
     lastCheckedChunk = 0
     partialTimer = hs.timer.doEvery(PARTIAL_INTERVAL, doPartialTranscribe)
-    silenceTimer = hs.timer.doEvery(1.0, checkSilence)
+    -- silenceTimer disabled: recording only stops when key is released
+    -- silenceTimer = hs.timer.doEvery(1.0, checkSilence)
 end
 
-local function stopRecording()
+stopRecording = function()
     if not isRecording then return end
     isRecording = false
     log("recording: stop")
