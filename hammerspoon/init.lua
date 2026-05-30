@@ -1493,6 +1493,8 @@ end
 --------------------------------------------------------------------------------
 
 local stopRecording -- forward declaration (defined below in Start/stop section)
+local stopKeepalive  -- forward declaration (defined below after modTap)
+local startKeepalive -- forward declaration (defined below after modTap)
 
 local function checkSilence()
     if not isRecording then return end
@@ -1532,6 +1534,8 @@ end
 
 local function startRecording()
     if isRecording then return end
+    -- Stop keepalive so the device isn't double-captured during recording
+    stopKeepalive()
     isRecording = true
     log("recording: start")
 
@@ -1589,8 +1593,12 @@ stopRecording = function()
 
     hs.sound.getByFile("/System/Library/Sounds/Tink.aiff"):play()
 
-    -- Brief delay for ffmpeg to finalize last chunk
-    hs.timer.doAfter(0.3, doFinalTranscription)
+    -- Brief delay for ffmpeg to finalize last chunk, then transcribe and restart keepalive
+    hs.timer.doAfter(0.3, function()
+        doFinalTranscription()
+        -- Restart keepalive to keep device warm for next recording
+        startKeepalive()
+    end)
 end
 
 --------------------------------------------------------------------------------
@@ -1635,6 +1643,43 @@ local modTap = hs.eventtap.new({ hs.eventtap.event.types.flagsChanged }, functio
 end)
 modTap:start()
 _whisper.modTap = modTap
+
+--------------------------------------------------------------------------------
+-- Keepalive: prevent avfoundation cold-start delay
+-- After several minutes of mic inactivity macOS needs ~8s to re-init the device,
+-- losing the beginning of the recording. A silent background ffmpeg keeps it warm.
+--------------------------------------------------------------------------------
+
+local keepaliveTask = nil
+
+stopKeepalive = function()
+    if keepaliveTask and keepaliveTask:isRunning() then
+        keepaliveTask:interrupt()
+        keepaliveTask = nil
+        log("keepalive: stopped")
+    end
+end
+
+startKeepalive = function()
+    if keepaliveTask and keepaliveTask:isRunning() then return end
+    keepaliveTask = hs.task.new(FFMPEG, function(code)
+        keepaliveTask = nil
+        log("keepalive: exited " .. tostring(code))
+        -- Restart unless we're currently recording
+        if not isRecording then
+            hs.timer.doAfter(2.0, startKeepalive)
+        end
+    end, {
+        "-f", "avfoundation", "-i", AUDIO_DEVICE,
+        "-ac", "1", "-ar", "16000",
+        "-f", "null", "-"
+    })
+    keepaliveTask:start()
+    log("keepalive: started (device warm-up)")
+end
+
+-- Start keepalive now so the device is warm for the first recording
+startKeepalive()
 
 -- Re-enable eventtap if it gets disabled (e.g. by secure input)
 hs.timer.doEvery(5, function()
