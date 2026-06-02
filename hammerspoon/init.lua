@@ -1493,8 +1493,6 @@ end
 --------------------------------------------------------------------------------
 
 local stopRecording -- forward declaration (defined below in Start/stop section)
-local stopKeepalive  -- forward declaration (defined below after modTap)
-local startKeepalive -- forward declaration (defined below after modTap)
 
 local function checkSilence()
     if not isRecording then return end
@@ -1532,10 +1530,17 @@ end
 -- Start / stop recording
 --------------------------------------------------------------------------------
 
-local function startRecording()
-    if isRecording then return end
-    -- Stop keepalive so the device isn't double-captured during recording
-    stopKeepalive()
+-- Warmup state
+local warmupTask = nil
+local warmupTimer = nil
+local isWarmingUp = false
+local warmupAttempt = 0
+local WARMUP_ATTEMPT_SECS = 1.0   -- timeout per attempt
+local WARMUP_MAX_ATTEMPTS = 10    -- give up after this many retries
+
+local function startActualRecording()
+    isWarmingUp = false
+    warmupAttempt = 0
     isRecording = true
     log("recording: start")
 
@@ -1545,10 +1550,10 @@ local function startRecording()
     captureActiveApp()
     log("recording: app=" .. tostring(capturedAppName) .. " (" .. tostring(capturedAppBundleID) .. ")")
 
-    showOverlay()
+    setOverlayText("")
     startRecordingIndicator()
     updateMenuBar()
-    hs.sound.getByFile("/System/Library/Sounds/Pop.aiff"):play()
+    -- Pop is played once the first chunk appears on disk (audio is truly flowing)
 
     ffmpegTask = hs.task.new(FFMPEG, function(code, out, err)
         log("recording: ffmpeg exited " .. tostring(code))
@@ -1567,12 +1572,111 @@ local function startRecording()
     partialBusy = false
     silentChunkCount = 0
     lastCheckedChunk = 0
-    partialTimer = hs.timer.doEvery(PARTIAL_INTERVAL, doPartialTranscribe)
-    -- silenceTimer disabled: recording only stops when key is released
-    -- silenceTimer = hs.timer.doEvery(1.0, checkSilence)
+    -- Partial transcription disabled: low quality, not useful
+    -- partialTimer = hs.timer.doEvery(PARTIAL_INTERVAL, doPartialTranscribe)
+
+    -- Poll until first chunk exists on disk → audio is truly flowing → play Pop
+    local chunkPoller = nil
+    local chunkPollCount = 0
+    chunkPoller = hs.timer.doEvery(0.05, function()
+        chunkPollCount = chunkPollCount + 1
+        local firstChunk = CHUNK_DIR .. "/chunk_001.wav"
+        if hs.fs.attributes(firstChunk) or chunkPollCount > 60 then  -- max 3s fallback
+            chunkPoller:stop()
+            if isRecording then
+                log("recording: first chunk ready after " .. (chunkPollCount * 0.05) .. "s — audio flowing")
+                hs.sound.getByFile("/System/Library/Sounds/Pop.aiff"):play()
+            end
+        end
+    end)
+end
+
+local function cancelWarmup()
+    if warmupTimer then warmupTimer:stop(); warmupTimer = nil end
+    if warmupTask and warmupTask:isRunning() then
+        warmupTask:interrupt(); warmupTask = nil
+    end
+end
+
+local tryWarmup  -- forward declaration for recursion
+
+local warmupTick = hs.sound.getByFile("/System/Library/Sounds/Tink.aiff")
+if warmupTick then warmupTick:volume(0.15) end
+
+tryWarmup = function()
+    if not isWarmingUp then return end
+
+    warmupAttempt = warmupAttempt + 1
+    log("warmup: attempt " .. warmupAttempt .. "/" .. WARMUP_MAX_ATTEMPTS)
+
+    -- Subtle tick before each attempt
+    if warmupTick then warmupTick:play() end
+    setOverlayText("... " .. warmupAttempt .. "/" .. WARMUP_MAX_ATTEMPTS)
+
+    warmupTask = hs.task.new(FFMPEG,
+        function(code)  -- termination callback
+            warmupTask = nil
+        end,
+        function(task, stdout, stderr)  -- streaming callback: ffmpeg writes to stderr once device is open
+            if stderr and stderr ~= "" and isWarmingUp then
+                log("warmup: device ready on attempt " .. warmupAttempt)
+                if warmupTimer then warmupTimer:stop(); warmupTimer = nil end
+                task:interrupt()
+                startActualRecording()
+            end
+            return true
+        end,
+        { "-f", "avfoundation", "-i", AUDIO_DEVICE,
+          "-ac", "1", "-ar", "16000",
+          "-f", "null", "-" }
+    )
+    warmupTask:start()
+
+    -- If no response within 1s, kill and retry (up to max)
+    warmupTimer = hs.timer.doAfter(WARMUP_ATTEMPT_SECS, function()
+        warmupTimer = nil
+        if not isWarmingUp then return end
+        if warmupTask and warmupTask:isRunning() then
+            warmupTask:interrupt(); warmupTask = nil
+        end
+        if warmupAttempt < WARMUP_MAX_ATTEMPTS then
+            log("warmup: no response, retrying...")
+            tryWarmup()
+        else
+            -- All attempts exhausted — signal error, do NOT record
+            isWarmingUp = false
+            warmupAttempt = 0
+            log("warmup: FAILED after " .. WARMUP_MAX_ATTEMPTS .. " attempts — audio device unresponsive")
+            setOverlayText("Микрофон недоступен")
+            hs.sound.getByFile("/System/Library/Sounds/Basso.aiff"):play()
+            hs.timer.doAfter(2.5, hideOverlay)
+        end
+    end)
+end
+
+local function startRecording()
+    if isRecording or isWarmingUp then return end
+    isWarmingUp = true
+    warmupAttempt = 0
+    log("warmup: probing audio device...")
+
+    setOverlayText("...")
+    showOverlay()
+
+    tryWarmup()
 end
 
 stopRecording = function()
+    -- Cancel warmup if key released before device was ready
+    if isWarmingUp then
+        isWarmingUp = false
+        warmupAttempt = 0
+        cancelWarmup()
+        log("warmup: cancelled (key released before device ready)")
+        hideOverlay()
+        return
+    end
+
     if not isRecording then return end
     isRecording = false
     log("recording: stop")
@@ -1593,12 +1697,8 @@ stopRecording = function()
 
     hs.sound.getByFile("/System/Library/Sounds/Tink.aiff"):play()
 
-    -- Brief delay for ffmpeg to finalize last chunk, then transcribe and restart keepalive
-    hs.timer.doAfter(0.3, function()
-        doFinalTranscription()
-        -- Restart keepalive to keep device warm for next recording
-        startKeepalive()
-    end)
+    -- Brief delay for ffmpeg to finalize last chunk
+    hs.timer.doAfter(0.3, doFinalTranscription)
 end
 
 --------------------------------------------------------------------------------
@@ -1632,7 +1732,7 @@ local modTap = hs.eventtap.new({ hs.eventtap.event.types.flagsChanged }, functio
                     stopRecording()
                 end
             end)
-        elseif not triggered and isRecording then
+        elseif not triggered and (isRecording or isWarmingUp) then
             if releasePoller then releasePoller:stop(); releasePoller = nil end
             stopRecording()
         end
@@ -1643,43 +1743,6 @@ local modTap = hs.eventtap.new({ hs.eventtap.event.types.flagsChanged }, functio
 end)
 modTap:start()
 _whisper.modTap = modTap
-
---------------------------------------------------------------------------------
--- Keepalive: prevent avfoundation cold-start delay
--- After several minutes of mic inactivity macOS needs ~8s to re-init the device,
--- losing the beginning of the recording. A silent background ffmpeg keeps it warm.
---------------------------------------------------------------------------------
-
-local keepaliveTask = nil
-
-stopKeepalive = function()
-    if keepaliveTask and keepaliveTask:isRunning() then
-        keepaliveTask:interrupt()
-        keepaliveTask = nil
-        log("keepalive: stopped")
-    end
-end
-
-startKeepalive = function()
-    if keepaliveTask and keepaliveTask:isRunning() then return end
-    keepaliveTask = hs.task.new(FFMPEG, function(code)
-        keepaliveTask = nil
-        log("keepalive: exited " .. tostring(code))
-        -- Restart unless we're currently recording
-        if not isRecording then
-            hs.timer.doAfter(2.0, startKeepalive)
-        end
-    end, {
-        "-f", "avfoundation", "-i", AUDIO_DEVICE,
-        "-ac", "1", "-ar", "16000",
-        "-f", "null", "-"
-    })
-    keepaliveTask:start()
-    log("keepalive: started (device warm-up)")
-end
-
--- Start keepalive now so the device is warm for the first recording
-startKeepalive()
 
 -- Re-enable eventtap if it gets disabled (e.g. by secure input)
 hs.timer.doEvery(5, function()
