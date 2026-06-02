@@ -1218,12 +1218,10 @@ end
 -- Low-level text insertion at cursor
 local function insertTextAtCursor(text, mode)
     if mode == "paste" then
-        local oldClipboard = hs.pasteboard.getContents()
+        -- Note: we intentionally don't save/restore clipboard — getContents() can block
+        -- for 60+ seconds if another app holds a large object on the clipboard.
         hs.pasteboard.setContents(text)
         hs.eventtap.keyStroke({"cmd"}, 9)  -- keycode 9 = V (ANSI), works regardless of keyboard layout
-        hs.timer.doAfter(0.3, function()
-            if oldClipboard then hs.pasteboard.setContents(oldClipboard) end
-        end)
     else
         hs.eventtap.keyStrokes(text)
     end
@@ -1576,19 +1574,23 @@ local function startActualRecording()
     -- partialTimer = hs.timer.doEvery(PARTIAL_INTERVAL, doPartialTranscribe)
 
     -- Poll until first chunk exists on disk → audio is truly flowing → play Pop
-    local chunkPoller = nil
-    local chunkPollCount = 0
-    chunkPoller = hs.timer.doEvery(0.05, function()
-        chunkPollCount = chunkPollCount + 1
-        local firstChunk = CHUNK_DIR .. "/chunk_001.wav"
-        if hs.fs.attributes(firstChunk) or chunkPollCount > 60 then  -- max 3s fallback
-            chunkPoller:stop()
-            if isRecording then
-                log("recording: first chunk ready after " .. (chunkPollCount * 0.05) .. "s — audio flowing")
-                hs.sound.getByFile("/System/Library/Sounds/Pop.aiff"):play()
+    -- Uses recursive doAfter (not doEvery) to avoid stop-within-callback issues.
+    local function pollForFirstChunk(attempt)
+        if not isRecording then return end  -- recording already stopped, don't play Pop
+        local firstChunk = CHUNK_DIR .. "/chunk_000.wav"
+        local attr = hs.fs.attributes(firstChunk)
+        if (attr and attr.size and attr.size > 200) or attempt >= 60 then
+            if attr then
+                log("recording: first chunk ready after " .. (attempt * 0.05) .. "s — audio flowing")
+            else
+                log("recording: first chunk timeout, playing Pop anyway")
             end
+            hs.sound.getByFile("/System/Library/Sounds/Pop.aiff"):play()
+        else
+            hs.timer.doAfter(0.05, function() pollForFirstChunk(attempt + 1) end)
         end
-    end)
+    end
+    pollForFirstChunk(0)
 end
 
 local function cancelWarmup()
