@@ -350,6 +350,65 @@ local function getChunkFiles()
     return chunks
 end
 
+-- Read a 16-bit mono WAV file and return its RMS amplitude (0..32768 range).
+-- Pure Lua — no subprocess. Fast enough for 1-second chunks (~32KB each).
+local function getWavRMS(wavPath)
+    local f = io.open(wavPath, "rb")
+    if not f then return math.huge end
+    f:seek("set", 44)  -- skip standard WAV header
+    local data = f:read("*all")
+    f:close()
+    if not data or #data < 2 then return math.huge end
+    local sum = 0
+    local n = math.floor(#data / 2)
+    for i = 1, n * 2 - 1, 2 do
+        local lo = data:byte(i)
+        local hi = data:byte(i + 1)
+        local s = hi * 256 + lo
+        if s >= 32768 then s = s - 65536 end
+        sum = sum + s * s
+    end
+    return n > 0 and math.sqrt(sum / n) or math.huge
+end
+
+-- Split chunk list into groups no longer than maxSecs, but breaking at the
+-- quietest 1-second chunk found within the last lookbackSecs of each window.
+-- This prevents cuts mid-word or mid-sentence.
+local function splitAtSilence(chunks, maxSecs, lookbackSecs)
+    lookbackSecs = lookbackSecs or 8
+    local groups = {}
+    local i = 1
+    while i <= #chunks do
+        if #chunks - i + 1 <= maxSecs then
+            -- Last group: take everything remaining
+            local group = {}
+            for j = i, #chunks do table.insert(group, chunks[j]) end
+            table.insert(groups, group)
+            break
+        end
+        -- Scan backwards from the hard boundary to find the quietest chunk.
+        -- Never push the boundary earlier than halfway through the window.
+        local hardEnd    = i + maxSecs - 1
+        local scanStart  = math.max(i + math.floor(maxSecs / 2), hardEnd - lookbackSecs + 1)
+        local bestIdx    = hardEnd
+        local bestRMS    = math.huge
+        for j = hardEnd, scanStart, -1 do
+            local rms = getWavRMS(chunks[j])
+            if rms < bestRMS then
+                bestRMS = rms
+                bestIdx = j
+                if rms < 300 then break end  -- near-silence found, stop scanning
+            end
+        end
+        local group = {}
+        for j = i, bestIdx do table.insert(group, chunks[j]) end
+        table.insert(groups, group)
+        log("split: seg ends at chunk " .. bestIdx .. " (RMS=" .. math.floor(bestRMS) .. ", hard=" .. hardEnd .. ")")
+        i = bestIdx + 1
+    end
+    return groups
+end
+
 -- Cycle helpers
 local function cycleLang()
     local cycle = { en = "ru", ru = "uk", uk = "auto", auto = "en" }
@@ -1331,17 +1390,10 @@ local function doFinalTranscription()
     local preferred = getPreferredLangs()
     local promptArgs = getPromptArgs()
 
-    -- Split 1-second chunks into groups of FINAL_SEGMENT_SECS
-    local segmentGroups = {}
-    local i = 1
-    while i <= #chunks do
-        local group = {}
-        for j = i, math.min(i + FINAL_SEGMENT_SECS - 1, #chunks) do
-            table.insert(group, chunks[j])
-        end
-        table.insert(segmentGroups, group)
-        i = i + FINAL_SEGMENT_SECS
-    end
+    -- Split chunks at natural silence boundaries near FINAL_SEGMENT_SECS.
+    -- splitAtSilence reads WAV RMS directly (no subprocess) and prefers cutting
+    -- at the quietest 1-second chunk within the last 8s of each window.
+    local segmentGroups = splitAtSilence(chunks, FINAL_SEGMENT_SECS)
 
     local totalSegs = #segmentGroups
     log("final: segments=" .. totalSegs .. " (FINAL_SEGMENT_SECS=" .. FINAL_SEGMENT_SECS .. ")")
@@ -1560,13 +1612,20 @@ local function startActualRecording()
         if not isRecording then return end  -- recording already stopped, don't play Pop
         local firstChunk = CHUNK_DIR .. "/chunk_000.wav"
         local attr = hs.fs.attributes(firstChunk)
-        if (attr and attr.size and attr.size > 200) or attempt >= 200 then
-            if attr then
-                log("recording: first chunk ready after " .. (attempt * 0.05) .. "s — audio flowing")
-            else
-                log("recording: first chunk timeout, playing Pop anyway")
-            end
+        if (attr and attr.size and attr.size > 200) then
+            log("recording: first chunk ready after " .. (attempt * 0.05) .. "s — audio flowing")
             hs.sound.getByFile("/System/Library/Sounds/Pop.aiff"):play()
+        elseif attempt >= 200 then
+            -- 10 seconds elapsed and still no audio data — abort with error
+            log("recording: first chunk timeout — aborting, device not producing audio")
+            hs.sound.getByFile("/System/Library/Sounds/Basso.aiff"):play()
+            setOverlayText("Нет аудио")
+            isRecording = false
+            if ffmpegTask and ffmpegTask:isRunning() then ffmpegTask:interrupt() end
+            ffmpegTask = nil
+            stopRecordingIndicator()
+            updateMenuBar()
+            hs.timer.doAfter(2.0, hideOverlay)
         else
             hs.timer.doAfter(0.05, function() pollForFirstChunk(attempt + 1) end)
         end
