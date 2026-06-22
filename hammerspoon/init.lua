@@ -1303,9 +1303,10 @@ local function insertTranscribedText(text, detectedLang)
     end
 end
 
--- Max seconds per whisper call — keeps each segment within whisper's sweet spot
--- and prevents the model from losing the beginning of long recordings.
-local FINAL_SEGMENT_SECS = 55
+-- Max seconds per whisper call — must stay BELOW whisper's 30s internal window.
+-- Exceeding 30s forces a window boundary crossing where the model reliably drops
+-- 5-10s of content at the seam. 25s gives a safe margin inside one window.
+local FINAL_SEGMENT_SECS = 25
 
 local function doFinalTranscription()
     local chunks = getChunkFiles()
@@ -1418,11 +1419,9 @@ local function doFinalTranscription()
                 transcribeNextSegment()
             end
 
-            -- For auto mode, detect language on first segment then reuse for speed
+            -- Always use auto-detect per segment for code-switching (surzhyk/mixed language)
+            -- Never reuse a previously detected language — each segment may have different dominant language
             local effectiveLang = lang
-            if lang == "auto" and detectedLangOverall then
-                effectiveLang = detectedLangOverall
-            end
 
             log("final: seg " .. n .. " starting whisper lang=" .. effectiveLang .. " model=" .. getModelPath():match("([^/]+)$"))
 
@@ -1439,28 +1438,10 @@ local function doFinalTranscription()
                     local detected = (err2 or ""):match("auto%-detected language:%s*(%w+)")
                     log("seg " .. n .. " auto-detected: " .. tostring(detected))
 
-                    local inPreferred = false
-                    if detected then
-                        for _, pl in ipairs(preferred) do
-                            if detected == pl then inPreferred = true; break end
-                        end
-                    end
-
-                    if inPreferred then
-                        local text = (out2 or ""):gsub("^%s+", ""):gsub("%s+$", ""):gsub("%s+", " ")
-                        onSegmentText(text, detected)
-                    else
-                        local fallback = preferred[1]
-                        log("seg " .. n .. " auto-detect got '" .. tostring(detected) .. "', retry with " .. fallback)
-                        local retryArgs = { "-m", getModelPath(), "-f", segWav, "-l", fallback, "-nt", "--no-prints" }
-                        for _, a in ipairs(promptArgs) do table.insert(retryArgs, a) end
-                        local retryTask = hs.task.new(WHISPER_BIN, function(code3, out3)
-                            log("final: seg " .. n .. " whisper(retry/" .. fallback .. ") exit=" .. tostring(code3) .. " outlen=" .. #(out3 or ""))
-                            local text = (out3 or ""):gsub("^%s+", ""):gsub("%s+$", ""):gsub("%s+", " ")
-                            onSegmentText(text, fallback)
-                        end, retryArgs)
-                        retryTask:start()
-                    end
+                    -- Accept whatever language auto-detected — forcing a retry with preferred[1]
+                    -- would cause "translation" of mixed-language content (surzhyk, English terms, etc.)
+                    local text = (out2 or ""):gsub("^%s+", ""):gsub("%s+$", ""):gsub("%s+", " ")
+                    onSegmentText(text, detected)
                 end, autoArgs)
                 wTask:start()
             else
@@ -1579,7 +1560,7 @@ local function startActualRecording()
         if not isRecording then return end  -- recording already stopped, don't play Pop
         local firstChunk = CHUNK_DIR .. "/chunk_000.wav"
         local attr = hs.fs.attributes(firstChunk)
-        if (attr and attr.size and attr.size > 200) or attempt >= 60 then
+        if (attr and attr.size and attr.size > 200) or attempt >= 200 then
             if attr then
                 log("recording: first chunk ready after " .. (attempt * 0.05) .. "s — audio flowing")
             else
