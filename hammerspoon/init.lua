@@ -674,8 +674,8 @@ local overlay = nil
 local btnColor = { red = 0.5, green = 0.8, blue = 1.0, alpha = 1.0 }
 local btnHover = { red = 0.7, green = 0.9, blue = 1.0, alpha = 1.0 }
 
--- Element indices: 1=bg, 2=lang, 3=sep1, 4=output, 5=sep2, 6=enter, 7=sep3, 8=model, 9=sep4, 10=refine, 11=text, 12=dot, 13=timer, 14=close
-local EL = { lang = 2, output = 4, enter = 6, model = 8, refine = 10, text = 11, dot = 12, timer = 13, close = 14 }
+-- Element indices: 1=bg, 2=lang, 3=sep1, 4=output, 5=sep2, 6=enter, 7=sep3, 8=model, 9=sep4, 10=refine, 11=text, 12=dot, 13=timer, 14=close, 15=bar_bg, 16=bar_rec, 17=bar_txn
+local EL = { lang = 2, output = 4, enter = 6, model = 8, refine = 10, text = 11, dot = 12, timer = 13, close = 14, bar_bg = 15, bar_rec = 16, bar_txn = 17 }
 
 local enterOnColor = { red = 0.3, green = 1.0, blue = 0.3, alpha = 1.0 }
 local enterOffColor = { red = 0.5, green = 0.5, blue = 0.5, alpha = 0.5 }
@@ -697,7 +697,7 @@ end
 local function createOverlay()
     local screen = hs.screen.mainScreen()
     local frame = screen:frame()
-    local width, height = 420, 100
+    local width, height = 420, 118
     local padding = 20
     local x = frame.x + frame.w - width - padding
     local y = frame.y + frame.h - height - padding - 50
@@ -782,7 +782,7 @@ local function createOverlay()
         id = "text", type = "text", text = "Listening...",
         textColor = { red = 1, green = 1, blue = 1, alpha = 1.0 },
         textSize = 14,
-        frame = { x = "5%", y = "35%", w = "90%", h = "60%" },
+        frame = { x = "5%", y = "35%", w = "90%", h = "48%" },
     })
     -- 12: Recording indicator (pulsing red dot)
     overlay:appendElements({
@@ -805,6 +805,27 @@ local function createOverlay()
         textSize = 16, textAlignment = "center",
         frame = { x = "90%", y = "10%", w = "8%", h = "20%" },
         trackMouseDown = true, trackMouseUp = true, trackMouseEnterExit = true,
+    })
+    -- 15: Progress bar background (gray track)
+    overlay:appendElements({
+        id = "bar_bg", type = "rectangle", action = "fill",
+        roundedRectRadii = { xRadius = 3, yRadius = 3 },
+        fillColor = { red = 0.3, green = 0.3, blue = 0.3, alpha = 0.0 },
+        frame = { x = 0.04, y = 0.87, w = 0.92, h = 0.08 },
+    })
+    -- 16: Recording progress (red/orange) — filled as recording proceeds
+    overlay:appendElements({
+        id = "bar_rec", type = "rectangle", action = "fill",
+        roundedRectRadii = { xRadius = 3, yRadius = 3 },
+        fillColor = { red = 1.0, green = 0.35, blue = 0.15, alpha = 0.0 },
+        frame = { x = 0.04, y = 0.87, w = 0.0, h = 0.08 },
+    })
+    -- 17: Transcription progress (blue/green) — chases the red bar
+    overlay:appendElements({
+        id = "bar_txn", type = "rectangle", action = "fill",
+        roundedRectRadii = { xRadius = 3, yRadius = 3 },
+        fillColor = { red = 0.2, green = 0.75, blue = 1.0, alpha = 0.0 },
+        frame = { x = 0.04, y = 0.87, w = 0.0, h = 0.08 },
     })
 
     overlay:level(hs.canvas.windowLevels.floating)
@@ -937,6 +958,11 @@ local menuBar = nil
 local pulseTimer = nil
 local clockTimer = nil
 local recordingStartTime = 0
+
+-- Progress bar state
+local transcribedSecs = 0   -- seconds of audio fully transcribed
+local barMaxSecs      = 180 -- current max duration displayed (expands at 90%)
+local segChunkCounts  = {}  -- [segN] = number of chunks in that segment
 local pulseAlpha = 1.0
 local pulseFading = true
 
@@ -1162,15 +1188,39 @@ end
 -- Recording indicator (pulsing dot + timer)
 --------------------------------------------------------------------------------
 
+local function updateProgressBar()
+    if not overlay then return end
+    local elapsed = hs.timer.secondsSinceEpoch() - recordingStartTime
+    -- Auto-expand: when recording reaches 90% of max, extend by another 3 min
+    if elapsed >= barMaxSecs * 0.9 then
+        barMaxSecs = barMaxSecs + 180
+    end
+    local BAR_X   = 0.04   -- left edge (4% of canvas width)
+    local BAR_MAX = 0.92   -- available width (92% of canvas)
+    local BAR_Y   = 0.87   -- top of bar (87% down)
+    local BAR_H   = 0.08   -- bar height (8% of canvas height)
+    local recFrac = math.min(elapsed / barMaxSecs, 1.0)
+    local txnFrac = math.min(transcribedSecs / barMaxSecs, 1.0)
+    overlay[EL.bar_rec].frame = { x = BAR_X, y = BAR_Y, w = recFrac * BAR_MAX, h = BAR_H }
+    overlay[EL.bar_txn].frame = { x = BAR_X, y = BAR_Y, w = txnFrac * BAR_MAX, h = BAR_H }
+end
+
 local function startRecordingIndicator()
     if not overlay then return end
     recordingStartTime = hs.timer.secondsSinceEpoch()
+    transcribedSecs = 0
+    barMaxSecs      = 180
     pulseAlpha = 1.0
     pulseFading = true
 
     -- Show dot and timer
     overlay[EL.dot].fillColor = { red = 1, green = 0.15, blue = 0.15, alpha = 1.0 }
     overlay[EL.timer].textColor = { red = 1, green = 0.4, blue = 0.4, alpha = 1.0 }
+
+    -- Show progress bar track
+    overlay[EL.bar_bg].fillColor  = { red = 0.3, green = 0.3, blue = 0.3,  alpha = 0.6 }
+    overlay[EL.bar_rec].fillColor = { red = 1.0, green = 0.35, blue = 0.15, alpha = 0.8 }
+    overlay[EL.bar_txn].fillColor = { red = 0.2, green = 0.75, blue = 1.0, alpha = 0.9 }
 
     -- Pulse the red dot
     pulseTimer = hs.timer.doEvery(0.05, function()
@@ -1185,13 +1235,14 @@ local function startRecordingIndicator()
         overlay[EL.dot].fillColor = { red = 1, green = 0.15, blue = 0.15, alpha = pulseAlpha }
     end)
 
-    -- Update elapsed time every second
+    -- Update elapsed time and progress bar every second
     clockTimer = hs.timer.doEvery(1, function()
         if not overlay then return end
         local elapsed = math.floor(hs.timer.secondsSinceEpoch() - recordingStartTime)
         local min = math.floor(elapsed / 60)
         local sec = elapsed % 60
         overlay[EL.timer].text = string.format("%d:%02d", min, sec)
+        updateProgressBar()
     end)
 end
 
@@ -1199,9 +1250,13 @@ local function stopRecordingIndicator()
     if pulseTimer then pulseTimer:stop(); pulseTimer = nil end
     if clockTimer then clockTimer:stop(); clockTimer = nil end
     if overlay then
-        overlay[EL.dot].fillColor = { red = 1, green = 0.15, blue = 0.15, alpha = 0.0 }
-        overlay[EL.timer].textColor = { red = 1, green = 0.4, blue = 0.4, alpha = 0.0 }
-        overlay[EL.timer].text = ""
+        overlay[EL.dot].fillColor   = { red = 1, green = 0.15, blue = 0.15, alpha = 0.0 }
+        overlay[EL.timer].textColor = { red = 1, green = 0.4,  blue = 0.4,  alpha = 0.0 }
+        overlay[EL.timer].text      = ""
+        -- Hide progress bar
+        overlay[EL.bar_bg].fillColor  = { red = 0.3, green = 0.3, blue = 0.3, alpha = 0.0 }
+        overlay[EL.bar_rec].fillColor = { red = 1.0, green = 0.35, blue = 0.15, alpha = 0.0 }
+        overlay[EL.bar_txn].fillColor = { red = 0.2, green = 0.75, blue = 1.0, alpha = 0.0 }
     end
 end
 
@@ -1391,6 +1446,8 @@ local function pipelineReset()
     pipelineTotal      = 0
     pipelineDone       = 0
     pipelineFinalizing = false
+    segChunkCounts     = {}
+    transcribedSecs    = 0
 end
 
 local function pipelineFinalize()
@@ -1409,7 +1466,10 @@ local function onPipelineDone(n, text, detected)
     pipelineResults[n] = text
     if detected and not pipelineLang then pipelineLang = detected end
     pipelineDone = pipelineDone + 1
-    log("pipeline: seg " .. n .. " complete (done=" .. pipelineDone .. "/" .. pipelineTotal .. ")")
+    -- Advance transcription progress bar
+    transcribedSecs = transcribedSecs + (segChunkCounts[n] or 0)
+    log("pipeline: seg " .. n .. " complete (done=" .. pipelineDone .. "/" .. pipelineTotal .. ", txnSecs=" .. transcribedSecs .. ")")
+    if overlay then updateProgressBar() end
     if pipelineFinalizing then
         local left = pipelineTotal - pipelineDone
         if left > 0 then
@@ -1424,6 +1484,7 @@ end
 -- Fully async; multiple segments can run concurrently.
 -- Automatically passes previous segment text as --prompt for semantic continuity.
 local function dispatchSegment(segN, chunkGroup)
+    segChunkCounts[segN] = #chunkGroup  -- remember size for progress bar
     local lang = getLang()
 
     -- Build --prompt: combine user's custom prompt + previous segment text.
