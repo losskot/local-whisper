@@ -1,0 +1,41 @@
+{
+  "schemaVersion": "1.0",
+  "provider": {
+    "id": "copilotide",
+    "name": "VS Code Copilot IDE",
+    "version": "1.0"
+  },
+  "sessionId": "2d125efe-df0d-4cfa-9dc2-b86ee9ffa227",
+  "createdAt": "2026-06-23T03:05:43+02:00",
+  "updatedAt": "1970-01-01T01:00:00+01:00",
+  "slug": "untitled",
+  "workspaceRoot": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "exchanges": [
+    {
+      "exchangeId": "2d125efe-df0d-4cfa-9dc2-b86ee9ffa227-synthetic",
+      "startTime": "2026-06-23T03:05:43+02:00",
+      "messages": [
+        {
+          "timestamp": "2026-06-23T03:05:43+02:00",
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "File editing session"
+            }
+          ]
+        },
+        {
+          "role": "agent",
+          "model": "GitHub Copilot",
+          "content": [
+            {
+              "type": "text",
+              "text": "Performed 1 file operation:\n\nFile editing session (details not available)"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

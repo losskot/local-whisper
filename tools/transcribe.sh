@@ -169,7 +169,9 @@ ext_type() {
         *" $e "*) echo native; return ;;
     esac
     if [[ -n "$FFMPEG_BIN" ]]; then
-        case " $EXTRA_EXTS " in
+        local exts_flat
+        exts_flat=$(echo "$EXTRA_EXTS" | tr '\n' ' ')
+        case " $exts_flat " in
             *" $e "*) echo ffmpeg; return ;;
         esac
     fi
@@ -283,6 +285,7 @@ for input_file in "${QUEUE[@]}"; do
         wav_tmp="${TMPWORK}/$(printf '%06d' "$DONE").wav"
         log "  Converting via ffmpeg → WAV 16 kHz mono…"
         if ! "$FFMPEG_BIN" -hide_banner -loglevel error \
+            -fflags +discardcorrupt \
             -i "$input_file" \
             -ar 16000 -ac 1 -c:a pcm_s16le \
             -y "$wav_tmp" 2>&1; then
