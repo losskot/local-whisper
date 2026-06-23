@@ -7,15 +7,18 @@ Hold **Right Cmd**, speak, release — text appears at your cursor.
 ## Features
 
 - **Hold-to-dictate**: Hold a modifier key to record, release to transcribe and insert
+- **Streaming transcription pipeline**: Long recordings are split into segments and transcribed live *during* recording — when you release the key, only the short tail segment remains, dramatically reducing post-stop latency
+- **Silence-aware splitting**: Segments are cut at natural pauses (lowest-RMS 1s chunk near each boundary) so words and sentences are never split mid-way
+- **Semantic continuity**: Each segment receives the previous segment's transcribed text as `--prompt` context so Whisper's decoder doesn't lose meaning, capitalization, or word choice at boundaries
 - **Voice commands**: Say "voice command note buy coffee" to save a note, "voice command open app Safari" to launch apps, and more — fully customizable
-- **Live preview**: Streaming overlay shows partial transcription while you speak
 - **Recording indicator**: Pulsing red dot and elapsed timer in the overlay
-- **Multi-language**: English, Portuguese, and auto-detect with preferred language fallback
+- **Multi-language**: English, Russian, Ukrainian, and auto-detect
 - **App-aware processing**: Auto-capitalizes in most apps, skips in terminals and code editors
 - **LLM refinement** (optional): Clean up dictated text with a local LLM via [Ollama](https://ollama.com) — fixes punctuation, removes filler words, formats numbered lists
 - **Text post-processing**: Remove filler words (um, uh, hmm), clean whitespace
 - **Custom vocabulary**: Provide a prompt file to improve recognition of domain-specific terms
 - **Auto-stop on silence**: Automatically stops recording after 3 seconds of silence
+- **Warmup probe**: Before every recording, a short ffmpeg probe warms up the audio device; if the device never produces audio within 10 seconds, recording aborts with an error sound
 - **Menu bar**: Waveform icon shows recording status (turns red), click for settings and recent dictations
 - **Recent dictations**: View and re-paste your last 10 dictations from the menu bar
 - **Fully local**: All processing on-device via whisper.cpp — nothing leaves your machine
@@ -143,7 +146,7 @@ Create `~/.local-whisper/prompt` with terms whisper should recognize better:
 Claude, Hammerspoon, whisper.cpp, ffmpeg, macOS, Lua, Anthropic
 ```
 
-This is passed as `--prompt` to whisper-cli for both partial and final transcription. Adding your voice command trigger words here improves recognition.
+This text is passed as `--prompt` to whisper-cli for the first segment of each recording. For subsequent segments the prompt is automatically chained: the previous segment's transcribed text is appended, giving the decoder full sentence context across boundaries. Adding your voice command trigger words here also improves recognition.
 
 ## LLM refinement (optional)
 
@@ -225,14 +228,30 @@ The config auto-reloads when you save the file. For more patterns and examples, 
 
 ```
 Modifier key hold/release (detected by Hammerspoon eventtap)
-  → ffmpeg records chunked WAV segments (1s each)
-  → Partial transcription loop: concat latest chunks → whisper-cli (tiny model)
-  → On release: concat all chunks → final whisper-cli transcription (chosen model)
+  → warmup probe: short ffmpeg run to open the audio device before committing
+  → ffmpeg records chunked WAV segments (1s each) via avfoundation
+  ↓
+  ┌─ every 3s during recording ──────────────────────────────────────────────┐
+  │  streamCheckAndDispatch(): if ≥25s of chunks ready →                     │
+  │    splitAtSilence(): find quietest 1s chunk near boundary (8s lookback)  │
+  │    dispatchSegment(N): concat → whisper-cli (async, runs while recording) │
+  └──────────────────────────────────────────────────────────────────────────┘
+  ↓  (key released)
+  → doFinalTranscription(): dispatch only remaining unchunked audio
+  → each segment uses --prompt from previous segment for semantic continuity
+  → pipelineFinalize(): join results in order when all segments complete
   → Post-processing: remove fillers, capitalize, app-aware adjustments
   → Optional LLM refinement via Ollama (punctuation, formatting, cleanup)
   → Voice command hooks: beforeInsert → actions → text insertion → afterInsert
   → Text inserted at cursor via paste (Cmd+V) or keystroke
 ```
+
+**Latency profile** (60s dictation, large-v3-turbo model, ~0.4× real-time):
+
+| | Before | After |
+|---|---|---|
+| Post-stop wait | ~25 s | ~5 s |
+| Why | All segments transcribed after stop | Only the short tail segment remains |
 
 ## Auto-stop on silence
 
