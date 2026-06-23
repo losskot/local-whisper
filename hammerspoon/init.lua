@@ -1422,9 +1422,28 @@ end
 
 -- Concat chunkGroup → WAV → whisper, then call onPipelineDone(segN, text, lang).
 -- Fully async; multiple segments can run concurrently.
+-- Automatically passes previous segment text as --prompt for semantic continuity.
 local function dispatchSegment(segN, chunkGroup)
-    local lang        = getLang()
-    local promptArgs  = getPromptArgs()
+    local lang = getLang()
+
+    -- Build --prompt: combine user's custom prompt + previous segment text.
+    -- Previous segment text gives Whisper decoder context so it doesn't lose
+    -- meaning or mis-capitalize at segment boundaries.
+    local userPrompt = readFile(PROMPT_FILE):gsub("%s+$", "")
+    local prevText   = (pipelineResults[segN - 1] or ""):sub(-300)  -- last ~300 chars fits ~60 tokens
+    local combined   = ""
+    if userPrompt ~= "" and prevText ~= "" then
+        combined = userPrompt .. " " .. prevText
+    elseif userPrompt ~= "" then
+        combined = userPrompt
+    elseif prevText ~= "" then
+        combined = prevText
+    end
+    local promptArgs = combined ~= "" and { "--prompt", combined } or {}
+    if combined ~= "" then
+        log("pipeline: seg " .. segN .. " prompt context: '" .. combined:sub(1, 80) .. "'")
+    end
+
     local concatFile  = WHISPER_TMP .. "/pipe_concat_" .. segN .. ".txt"
     local segWav      = WHISPER_TMP .. "/pipe_seg_"    .. segN .. ".wav"
 
