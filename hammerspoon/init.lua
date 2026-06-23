@@ -959,10 +959,8 @@ local pulseTimer = nil
 local clockTimer = nil
 local recordingStartTime = 0
 
--- Progress bar state
-local transcribedSecs = 0   -- seconds of audio fully transcribed
-local barMaxSecs      = 180 -- current max duration displayed (expands at 90%)
-local segChunkCounts  = {}  -- [segN] = number of chunks in that segment
+-- Progress bar state (grouped to save local variable slots)
+local barState = { txnSecs = 0, maxSecs = 180, segChunks = {} }
 local pulseAlpha = 1.0
 local pulseFading = true
 
@@ -1188,30 +1186,27 @@ end
 -- Recording indicator (pulsing dot + timer)
 --------------------------------------------------------------------------------
 
-local BAR_X   = 17    -- px from left  (≈4% of 420)
-local BAR_Y   = 103   -- px from top   (≈87% of 118)
-local BAR_H   = 9     -- px height     (≈8% of 118)
-local BAR_MAX = 386   -- px max width  (≈92% of 420)
+local BAR = { x = 17, y = 103, h = 9, max = 386 }  -- absolute px in 420x118 canvas
 
 local function updateProgressBar()
     if not overlay then return end
     local elapsed = hs.timer.secondsSinceEpoch() - recordingStartTime
     -- Auto-expand: when recording reaches 90% of max, extend by another 3 min
-    if elapsed >= barMaxSecs * 0.9 then
-        barMaxSecs = barMaxSecs + 180
-        log("progress bar: expanded to " .. barMaxSecs .. "s")
+    if elapsed >= barState.maxSecs * 0.9 then
+        barState.maxSecs = barState.maxSecs + 180
+        log("progress bar: expanded to " .. barState.maxSecs .. "s")
     end
-    local recFrac = math.min(elapsed / barMaxSecs, 1.0)
-    local txnFrac = math.min(transcribedSecs / barMaxSecs, 1.0)
-    overlay[EL.bar_rec].frame = { x = BAR_X, y = BAR_Y, w = math.max(1, math.floor(recFrac * BAR_MAX)), h = BAR_H }
-    overlay[EL.bar_txn].frame = { x = BAR_X, y = BAR_Y, w = math.max(1, math.floor(txnFrac * BAR_MAX)), h = BAR_H }
+    local recFrac = math.min(elapsed / barState.maxSecs, 1.0)
+    local txnFrac = math.min(barState.txnSecs / barState.maxSecs, 1.0)
+    overlay[EL.bar_rec].frame = { x = BAR.x, y = BAR.y, w = math.max(1, math.floor(recFrac * BAR.max)), h = BAR.h }
+    overlay[EL.bar_txn].frame = { x = BAR.x, y = BAR.y, w = math.max(1, math.floor(txnFrac * BAR.max)), h = BAR.h }
 end
 
 local function startRecordingIndicator()
     if not overlay then return end
     recordingStartTime = hs.timer.secondsSinceEpoch()
-    transcribedSecs = 0
-    barMaxSecs      = 180
+    barState.txnSecs = 0
+    barState.maxSecs = 180
     pulseAlpha = 1.0
     pulseFading = true
     log("startRecordingIndicator: overlay element count = " .. tostring(#overlay))
@@ -1450,8 +1445,8 @@ local function pipelineReset()
     pipelineTotal      = 0
     pipelineDone       = 0
     pipelineFinalizing = false
-    segChunkCounts     = {}
-    transcribedSecs    = 0
+    barState.segChunks = {}
+    barState.txnSecs   = 0
 end
 
 local function pipelineFinalize()
@@ -1471,8 +1466,8 @@ local function onPipelineDone(n, text, detected)
     if detected and not pipelineLang then pipelineLang = detected end
     pipelineDone = pipelineDone + 1
     -- Advance transcription progress bar
-    transcribedSecs = transcribedSecs + (segChunkCounts[n] or 0)
-    log("pipeline: seg " .. n .. " complete (done=" .. pipelineDone .. "/" .. pipelineTotal .. ", txnSecs=" .. transcribedSecs .. ")")
+    barState.txnSecs = barState.txnSecs + (barState.segChunks[n] or 0)
+    log("pipeline: seg " .. n .. " complete (done=" .. pipelineDone .. "/" .. pipelineTotal .. ", txnSecs=" .. barState.txnSecs .. ")")
     if overlay then updateProgressBar() end
     if pipelineFinalizing then
         local left = pipelineTotal - pipelineDone
@@ -1488,7 +1483,7 @@ end
 -- Fully async; multiple segments can run concurrently.
 -- Automatically passes previous segment text as --prompt for semantic continuity.
 local function dispatchSegment(segN, chunkGroup)
-    segChunkCounts[segN] = #chunkGroup  -- remember size for progress bar
+    barState.segChunks[segN] = #chunkGroup  -- remember size for progress bar
     local lang = getLang()
 
     -- Build --prompt: combine user's custom prompt + previous segment text.
