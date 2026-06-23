@@ -806,26 +806,26 @@ local function createOverlay()
         frame = { x = "90%", y = "10%", w = "8%", h = "20%" },
         trackMouseDown = true, trackMouseUp = true, trackMouseEnterExit = true,
     })
-    -- 15: Progress bar background (gray track)
+    -- 15: Progress bar background (gray track) — absolute px: x=17,y=103,w=386,h=9
     overlay:appendElements({
         id = "bar_bg", type = "rectangle", action = "fill",
         roundedRectRadii = { xRadius = 3, yRadius = 3 },
         fillColor = { red = 0.3, green = 0.3, blue = 0.3, alpha = 0.0 },
-        frame = { x = "4%", y = "87%", w = "92%", h = "8%" },
+        frame = { x = 17, y = 103, w = 386, h = 9 },
     })
-    -- 16: Recording progress (red/orange) — filled as recording proceeds
+    -- 16: Recording progress (red/orange)
     overlay:appendElements({
         id = "bar_rec", type = "rectangle", action = "fill",
         roundedRectRadii = { xRadius = 3, yRadius = 3 },
         fillColor = { red = 1.0, green = 0.35, blue = 0.15, alpha = 0.0 },
-        frame = { x = "4%", y = "87%", w = "0%", h = "8%" },
+        frame = { x = 17, y = 103, w = 1, h = 9 },
     })
-    -- 17: Transcription progress (blue/green) — chases the red bar
+    -- 17: Transcription progress (blue/green)
     overlay:appendElements({
         id = "bar_txn", type = "rectangle", action = "fill",
         roundedRectRadii = { xRadius = 3, yRadius = 3 },
         fillColor = { red = 0.2, green = 0.75, blue = 1.0, alpha = 0.0 },
-        frame = { x = "4%", y = "87%", w = "0%", h = "8%" },
+        frame = { x = 17, y = 103, w = 1, h = 9 },
     })
 
     overlay:level(hs.canvas.windowLevels.floating)
@@ -1188,24 +1188,23 @@ end
 -- Recording indicator (pulsing dot + timer)
 --------------------------------------------------------------------------------
 
+local BAR_X   = 17    -- px from left  (≈4% of 420)
+local BAR_Y   = 103   -- px from top   (≈87% of 118)
+local BAR_H   = 9     -- px height     (≈8% of 118)
+local BAR_MAX = 386   -- px max width  (≈92% of 420)
+
 local function updateProgressBar()
     if not overlay then return end
     local elapsed = hs.timer.secondsSinceEpoch() - recordingStartTime
     -- Auto-expand: when recording reaches 90% of max, extend by another 3 min
     if elapsed >= barMaxSecs * 0.9 then
         barMaxSecs = barMaxSecs + 180
+        log("progress bar: expanded to " .. barMaxSecs .. "s")
     end
-    -- Bar occupies 92% of canvas width starting at x=4%
     local recFrac = math.min(elapsed / barMaxSecs, 1.0)
     local txnFrac = math.min(transcribedSecs / barMaxSecs, 1.0)
-    overlay[EL.bar_rec].frame = {
-        x = "4%", y = "87%", h = "8%",
-        w = string.format("%.4f%%", recFrac * 92),
-    }
-    overlay[EL.bar_txn].frame = {
-        x = "4%", y = "87%", h = "8%",
-        w = string.format("%.4f%%", txnFrac * 92),
-    }
+    overlay[EL.bar_rec].frame = { x = BAR_X, y = BAR_Y, w = math.max(1, math.floor(recFrac * BAR_MAX)), h = BAR_H }
+    overlay[EL.bar_txn].frame = { x = BAR_X, y = BAR_Y, w = math.max(1, math.floor(txnFrac * BAR_MAX)), h = BAR_H }
 end
 
 local function startRecordingIndicator()
@@ -1215,6 +1214,7 @@ local function startRecordingIndicator()
     barMaxSecs      = 180
     pulseAlpha = 1.0
     pulseFading = true
+    log("startRecordingIndicator: overlay element count = " .. tostring(#overlay))
 
     -- Show dot and timer
     overlay[EL.dot].fillColor = { red = 1, green = 0.15, blue = 0.15, alpha = 1.0 }
@@ -1222,8 +1222,9 @@ local function startRecordingIndicator()
 
     -- Show progress bar track
     overlay[EL.bar_bg].fillColor  = { red = 0.3, green = 0.3, blue = 0.3,  alpha = 0.6 }
-    overlay[EL.bar_rec].fillColor = { red = 1.0, green = 0.35, blue = 0.15, alpha = 0.8 }
-    overlay[EL.bar_txn].fillColor = { red = 0.2, green = 0.75, blue = 1.0, alpha = 0.9 }
+    overlay[EL.bar_rec].fillColor = { red = 1.0, green = 0.35, blue = 0.15, alpha = 0.85 }
+    overlay[EL.bar_txn].fillColor = { red = 0.2, green = 0.75, blue = 1.0,  alpha = 0.9 }
+    log("startRecordingIndicator: bar_bg idx=" .. EL.bar_bg .. " bar_rec idx=" .. EL.bar_rec)
 
     -- Pulse the red dot
     pulseTimer = hs.timer.doEvery(0.05, function()
