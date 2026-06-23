@@ -753,15 +753,15 @@ local function createOverlay()
     -- 8: Model
     overlay:appendElements({
         id = "model", type = "text", text = getModelName(),
-        textColor = btnColor, textSize = 11,
-        frame = { x = "36%", y = "6%", w = "20%", h = "25%" },
+        textColor = btnColor, textSize = 10,
+        frame = { x = "36%", y = "6%", w = "33%", h = "25%" },
         trackMouseUp = true, trackMouseEnterExit = true,
     })
     -- 9: Separator
     overlay:appendElements({
         id = "sep4", type = "text", text = "|",
         textColor = sepColor, textSize = 11,
-        frame = { x = "54%", y = "6%", w = "2%", h = "25%" },
+        frame = { x = "70%", y = "6%", w = "2%", h = "25%" },
     })
     -- 10: LLM refine toggle
     overlay:appendElements({
@@ -769,7 +769,7 @@ local function createOverlay()
         text = (getRefineMode() and hasOllama()) and "refine ✓" or "refine ✗",
         textColor = (getRefineMode() and hasOllama()) and CLR.refineOn or CLR.refineOff,
         textSize = 11,
-        frame = { x = "57%", y = "6%", w = "18%", h = "25%" },
+        frame = { x = "73%", y = "6%", w = "15%", h = "25%" },
         trackMouseUp = true, trackMouseEnterExit = true,
     })
     -- 11: Transcript text
@@ -1192,7 +1192,9 @@ local function updateProgressBar()
     end
     local recFrac = math.min(elapsed / barState.maxSecs, 1.0)
     local txnFrac = math.min(barState.txnSecs / barState.maxSecs, 1.0)
-    overlay[EL.bar_rec].frame = { x = BAR.x, y = BAR.y, w = math.max(1, math.floor(recFrac * BAR.max)), h = BAR.h }
+    if not barState.frozen then
+        overlay[EL.bar_rec].frame = { x = BAR.x, y = BAR.y, w = math.max(1, math.floor(recFrac * BAR.max)), h = BAR.h }
+    end
     overlay[EL.bar_txn].frame = { x = BAR.x, y = BAR.y, w = math.max(1, math.floor(txnFrac * BAR.max)), h = BAR.h }
 end
 
@@ -1201,6 +1203,7 @@ local function startRecordingIndicator()
     recordingStartTime = hs.timer.secondsSinceEpoch()
     barState.txnSecs = 0
     barState.maxSecs = 180
+    barState.frozen  = false
     pulseAlpha = 1.0
     pulseFading = true
     log("startRecordingIndicator: overlay element count = " .. tostring(#overlay))
@@ -1246,11 +1249,17 @@ local function stopRecordingIndicator()
         overlay[EL.dot].fillColor   = { red = 1, green = 0.15, blue = 0.15, alpha = 0.0 }
         overlay[EL.timer].textColor = { red = 1, green = 0.4,  blue = 0.4,  alpha = 0.0 }
         overlay[EL.timer].text      = ""
-        -- Hide progress bar
-        overlay[EL.bar_bg].fillColor  = { red = 0.3, green = 0.3, blue = 0.3, alpha = 0.0 }
-        overlay[EL.bar_rec].fillColor = { red = 1.0, green = 0.35, blue = 0.15, alpha = 0.0 }
-        overlay[EL.bar_txn].fillColor = { red = 0.2, green = 0.75, blue = 1.0, alpha = 0.0 }
+        -- Freeze orange bar at current position; keep bars visible for
+        -- transcription progress (bars hidden when overlay is deleted)
+        barState.frozen = true
     end
+end
+
+local function hideProgressBar()
+    if not overlay then return end
+    overlay[EL.bar_bg].fillColor  = { red = 0.3, green = 0.3, blue = 0.3, alpha = 0.0 }
+    overlay[EL.bar_rec].fillColor = { red = 1.0, green = 0.35, blue = 0.15, alpha = 0.0 }
+    overlay[EL.bar_txn].fillColor = { red = 0.2, green = 0.75, blue = 1.0, alpha = 0.0 }
 end
 
 --------------------------------------------------------------------------------
@@ -1441,6 +1450,7 @@ local function pipelineReset()
     pipelineFinalizing = false
     barState.segChunks = {}
     barState.txnSecs   = 0
+    barState.frozen    = false
 end
 
 local function pipelineFinalize()
@@ -1451,7 +1461,11 @@ local function pipelineFinalize()
     end
     local finalText = table.concat(parts, " "):gsub("^%s+", ""):gsub("%s+$", ""):gsub("%s+", " ")
     log("pipeline: finalized " .. pipelineTotal .. " seg(s): '" .. finalText:sub(1, 120) .. "'")
-    if finalText == "" then hideOverlay(); return end
+    if finalText == "" then hideProgressBar(); hideOverlay(); return end
+    -- Show blue bar at 100% briefly before inserting
+    barState.txnSecs = barState.maxSecs
+    if overlay then updateProgressBar() end
+    hs.timer.doAfter(0.4, function() hideProgressBar() end)
     insertTranscribedText(finalText, pipelineLang)
 end
 
