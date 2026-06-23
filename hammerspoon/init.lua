@@ -79,15 +79,9 @@ local LOG_FILE = WHISPER_TMP .. "/whisper-dictate.log"
 local ACTIONS_FILE = HOME .. "/.hammerspoon/local_whisper_actions.lua"
 
 -- Auto-stop on silence
-local AUTO_STOP_SILENCE_SECONDS = 3
-local AUTO_STOP_THRESHOLD_DB = -40
 
--- LLM refinement (requires Ollama)
-local REFINE_FILE = CONFIG_DIR .. "/refine"
 local REFINE_PROMPT_FILE = CONFIG_DIR .. "/refine_prompt"
 local REFINE_MODEL_FILE = CONFIG_DIR .. "/refine_model"
-local REFINE_DEFAULT_MODEL = "gemma3:4b"
-local REFINE_MIN_CHARS = 50  -- skip refinement for short text
 local REFINE_DEFAULT_PROMPT = "You are a text cleanup tool. Output ONLY the cleaned text, nothing else. Fix punctuation and capitalization. Remove ONLY filler words like um, uh, you know, I mean. Do NOT remove sentences or meaningful content. When the text lists sequential items using first/second/third or one/two/three, convert them into a numbered list with each item on a new line. NEVER add commentary or preamble. Just output the cleaned text."
 
 local function getRefineModel()
@@ -96,7 +90,7 @@ local function getRefineModel()
         local val = f:read("*a"):gsub("%s+", ""); f:close()
         if val ~= "" then return val end
     end
-    return REFINE_DEFAULT_MODEL
+    return "gemma3:4b"
 end
 
 local function getRefinePrompt()
@@ -135,8 +129,6 @@ local function cycleRefine()
 end
 
 -- Timing
-local PARTIAL_INTERVAL = 2.0   -- seconds between partial transcriptions
-local OVERLAY_LINGER = 0.5     -- seconds to show final text before closing
 
 -- Known whisper hallucinations on silence/short audio
 local HALLUCINATIONS = {
@@ -279,7 +271,7 @@ local function postProcess(text, appBundleID)
 end
 
 local function refineWithOllama(text, callback)
-    if not getRefineMode() or not hasOllama() or #text < REFINE_MIN_CHARS then
+    if not getRefineMode() or not hasOllama() or #text < 50 then
         callback(text)
         return
     end
@@ -677,21 +669,23 @@ local btnHover = { red = 0.7, green = 0.9, blue = 1.0, alpha = 1.0 }
 -- Element indices: 1=bg, 2=lang, 3=sep1, 4=output, 5=sep2, 6=enter, 7=sep3, 8=model, 9=sep4, 10=refine, 11=text, 12=dot, 13=timer, 14=close, 15=bar_bg, 16=bar_rec, 17=bar_txn
 local EL = { lang = 2, output = 4, enter = 6, model = 8, refine = 10, text = 11, dot = 12, timer = 13, close = 14, bar_bg = 15, bar_rec = 16, bar_txn = 17 }
 
-local enterOnColor = { red = 0.3, green = 1.0, blue = 0.3, alpha = 1.0 }
-local enterOffColor = { red = 0.5, green = 0.5, blue = 0.5, alpha = 0.5 }
-local refineOnColor = { red = 0.4, green = 0.8, blue = 1.0, alpha = 1.0 }
-local refineOffColor = { red = 0.5, green = 0.5, blue = 0.5, alpha = 0.5 }
+local CLR = {
+    enterOn  = { red = 0.3, green = 1.0, blue = 0.3, alpha = 1.0 },
+    enterOff = { red = 0.5, green = 0.5, blue = 0.5, alpha = 0.5 },
+    refineOn = { red = 0.4, green = 0.8, blue = 1.0, alpha = 1.0 },
+    refineOff = { red = 0.5, green = 0.5, blue = 0.5, alpha = 0.5 },
+}
 
 local function refreshOverlayLabels()
     if not overlay then return end
     overlay[EL.lang].text = getLang():upper()
     overlay[EL.output].text = getOutputMode():upper()
     overlay[EL.enter].text = "⏎"
-    overlay[EL.enter].textColor = getEnterMode() and enterOnColor or enterOffColor
+    overlay[EL.enter].textColor = getEnterMode() and CLR.enterOn or CLR.enterOff
     overlay[EL.model].text = getModelName()
     local refineOn = getRefineMode() and hasOllama()
     overlay[EL.refine].text = refineOn and "refine ✓" or "refine ✗"
-    overlay[EL.refine].textColor = refineOn and refineOnColor or refineOffColor
+    overlay[EL.refine].textColor = refineOn and CLR.refineOn or CLR.refineOff
 end
 
 local function createOverlay()
@@ -745,7 +739,7 @@ local function createOverlay()
     -- 6: Enter mode (⏎ green=on, gray=off)
     overlay:appendElements({
         id = "enter", type = "text", text = "⏎",
-        textColor = getEnterMode() and enterOnColor or enterOffColor, textSize = 11,
+        textColor = getEnterMode() and CLR.enterOn or CLR.enterOff, textSize = 11,
         frame = { x = "29%", y = "6%", w = "5%", h = "25%" },
         trackMouseUp = true, trackMouseEnterExit = true,
     })
@@ -772,7 +766,7 @@ local function createOverlay()
     overlay:appendElements({
         id = "refine", type = "text",
         text = (getRefineMode() and hasOllama()) and "refine ✓" or "refine ✗",
-        textColor = (getRefineMode() and hasOllama()) and refineOnColor or refineOffColor,
+        textColor = (getRefineMode() and hasOllama()) and CLR.refineOn or CLR.refineOff,
         textSize = 11,
         frame = { x = "57%", y = "6%", w = "18%", h = "25%" },
         trackMouseUp = true, trackMouseEnterExit = true,
@@ -882,9 +876,9 @@ local function createOverlay()
             if id == "close" then
                 canvas[idx].textColor = { red = 1, green = 0.3, blue = 0.3, alpha = 1 }
             elseif id == "enter" then
-                canvas[idx].textColor = enterOnColor
+                canvas[idx].textColor = CLR.enterOn
             elseif id == "refine" then
-                canvas[idx].textColor = refineOnColor
+                canvas[idx].textColor = CLR.refineOn
             else
                 canvas[idx].textColor = btnHover
             end
@@ -895,9 +889,9 @@ local function createOverlay()
             if id == "close" then
                 canvas[idx].textColor = { red = 1, green = 1, blue = 1, alpha = 0.5 }
             elseif id == "enter" then
-                canvas[idx].textColor = getEnterMode() and enterOnColor or enterOffColor
+                canvas[idx].textColor = getEnterMode() and CLR.enterOn or CLR.enterOff
             elseif id == "refine" then
-                canvas[idx].textColor = (getRefineMode() and hasOllama()) and refineOnColor or refineOffColor
+                canvas[idx].textColor = (getRefineMode() and hasOllama()) and CLR.refineOn or CLR.refineOff
             else
                 canvas[idx].textColor = btnColor
             end
@@ -968,7 +962,6 @@ local pulseFading = true
 local lastInsertedText = nil
 
 -- Recent dictations (newest first, max 10)
-local MAX_RECENT = 10
 
 local recentDictations = {}
 
@@ -1391,7 +1384,7 @@ local function finishInsertion(text, detectedLang)
         inserted = ctx.inserted,
         app = capturedAppName or "?",
     })
-    while #recentDictations > MAX_RECENT do
+    while #recentDictations > 10 do
         table.remove(recentDictations)
     end
     saveRecentDictations()
@@ -1400,7 +1393,7 @@ local function finishInsertion(text, detectedLang)
     if detectedLang then display = display .. " [" .. detectedLang:upper() .. "]" end
     setOverlayText(display)
     hs.sound.getByFile("/System/Library/Sounds/Glass.aiff"):play()
-    hs.timer.doAfter(OVERLAY_LINGER, hideOverlay)
+    hs.timer.doAfter(0.5, hideOverlay)
 end
 
 -- Insert transcribed text at cursor, with post-processing, optional LLM refinement, and action hooks
@@ -1418,7 +1411,7 @@ local function insertTranscribedText(text, detectedLang)
     local isVoiceCommand = text:lower():match("voice%s+command")
 
     -- Optional LLM refinement (async, skips short text and voice commands)
-    if not isVoiceCommand and getRefineMode() and #text >= REFINE_MIN_CHARS then
+    if not isVoiceCommand and getRefineMode() and #text >= 50 then
         setOverlayText("Refining...")
         refineWithOllama(text, function(refined)
             finishInsertion(refined, detectedLang)
@@ -1431,7 +1424,7 @@ end
 -- Max seconds per whisper call — must stay BELOW whisper's 30s internal window.
 -- Exceeding 30s forces a window boundary crossing where the model reliably drops
 -- 5-10s of content at the seam. 25s gives a safe margin inside one window.
-local FINAL_SEGMENT_SECS = 25
+
 
 --------------------------------------------------------------------------------
 -- Transcription pipeline (streaming during recording + finalization at stop)
@@ -1564,15 +1557,15 @@ local function streamCheckAndDispatch()
     if not isRecording then return end
     local allChunks = getChunkFiles()
     local safeCount = #allChunks - 2  -- leave last 2 chunks (still being written)
-    if safeCount < pipelineNextChunk + FINAL_SEGMENT_SECS - 2 then return end
+    if safeCount < pipelineNextChunk + 25 - 2 then return end
 
     local candidates = {}
     for j = pipelineNextChunk, safeCount do
         table.insert(candidates, allChunks[j])
     end
-    if #candidates < FINAL_SEGMENT_SECS then return end
+    if #candidates < 25 then return end
 
-    local groups     = splitAtSilence(candidates, FINAL_SEGMENT_SECS)
+    local groups     = splitAtSilence(candidates, 25)
     local firstGroup = groups[1]
     if not firstGroup or #firstGroup < 15 then return end  -- too short to bother
 
@@ -1607,7 +1600,7 @@ local function doFinalTranscription()
 
     -- Dispatch remaining chunks as final pipeline segments
     if #remaining >= 2 then
-        local finalGroups = splitAtSilence(remaining, FINAL_SEGMENT_SECS)
+        local finalGroups = splitAtSilence(remaining, 25)
         for _, grp in ipairs(finalGroups) do
             local gfirst = grp[1]:match("([^/]+)$") or grp[1]
             local glast  = grp[#grp]:match("([^/]+)$") or grp[#grp]
@@ -1664,11 +1657,11 @@ local function checkSilence()
         local maxVol = (err or ""):match("max_volume:%s*([-%.%d]+)")
         if maxVol then
             maxVol = tonumber(maxVol)
-            if maxVol and maxVol < AUTO_STOP_THRESHOLD_DB then
+            if maxVol and maxVol < -40 then
                 silentChunkCount = silentChunkCount + 1
                 log("silence: chunk " .. completed .. " vol=" .. maxVol .. "dB (count=" .. silentChunkCount .. ")")
-                if silentChunkCount >= AUTO_STOP_SILENCE_SECONDS then
-                    log("auto-stop: " .. AUTO_STOP_SILENCE_SECONDS .. "s of silence")
+                if silentChunkCount >= 3 then
+                    log("auto-stop: " .. 3 .. "s of silence")
                     stopRecording()
                 end
             else
@@ -1688,8 +1681,6 @@ local warmupTask = nil
 local warmupTimer = nil
 local isWarmingUp = false
 local warmupAttempt = 0
-local WARMUP_ATTEMPT_SECS = 1.0   -- timeout per attempt
-local WARMUP_MAX_ATTEMPTS = 10    -- give up after this many retries
 
 local function startActualRecording()
     isWarmingUp = false
@@ -1774,11 +1765,11 @@ tryWarmup = function()
     if not isWarmingUp then return end
 
     warmupAttempt = warmupAttempt + 1
-    log("warmup: attempt " .. warmupAttempt .. "/" .. WARMUP_MAX_ATTEMPTS)
+    log("warmup: attempt " .. warmupAttempt .. "/" .. 10)
 
     -- Subtle tick before each attempt
     if warmupTick then warmupTick:play() end
-    setOverlayText("... " .. warmupAttempt .. "/" .. WARMUP_MAX_ATTEMPTS)
+    setOverlayText("... " .. warmupAttempt .. "/" .. 10)
 
     warmupTask = hs.task.new(FFMPEG,
         function(code)  -- termination callback
@@ -1800,20 +1791,20 @@ tryWarmup = function()
     warmupTask:start()
 
     -- If no response within 1s, kill and retry (up to max)
-    warmupTimer = hs.timer.doAfter(WARMUP_ATTEMPT_SECS, function()
+    warmupTimer = hs.timer.doAfter(1.0, function()
         warmupTimer = nil
         if not isWarmingUp then return end
         if warmupTask and warmupTask:isRunning() then
             warmupTask:interrupt(); warmupTask = nil
         end
-        if warmupAttempt < WARMUP_MAX_ATTEMPTS then
+        if warmupAttempt < 10 then
             log("warmup: no response, retrying...")
             tryWarmup()
         else
             -- All attempts exhausted — signal error, do NOT record
             isWarmingUp = false
             warmupAttempt = 0
-            log("warmup: FAILED after " .. WARMUP_MAX_ATTEMPTS .. " attempts — audio device unresponsive")
+            log("warmup: FAILED after " .. 10 .. " attempts — audio device unresponsive")
             setOverlayText("Микрофон недоступен")
             hs.sound.getByFile("/System/Library/Sounds/Basso.aiff"):play()
             hs.timer.doAfter(2.5, hideOverlay)
@@ -1874,8 +1865,7 @@ end
 --------------------------------------------------------------------------------
 
 -- Map trigger key to generic modifier name for polling
-local GENERIC_MOD = { rightAlt = "alt", rightCmd = "cmd", rightCtrl = "ctrl" }
-local genericMod = GENERIC_MOD[TRIGGER_KEY]
+local genericMod = ({ rightAlt = "alt", rightCmd = "cmd", rightCtrl = "ctrl" })[TRIGGER_KEY]
 
 local releasePoller = nil
 
