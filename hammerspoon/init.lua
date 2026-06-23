@@ -811,21 +811,21 @@ local function createOverlay()
         id = "bar_bg", type = "rectangle", action = "fill",
         roundedRectRadii = { xRadius = 3, yRadius = 3 },
         fillColor = { red = 0.3, green = 0.3, blue = 0.3, alpha = 0.0 },
-        frame = { x = 0.04, y = 0.87, w = 0.92, h = 0.08 },
+        frame = { x = "4%", y = "87%", w = "92%", h = "8%" },
     })
     -- 16: Recording progress (red/orange) — filled as recording proceeds
     overlay:appendElements({
         id = "bar_rec", type = "rectangle", action = "fill",
         roundedRectRadii = { xRadius = 3, yRadius = 3 },
         fillColor = { red = 1.0, green = 0.35, blue = 0.15, alpha = 0.0 },
-        frame = { x = 0.04, y = 0.87, w = 0.0, h = 0.08 },
+        frame = { x = "4%", y = "87%", w = "0%", h = "8%" },
     })
     -- 17: Transcription progress (blue/green) — chases the red bar
     overlay:appendElements({
         id = "bar_txn", type = "rectangle", action = "fill",
         roundedRectRadii = { xRadius = 3, yRadius = 3 },
         fillColor = { red = 0.2, green = 0.75, blue = 1.0, alpha = 0.0 },
-        frame = { x = 0.04, y = 0.87, w = 0.0, h = 0.08 },
+        frame = { x = "4%", y = "87%", w = "0%", h = "8%" },
     })
 
     overlay:level(hs.canvas.windowLevels.floating)
@@ -1195,14 +1195,17 @@ local function updateProgressBar()
     if elapsed >= barMaxSecs * 0.9 then
         barMaxSecs = barMaxSecs + 180
     end
-    local BAR_X   = 0.04   -- left edge (4% of canvas width)
-    local BAR_MAX = 0.92   -- available width (92% of canvas)
-    local BAR_Y   = 0.87   -- top of bar (87% down)
-    local BAR_H   = 0.08   -- bar height (8% of canvas height)
+    -- Bar occupies 92% of canvas width starting at x=4%
     local recFrac = math.min(elapsed / barMaxSecs, 1.0)
     local txnFrac = math.min(transcribedSecs / barMaxSecs, 1.0)
-    overlay[EL.bar_rec].frame = { x = BAR_X, y = BAR_Y, w = recFrac * BAR_MAX, h = BAR_H }
-    overlay[EL.bar_txn].frame = { x = BAR_X, y = BAR_Y, w = txnFrac * BAR_MAX, h = BAR_H }
+    overlay[EL.bar_rec].frame = {
+        x = "4%", y = "87%", h = "8%",
+        w = string.format("%.4f%%", recFrac * 92),
+    }
+    overlay[EL.bar_txn].frame = {
+        x = "4%", y = "87%", h = "8%",
+        w = string.format("%.4f%%", txnFrac * 92),
+    }
 end
 
 local function startRecordingIndicator()
