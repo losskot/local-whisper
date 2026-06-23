@@ -920,6 +920,16 @@ local partialTimer = nil
 local partialBusy = false
 local lastChunkCount = 0
 
+-- Streaming transcription pipeline state (reset each recording session)
+local pipelineResults    = {}     -- [seg_n] = text, filled as each segment completes
+local pipelineLang       = nil    -- first detected language across all segments
+local pipelineNextChunk  = 1      -- 1-based index of next chunk not yet claimed by pipeline
+local pipelineNextSeg    = 1      -- next segment number to assign (1-indexed)
+local pipelineTotal      = 0      -- total segments expected (fixed when recording stops)
+local pipelineDone       = 0      -- segments completed so far
+local pipelineFinalizing = false  -- true once we know the final total (recording stopped)
+local streamTimer        = nil    -- fires every 3s during recording to dispatch ready segments
+
 -- Menu bar
 local menuBar = nil
 
@@ -1204,12 +1214,14 @@ function emergencyStop()
     isRecording = false
     if partialTimer then partialTimer:stop(); partialTimer = nil end
     if silenceTimer then silenceTimer:stop(); silenceTimer = nil end
+    if streamTimer  then streamTimer:stop();  streamTimer  = nil end
     stopRecordingIndicator()
     if ffmpegTask and ffmpegTask:isRunning() then ffmpegTask:interrupt() end
     ffmpegTask = nil
     partialBusy = false
     silentChunkCount = 0
     lastCheckedChunk = 0
+    pipelineReset()
     forceHideOverlay()
     updateMenuBar()
     os.execute("killall whisper-cli 2>/dev/null")
@@ -1367,18 +1379,149 @@ end
 -- 5-10s of content at the seam. 25s gives a safe margin inside one window.
 local FINAL_SEGMENT_SECS = 25
 
-local function doFinalTranscription()
+--------------------------------------------------------------------------------
+-- Transcription pipeline (streaming during recording + finalization at stop)
+--------------------------------------------------------------------------------
+
+local function pipelineReset()
+    pipelineResults    = {}
+    pipelineLang       = nil
+    pipelineNextChunk  = 1
+    pipelineNextSeg    = 1
+    pipelineTotal      = 0
+    pipelineDone       = 0
+    pipelineFinalizing = false
+end
+
+local function pipelineFinalize()
+    local parts = {}
+    for n = 1, pipelineTotal do
+        local t = pipelineResults[n] or ""
+        if t ~= "" then table.insert(parts, t) end
+    end
+    local finalText = table.concat(parts, " "):gsub("^%s+", ""):gsub("%s+$", ""):gsub("%s+", " ")
+    log("pipeline: finalized " .. pipelineTotal .. " seg(s): '" .. finalText:sub(1, 120) .. "'")
+    if finalText == "" then hideOverlay(); return end
+    insertTranscribedText(finalText, pipelineLang)
+end
+
+local function onPipelineDone(n, text, detected)
+    pipelineResults[n] = text
+    if detected and not pipelineLang then pipelineLang = detected end
+    pipelineDone = pipelineDone + 1
+    log("pipeline: seg " .. n .. " complete (done=" .. pipelineDone .. "/" .. pipelineTotal .. ")")
+    if pipelineFinalizing then
+        local left = pipelineTotal - pipelineDone
+        if left > 0 then
+            setOverlayText(string.format("Transcribing... (%d left)", left))
+        else
+            pipelineFinalize()
+        end
+    end
+end
+
+-- Concat chunkGroup → WAV → whisper, then call onPipelineDone(segN, text, lang).
+-- Fully async; multiple segments can run concurrently.
+local function dispatchSegment(segN, chunkGroup)
+    local lang        = getLang()
+    local promptArgs  = getPromptArgs()
+    local concatFile  = WHISPER_TMP .. "/pipe_concat_" .. segN .. ".txt"
+    local segWav      = WHISPER_TMP .. "/pipe_seg_"    .. segN .. ".wav"
+
+    local f, ferr = io.open(concatFile, "w")
+    if not f then
+        log("pipeline: seg " .. segN .. " ERROR opening concat file: " .. tostring(ferr))
+        onPipelineDone(segN, "", nil)
+        return
+    end
+    for _, chunk in ipairs(chunkGroup) do f:write("file '" .. chunk .. "'\n") end
+    f:close()
+
+    log("pipeline: seg " .. segN .. " concat → " .. segWav .. " (" .. #chunkGroup .. " chunks)")
+    local concatTask = hs.task.new(FFMPEG, function(code)
+        if code ~= 0 then
+            log("pipeline: seg " .. segN .. " concat FAILED (code=" .. tostring(code) .. ")")
+            onPipelineDone(segN, "", nil); return
+        end
+        log("pipeline: seg " .. segN .. " concat OK (" .. ((hs.fs.attributes(segWav) or {}).size or -1) .. " bytes), starting whisper lang=" .. lang)
+
+        local function onWhisperDone(rawOut, detected)
+            local clean = rawOut:gsub("^%s+", ""):gsub("%s+$", ""):gsub("%s+", " ")
+            if isHallucination(clean) then
+                log("pipeline: seg " .. segN .. " REJECTED (hallucination)")
+                clean = ""
+            else
+                log("pipeline: seg " .. segN .. " accepted text (" .. #clean .. " chars): '" .. clean:sub(1, 80) .. "'")
+            end
+            onPipelineDone(segN, clean, detected)
+        end
+
+        if lang == "auto" then
+            local args = { "-m", getModelPath(), "-f", segWav, "-l", "auto", "-nt" }
+            for _, a in ipairs(promptArgs) do table.insert(args, a) end
+            hs.task.new(WHISPER_BIN, function(code2, out2, err2)
+                log("pipeline: seg " .. segN .. " whisper(auto) exit=" .. tostring(code2))
+                if code2 ~= 0 then onPipelineDone(segN, "", nil); return end
+                local detected = (err2 or ""):match("auto%-detected language:%s*(%w+)")
+                log("pipeline: seg " .. segN .. " auto-detected: " .. tostring(detected))
+                onWhisperDone(out2 or "", detected)
+            end, args):start()
+        else
+            local args = { "-m", getModelPath(), "-f", segWav, "-l", lang, "-nt", "--no-prints" }
+            for _, a in ipairs(promptArgs) do table.insert(args, a) end
+            hs.task.new(WHISPER_BIN, function(code2, out2)
+                log("pipeline: seg " .. segN .. " whisper(" .. lang .. ") exit=" .. tostring(code2))
+                if code2 ~= 0 then onPipelineDone(segN, "", nil); return end
+                onWhisperDone(out2 or "", lang)
+            end, args):start()
+        end
+    end, { "-y", "-f", "concat", "-safe", "0", "-i", concatFile, "-c", "copy", segWav })
+    concatTask:start()
+end
+
+-- Fired every 3s during recording. Dispatches a segment when enough chunks
+-- have accumulated and the silence-aware split gives a meaningful group.
+local function streamCheckAndDispatch()
+    if not isRecording then return end
+    local allChunks = getChunkFiles()
+    local safeCount = #allChunks - 2  -- leave last 2 chunks (still being written)
+    if safeCount < pipelineNextChunk + FINAL_SEGMENT_SECS - 2 then return end
+
+    local candidates = {}
+    for j = pipelineNextChunk, safeCount do
+        table.insert(candidates, allChunks[j])
+    end
+    if #candidates < FINAL_SEGMENT_SECS then return end
+
+    local groups     = splitAtSilence(candidates, FINAL_SEGMENT_SECS)
+    local firstGroup = groups[1]
+    if not firstGroup or #firstGroup < 15 then return end  -- too short to bother
+
+    local segN = pipelineNextSeg
+    pipelineNextSeg    = pipelineNextSeg    + 1
+    pipelineNextChunk  = pipelineNextChunk  + #firstGroup
+    log("stream: dispatching seg " .. segN .. " (" .. #firstGroup .. " chunks, live during recording)")
+    dispatchSegment(segN, firstGroup)
+end
     local chunks = getChunkFiles()
 
-    -- ДИАГНОСТИКА: логируем все чанки и состояние
-    log("final: START — total chunks=" .. #chunks .. ", partialBusy=" .. tostring(partialBusy))
-    if #chunks > 0 then
-        local first = chunks[1]:match("([^/]+)$") or chunks[1]
-        local last  = chunks[#chunks]:match("([^/]+)$") or chunks[#chunks]
-        log("final: first=" .. first .. "  last=" .. last .. "  duration≈" .. #chunks .. "s")
+end
+
+local function doFinalTranscription()
+    if streamTimer then streamTimer:stop(); streamTimer = nil end
+
+    local allChunks = getChunkFiles()
+    log("final: START — total chunks=" .. #allChunks
+        .. ", streamed=" .. (pipelineNextSeg - 1) .. " segs"
+        .. " (next unclaimed chunk idx=" .. pipelineNextChunk .. ")")
+
+    -- Build remaining chunks not yet claimed by the streaming pipeline
+    local remaining = {}
+    for j = pipelineNextChunk, #allChunks do
+        table.insert(remaining, allChunks[j])
     end
 
-    if #chunks < 2 then
+    if pipelineNextSeg == 1 and #remaining < 2 then
         log("final: not enough chunks, skipping")
         hideOverlay()
         return
@@ -1386,137 +1529,40 @@ local function doFinalTranscription()
 
     setOverlayText("Transcribing...")
 
-    local lang = getLang()
-    local preferred = getPreferredLangs()
-    local promptArgs = getPromptArgs()
-
-    -- Split chunks at natural silence boundaries near FINAL_SEGMENT_SECS.
-    -- splitAtSilence reads WAV RMS directly (no subprocess) and prefers cutting
-    -- at the quietest 1-second chunk within the last 8s of each window.
-    local segmentGroups = splitAtSilence(chunks, FINAL_SEGMENT_SECS)
-
-    local totalSegs = #segmentGroups
-    log("final: segments=" .. totalSegs .. " (FINAL_SEGMENT_SECS=" .. FINAL_SEGMENT_SECS .. ")")
-    for si, grp in ipairs(segmentGroups) do
-        local gfirst = grp[1]:match("([^/]+)$") or grp[1]
-        local glast  = grp[#grp]:match("([^/]+)$") or grp[#grp]
-        log("final: seg " .. si .. " → " .. #grp .. " chunks (" .. gfirst .. " … " .. glast .. ")")
+    -- Dispatch remaining chunks as final pipeline segments
+    if #remaining >= 2 then
+        local finalGroups = splitAtSilence(remaining, FINAL_SEGMENT_SECS)
+        for _, grp in ipairs(finalGroups) do
+            local gfirst = grp[1]:match("([^/]+)$") or grp[1]
+            local glast  = grp[#grp]:match("([^/]+)$") or grp[#grp]
+            local segN = pipelineNextSeg
+            pipelineNextSeg   = pipelineNextSeg   + 1
+            pipelineNextChunk = pipelineNextChunk + #grp
+            log("final: dispatching seg " .. segN .. " → " .. #grp .. " chunks (" .. gfirst .. " … " .. glast .. ")")
+            dispatchSegment(segN, grp)
+        end
     end
 
-    local allTexts = {}
-    local detectedLangOverall = nil
-    local segIdx = 0
+    -- Fix the total and start finalization mode
+    pipelineTotal      = pipelineNextSeg - 1
+    pipelineFinalizing = true
+    log("final: pipelineTotal=" .. pipelineTotal .. ", pipelineDone=" .. pipelineDone)
 
-    local function finishAll()
-        log("final: finishAll — collected " .. #allTexts .. " text segment(s)")
-        local finalText = table.concat(allTexts, " "):gsub("^%s+", ""):gsub("%s+$", ""):gsub("%s+", " ")
-        log("final combined (" .. totalSegs .. " seg(s)): '" .. finalText .. "'")
-        if finalText == "" then
-            hideOverlay()
-            return
-        end
-        insertTranscribedText(finalText, detectedLangOverall)
+    if pipelineTotal == 0 then
+        log("final: no segments at all, skipping")
+        hideOverlay(); return
     end
 
-    local function transcribeNextSegment()
-        segIdx = segIdx + 1
-        if segIdx > totalSegs then
-            finishAll()
-            return
-        end
-
-        local group = segmentGroups[segIdx]
-        local n = segIdx
-
-        if totalSegs > 1 then
-            setOverlayText(string.format("Transcribing %d/%d...", n, totalSegs))
-        end
-
-        local concatFile = WHISPER_TMP .. "/seg_concat_" .. n .. ".txt"
-        local segWav    = WHISPER_TMP .. "/seg_" .. n .. ".wav"
-
-        log("final: seg " .. n .. " writing concat list (" .. #group .. " files) → " .. concatFile)
-        local f, ferr = io.open(concatFile, "w")
-        if not f then
-            log("final: seg " .. n .. " ERROR opening concat file: " .. tostring(ferr))
-            transcribeNextSegment()
-            return
-        end
-        for _, chunk in ipairs(group) do
-            f:write("file '" .. chunk .. "'\n")
-        end
-        f:close()
-
-        log("final: seg " .. n .. " starting ffmpeg concat → " .. segWav)
-        local concatTask = hs.task.new(FFMPEG, function(code)
-            if code ~= 0 then
-                log("final: seg " .. n .. " concat FAILED (code=" .. tostring(code) .. ")")
-                transcribeNextSegment()  -- skip bad segment, keep going
-                return
-            end
-            local wavSize = (hs.fs.attributes(segWav) or {}).size or -1
-            log("final: seg " .. n .. " concat OK — wav size=" .. wavSize .. " bytes")
-
-            local function onSegmentText(text, detected)
-                log("final: seg " .. n .. " onSegmentText hallucination=" .. tostring(isHallucination(text)) .. " len=" .. #text)
-                if text ~= "" and not isHallucination(text) then
-                    table.insert(allTexts, text)
-                    log("final: seg " .. n .. " accepted text: '" .. text:sub(1, 120) .. "'")
-                else
-                    log("final: seg " .. n .. " REJECTED (empty or hallucination): '" .. text:sub(1, 80) .. "'")
-                end
-                if detected and not detectedLangOverall then
-                    detectedLangOverall = detected
-                end
-                transcribeNextSegment()
-            end
-
-            -- Always use auto-detect per segment for code-switching (surzhyk/mixed language)
-            -- Never reuse a previously detected language — each segment may have different dominant language
-            local effectiveLang = lang
-
-            log("final: seg " .. n .. " starting whisper lang=" .. effectiveLang .. " model=" .. getModelPath():match("([^/]+)$"))
-
-            if effectiveLang == "auto" then
-                local autoArgs = { "-m", getModelPath(), "-f", segWav, "-l", "auto", "-nt" }
-                for _, a in ipairs(promptArgs) do table.insert(autoArgs, a) end
-                local wTask = hs.task.new(WHISPER_BIN, function(code2, out2, err2)
-                    log("final: seg " .. n .. " whisper(auto) exit=" .. tostring(code2) .. " outlen=" .. #(out2 or "") .. " errlen=" .. #(err2 or ""))
-                    if code2 ~= 0 then
-                        log("final: seg " .. n .. " whisper FAILED (auto)")
-                        transcribeNextSegment()
-                        return
-                    end
-                    local detected = (err2 or ""):match("auto%-detected language:%s*(%w+)")
-                    log("seg " .. n .. " auto-detected: " .. tostring(detected))
-
-                    -- Accept whatever language auto-detected — forcing a retry with preferred[1]
-                    -- would cause "translation" of mixed-language content (surzhyk, English terms, etc.)
-                    local text = (out2 or ""):gsub("^%s+", ""):gsub("%s+$", ""):gsub("%s+", " ")
-                    onSegmentText(text, detected)
-                end, autoArgs)
-                wTask:start()
-            else
-                local langArgs = { "-m", getModelPath(), "-f", segWav, "-l", effectiveLang, "-nt", "--no-prints" }
-                for _, a in ipairs(promptArgs) do table.insert(langArgs, a) end
-                local wTask = hs.task.new(WHISPER_BIN, function(code2, out2)
-                    log("final: seg " .. n .. " whisper(" .. effectiveLang .. ") exit=" .. tostring(code2) .. " outlen=" .. #(out2 or ""))
-                    if code2 ~= 0 then
-                        log("final: seg " .. n .. " whisper FAILED")
-                        transcribeNextSegment()
-                        return
-                    end
-                    local text = (out2 or ""):gsub("^%s+", ""):gsub("%s+$", ""):gsub("%s+", " ")
-                    log("final seg " .. n .. "/" .. totalSegs .. ": '" .. text .. "'")
-                    onSegmentText(text, effectiveLang)
-                end, langArgs)
-                wTask:start()
-            end
-        end, { "-y", "-f", "concat", "-safe", "0", "-i", concatFile, "-c", "copy", segWav })
-        concatTask:start()
+    -- Update overlay with pending count (stream segs may still be running)
+    local left = pipelineTotal - pipelineDone
+    if left > 1 then
+        setOverlayText(string.format("Transcribing... (%d left)", left))
     end
 
-    transcribeNextSegment()
+    -- Edge case: all streaming segs completed before recording stopped
+    if pipelineDone >= pipelineTotal then
+        pipelineFinalize()
+    end
 end
 
 --------------------------------------------------------------------------------
@@ -1603,8 +1649,11 @@ local function startActualRecording()
     partialBusy = false
     silentChunkCount = 0
     lastCheckedChunk = 0
-    -- Partial transcription disabled: low quality, not useful
-    -- partialTimer = hs.timer.doEvery(PARTIAL_INTERVAL, doPartialTranscribe)
+
+    -- Reset streaming pipeline state for this recording session
+    pipelineReset()
+    if streamTimer then streamTimer:stop(); streamTimer = nil end
+    streamTimer = hs.timer.doEvery(3, streamCheckAndDispatch)
 
     -- Poll until first chunk exists on disk → audio is truly flowing → play Pop
     -- Uses recursive doAfter (not doEvery) to avoid stop-within-callback issues.
@@ -1725,6 +1774,7 @@ stopRecording = function()
 
     if partialTimer then partialTimer:stop(); partialTimer = nil end
     if silenceTimer then silenceTimer:stop(); silenceTimer = nil end
+    if streamTimer then streamTimer:stop(); streamTimer = nil end
     partialBusy = false
     silentChunkCount = 0
     lastCheckedChunk = 0
