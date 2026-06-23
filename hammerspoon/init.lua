@@ -1587,9 +1587,6 @@ local function streamCheckAndDispatch()
     log("stream: dispatching seg " .. segN .. " (" .. #firstGroup .. " chunks, live during recording)")
     dispatchSegment(segN, firstGroup)
 end
-    local chunks = getChunkFiles()
-
-end
 
 local function doFinalTranscription()
     if streamTimer then streamTimer:stop(); streamTimer = nil end
