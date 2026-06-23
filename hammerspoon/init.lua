@@ -1255,13 +1255,6 @@ local function stopRecordingIndicator()
     end
 end
 
-local function hideProgressBar()
-    if not overlay then return end
-    overlay[EL.bar_bg].fillColor  = { red = 0.3, green = 0.3, blue = 0.3, alpha = 0.0 }
-    overlay[EL.bar_rec].fillColor = { red = 1.0, green = 0.35, blue = 0.15, alpha = 0.0 }
-    overlay[EL.bar_txn].fillColor = { red = 0.2, green = 0.75, blue = 1.0, alpha = 0.0 }
-end
-
 --------------------------------------------------------------------------------
 -- Emergency stop (forward declaration)
 --------------------------------------------------------------------------------
@@ -1461,11 +1454,16 @@ local function pipelineFinalize()
     end
     local finalText = table.concat(parts, " "):gsub("^%s+", ""):gsub("%s+$", ""):gsub("%s+", " ")
     log("pipeline: finalized " .. pipelineTotal .. " seg(s): '" .. finalText:sub(1, 120) .. "'")
-    if finalText == "" then hideProgressBar(); hideOverlay(); return end
+    if finalText == "" then
+        if overlay then overlay[EL.bar_bg].fillColor={red=0.3,green=0.3,blue=0.3,alpha=0}; overlay[EL.bar_rec].fillColor={red=1,green=0.35,blue=0.15,alpha=0}; overlay[EL.bar_txn].fillColor={red=0.2,green=0.75,blue=1,alpha=0} end
+        hideOverlay(); return
+    end
     -- Show blue bar at 100% briefly before inserting
     barState.txnSecs = barState.maxSecs
     if overlay then updateProgressBar() end
-    hs.timer.doAfter(0.4, function() hideProgressBar() end)
+    hs.timer.doAfter(0.4, function()
+        if overlay then overlay[EL.bar_bg].fillColor={red=0.3,green=0.3,blue=0.3,alpha=0}; overlay[EL.bar_rec].fillColor={red=1,green=0.35,blue=0.15,alpha=0}; overlay[EL.bar_txn].fillColor={red=0.2,green=0.75,blue=1,alpha=0} end
+    end)
     insertTranscribedText(finalText, pipelineLang)
 end
 
