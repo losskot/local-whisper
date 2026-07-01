@@ -1,6 +1,7 @@
 {
   "host": "",
   "sessionId": "97f91794-2ebd-47c9-a722-6e292825facd",
+  "customTitle": "Проблемы с распознаванием голоса",
   "version": 3,
   "requesterUsername": "",
   "responderUsername": "GitHub Copilot",
@@ -8,5 +9,499 @@
   "lastMessageDate": 0,
   "initialLocation": "panel",
   "isImported": false,
-  "requests": []
+  "requests": [
+    {
+      "requestId": "request_c8b5ca06-0a67-4e86-ac89-dbb9c7b93ea8",
+      "timestamp": 1782171815978,
+      "message": {
+        "text": "Пропускает распознавание голосом. Приложение пропускает целые куски фраз, целые 10-секундные отрезки. Я не знаю, сможешь ли ты найти там логи или что-то еще, но работа некачественная. На этапе записи аудио или на этапе стриминга через модель, Где-то происходит утечка.",
+        "parts": [
+          {
+            "kind": "text"
+          }
+        ]
+      },
+      "response": [
+        {
+          "didStartServerIds": [],
+          "kind": "mcpServersStarting"
+        },
+        {
+          "generatedTitle": "Reviewed logs and examined init.lua file",
+          "id": "thinking_0",
+          "kind": "thinking",
+          "value": "The user is reporting that the voice recognition is skipping entire chunks of phrases, entire 10-second segments. They want me to investigate the logs and code to find where the issue is occurring - either during audio recording or during streaming through the model.\n\nLet me start by reading the logs and then examining the init.lua file to understand the recording and transcription pipeline."
+        },
+        {
+          "id": "",
+          "kind": "thinking",
+          "metadata": {
+            "stopReason": "other",
+            "vscodeReasoningDone": true
+          },
+          "value": ""
+        },
+        {
+          "invocationMessage": {
+            "isTrusted": false,
+            "supportAlertSyntax": false,
+            "supportHtml": false,
+            "supportThemeIcons": false,
+            "value": "Running ` TMPDIR\\_REAL=$\\(getconf DARWIN\\_USER\\_TEMP\\_DIR\\) \u0026\u0026 tail -100 \"$\\{TMPDIR\\_REAL\\}whis...`"
+          },
+          "isComplete": true,
+          "kind": "toolInvocationSerialized",
+          "source": {
+            "label": "Built-In",
+            "type": "internal"
+          },
+          "toolCallId": "toolu_bdrk_011vZ8Si9VhWd1B2McVsQuqR",
+          "toolId": "run_in_terminal",
+          "toolSpecificData": {
+            "commandLine": {
+              "forDisplay": " TMPDIR_REAL=$(getconf DARWIN_USER_TEMP_DIR) \u0026\u0026 tail -100 \"${TMPDIR_REAL}whisper-dictate/whisper-dictate.log\" 2\u003e/dev/null || echo \"Log not found\"",
+              "isSandboxWrapped": false,
+              "original": "TMPDIR_REAL=$(getconf DARWIN_USER_TEMP_DIR) \u0026\u0026 tail -100 \"${TMPDIR_REAL}whisper-dictate/whisper-dictate.log\" 2\u003e/dev/null || echo \"Log not found\"",
+              "toolEdited": " TMPDIR_REAL=$(getconf DARWIN_USER_TEMP_DIR) \u0026\u0026 tail -100 \"${TMPDIR_REAL}whisper-dictate/whisper-dictate.log\" 2\u003e/dev/null || echo \"Log not found\""
+            },
+            "confirmation": {
+              "commandLine": "TMPDIR_REAL=$(getconf DARWIN_USER_TEMP_DIR) \u0026\u0026 tail -100 \"${TMPDIR_REAL}whisper-dictate/whisper-dictate.log\" 2\u003e/dev/null || echo \"Log not found\""
+            },
+            "cwd": {
+              "$mid": 1,
+              "external": "file:///Users/vitaliy/Documents/GitHub/local-whisper",
+              "fsPath": "/Users/vitaliy/Documents/GitHub/local-whisper",
+              "path": "/Users/vitaliy/Documents/GitHub/local-whisper",
+              "scheme": "file"
+            },
+            "isBackground": false,
+            "kind": "terminal",
+            "language": "sh",
+            "requestAllowNetwork": false,
+            "requestUnsandboxedExecution": false,
+            "terminalCommandId": "tool-45a4a350-f896-4e77-b893-b75f111a25af",
+            "terminalToolSessionId": "9bf38be0-0e88-4157-8e34-2d64214425fd"
+          }
+        }
+      ],
+      "result": {
+        "metadata": {},
+        "timings": {
+          "firstProgress": 0,
+          "totalElapsed": 0
+        }
+      },
+      "modelId": "copilot/claude-sonnet-4.6"
+    },
+    {
+      "requestId": "request_e0b69f82-9317-4652-8d7d-e16ec53a9446",
+      "timestamp": 1782172348140,
+      "message": {
+        "text": "Ну, я бы сказал, что если у нас отклика нету, то надо какую-то другую бемкалку звук ошибки и закрываться. То есть, ну, не пишем. Не надо вот этого запускаться во что бы то ни стало. Первое. Второе. Обрезать на 30 секунде. Вот это мне всегда не нравится. Вот я всегда подозревал, и тут оно всплыло. Так это же может обрезаться посредине слова, посредине предложения. И вот, может, из-за этого оно теряет. Может, у нас тупой механизм обрезания. И если виспер вот так вот работает, то где-то... люди что-то придумали, какой алгоритм правильного обрезания в паузах, чтобы оно на лету как-то там отрезало, если пошла пауза.\n\nИли ты знаешь, что надо делать, или сделай интернет-поиск на эту тему, как правильно нарезать аудио, чтобы не терять мои слова, порезанные пополам.",
+        "parts": [
+          {
+            "kind": "text"
+          }
+        ]
+      },
+      "response": [
+        {
+          "didStartServerIds": [],
+          "kind": "mcpServersStarting"
+        },
+        {
+          "id": "thinking_0",
+          "kind": "thinking",
+          "value": "The user has two requests:\n1. When warmup fails (no device response), play an error sound and stop - don't try to record at all costs\n2. Smart audio splitting - instead of cutting every 25 seconds at a fixed boundary (which can cut mid-word/mid-sentence), split at natural pauses/silence points\n\nLet me research the second point about smart audio splitting (VAD-based splitting).\n\nThe user suspects that cutting at fixed 25-second intervals can cut mid-word or mid-sentence, causing Whisper to lose context. They want pause-based splitting.\n\nThis is a well-known technique called Voice Activity Detection (VAD) based splitting. The idea is:\n\n\n- Detect silence or pauses in the audio instead of using fixed time boundaries\n- Cut at the nearest pause that falls close to the target split point\n\nI'm thinking through the implementation: I could use ffmpeg's silencedetect filter to identify silence boundaries in the concatenated audio chunks, then cut near the 25-second mark at whichever silence point is closest. The current flow records 1-second WAV chunks, groups them into 25-second segments, and then processes each group.\n\nThe issue is that the 25-second boundary is arbitrary—it just cuts at the 25th chunk regardless of what's happening in the audio. A better approach would be to look for silence within the last 5 seconds before the 25-second mark and split there instead. Since I already have individual 1-second chunks, I could check which ones contain silence and use those as split points. Or I could run silencedetect on the combined audio to find optimal split points automatically.\n\nI'm also reconsidering how Whisper handles the 30-second window—it takes the audio and internally splits it into 30-second mel-spectrogram frames. seconds of audio to whisper. I could segment the chunks by detecting silence using RMS levels or ffmpeg's silencedetect filter, then group them up to around 25 seconds and split at the quietest point when approaching that limit. Actually, whisper.cpp has a built-in `--vad` flag for Voice Activity Detection that handles segmentation automatically, which would be simpler than implementing my own splitting logic. most practical approach is to use ffmpeg's silencedetect filter on the combined audio to find natural break points, or leverage the silence detection data we're already collecting during auto-stop to inform where we split. I should check if whisper-cli supports a `--vad` flag that might handle segmentation internally, and if not, implement a solution that searches for silence within a window before the target split point rather than cutting at a fixed time.\n\nImplementing the silence-aware splitting..."
+        }
+      ],
+      "result": {
+        "metadata": {},
+        "timings": {
+          "firstProgress": 0,
+          "totalElapsed": 0
+        }
+      },
+      "modelId": "copilot/claude-sonnet-4.6"
+    },
+    {
+      "requestId": "request_24254a3f-8dab-4e07-a2be-1ee84c9250c0",
+      "timestamp": 1782172845321,
+      "message": {
+        "text": "Окей, теперь вопрос производительности. Если мы пишем много этих кусочков по 20-30 секунд, а потом оно в конце декодируется, мы можем записанный кусочек отрезанный уже посылать на декодер? У нас это есть параллельное декодирование или мультитред. Мы можем оптимизировать скорость?\n\nНу и в принципе, опять же, подозрение. Даже мы по тишине сейчас обрезали, но я задумался, и это одно и то же предложение. Виспер же не видит разных кусков. Не будет ли замучено это по смыслу потеря? То есть тут не делай, тут мне ответь. Есть ли какая-то возможность, чтобы Виспер потом на это все посмотрел, как на целостный текст?",
+        "parts": [
+          {
+            "kind": "text"
+          }
+        ]
+      },
+      "response": [
+        {
+          "didStartServerIds": [],
+          "kind": "mcpServersStarting"
+        },
+        {
+          "id": "thinking_0",
+          "kind": "thinking",
+          "value": "The user has two questions:\n\n1. **Performance optimization**: Can we send already-completed segments to the decoder while recording is still happening? Can we do parallel decoding / multi-threading?\n\n2. **Semantic continuity**: Even with silence-based splitting, Whisper doesn't see the full context across segments. Could there be semantic loss at boundaries? Is there a way to give Whisper the full picture as a whole text?\n\nLet me think about both:\n\n**Question 1: Parallel/streaming decoding**\n\nCurrently the flow is:\n1. Record ALL chunks\n2. Stop recording\n3. Concatenate + transcribe segment 1\n\n\n4. Transcribe segment 2 (after 1 finishes)\n5. Concatenate all results\n\nWith parallel processing, we could start transcribing segment 1 as soon as we have 25 seconds of audio and detect a silence boundary, then continue recording segment 2 while the first one is being decoded. This \"streaming transcription\" or pipeline approach would let us overlap recording and transcription, but the tricky part is detecting silence boundaries in real-time while the audio is still coming in."
+        }
+      ],
+      "result": {
+        "metadata": {},
+        "timings": {
+          "firstProgress": 0,
+          "totalElapsed": 0
+        }
+      },
+      "modelId": "copilot/claude-sonnet-4.6"
+    },
+    {
+      "requestId": "request_c9f90782-85f4-48b6-ab17-ee59b2e38b5d",
+      "timestamp": 1782176568840,
+      "message": {
+        "text": "2 - implement also",
+        "parts": [
+          {
+            "kind": "text"
+          }
+        ]
+      },
+      "response": [
+        {
+          "didStartServerIds": [],
+          "kind": "mcpServersStarting"
+        },
+        {
+          "id": "thinking_0",
+          "kind": "thinking",
+          "value": "The user wants to implement question 2 as well — the `--prompt` context chaining between segments so Whisper has semantic continuity across segment boundaries.\n\nThe idea: when transcribing segment N+1, pass the text of segment N as `--prompt` to whisper-cli. This gives the model context about what was said before, preventing semantic breaks at boundaries.\n\nThe challenge with the current async pipeline: segments can complete out of order (though in practice, if they're dispatched in order and take similar time, they'll complete roughly in order). But with the async design, segment 2 might start before segment 1 is done.\n\nFor prompt chaining to work, we need segment N's text before dispatching segment N+1. But with the current parallel design, segments can be dispatched simultaneously.\n\n\nI'm weighing a few trade-offs: I could go fully sequential and dispatch each segment only after the previous one finishes, which guarantees correct prompt chaining but loses parallelism. Or I could use a best-effort approach where I track the last completed segment and use its text as context, accepting that sometimes a segment might start before its predecessor finishes. There's also a middle ground where I keep segments dispatched sequentially but still overlap with the recording stream, so I'm not completely sacrificing performance.\n\nThe key realization is that streaming already gives us a big win by starting the first segment's transcription during recording. Since the first segment typically finishes around 12 seconds after dispatch, and the second segment wouldn't be ready until the full 50-second mark anyway, there's actually plenty of buffer time to chain them sequentially without much practical loss. For the final segments processed after recording stops, I can chain them one after another to ensure"
+        }
+      ],
+      "result": {
+        "metadata": {},
+        "timings": {
+          "firstProgress": 0,
+          "totalElapsed": 0
+        }
+      },
+      "modelId": "copilot/claude-sonnet-4.6"
+    },
+    {
+      "requestId": "request_da548e2e-41c0-49b4-9087-3684edb183d2",
+      "timestamp": 1782176729906,
+      "message": {
+        "text": "Хорошо. Обнови MD-файлы документации.",
+        "parts": [
+          {
+            "kind": "text"
+          }
+        ]
+      },
+      "response": [
+        {
+          "didStartServerIds": [],
+          "kind": "mcpServersStarting"
+        },
+        {
+          "generatedTitle": "Reviewed documentation MD files for updates",
+          "id": "thinking_0",
+          "kind": "thinking",
+          "value": "The user wants me to update the documentation MD files to reflect the recent changes. Let me look at what docs exist and what needs updating."
+        },
+        {
+          "id": "",
+          "kind": "thinking",
+          "metadata": {
+            "stopReason": "other",
+            "vscodeReasoningDone": true
+          },
+          "value": ""
+        },
+        {
+          "invocationMessage": {
+            "supportAlertSyntax": false,
+            "supportHtml": false,
+            "supportThemeIcons": false,
+            "uris": {
+              "file:///Users/vitaliy/Documents/GitHub/local-whisper": {
+                "$mid": 1,
+                "path": "/Users/vitaliy/Documents/GitHub/local-whisper",
+                "scheme": "file"
+              }
+            },
+            "value": "Reading [](file:///Users/vitaliy/Documents/GitHub/local-whisper)"
+          },
+          "isComplete": true,
+          "isConfirmed": {
+            "type": 1
+          },
+          "kind": "toolInvocationSerialized",
+          "pastTenseMessage": {
+            "supportAlertSyntax": false,
+            "supportHtml": false,
+            "supportThemeIcons": false,
+            "uris": {
+              "file:///Users/vitaliy/Documents/GitHub/local-whisper": {
+                "$mid": 1,
+                "path": "/Users/vitaliy/Documents/GitHub/local-whisper",
+                "scheme": "file"
+              }
+            },
+            "value": "Read [](file:///Users/vitaliy/Documents/GitHub/local-whisper)"
+          },
+          "source": {
+            "label": "Built-In",
+            "type": "internal"
+          },
+          "toolCallId": "toolu_bdrk_01WiGZ6SQNQmdtCurAWL3vDx",
+          "toolId": "copilot_listDirectory"
+        },
+        {
+          "invocationMessage": {
+            "supportAlertSyntax": false,
+            "supportHtml": false,
+            "supportThemeIcons": false,
+            "uris": {
+              "file:///Users/vitaliy/Documents/GitHub/local-whisper/docs": {
+                "$mid": 1,
+                "path": "/Users/vitaliy/Documents/GitHub/local-whisper/docs",
+                "scheme": "file"
+              }
+            },
+            "value": "Reading [](file:///Users/vitaliy/Documents/GitHub/local-whisper/docs)"
+          },
+          "isComplete": true,
+          "isConfirmed": {
+            "type": 1
+          },
+          "kind": "toolInvocationSerialized",
+          "pastTenseMessage": {
+            "supportAlertSyntax": false,
+            "supportHtml": false,
+            "supportThemeIcons": false,
+            "uris": {
+              "file:///Users/vitaliy/Documents/GitHub/local-whisper/docs": {
+                "$mid": 1,
+                "path": "/Users/vitaliy/Documents/GitHub/local-whisper/docs",
+                "scheme": "file"
+              }
+            },
+            "value": "Read [](file:///Users/vitaliy/Documents/GitHub/local-whisper/docs)"
+          },
+          "source": {
+            "label": "Built-In",
+            "type": "internal"
+          },
+          "toolCallId": "toolu_bdrk_01GUZZygp8Z5ooy68DkQvdsn",
+          "toolId": "copilot_listDirectory"
+        },
+        {
+          "invocationMessage": {
+            "supportAlertSyntax": false,
+            "supportHtml": false,
+            "supportThemeIcons": false,
+            "uris": {
+              "file:///Users/vitaliy/Documents/GitHub/local-whisper/README.md#1-1": {
+                "$mid": 1,
+                "fragment": "1-1",
+                "path": "/Users/vitaliy/Documents/GitHub/local-whisper/README.md",
+                "scheme": "file"
+              }
+            },
+            "value": "Reading [](file:///Users/vitaliy/Documents/GitHub/local-whisper/README.md#1-1), lines 1 to 200"
+          },
+          "isComplete": true,
+          "isConfirmed": {
+            "type": 1
+          },
+          "kind": "toolInvocationSerialized",
+          "pastTenseMessage": {
+            "supportAlertSyntax": false,
+            "supportHtml": false,
+            "supportThemeIcons": false,
+            "uris": {
+              "file:///Users/vitaliy/Documents/GitHub/local-whisper/README.md#1-1": {
+                "$mid": 1,
+                "fragment": "1-1",
+                "path": "/Users/vitaliy/Documents/GitHub/local-whisper/README.md",
+                "scheme": "file"
+              }
+            },
+            "value": "Read [](file:///Users/vitaliy/Documents/GitHub/local-whisper/README.md#1-1), lines 1 to 200"
+          },
+          "source": {
+            "label": "Built-In",
+            "type": "internal"
+          },
+          "toolCallId": "toolu_bdrk_01PoArApYcxgdDZ7Za4WM7NR",
+          "toolId": "copilot_readFile"
+        },
+        {
+          "invocationMessage": {
+            "supportAlertSyntax": false,
+            "supportHtml": false,
+            "supportThemeIcons": false,
+            "uris": {
+              "file:///Users/vitaliy/Documents/GitHub/local-whisper/docs/TRANSCRIBE.md#1-1": {
+                "$mid": 1,
+                "fragment": "1-1",
+                "path": "/Users/vitaliy/Documents/GitHub/local-whisper/docs/TRANSCRIBE.md",
+                "scheme": "file"
+              }
+            },
+            "value": "Reading [](file:///Users/vitaliy/Documents/GitHub/local-whisper/docs/TRANSCRIBE.md#1-1), lines 1 to 100"
+          },
+          "isComplete": true,
+          "isConfirmed": {
+            "type": 1
+          },
+          "kind": "toolInvocationSerialized",
+          "pastTenseMessage": {
+            "supportAlertSyntax": false,
+            "supportHtml": false,
+            "supportThemeIcons": false,
+            "uris": {
+              "file:///Users/vitaliy/Documents/GitHub/local-whisper/docs/TRANSCRIBE.md#1-1": {
+                "$mid": 1,
+                "fragment": "1-1",
+                "path": "/Users/vitaliy/Documents/GitHub/local-whisper/docs/TRANSCRIBE.md",
+                "scheme": "file"
+              }
+            },
+            "value": "Read [](file:///Users/vitaliy/Documents/GitHub/local-whisper/docs/TRANSCRIBE.md#1-1), lines 1 to 100"
+          },
+          "source": {
+            "label": "Built-In",
+            "type": "internal"
+          },
+          "toolCallId": "toolu_bdrk_0152pmr5yatLrBuxgrv6ogYc",
+          "toolId": "copilot_readFile"
+        },
+        {
+          "invocationMessage": {
+            "supportAlertSyntax": false,
+            "supportHtml": false,
+            "supportThemeIcons": false,
+            "uris": {
+              "file:///Users/vitaliy/Documents/GitHub/local-whisper/README.md#200-200": {
+                "$mid": 1,
+                "fragment": "200-200",
+                "path": "/Users/vitaliy/Documents/GitHub/local-whisper/README.md",
+                "scheme": "file"
+              }
+            },
+            "value": "Reading [](file:///Users/vitaliy/Documents/GitHub/local-whisper/README.md#200-200), lines 200 to 264"
+          },
+          "isComplete": true,
+          "isConfirmed": {
+            "type": 1
+          },
+          "kind": "toolInvocationSerialized",
+          "pastTenseMessage": {
+            "supportAlertSyntax": false,
+            "supportHtml": false,
+            "supportThemeIcons": false,
+            "uris": {
+              "file:///Users/vitaliy/Documents/GitHub/local-whisper/README.md#200-200": {
+                "$mid": 1,
+                "fragment": "200-200",
+                "path": "/Users/vitaliy/Documents/GitHub/local-whisper/README.md",
+                "scheme": "file"
+              }
+            },
+            "value": "Read [](file:///Users/vitaliy/Documents/GitHub/local-whisper/README.md#200-200), lines 200 to 264"
+          },
+          "source": {
+            "label": "Built-In",
+            "type": "internal"
+          },
+          "toolCallId": "toolu_bdrk_01GF2PNrsbfKxwgea8grUUq8",
+          "toolId": "copilot_readFile"
+        },
+        {
+          "id": "thinking_0",
+          "kind": "thinking",
+          "value": "Now I have a clear picture of the existing documentation. I need to update:\n\n1. **README.md** - Update the \"How it works\" section to reflect the new streaming pipeline, and update the Features section to mention the streaming transcription (removes the \"Live preview\" partial transcription claim which is disabled, and add the streaming pipeline). Also update any mentions of how transcription works.\n\n2. The \"Custom vocabulary prompt\" section mentions `--prompt` being passed - this is still true but now also used for segment context chaining.\n\nKey changes to document:\n1. **Streaming pipeline**: Segments are transcribed live during recording, not just after stop. This significantly reduces post-stop latency for long recordings.\n\n\n2. **Smart silence-based splitting**: Audio is split at natural pauses, not at fixed time boundaries, to avoid cutting mid-word.\n3. **Prompt chaining**: Each segment gets the previous segment's text as context via `--prompt`, preserving semantic continuity.\n4. **Warmup behavior change**: If audio device doesn't produce data within 10 seconds, recording aborts with error sound instead of continuing blindly.\n5. **FINAL_SEGMENT_SECS = 25**: Reduced from 55 to stay within Whisper's 30s internal window.\n\nI'm checking the README to see what the \"Live preview\" feature actually claims and whether it needs to be removed or clarified. The overlay will show recording status and transcription progress messages like \"Transcribing... (2 left)\" rather than live partial text. I need to correct the features list to reflect this reality, update the \"How it works\" section to explain the new streaming pipeline, and leave TRANSCRIBE.md unchanged since it covers the separate batch tool."
+        },
+        {
+          "id": "",
+          "kind": "thinking",
+          "metadata": {
+            "stopReason": "text",
+            "vscodeReasoningDone": true
+          },
+          "value": ""
+        },
+        {
+          "baseUri": {
+            "$mid": 1,
+            "path": "/Users/vitaliy/Documents/GitHub/local-whisper/",
+            "scheme": "file"
+          },
+          "supportHtml": false,
+          "supportThemeIcons": false,
+          "value": "Now I have the full picture. The main doc to update is "
+        },
+        {
+          "inlineReference": {
+            "$mid": 1,
+            "external": "file:///Users/vitaliy/Documents/GitHub/local-whisper/README.md",
+            "fsPath": "/Users/vitaliy/Documents/GitHub/local-whisper/README.md",
+            "path": "/Users/vitaliy/Documents/GitHub/local-whisper/README.md",
+            "scheme": "file"
+          },
+          "kind": "inlineReference"
+        },
+        {
+          "baseUri": {
+            "$mid": 1,
+            "path": "/Users/vitaliy/Documents/GitHub/local-whisper/",
+            "scheme": "file"
+          },
+          "supportHtml": false,
+          "supportThemeIcons": false,
+          "value": " — the \"How it works\" architecture diagram is stale and several Feature claims need correcting. "
+        },
+        {
+          "inlineReference": {
+            "$mid": 1,
+            "external": "file:///Users/vitaliy/Documents/GitHub/local-whisper/docs/TRANSCRIBE.md",
+            "fsPath": "/Users/vitaliy/Documents/GitHub/local-whisper/docs/TRANSCRIBE.md",
+            "path": "/Users/vitaliy/Documents/GitHub/local-whisper/docs/TRANSCRIBE.md",
+            "scheme": "file"
+          },
+          "kind": "inlineReference"
+        },
+        {
+          "baseUri": {
+            "$mid": 1,
+            "path": "/Users/vitaliy/Documents/GitHub/local-whisper/",
+            "scheme": "file"
+          },
+          "supportHtml": false,
+          "supportThemeIcons": false,
+          "value": " is about the batch tool (unchanged). "
+        },
+        {
+          "invocationMessage": "Multi-Replace String in Files",
+          "isComplete": true,
+          "kind": "toolInvocationSerialized",
+          "source": {
+            "label": "Built-In",
+            "type": "internal"
+          },
+          "toolCallId": "toolu_bdrk_013o5EHZ2LaLAJv56k5LTawB",
+          "toolId": "copilot_multiReplaceString"
+        }
+      ],
+      "result": {
+        "metadata": {},
+        "timings": {
+          "firstProgress": 0,
+          "totalElapsed": 0
+        }
+      },
+      "modelId": "copilot/claude-sonnet-4.6"
+    }
+  ]
 }

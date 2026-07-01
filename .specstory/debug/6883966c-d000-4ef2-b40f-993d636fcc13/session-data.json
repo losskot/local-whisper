@@ -1,0 +1,41 @@
+{
+  "schemaVersion": "1.0",
+  "provider": {
+    "id": "copilotide",
+    "name": "VS Code Copilot IDE",
+    "version": "1.0"
+  },
+  "sessionId": "6883966c-d000-4ef2-b40f-993d636fcc13",
+  "createdAt": "2026-07-02T01:37:17+02:00",
+  "updatedAt": "1970-01-01T01:00:00+01:00",
+  "slug": "hammerspoon-local-variables-error",
+  "workspaceRoot": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "exchanges": [
+    {
+      "exchangeId": "request_8e484f89-611e-4386-9537-915e1ce63f10",
+      "startTime": "2026-07-02T01:37:49+02:00",
+      "messages": [
+        {
+          "timestamp": "2026-07-02T01:37:49+02:00",
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "026-07-02 01:36:58: -- Loading ~/.hammerspoon/init.lua\n2026-07-02 01:36:58: *** ERROR: /Users/vitaliy/.hammerspoon/init.lua:2882: too many local variables (limit is 200) in main function near '='\n"
+            }
+          ]
+        },
+        {
+          "role": "agent",
+          "model": "copilot/gpt-5.4-mini",
+          "content": [
+            {
+              "type": "text",
+              "text": "**Evaluating file and commands**\n\nI need to read a file and potentially use rg to find the function start. Checking AGENTS is on my mind since it's already in the prompt. I’m wondering if there’s a separate Hammerspoon AGENTS. The root instructions apply to the workspace and whisper.cpp only when modifying that folder; I’ll keep my focus on hammerspoon/init.lua. I think I should use the terminal for the bd ready task and possibly create an issue afterward. But the instructions say to create the bd issue before starting. I'll check if bd exists and run the terminal commands."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

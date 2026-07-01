@@ -1,6 +1,7 @@
 {
   "host": "",
   "sessionId": "f7396d07-0b0c-43e9-acfe-c7ff0fe121b8",
+  "customTitle": "Проблемы с записью и транскрайбингом",
   "version": 3,
   "requesterUsername": "",
   "responderUsername": "GitHub Copilot",
@@ -8,5 +9,32 @@
   "lastMessageDate": 0,
   "initialLocation": "panel",
   "isImported": false,
-  "requests": []
+  "requests": [
+    {
+      "requestId": "request_987e759e-e4fc-41a6-b4b0-23568641cfaf",
+      "timestamp": 1782171900741,
+      "message": {
+        "text": "Не всегда я слышу легкие щелчки или легкие звуки, попытки коннектиться к микрофону. Оно то клацает, а иногда молчание-молчание, а потом громкий щелчок, который ознаменует начало записи. Непонятно. И очень варьируется скорость транскрайбинга. Наверное, это от загруженности процессора, но надо добавить прогресс бар какой-то.",
+        "parts": [
+          {
+            "kind": "text"
+          }
+        ]
+      },
+      "response": [
+        {
+          "didStartServerIds": [],
+          "kind": "mcpServersStarting"
+        }
+      ],
+      "result": {
+        "metadata": {},
+        "timings": {
+          "firstProgress": 0,
+          "totalElapsed": 0
+        }
+      },
+      "modelId": "copilot/claude-sonnet-4.6"
+    }
+  ]
 }
