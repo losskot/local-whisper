@@ -195,6 +195,7 @@ end
 local function getOutputMode()
     local mode = readFile(OUTPUT_FILE):gsub("%s+", "")
     if mode == "type" then return "type" end
+    if mode == "copy" then return "copy" end
     return "paste"
 end
 
@@ -427,7 +428,8 @@ local function cycleModel()
 end
 
 local function cycleOutput()
-    local next = (getOutputMode() == "paste") and "type" or "paste"
+    local cur = getOutputMode()
+    local next = (cur == "paste") and "type" or (cur == "type") and "copy" or "paste"
     writeFile(OUTPUT_FILE, next)
     return next
 end
@@ -1351,6 +1353,15 @@ local function insertTextAtCursor(text, mode)
                 hs.pasteboard.setContents(text)
             end
             hs.eventtap.keyStroke({"cmd"}, 9)  -- keycode 9 = V (ANSI)
+        end, {"-c", "printf '%s' \"$1\" | /usr/bin/pbcopy", "--", text})
+        task:start()
+    elseif mode == "copy" then
+        -- Copy to clipboard only — no auto-paste. Useful for remote desktop
+        -- where clipboard sync is asynchronous; user pastes manually when ready.
+        local task = hs.task.new("/bin/sh", function(exitCode, _, _)
+            if exitCode ~= 0 then
+                hs.pasteboard.setContents(text)
+            end
         end, {"-c", "printf '%s' \"$1\" | /usr/bin/pbcopy", "--", text})
         task:start()
     else
