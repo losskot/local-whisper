@@ -1341,8 +1341,6 @@ end
 --------------------------------------------------------------------------------
 
 -- Bundle IDs of remote desktop / VM apps where clipboard paste does not work;
-local UTF8_ENV = {LANG = "en_US.UTF-8", HOME = os.getenv("HOME") or ""}
-
 -- Low-level text insertion at cursor
 local function insertTextAtCursor(text, mode)
     if mode == "paste" then
@@ -1356,7 +1354,7 @@ local function insertTextAtCursor(text, mode)
             end
             hs.eventtap.keyStroke({"cmd"}, 9)  -- keycode 9 = V (ANSI)
         end, {"-c", "printf '%s' \"$1\" | /usr/bin/pbcopy", "--", text})
-        task:setEnvironment(UTF8_ENV)
+        task:setEnvironment({LANG="en_US.UTF-8", HOME=HOME})
         task:start()
     elseif mode == "copy" then
         -- Copy to clipboard only — no auto-paste. Useful for remote desktop
@@ -1366,7 +1364,7 @@ local function insertTextAtCursor(text, mode)
                 hs.pasteboard.setContents(text)
             end
         end, {"-c", "printf '%s' \"$1\" | /usr/bin/pbcopy", "--", text})
-        task:setEnvironment(UTF8_ENV)
+        task:setEnvironment({LANG="en_US.UTF-8", HOME=HOME})
         task:start()
     else
         hs.eventtap.keyStrokes(text)
