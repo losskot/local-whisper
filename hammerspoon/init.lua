@@ -1342,13 +1342,17 @@ end
 -- Low-level text insertion at cursor
 local function insertTextAtCursor(text, mode)
     if mode == "paste" then
-        -- Note: we intentionally don't save/restore clipboard — getContents() can block
-        -- for 60+ seconds if another app holds a large object on the clipboard.
-        hs.pasteboard.setContents(text)
-        -- Small delay before Cmd+V so remote clipboard sync (e.g. RDP) has time to propagate.
-        hs.timer.doAfter(0.3, function()
-            hs.eventtap.keyStroke({"cmd"}, 9)  -- keycode 9 = V (ANSI), works regardless of keyboard layout
-        end)
+        -- Write via pbcopy (a separate process) so that apps like Microsoft Remote Desktop,
+        -- which only detect clipboard changes from real OS-level copy operations, also pick
+        -- up the new content. hs.pasteboard.setContents() alone does not trigger RDP sync.
+        local task = hs.task.new("/bin/sh", function(exitCode, _, _)
+            if exitCode ~= 0 then
+                -- Fallback to direct pasteboard write if pbcopy fails
+                hs.pasteboard.setContents(text)
+            end
+            hs.eventtap.keyStroke({"cmd"}, 9)  -- keycode 9 = V (ANSI)
+        end, {"-c", "printf '%s' \"$1\" | /usr/bin/pbcopy", "--", text})
+        task:start()
     else
         hs.eventtap.keyStrokes(text)
     end
