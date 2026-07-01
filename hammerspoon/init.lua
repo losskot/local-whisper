@@ -1338,7 +1338,8 @@ end
 -- Final transcription
 --------------------------------------------------------------------------------
 
--- Bundle IDs of remote desktop / VM apps that require Ctrl+V instead of Cmd+V
+-- Bundle IDs of remote desktop / VM apps where clipboard paste does not work;
+-- keyStrokes (direct typing) is used instead.
 local REMOTE_DESKTOP_BUNDLE_IDS = {
     ["com.microsoft.rdc.macos"]   = true,  -- Microsoft Remote Desktop
     ["com.microsoft.rdc.mac"]     = true,  -- older Microsoft Remote Desktop
@@ -1347,7 +1348,7 @@ local REMOTE_DESKTOP_BUNDLE_IDS = {
     ["com.vmware.fusion"]         = true,  -- VMware Fusion
 }
 
-local function frontAppUsesCtrlV()
+local function frontAppIsRemoteDesktop()
     local app = hs.application.frontmostApplication()
     return app and REMOTE_DESKTOP_BUNDLE_IDS[app:bundleID()] or false
 end
@@ -1358,10 +1359,11 @@ local function insertTextAtCursor(text, mode)
         -- Note: we intentionally don't save/restore clipboard — getContents() can block
         -- for 60+ seconds if another app holds a large object on the clipboard.
         hs.pasteboard.setContents(text)
-        if frontAppUsesCtrlV() then
-            -- Remote desktop apps forward Ctrl+V to the guest OS (Windows paste shortcut).
-            -- Cmd+V would arrive as bare "v" on the remote side.
-            hs.eventtap.keyStroke({"ctrl"}, "v")
+        if frontAppIsRemoteDesktop() then
+            -- Remote desktop apps sync the clipboard asynchronously to the guest OS.
+            -- By the time Cmd/Ctrl+V fires, Windows hasn't received the updated clipboard yet.
+            -- Typing keystrokes bypasses the clipboard entirely and arrives as direct key input.
+            hs.eventtap.keyStrokes(text)
         else
             hs.eventtap.keyStroke({"cmd"}, 9)  -- keycode 9 = V (ANSI), works regardless of keyboard layout
         end
