@@ -138,6 +138,16 @@ A waveform icon in the menu bar shows recording status (turns red when recording
 
 All settings are accessible from the menu bar — no keyboard shortcuts needed.
 
+### Output modes
+
+Click **Output** in the menu bar to cycle through three modes:
+
+| Mode | Behaviour |
+|------|-----------|
+| **PASTE** | Writes text to clipboard via `pbcopy`, then sends `Cmd+V` automatically. Default for normal use. |
+| **TYPE** | Types text character-by-character using keystroke events. Works in apps that block paste. Note: Cyrillic/non-ASCII may not work correctly in some apps. |
+| **COPY** | Writes text to clipboard via `pbcopy` but does **not** send `Cmd+V`. Useful when working in **Microsoft Remote Desktop** or other remote-desktop/VM apps where clipboard sync to the guest OS is asynchronous — dictate, wait a moment for the clipboard to sync, then press `Ctrl+V` manually in the Windows window. |
+
 ## Custom vocabulary prompt
 
 Create `~/.local-whisper/prompt` with terms whisper should recognize better:
@@ -243,7 +253,7 @@ Modifier key hold/release (detected by Hammerspoon eventtap)
   → Post-processing: remove fillers, capitalize, app-aware adjustments
   → Optional LLM refinement via Ollama (punctuation, formatting, cleanup)
   → Voice command hooks: beforeInsert → actions → text insertion → afterInsert
-  → Text inserted at cursor via paste (Cmd+V) or keystroke
+  → Text inserted at cursor via paste (Cmd+V), keystroke, or clipboard-only (COPY mode)
 ```
 
 **Latency profile** (60s dictation, large-v3-turbo model, ~0.4× real-time):
