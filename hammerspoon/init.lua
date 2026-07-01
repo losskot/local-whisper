@@ -689,6 +689,8 @@ local function refreshOverlayLabels()
     overlay[EL.refine].textColor = refineOn and CLR.refineOn or CLR.refineOff
 end
 
+local hideOverlay  -- forward declaration (defined after createOverlay)
+
 local function createOverlay()
     local screen = hs.screen.mainScreen()
     local frame = screen:frame()
@@ -907,7 +909,7 @@ local function showOverlay()
     overlay:show()
 end
 
-local function hideOverlay()
+hideOverlay = function()
     if overlayPinned then return end  -- pinned overlay stays open
     if overlay then overlay:delete(); overlay = nil end
 end
@@ -1336,13 +1338,33 @@ end
 -- Final transcription
 --------------------------------------------------------------------------------
 
+-- Bundle IDs of remote desktop / VM apps that require Ctrl+V instead of Cmd+V
+local REMOTE_DESKTOP_BUNDLE_IDS = {
+    ["com.microsoft.rdc.macos"]   = true,  -- Microsoft Remote Desktop
+    ["com.microsoft.rdc.mac"]     = true,  -- older Microsoft Remote Desktop
+    ["com.parallels.desktop"]     = true,  -- Parallels Desktop
+    ["org.virtualbox.app.VirtualBox"] = true,  -- VirtualBox
+    ["com.vmware.fusion"]         = true,  -- VMware Fusion
+}
+
+local function frontAppUsesCtrlV()
+    local app = hs.application.frontmostApplication()
+    return app and REMOTE_DESKTOP_BUNDLE_IDS[app:bundleID()] or false
+end
+
 -- Low-level text insertion at cursor
 local function insertTextAtCursor(text, mode)
     if mode == "paste" then
         -- Note: we intentionally don't save/restore clipboard — getContents() can block
         -- for 60+ seconds if another app holds a large object on the clipboard.
         hs.pasteboard.setContents(text)
-        hs.eventtap.keyStroke({"cmd"}, 9)  -- keycode 9 = V (ANSI), works regardless of keyboard layout
+        if frontAppUsesCtrlV() then
+            -- Remote desktop apps forward Ctrl+V to the guest OS (Windows paste shortcut).
+            -- Cmd+V would arrive as bare "v" on the remote side.
+            hs.eventtap.keyStroke({"ctrl"}, "v")
+        else
+            hs.eventtap.keyStroke({"cmd"}, 9)  -- keycode 9 = V (ANSI), works regardless of keyboard layout
+        end
     else
         hs.eventtap.keyStrokes(text)
     end
