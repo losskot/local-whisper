@@ -152,21 +152,25 @@ CONFIG_DIR="$HOME/.local-whisper"
 mkdir -p "$CONFIG_DIR"
 ok "Config directory: $CONFIG_DIR"
 
-if [[ -f "$HAMMERSPOON_DIR/init.lua" ]]; then
+# Use a symlink so changes in the repo are reflected immediately without re-running install
+if [[ -L "$HAMMERSPOON_DIR/init.lua" ]]; then
+    ln -sf "$SCRIPT_DIR/hammerspoon/init.lua" "$HAMMERSPOON_DIR/init.lua"
+    ok "Hammerspoon config symlink updated"
+elif [[ -f "$HAMMERSPOON_DIR/init.lua" ]]; then
     if grep -q "local-whisper" "$HAMMERSPOON_DIR/init.lua"; then
-        # Existing local-whisper config — update it but preserve user settings
-        # (user settings live in ~/.local-whisper/, not in init.lua)
-        cp "$SCRIPT_DIR/hammerspoon/init.lua" "$HAMMERSPOON_DIR/init.lua"
-        ok "Hammerspoon config updated"
+        rm "$HAMMERSPOON_DIR/init.lua"
+        ln -sf "$SCRIPT_DIR/hammerspoon/init.lua" "$HAMMERSPOON_DIR/init.lua"
+        ok "Hammerspoon config replaced with symlink"
     else
         warn "Existing init.lua found — backing up to init.lua.backup"
         cp "$HAMMERSPOON_DIR/init.lua" "$HAMMERSPOON_DIR/init.lua.backup"
-        cp "$SCRIPT_DIR/hammerspoon/init.lua" "$HAMMERSPOON_DIR/init.lua"
-        ok "Hammerspoon config installed (backup saved)"
+        rm "$HAMMERSPOON_DIR/init.lua"
+        ln -sf "$SCRIPT_DIR/hammerspoon/init.lua" "$HAMMERSPOON_DIR/init.lua"
+        ok "Hammerspoon config installed as symlink (backup saved)"
     fi
 else
-    cp "$SCRIPT_DIR/hammerspoon/init.lua" "$HAMMERSPOON_DIR/init.lua"
-    ok "Hammerspoon config installed"
+    ln -sf "$SCRIPT_DIR/hammerspoon/init.lua" "$HAMMERSPOON_DIR/init.lua"
+    ok "Hammerspoon config installed as symlink"
 fi
 
 # Install example voice commands if user doesn't have a config yet
