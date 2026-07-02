@@ -1344,27 +1344,25 @@ end
 -- Low-level text insertion at cursor
 local function insertTextAtCursor(text, mode)
     if mode == "paste" then
-        -- Write via pbcopy (a separate process) so that apps like Microsoft Remote Desktop,
-        -- which only detect clipboard changes from real OS-level copy operations, also pick
-        -- up the new content. hs.pasteboard.setContents() alone does not trigger RDP sync.
-        local task = hs.task.new("/bin/sh", function(exitCode, _, _)
+        -- osascript forces clipboard ownership transfer (works even when Windows owns RDP clipboard).
+        -- pbcopy alone fails when the clipboard was last used from Windows side.
+        local escaped = text:gsub("\\", "\\\\"):gsub('"', '\\"')
+        local task = hs.task.new("/usr/bin/osascript", function(exitCode, _, _)
             if exitCode ~= 0 then
-                -- Fallback to direct pasteboard write if pbcopy fails
                 hs.pasteboard.setContents(text)
             end
             hs.eventtap.keyStroke({"cmd"}, 9)  -- keycode 9 = V (ANSI)
-        end, {"-c", "printf '%s' \"$1\" | /usr/bin/pbcopy", "--", text})
-        task:setEnvironment({LANG="en_US.UTF-8", HOME=HOME})
+        end, {"-e", 'set the clipboard to "' .. escaped .. '"'})
         task:start()
     elseif mode == "copy" then
         -- Copy to clipboard only — no auto-paste. Useful for remote desktop
         -- where clipboard sync is asynchronous; user pastes manually when ready.
-        local task = hs.task.new("/bin/sh", function(exitCode, _, _)
+        local escaped = text:gsub("\\", "\\\\"):gsub('"', '\\"')
+        local task = hs.task.new("/usr/bin/osascript", function(exitCode, _, _)
             if exitCode ~= 0 then
                 hs.pasteboard.setContents(text)
             end
-        end, {"-c", "printf '%s' \"$1\" | /usr/bin/pbcopy", "--", text})
-        task:setEnvironment({LANG="en_US.UTF-8", HOME=HOME})
+        end, {"-e", 'set the clipboard to "' .. escaped .. '"'})
         task:start()
     else
         hs.eventtap.keyStrokes(text)
