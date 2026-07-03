@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "TMPDIR_REAL=/var/folders/ph/3yv4hw8567g12wy09lntpvt40000gp/T/\ntotal 13088\ndrwxr-xr-x@  26 vitaliy  staff     832 Jul  3 18:58 .\ndrwx------@ 209 vitaliy  staff    6688 Jul  3 18:59 ..\ndrwxr-xr-x@  66 vitaliy  staff    2112 Jul  3 18:59 chunks\n-rw-r--r--@   1 vitaliy  staff    2350 Jul  3 18:58 pipe_concat_1.txt\n-rw-r--r--@   1 vitaliy  staff    1786 Jul  3 18:52 pipe_concat_10.txt\n-rw-r--r--@   1 vitaliy  staff     658 Jul  3 18:52 pipe_concat_11.txt\n-rw-r--r--@   1 vitaliy  staff    2162 Jul  3 18:59 pipe_concat_2.txt\n-rw-r--r--@   1 vitaliy  staff    1504 Jul  3 18:59 pipe_concat_3.txt\n-rw-r--r--@   1 vitaliy  staff    2162 Jul  3 18:55 pipe_concat_4.txt\n-rw-r--r--@   1 vitaliy  staff    2350 Jul  3 18:55 pipe_concat_5.txt\n-rw-r--r--@   1 vitaliy  staff    2350 Jul  3 18:49 pipe_concat_6.txt\n-rw-r--r--@   1 vitaliy  staff    2068 Jul  3 18:49 pipe_concat_7.txt\n-rw-r--r--@   1 vitaliy  staff    2068 Jul  3 18:50 pipe_concat_8.txt\n-rw-r--r--@   1 vitaliy  staff    2162 Jul  3 18:50 pipe_concat_9.txt\n-rw-r--r--@   1 vitaliy  staff  714114 Jul  3 18:58 pipe_seg_1.wav\n-rw-r--r--@   1 vitaliy  staff  544846 Jul  3 18:52 pipe_seg_10.wav\n-rw-r--r--@   1 vitaliy  staff  199758 Jul  3 18:52 pipe_seg_11.wav\n-rw-r--r--@   1 vitaliy  staff  663630 Jul  3 18:59 pipe_seg_2.wav\n-rw-r--r--@   1 vitaliy  staff  457840 Jul  3 18:59 pipe_seg_3.wav\n-rw-r--r--@   1 vitaliy  staff  659192 Jul  3 18:55 pipe_seg_4.wav\n-rw-r--r--@   1 vitaliy  staff  720634 Jul  3 18:55 pipe_seg_5.wav\n-rw-r--r--@   1 vitaliy  staff  716878 Jul  3 18:49 pipe_seg_6.wav\n-rw-r--r--@   1 vitaliy  staff  631544 Jul  3 18:49 pipe_seg_7.wav\n-rw-r--r--@   1 vitaliy  staff  633252 Jul  3 18:50 pipe_seg_8.wav\n-rw-r--r--@   1 vitaliy  staff  662606 Jul  3 18:50 pipe_seg_9.wav\n-rw-r--r--@   1 vitaliy  staff   25148 Jul  3 18:59 whisper-dictate.log\n---LOG SIZE---\n     270 /var/folders/ph/3yv4hw8567g12wy09lntpvt40000gp/T/whisper-dictate/whisper-dictate.log",
+        "is_error": false,
+        "tool_use_id": "toolu_01G6J3s63G6NQ2hjhxhbMgog",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "21c5640a-bd78-4e03-8b55-bf1577249166",
+  "promptId": "d5674c17-c844-4911-a5b7-5366032bd0d7",
+  "sessionId": "ef7d9c6a-1d4c-4be3-a355-88016657f998",
+  "sourceToolAssistantUUID": "21c5640a-bd78-4e03-8b55-bf1577249166",
+  "timestamp": "2026-07-03T16:59:40.354Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "TMPDIR_REAL=/var/folders/ph/3yv4hw8567g12wy09lntpvt40000gp/T/\ntotal 13088\ndrwxr-xr-x@  26 vitaliy  staff     832 Jul  3 18:58 .\ndrwx------@ 209 vitaliy  staff    6688 Jul  3 18:59 ..\ndrwxr-xr-x@  66 vitaliy  staff    2112 Jul  3 18:59 chunks\n-rw-r--r--@   1 vitaliy  staff    2350 Jul  3 18:58 pipe_concat_1.txt\n-rw-r--r--@   1 vitaliy  staff    1786 Jul  3 18:52 pipe_concat_10.txt\n-rw-r--r--@   1 vitaliy  staff     658 Jul  3 18:52 pipe_concat_11.txt\n-rw-r--r--@   1 vitaliy  staff    2162 Jul  3 18:59 pipe_concat_2.txt\n-rw-r--r--@   1 vitaliy  staff    1504 Jul  3 18:59 pipe_concat_3.txt\n-rw-r--r--@   1 vitaliy  staff    2162 Jul  3 18:55 pipe_concat_4.txt\n-rw-r--r--@   1 vitaliy  staff    2350 Jul  3 18:55 pipe_concat_5.txt\n-rw-r--r--@   1 vitaliy  staff    2350 Jul  3 18:49 pipe_concat_6.txt\n-rw-r--r--@   1 vitaliy  staff    2068 Jul  3 18:49 pipe_concat_7.txt\n-rw-r--r--@   1 vitaliy  staff    2068 Jul  3 18:50 pipe_concat_8.txt\n-rw-r--r--@   1 vitaliy  staff    2162 Jul  3 18:50 pipe_concat_9.txt\n-rw-r--r--@   1 vitaliy  staff  714114 Jul  3 18:58 pipe_seg_1.wav\n-rw-r--r--@   1 vitaliy  staff  544846 Jul  3 18:52 pipe_seg_10.wav\n-rw-r--r--@   1 vitaliy  staff  199758 Jul  3 18:52 pipe_seg_11.wav\n-rw-r--r--@   1 vitaliy  staff  663630 Jul  3 18:59 pipe_seg_2.wav\n-rw-r--r--@   1 vitaliy  staff  457840 Jul  3 18:59 pipe_seg_3.wav\n-rw-r--r--@   1 vitaliy  staff  659192 Jul  3 18:55 pipe_seg_4.wav\n-rw-r--r--@   1 vitaliy  staff  720634 Jul  3 18:55 pipe_seg_5.wav\n-rw-r--r--@   1 vitaliy  staff  716878 Jul  3 18:49 pipe_seg_6.wav\n-rw-r--r--@   1 vitaliy  staff  631544 Jul  3 18:49 pipe_seg_7.wav\n-rw-r--r--@   1 vitaliy  staff  633252 Jul  3 18:50 pipe_seg_8.wav\n-rw-r--r--@   1 vitaliy  staff  662606 Jul  3 18:50 pipe_seg_9.wav\n-rw-r--r--@   1 vitaliy  staff   25148 Jul  3 18:59 whisper-dictate.log\n---LOG SIZE---\n     270 /var/folders/ph/3yv4hw8567g12wy09lntpvt40000gp/T/whisper-dictate/whisper-dictate.log"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "a1c032c0-44b4-435f-a730-2af0feeae341",
+  "version": "2.1.197"
+}

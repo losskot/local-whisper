@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "-rwxr-xr-x  1 vitaliy  staff  882064 May 28 01:45 /Users/vitaliy/whisper.cpp/build/bin/whisper-cli\n=== models ===\n-rw-r--r--  1 vitaliy  staff      575451 May 28 01:37 /Users/vitaliy/whisper.cpp/models/for-tests-ggml-base.bin\n-rw-r--r--  1 vitaliy  staff      586836 May 28 01:37 /Users/vitaliy/whisper.cpp/models/for-tests-ggml-base.en.bin\n-rw-r--r--  1 vitaliy  staff      575451 May 28 01:37 /Users/vitaliy/whisper.cpp/models/for-tests-ggml-large.bin\n-rw-r--r--  1 vitaliy  staff      575451 May 28 01:37 /Users/vitaliy/whisper.cpp/models/for-tests-ggml-medium.bin\n-rw-r--r--  1 vitaliy  staff      586836 May 28 01:37 /Users/vitaliy/whisper.cpp/models/for-tests-ggml-medium.en.bin\n-rw-r--r--  1 vitaliy  staff       16603 Jun 22 21:59 /Users/vitaliy/whisper.cpp/models/for-tests-ggml-parakeet-tdt.bin\n-rw-r--r--  1 vitaliy  staff      575451 May 28 01:37 /Users/vitaliy/whisper.cpp/models/for-tests-ggml-small.bin\n-rw-r--r--  1 vitaliy  staff      586836 May 28 01:37 /Users/vitaliy/whisper.cpp/models/for-tests-ggml-small.en.bin\n-rw-r--r--  1 vitaliy  staff      575451 May 28 01:37 /Users/vitaliy/whisper.cpp/models/for-tests-ggml-tiny.bin\n-rw-r--r--  1 vitaliy  staff      586836 May 28 01:37 /Users/vitaliy/whisper.cpp/models/for-tests-ggml-tiny.en.bin\n-rw-r--r--  1 vitaliy  staff      885098 May 28 01:37 /Users/vitaliy/whisper.cpp/models/for-tests-silero-v6.2.0-ggml.bin\n-rw-r--r--  1 vitaliy  staff   574041195 May 28 01:56 /Users/vitaliy/whisper.cpp/models/ggml-large-v3-turbo-q5_0.bin\n-rw-r--r--  1 vitaliy  staff  1533763059 May 28 01:49 /Users/vitaliy/whisper.cpp/models/ggml-medium.bin\n-rw-r--r--  1 vitaliy  staff    77691713 May 28 01:50 /Users/vitaliy/whisper.cpp/models/ggml-tiny.bin\n=== config ===\ntotal 72\ndrwxr-xr-x    9 vitaliy  staff   288 May 28 02:59 .\ndrwxr-x---+ 153 vitaliy  staff  4896 Jul  3 18:58 ..\n-rw-r--r--@   1 vitaliy  staff     3 Jun 15 03:51 enter\n-rw-r--r--@   1 vitaliy  staff     4 Jun  5 05:28 lang\n-rw-r--r--@   1 vitaliy  staff    19 Jun 15 03:43 model\n-rw-r--r--@   1 vitaliy  staff     4 Jul  2 22:35 output\n-rw-r--r--@   1 vitaliy  staff     6 May 28 02:06 preferred_langs\n-rw-r--r--@   1 vitaliy  staff  9335 Jul  3 19:01 recent.json\n-rw-r--r--@   1 vitaliy  staff     3 Jun 15 03:43 refine\n-- /Users/vitaliy/.local-whisper/model --\nlarge-v3-turbo-q5_0-- /Users/vitaliy/.local-whisper/lang --\nauto",
+        "is_error": false,
+        "tool_use_id": "toolu_017G5WfqooJ7tLaBxyKfPRkU",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "ecc19652-53d7-4edd-89a4-56d190f4396b",
+  "promptId": "d5674c17-c844-4911-a5b7-5366032bd0d7",
+  "sessionId": "ef7d9c6a-1d4c-4be3-a355-88016657f998",
+  "sourceToolAssistantUUID": "ecc19652-53d7-4edd-89a4-56d190f4396b",
+  "timestamp": "2026-07-03T17:01:37.765Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "-rwxr-xr-x  1 vitaliy  staff  882064 May 28 01:45 /Users/vitaliy/whisper.cpp/build/bin/whisper-cli\n=== models ===\n-rw-r--r--  1 vitaliy  staff      575451 May 28 01:37 /Users/vitaliy/whisper.cpp/models/for-tests-ggml-base.bin\n-rw-r--r--  1 vitaliy  staff      586836 May 28 01:37 /Users/vitaliy/whisper.cpp/models/for-tests-ggml-base.en.bin\n-rw-r--r--  1 vitaliy  staff      575451 May 28 01:37 /Users/vitaliy/whisper.cpp/models/for-tests-ggml-large.bin\n-rw-r--r--  1 vitaliy  staff      575451 May 28 01:37 /Users/vitaliy/whisper.cpp/models/for-tests-ggml-medium.bin\n-rw-r--r--  1 vitaliy  staff      586836 May 28 01:37 /Users/vitaliy/whisper.cpp/models/for-tests-ggml-medium.en.bin\n-rw-r--r--  1 vitaliy  staff       16603 Jun 22 21:59 /Users/vitaliy/whisper.cpp/models/for-tests-ggml-parakeet-tdt.bin\n-rw-r--r--  1 vitaliy  staff      575451 May 28 01:37 /Users/vitaliy/whisper.cpp/models/for-tests-ggml-small.bin\n-rw-r--r--  1 vitaliy  staff      586836 May 28 01:37 /Users/vitaliy/whisper.cpp/models/for-tests-ggml-small.en.bin\n-rw-r--r--  1 vitaliy  staff      575451 May 28 01:37 /Users/vitaliy/whisper.cpp/models/for-tests-ggml-tiny.bin\n-rw-r--r--  1 vitaliy  staff      586836 May 28 01:37 /Users/vitaliy/whisper.cpp/models/for-tests-ggml-tiny.en.bin\n-rw-r--r--  1 vitaliy  staff      885098 May 28 01:37 /Users/vitaliy/whisper.cpp/models/for-tests-silero-v6.2.0-ggml.bin\n-rw-r--r--  1 vitaliy  staff   574041195 May 28 01:56 /Users/vitaliy/whisper.cpp/models/ggml-large-v3-turbo-q5_0.bin\n-rw-r--r--  1 vitaliy  staff  1533763059 May 28 01:49 /Users/vitaliy/whisper.cpp/models/ggml-medium.bin\n-rw-r--r--  1 vitaliy  staff    77691713 May 28 01:50 /Users/vitaliy/whisper.cpp/models/ggml-tiny.bin\n=== config ===\ntotal 72\ndrwxr-xr-x    9 vitaliy  staff   288 May 28 02:59 .\ndrwxr-x---+ 153 vitaliy  staff  4896 Jul  3 18:58 ..\n-rw-r--r--@   1 vitaliy  staff     3 Jun 15 03:51 enter\n-rw-r--r--@   1 vitaliy  staff     4 Jun  5 05:28 lang\n-rw-r--r--@   1 vitaliy  staff    19 Jun 15 03:43 model\n-rw-r--r--@   1 vitaliy  staff     4 Jul  2 22:35 output\n-rw-r--r--@   1 vitaliy  staff     6 May 28 02:06 preferred_langs\n-rw-r--r--@   1 vitaliy  staff  9335 Jul  3 19:01 recent.json\n-rw-r--r--@   1 vitaliy  staff     3 Jun 15 03:43 refine\n-- /Users/vitaliy/.local-whisper/model --\nlarge-v3-turbo-q5_0-- /Users/vitaliy/.local-whisper/lang --\nauto"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "a53fec74-8ef8-43dc-9762-7a90dec72506",
+  "version": "2.1.197"
+}

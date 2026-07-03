@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "-    if mode == \"copy\" then return \"copy\" end\n-    local cur = getOutputMode()\n-    local next = (cur == \"paste\") and \"type\" or (cur == \"type\") and \"copy\" or \"paste\"\n-local hideOverlay  -- forward declaration (defined after createOverlay)\n-\n-hideOverlay = function()\n-        -- osascript forces clipboard ownership transfer (works even when Windows owns RDP clipboard).\n-        -- pbcopy alone fails when the clipboard was last used from Windows side.\n-        local escaped = text:gsub(\"\\\\\", \"\\\\\\\\\"):gsub('\"', '\\\\\"')\n-        local task = hs.task.new(\"/usr/bin/osascript\", function(exitCode, _, _)\n-            if exitCode ~= 0 then\n-                hs.pasteboard.setContents(text)\n-            end\n-            hs.eventtap.keyStroke({\"cmd\"}, 9)  -- keycode 9 = V (ANSI)\n-        end, {\"-e\", 'set the clipboard to \"' .. escaped .. '\"'})\n-        task:start()\n-    elseif mode == \"copy\" then\n-        -- Copy to clipboard only — no auto-paste. Useful for remote desktop\n-        -- where clipboard sync is asynchronous; user pastes manually when ready.\n-        local escaped = text:gsub(\"\\\\\", \"\\\\\\\\\"):gsub('\"', '\\\\\"')\n-        local task = hs.task.new(\"/usr/bin/osascript\", function(exitCode, _, _)\n-            if exitCode ~= 0 then\n-                hs.pasteboard.setContents(text)\n-            end\n-        end, {\"-e\", 'set the clipboard to \"' .. escaped .. '\"'})\n-        task:start()\n-    hs.sound.getByFile(\"/System/Library/Sounds/Glass.aiff\"):play()\n-            hs.sound.getByFile(\"/System/Library/Sounds/Pop.aiff\"):play()\n-            hs.sound.getByFile(\"/System/Library/Sounds/Basso.aiff\"):play()\n-            hs.sound.getByFile(\"/System/Library/Sounds/Basso.aiff\"):play()\n-    hs.sound.getByFile(\"/System/Library/Sounds/Tink.aiff\"):play()\n-\n-    -- Brief delay for ffmpeg to finalize last chunk",
+        "is_error": false,
+        "tool_use_id": "toolu_019iecs5vNNh5uq5Qf7BamND",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "5afef0b7-a32a-4374-8103-694a7ece6410",
+  "promptId": "e8a628b5-9b24-4d37-ad01-a8b95c4b9199",
+  "sessionId": "ef7d9c6a-1d4c-4be3-a355-88016657f998",
+  "sourceToolAssistantUUID": "5afef0b7-a32a-4374-8103-694a7ece6410",
+  "timestamp": "2026-07-03T17:18:44.947Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "-    if mode == \"copy\" then return \"copy\" end\n-    local cur = getOutputMode()\n-    local next = (cur == \"paste\") and \"type\" or (cur == \"type\") and \"copy\" or \"paste\"\n-local hideOverlay  -- forward declaration (defined after createOverlay)\n-\n-hideOverlay = function()\n-        -- osascript forces clipboard ownership transfer (works even when Windows owns RDP clipboard).\n-        -- pbcopy alone fails when the clipboard was last used from Windows side.\n-        local escaped = text:gsub(\"\\\\\", \"\\\\\\\\\"):gsub('\"', '\\\\\"')\n-        local task = hs.task.new(\"/usr/bin/osascript\", function(exitCode, _, _)\n-            if exitCode ~= 0 then\n-                hs.pasteboard.setContents(text)\n-            end\n-            hs.eventtap.keyStroke({\"cmd\"}, 9)  -- keycode 9 = V (ANSI)\n-        end, {\"-e\", 'set the clipboard to \"' .. escaped .. '\"'})\n-        task:start()\n-    elseif mode == \"copy\" then\n-        -- Copy to clipboard only — no auto-paste. Useful for remote desktop\n-        -- where clipboard sync is asynchronous; user pastes manually when ready.\n-        local escaped = text:gsub(\"\\\\\", \"\\\\\\\\\"):gsub('\"', '\\\\\"')\n-        local task = hs.task.new(\"/usr/bin/osascript\", function(exitCode, _, _)\n-            if exitCode ~= 0 then\n-                hs.pasteboard.setContents(text)\n-            end\n-        end, {\"-e\", 'set the clipboard to \"' .. escaped .. '\"'})\n-        task:start()\n-    hs.sound.getByFile(\"/System/Library/Sounds/Glass.aiff\"):play()\n-            hs.sound.getByFile(\"/System/Library/Sounds/Pop.aiff\"):play()\n-            hs.sound.getByFile(\"/System/Library/Sounds/Basso.aiff\"):play()\n-            hs.sound.getByFile(\"/System/Library/Sounds/Basso.aiff\"):play()\n-    hs.sound.getByFile(\"/System/Library/Sounds/Tink.aiff\"):play()\n-\n-    -- Brief delay for ffmpeg to finalize last chunk"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "ba2064e4-dee0-4ffb-b4dd-0c90852ee986",
+  "version": "2.1.197"
+}

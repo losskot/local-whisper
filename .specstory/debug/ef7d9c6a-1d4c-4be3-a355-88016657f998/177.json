@@ -1,0 +1,35 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "1009\t_whisperRecovery = { file = WHISPER_TMP .. \"/last-session-recovery.txt\" }\n1010\t\n1011\tfunction _whisperRecovery.play(path)\n1012\t    pcall(function()\n1013\t        local snd = hs.sound.getByFile(path)\n1014\t        if snd then snd:play() end\n1015\t    end)\n1016\tend\n1017\t\n1018\tfunction _whisperRecovery.snapshot()\n1019\t    local parts = {}\n1020\t    for n = 1, (pipelineNextSeg - 1) do\n1021\t        local t = pipelineResults[n]\n1022\t        if t and t ~= \"\" then table.insert(parts, t) end\n1023\t    end\n1024\t    if #parts == 0 then return end\n1025\t    local text = table.concat(parts, \" \"):gsub(\"%s+\", \" \")\n1026\t    local f = io.open(_whisperRecovery.file, \"w\")\n1027\t    if f then f:write(text); f:close() end\n1028\tend\n1029\t\n1030\tfunction _whisperRecovery.clear()\n1031\t    os.remove(_whisperRecovery.file)\n1032\tend\n1033\t\n1034\tfunction _whisperRecovery.salvage()\n1035\t    local f = io.open(_whisperRecovery.file, \"r\")\n1036\t    if not f then return end\n1037\t    local text = f:read(\"*a\"); f:close()\n1038\t    text = (text or \"\"):gsub(\"^%s+\", \"\"):gsub(\"%s+$\", \"\")\n1039\t    if text ~= \"\" then\n1040\t        log(\"recovery: salvaged orphaned session text (\" .. #text .. \" chars) → recent dictations\")\n1041\t        table.insert(recentDictations, 1, {\n1042\t            text = text,\n1043\t            time = os.time(),\n1044\t            inserted = false,\n1045\t            app = \"[recovered]\",\n1046\t        })\n1047\t        while #recentDictations \u003e 10 do table.remove(recentDictations) end\n1048\t        saveRecentDictations()\n1049\t    end\n1050\t    os.remove(_whisperRecovery.file)\n1051\tend\n1052\t\n1053\t-- On load: recover any text stranded by a previous crash/freeze/reload.\n1054\t_whisperRecovery.salvage()\n1055\t\n1056\t-- Auto-stop state",
+        "tool_use_id": "toolu_01V2v8eGaDJ9RLGRUpxaiz5w",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "4e16c52c-181d-4450-9967-d149d4946c31",
+  "promptId": "e8a628b5-9b24-4d37-ad01-a8b95c4b9199",
+  "sessionId": "ef7d9c6a-1d4c-4be3-a355-88016657f998",
+  "sourceToolAssistantUUID": "4e16c52c-181d-4450-9967-d149d4946c31",
+  "timestamp": "2026-07-03T17:17:05.962Z",
+  "toolUseResult": {
+    "file": {
+      "content": "_whisperRecovery = { file = WHISPER_TMP .. \"/last-session-recovery.txt\" }\n\nfunction _whisperRecovery.play(path)\n    pcall(function()\n        local snd = hs.sound.getByFile(path)\n        if snd then snd:play() end\n    end)\nend\n\nfunction _whisperRecovery.snapshot()\n    local parts = {}\n    for n = 1, (pipelineNextSeg - 1) do\n        local t = pipelineResults[n]\n        if t and t ~= \"\" then table.insert(parts, t) end\n    end\n    if #parts == 0 then return end\n    local text = table.concat(parts, \" \"):gsub(\"%s+\", \" \")\n    local f = io.open(_whisperRecovery.file, \"w\")\n    if f then f:write(text); f:close() end\nend\n\nfunction _whisperRecovery.clear()\n    os.remove(_whisperRecovery.file)\nend\n\nfunction _whisperRecovery.salvage()\n    local f = io.open(_whisperRecovery.file, \"r\")\n    if not f then return end\n    local text = f:read(\"*a\"); f:close()\n    text = (text or \"\"):gsub(\"^%s+\", \"\"):gsub(\"%s+$\", \"\")\n    if text ~= \"\" then\n        log(\"recovery: salvaged orphaned session text (\" .. #text .. \" chars) → recent dictations\")\n        table.insert(recentDictations, 1, {\n            text = text,\n            time = os.time(),\n            inserted = false,\n            app = \"[recovered]\",\n        })\n        while #recentDictations \u003e 10 do table.remove(recentDictations) end\n        saveRecentDictations()\n    end\n    os.remove(_whisperRecovery.file)\nend\n\n-- On load: recover any text stranded by a previous crash/freeze/reload.\n_whisperRecovery.salvage()\n\n-- Auto-stop state",
+      "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+      "numLines": 48,
+      "startLine": 1009,
+      "totalLines": 2935
+    },
+    "type": "text"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "8508205f-e6a6-4ce6-a186-de73f3b193bd",
+  "version": "2.1.197"
+}

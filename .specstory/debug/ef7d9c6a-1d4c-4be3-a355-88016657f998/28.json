@@ -1,0 +1,68 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01HYvPvdb4JyoZc9HJpykFti",
+        "input": {
+          "command": "TMPDIR_REAL=$(getconf DARWIN_USER_TEMP_DIR); D=\"${TMPDIR_REAL}whisper-dictate/\"; BIN=~/whisper.cpp/build/bin/whisper-cli; M=~/whisper.cpp/models/ggml-large-v3-turbo-q5_0.bin; for n in 4 5; do echo \"===== SEG $n (pipe_seg_$n.wav) =====\"; \"$BIN\" -m \"$M\" -f \"$D\"pipe_seg_$n.wav -l ru -nt -np 2\u003e/dev/null; echo; done",
+          "description": "Re-transcribe surviving seg4 and seg5"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_01KL8iPqXuRFj1mGaxCgutsG",
+    "model": "claude-opus-4-8",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 4405,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 4405,
+      "cache_read_input_tokens": 46383,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 4405,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 4405,
+          "cache_read_input_tokens": 46383,
+          "input_tokens": 2,
+          "output_tokens": 1396,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 1396,
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "bce8b610-e48d-4da7-ba05-12ca28e64d98",
+  "requestId": "req_011CcfUzGLpkVWr653Mf3XtF",
+  "sessionId": "ef7d9c6a-1d4c-4be3-a355-88016657f998",
+  "timestamp": "2026-07-03T17:01:57.106Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "185349ea-5525-461a-a328-23faa5b7f753",
+  "version": "2.1.197"
+}

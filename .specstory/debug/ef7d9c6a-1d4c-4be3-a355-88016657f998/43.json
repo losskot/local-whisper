@@ -1,0 +1,35 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "1592\tlocal function doFinalTranscription()\n1593\t    if streamTimer then streamTimer:stop(); streamTimer = nil end\n1594\t\n1595\t    local allChunks = getChunkFiles()\n1596\t    log(\"final: START — total chunks=\" .. #allChunks\n1597\t        .. \", streamed=\" .. (pipelineNextSeg - 1) .. \" segs\"\n1598\t        .. \" (next unclaimed chunk idx=\" .. pipelineNextChunk .. \")\")\n1599\t\n1600\t    -- Build remaining chunks not yet claimed by the streaming pipeline\n1601\t    local remaining = {}\n1602\t    for j = pipelineNextChunk, #allChunks do\n1603\t        table.insert(remaining, allChunks[j])\n1604\t    end\n1605\t\n1606\t    if pipelineNextSeg == 1 and #remaining \u003c 2 then\n1607\t        log(\"final: not enough chunks, skipping\")\n1608\t        hideOverlay()\n1609\t        return\n1610\t    end\n1611\t\n1612\t    setOverlayText(\"Transcribing...\")\n1613\t\n1614\t    -- Dispatch remaining chunks as final pipeline segments\n1615\t    if #remaining \u003e= 2 then\n1616\t        local finalGroups = splitAtSilence(remaining, 25)\n1617\t        for _, grp in ipairs(finalGroups) do\n1618\t            local gfirst = grp[1]:match(\"([^/]+)$\") or grp[1]\n1619\t            local glast  = grp[#grp]:match(\"([^/]+)$\") or grp[#grp]\n1620\t            local segN = pipelineNextSeg\n1621\t            pipelineNextSeg   = pipelineNextSeg   + 1\n1622\t            pipelineNextChunk = pipelineNextChunk + #grp\n1623\t            log(\"final: dispatching seg \" .. segN .. \" → \" .. #grp .. \" chunks (\" .. gfirst .. \" … \" .. glast .. \")\")\n1624\t            dispatchSegment(segN, grp)\n1625\t        end\n1626\t    end\n1627\t\n1628\t    -- Fix the total and start finalization mode\n1629\t    pipelineTotal      = pipelineNextSeg - 1\n1630\t    pipelineFinalizing = true\n1631\t    log(\"final: pipelineTotal=\" .. pipelineTotal .. \", pipelineDone=\" .. pipelineDone)\n1632\t\n1633\t    if pipelineTotal == 0 then\n1634\t        log(\"final: no segments at all, skipping\")\n1635\t        hideOverlay(); return\n1636\t    end\n1637\t\n1638\t    -- Update overlay with pending count (stream segs may still be running)\n1639\t    local left = pipelineTotal - pipelineDone\n1640\t    if left \u003e 1 then\n1641\t        setOverlayText(string.format(\"Transcribing... (%d left)\", left))\n1642\t    end\n1643\t\n1644\t    -- Edge case: all streaming segs completed before recording stopped\n1645\t    if pipelineDone \u003e= pipelineTotal then\n1646\t        pipelineFinalize()\n1647\t    end\n1648\tend\n1649\t\n1650\t--------------------------------------------------------------------------------\n1651\t-- Auto-stop on silence\n1652\t--------------------------------------------------------------------------------\n1653\t\n1654\tlocal stopRecording -- forward declaration (defined below in Start/stop section)\n1655\t\n1656\tlocal function checkSilence()\n1657\t    if not isRecording then return end\n1658\t    local chunks = getChunkFiles()\n1659\t    local numChunks = #chunks\n1660\t    -- Only check completed chunks (not the one being written)\n1661\t    local completed = numChunks - 1",
+        "tool_use_id": "toolu_01MxdRHnrVvbDUTmL74w9b2V",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "91a41ef8-572c-4960-bb69-6cd671f8065e",
+  "promptId": "d5674c17-c844-4911-a5b7-5366032bd0d7",
+  "sessionId": "ef7d9c6a-1d4c-4be3-a355-88016657f998",
+  "sourceToolAssistantUUID": "91a41ef8-572c-4960-bb69-6cd671f8065e",
+  "timestamp": "2026-07-03T17:03:16.100Z",
+  "toolUseResult": {
+    "file": {
+      "content": "local function doFinalTranscription()\n    if streamTimer then streamTimer:stop(); streamTimer = nil end\n\n    local allChunks = getChunkFiles()\n    log(\"final: START — total chunks=\" .. #allChunks\n        .. \", streamed=\" .. (pipelineNextSeg - 1) .. \" segs\"\n        .. \" (next unclaimed chunk idx=\" .. pipelineNextChunk .. \")\")\n\n    -- Build remaining chunks not yet claimed by the streaming pipeline\n    local remaining = {}\n    for j = pipelineNextChunk, #allChunks do\n        table.insert(remaining, allChunks[j])\n    end\n\n    if pipelineNextSeg == 1 and #remaining \u003c 2 then\n        log(\"final: not enough chunks, skipping\")\n        hideOverlay()\n        return\n    end\n\n    setOverlayText(\"Transcribing...\")\n\n    -- Dispatch remaining chunks as final pipeline segments\n    if #remaining \u003e= 2 then\n        local finalGroups = splitAtSilence(remaining, 25)\n        for _, grp in ipairs(finalGroups) do\n            local gfirst = grp[1]:match(\"([^/]+)$\") or grp[1]\n            local glast  = grp[#grp]:match(\"([^/]+)$\") or grp[#grp]\n            local segN = pipelineNextSeg\n            pipelineNextSeg   = pipelineNextSeg   + 1\n            pipelineNextChunk = pipelineNextChunk + #grp\n            log(\"final: dispatching seg \" .. segN .. \" → \" .. #grp .. \" chunks (\" .. gfirst .. \" … \" .. glast .. \")\")\n            dispatchSegment(segN, grp)\n        end\n    end\n\n    -- Fix the total and start finalization mode\n    pipelineTotal      = pipelineNextSeg - 1\n    pipelineFinalizing = true\n    log(\"final: pipelineTotal=\" .. pipelineTotal .. \", pipelineDone=\" .. pipelineDone)\n\n    if pipelineTotal == 0 then\n        log(\"final: no segments at all, skipping\")\n        hideOverlay(); return\n    end\n\n    -- Update overlay with pending count (stream segs may still be running)\n    local left = pipelineTotal - pipelineDone\n    if left \u003e 1 then\n        setOverlayText(string.format(\"Transcribing... (%d left)\", left))\n    end\n\n    -- Edge case: all streaming segs completed before recording stopped\n    if pipelineDone \u003e= pipelineTotal then\n        pipelineFinalize()\n    end\nend\n\n--------------------------------------------------------------------------------\n-- Auto-stop on silence\n--------------------------------------------------------------------------------\n\nlocal stopRecording -- forward declaration (defined below in Start/stop section)\n\nlocal function checkSilence()\n    if not isRecording then return end\n    local chunks = getChunkFiles()\n    local numChunks = #chunks\n    -- Only check completed chunks (not the one being written)\n    local completed = numChunks - 1",
+      "filePath": "/Users/vitaliy/.hammerspoon/init.lua",
+      "numLines": 70,
+      "startLine": 1592,
+      "totalLines": 2863
+    },
+    "type": "text"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "2c881dc2-7584-4505-a19b-09e77b2caac7",
+  "version": "2.1.197"
+}

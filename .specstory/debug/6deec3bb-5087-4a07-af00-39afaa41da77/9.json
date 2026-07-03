@@ -1,0 +1,68 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01FSJp6qHjNEPqTPsr3J2KPb",
+        "input": {
+          "command": "ls -la ~/.hammerspoon/ 2\u003e\u00261; echo \"---repo---\"; ls -la /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/ 2\u003e\u00261",
+          "description": "List hammerspoon files"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_01X3grHwSV9R1PcAHdC8RFhu",
+    "model": "claude-opus-4-8",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 7776,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 7776,
+      "cache_read_input_tokens": 16532,
+      "inference_geo": "not_available",
+      "input_tokens": 8668,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 7776,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 7776,
+          "cache_read_input_tokens": 16532,
+          "input_tokens": 8668,
+          "output_tokens": 737,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 737,
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "eaaaa655-a225-4952-82ef-c158e51d34f6",
+  "requestId": "req_011CcfWkJ5bHD8AGvkK9Hq1v",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "timestamp": "2026-07-03T17:24:54.369Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "ee3f32d6-1ab5-47df-99fe-40950cb2efb6",
+  "version": "2.1.197"
+}

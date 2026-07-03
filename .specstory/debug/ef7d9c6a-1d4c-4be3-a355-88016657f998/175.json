@@ -1,0 +1,60 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "text": "Syntax OK. Let me verify the key edited regions are correct end-to-end.",
+        "type": "text"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_01PcSmHWLiKMWsaHEj6XiRfi",
+    "model": "claude-opus-4-8",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 555,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 555,
+      "cache_read_input_tokens": 122810,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 555,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 555,
+          "cache_read_input_tokens": 122810,
+          "input_tokens": 2,
+          "output_tokens": 312,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 312,
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "57fbcae1-331a-4e82-8495-a0167edd4b57",
+  "requestId": "req_011CcfWAJN1QuYfNpP5Q7D3H",
+  "sessionId": "ef7d9c6a-1d4c-4be3-a355-88016657f998",
+  "timestamp": "2026-07-03T17:17:05.066Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "ae1ec89a-be29-43fa-ba3d-1a837f02ee29",
+  "version": "2.1.197"
+}

@@ -1,0 +1,68 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01WYpkWBBQjyySuftNtDHkw2",
+        "input": {
+          "command": "bd create \"stopRecording: unguarded Tink sound play() aborts finalize → overlay hangs, dictation lost\" --description=\"Frozen dictation 2026-07-03 18:54-18:56 (Claude, ~97s, never inserted). init.lua ~L1870 stopRecording calls hs.sound.getByFile(Tink):play() unguarded right before hs.timer.doAfter(0.3, doFinalTranscription) at L1873. If play() errors under audio load (warmup needed 2 tries at 18:46:53), stopRecording throws; it runs from release-poller doEvery (L1898-1903) with no pcall, so error is swallowed, doFinalTranscription never scheduled, overlay stays pinned, streamed segments discarded. Fix: pcall the sound; schedule doFinalTranscription before play; persist streamed seg text to crash-recovery file.\" -t bug -p 1 2\u003e\u00261 | tail -5",
+          "description": "Create bd issue (plain output)"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_01RJ4BEkA593yNrASUfiKzU3",
+    "model": "claude-opus-4-8",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 7648,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 7648,
+      "cache_read_input_tokens": 65511,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 7648,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 7648,
+          "cache_read_input_tokens": 65511,
+          "input_tokens": 2,
+          "output_tokens": 486,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 486,
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "95dd698e-ef0d-48d4-a001-d52705d2e6b0",
+  "requestId": "req_011CcfVFdJZUtPjQEXc8Bc7j",
+  "sessionId": "ef7d9c6a-1d4c-4be3-a355-88016657f998",
+  "timestamp": "2026-07-03T17:05:15.948Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "e7966b4b-0b4e-414f-aea7-4d02bba87b3c",
+  "version": "2.1.197"
+}

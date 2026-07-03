@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "(eval):1: no matches found: /Users/vitaliy/Documents/GitHub/local-whisper/.beads/*.db\n--- npx? ---\n/usr/local/bin/npx\n/usr/local/bin/node\n/usr/local/go/bin/go",
+        "is_error": false,
+        "tool_use_id": "toolu_01L9jurSenoAwWkAKUavJZuc",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "ae22fba2-c94d-4fe4-b14a-f039c13585e3",
+  "promptId": "d5674c17-c844-4911-a5b7-5366032bd0d7",
+  "sessionId": "ef7d9c6a-1d4c-4be3-a355-88016657f998",
+  "sourceToolAssistantUUID": "ae22fba2-c94d-4fe4-b14a-f039c13585e3",
+  "timestamp": "2026-07-03T17:06:52.006Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "(eval):1: no matches found: /Users/vitaliy/Documents/GitHub/local-whisper/.beads/*.db\n--- npx? ---\n/usr/local/bin/npx\n/usr/local/bin/node\n/usr/local/go/bin/go"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "f298f5dc-5afa-452a-8f25-cdb18c824dc4",
+  "version": "2.1.197"
+}

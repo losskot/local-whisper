@@ -1,0 +1,61 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "signature": "EvUBCmMIDxgCKkBs0pBQYP+jl0aLcib7VVgVNAE4f1khcovxiWOrTHBkw4TS7qi42d2JACY161vY1bW8P37bumPGGVk7YmOqh7H1Mg9jbGF1ZGUtb3B1cy00LTg4AEIIdGhpbmtpbmcSDFzyXdkgCHh713rHUhoMO1pczRhXYHhzbF2fIjCQvULny/Q0MacoUyvYX3S8Sn+tPJDD7I+nD2U8KcUscIeLt/n28iswccsiZF1+eZsqQKLb4BM4jNB7Htd0xM8/Uvz2pXEJPC0WXDgcQvGO5Y6+RMVfPeEzcEoolmNd5mQvOA695Z001sU0ze9gpW54ZL0YAQ==",
+        "thinking": "",
+        "type": "thinking"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_01BqWszLyDwvpnqnt5NBwM12",
+    "model": "claude-opus-4-8",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 641,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 641,
+      "cache_read_input_tokens": 119045,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 641,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 641,
+          "cache_read_input_tokens": 119045,
+          "input_tokens": 2,
+          "output_tokens": 248,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 248,
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "076bbf10-7430-4707-89fd-51b087fa3788",
+  "requestId": "req_011CcfW6BrjQpnv7iPp9S2rB",
+  "sessionId": "ef7d9c6a-1d4c-4be3-a355-88016657f998",
+  "timestamp": "2026-07-03T17:16:07.922Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "4a942f48-4a3f-4402-abf6-491588458df6",
+  "version": "2.1.197"
+}

@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "=== chunks dir mtimes (grouped) ===\n   \nJul 3 19:00:38 2026\nJul 3 19:00:39 2026\nJul 3 19:00:40 2026\nJul 3 19:00:41 2026\nJul 3 19:00:42 2026\nJul 3 19:00:43 2026\nJul 3 19:00:44 2026\nJul 3 19:00:45 2026\nJul 3 19:00:46 2026\nJul 3 19:00:47 2026\nJul 3 19:00:48 2026\nJul 3 19:00:49 2026\nJul 3 19:00:50 2026\nJul 3 19:00:51 2026\nJul 3 19:00:52 2026\nJul 3 19:00:53 2026\nJul 3 19:00:54 2026\nJul 3 19:00:55 2026\nJul 3 19:00:56 2026\nJul 3 19:00:57 2026\nJul 3 19:00:58 2026\nJul 3 19:00:59 2026\nJul 3 19:01:00 2026\nJul 3 19:01:01 2026\nJul 3 19:01:02 2026\nJul 3 19:01:03 2026\nJul 3 19:01:04 2026\nJul 3 19:01:05 2026\nJul 3 19:01:06 2026\nJul 3 19:01:07 2026\nJul 3 19:01:08 2026\nJul 3 19:01:09 2026\nJul 3 19:01:10 2026\nJul 3 19:01:11 2026\n\n=== pipe_seg wav mtimes ===\nJul 3 19:01:04 2026\nJul 3 18:52:06 2026\nJul 3 18:52:06 2026\nJul 3 19:01:12 2026\nJul 3 18:59:22 2026\nJul 3 18:55:30 2026\nJul 3 18:55:51 2026\nJul 3 18:49:13 2026\nJul 3 18:49:40 2026\nJul 3 18:50:01 2026\nJul 3 18:50:25 2026",
+        "is_error": false,
+        "tool_use_id": "toolu_01A4qhPo8hfJ1DP3VYx8Mavj",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "1dad834b-eacf-40e4-ab64-2a48494324f4",
+  "promptId": "d5674c17-c844-4911-a5b7-5366032bd0d7",
+  "sessionId": "ef7d9c6a-1d4c-4be3-a355-88016657f998",
+  "sourceToolAssistantUUID": "1dad834b-eacf-40e4-ab64-2a48494324f4",
+  "timestamp": "2026-07-03T17:01:36.408Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "=== chunks dir mtimes (grouped) ===\n   \nJul 3 19:00:38 2026\nJul 3 19:00:39 2026\nJul 3 19:00:40 2026\nJul 3 19:00:41 2026\nJul 3 19:00:42 2026\nJul 3 19:00:43 2026\nJul 3 19:00:44 2026\nJul 3 19:00:45 2026\nJul 3 19:00:46 2026\nJul 3 19:00:47 2026\nJul 3 19:00:48 2026\nJul 3 19:00:49 2026\nJul 3 19:00:50 2026\nJul 3 19:00:51 2026\nJul 3 19:00:52 2026\nJul 3 19:00:53 2026\nJul 3 19:00:54 2026\nJul 3 19:00:55 2026\nJul 3 19:00:56 2026\nJul 3 19:00:57 2026\nJul 3 19:00:58 2026\nJul 3 19:00:59 2026\nJul 3 19:01:00 2026\nJul 3 19:01:01 2026\nJul 3 19:01:02 2026\nJul 3 19:01:03 2026\nJul 3 19:01:04 2026\nJul 3 19:01:05 2026\nJul 3 19:01:06 2026\nJul 3 19:01:07 2026\nJul 3 19:01:08 2026\nJul 3 19:01:09 2026\nJul 3 19:01:10 2026\nJul 3 19:01:11 2026\n\n=== pipe_seg wav mtimes ===\nJul 3 19:01:04 2026\nJul 3 18:52:06 2026\nJul 3 18:52:06 2026\nJul 3 19:01:12 2026\nJul 3 18:59:22 2026\nJul 3 18:55:30 2026\nJul 3 18:55:51 2026\nJul 3 18:49:13 2026\nJul 3 18:49:40 2026\nJul 3 18:50:01 2026\nJul 3 18:50:25 2026"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "a1309fe8-19b8-4428-b901-6576603161dc",
+  "version": "2.1.197"
+}

@@ -1,0 +1,27 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "\u003ctool_use_error\u003eFile has not been read yet. Read it first before writing to it.\u003c/tool_use_error\u003e",
+        "is_error": true,
+        "tool_use_id": "toolu_01Q1Snpn4cMeSCuC39Sburxu",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "8bfbdcee-bbaa-4d8a-88ae-d75ab3cb62d5",
+  "promptId": "e8a628b5-9b24-4d37-ad01-a8b95c4b9199",
+  "sessionId": "ef7d9c6a-1d4c-4be3-a355-88016657f998",
+  "sourceToolAssistantUUID": "8bfbdcee-bbaa-4d8a-88ae-d75ab3cb62d5",
+  "timestamp": "2026-07-03T17:16:50.415Z",
+  "toolUseResult": "Error: File has not been read yet. Read it first before writing to it.",
+  "type": "user",
+  "userType": "external",
+  "uuid": "89b24ad1-6f7d-44e2-b6ab-2e092aa331d4",
+  "version": "2.1.197"
+}

@@ -1,0 +1,50 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01KonwEXSWaBDTfNGFuQvviU",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "868646a1-a519-4ec3-b36a-6274a2414054",
+  "promptId": "e8a628b5-9b24-4d37-ad01-a8b95c4b9199",
+  "sessionId": "ef7d9c6a-1d4c-4be3-a355-88016657f998",
+  "sourceToolAssistantUUID": "868646a1-a519-4ec3-b36a-6274a2414054",
+  "timestamp": "2026-07-03T17:14:16.928Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+    "newString": "local function onPipelineDone(n, text, detected)\n    pipelineResults[n] = text\n    writeRecoverySnapshot()  -- persist accepted segments so a finalize failure can't lose them\n    if detected and not pipelineLang then pipelineLang = detected end",
+    "oldString": "local function onPipelineDone(n, text, detected)\n    pipelineResults[n] = text\n    if detected and not pipelineLang then pipelineLang = detected end",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          " ",
+          " local function onPipelineDone(n, text, detected)",
+          "     pipelineResults[n] = text",
+          "+    writeRecoverySnapshot()  -- persist accepted segments so a finalize failure can't lose them",
+          "     if detected and not pipelineLang then pipelineLang = detected end",
+          "     pipelineDone = pipelineDone + 1",
+          "     -- Advance transcription progress bar"
+        ],
+        "newLines": 7,
+        "newStart": 1537,
+        "oldLines": 6,
+        "oldStart": 1537
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "acb70662-2365-4477-8992-982e262a2c96",
+  "version": "2.1.197"
+}

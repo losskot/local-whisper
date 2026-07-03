@@ -1,0 +1,61 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "signature": "EsMCCmMIDxgCKkDh/gZAErOodCV5Bs95J1eQV+ELNEY+7BpR76pkx4W5kQIdcUTm1+UwUNehIJNc2VcOvZcgmbljgMk9phsO3bovMg9jbGF1ZGUtb3B1cy00LTg4AEIIdGhpbmtpbmcSDEk/n1n05Mc0ym/BOhoMeLbxIuPGpzgQVLmOIjCY111BI3iAWGo6NYqo0alK8I/gRexGNAmBta8xMvnehkoNkq+gQ4uuXiN3d0+QXBgqjQECjLk6tOG8PHZrbsNyAajtTVVG0TnIu/3Y2yIb3PbSsYcvy/LKcXLBQZILjy+jqgNSFL4YWHBQ8JXF8Nk4uAbMIv6LT3JW1ujlirnU28fjnc/Hy7NUGkLSp5z/pt33O7yqzh9UrEPr+AzPlyPxl8khqelaQ2OCIRas1ayyCC4FP2+EW5JYbEmXTKJteGYYAQ==",
+        "thinking": "",
+        "type": "thinking"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_01KNWhTVYr73N1ETQhna9SsA",
+    "model": "claude-opus-4-8",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 7902,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 7902,
+      "cache_read_input_tokens": 54390,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 7902,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 7902,
+          "cache_read_input_tokens": 54390,
+          "input_tokens": 2,
+          "output_tokens": 325,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 325,
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "d29b1893-c1f7-4837-8e94-141130a879d3",
+  "requestId": "req_011CcfV7325JLCR7jj5HqP1a",
+  "sessionId": "ef7d9c6a-1d4c-4be3-a355-88016657f998",
+  "timestamp": "2026-07-03T17:03:13.466Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "8999ed0b-ebc0-4a80-a907-b9d086f8d155",
+  "version": "2.1.197"
+}

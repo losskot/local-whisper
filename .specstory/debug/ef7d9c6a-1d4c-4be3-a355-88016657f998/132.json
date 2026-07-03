@@ -1,0 +1,50 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01TNJjSFo3cPxY8TphLwHwNw",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "0f1361be-087d-4729-aa2e-f7d927419f52",
+  "promptId": "e8a628b5-9b24-4d37-ad01-a8b95c4b9199",
+  "sessionId": "ef7d9c6a-1d4c-4be3-a355-88016657f998",
+  "sourceToolAssistantUUID": "0f1361be-087d-4729-aa2e-f7d927419f52",
+  "timestamp": "2026-07-03T17:14:18.914Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+    "newString": "local function pipelineReset()\n    salvageOrphanRecovery()  -- rescue text from a prior session that never finalized\n    pipelineResults    = {}",
+    "oldString": "local function pipelineReset()\n    pipelineResults    = {}",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          " --------------------------------------------------------------------------------",
+          " ",
+          " local function pipelineReset()",
+          "+    salvageOrphanRecovery()  -- rescue text from a prior session that never finalized",
+          "     pipelineResults    = {}",
+          "     pipelineLang       = nil",
+          "     pipelineNextChunk  = 1"
+        ],
+        "newLines": 7,
+        "newStart": 1502,
+        "oldLines": 6,
+        "oldStart": 1502
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "5b66d096-afeb-4688-a1c1-830a69b606bf",
+  "version": "2.1.197"
+}

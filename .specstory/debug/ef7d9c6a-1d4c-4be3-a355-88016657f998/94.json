@@ -1,0 +1,35 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "960\tlocal pulseFading = true\n961\t\n962\t-- Undo state\n963\tlocal lastInsertedText = nil\n964\t\n965\t-- Recent dictations (newest first, max 10)\n966\t\n967\tlocal recentDictations = {}\n968\t\n969\tlocal function loadRecentDictations()\n970\t    local f = io.open(RECENT_FILE, \"r\")\n971\t    if not f then return end\n972\t    local data = f:read(\"*a\"); f:close()\n973\t    local ok, result = pcall(hs.json.decode, data)\n974\t    if ok and type(result) == \"table\" then\n975\t        -- Clear and populate in-place (preserve table reference)\n976\t        for i = #recentDictations, 1, -1 do recentDictations[i] = nil end\n977\t        for i, entry in ipairs(result) do recentDictations[i] = entry end\n978\t    end\n979\tend\n980\t\n981\tlocal function saveRecentDictations()\n982\t    local ok, json = pcall(hs.json.encode, recentDictations)\n983\t    if not ok then return end\n984\t    local f = io.open(RECENT_FILE, \"w\")\n985\t    if f then f:write(json); f:close() end\n986\tend\n987\t\n988\tloadRecentDictations()\n989\t",
+        "tool_use_id": "toolu_01CwwphjNC4fFuDEgnpm2uwR",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "5c83bf9f-8739-4b93-859a-02f2dba9eb4d",
+  "promptId": "e8a628b5-9b24-4d37-ad01-a8b95c4b9199",
+  "sessionId": "ef7d9c6a-1d4c-4be3-a355-88016657f998",
+  "sourceToolAssistantUUID": "5c83bf9f-8739-4b93-859a-02f2dba9eb4d",
+  "timestamp": "2026-07-03T17:11:12.785Z",
+  "toolUseResult": {
+    "file": {
+      "content": "local pulseFading = true\n\n-- Undo state\nlocal lastInsertedText = nil\n\n-- Recent dictations (newest first, max 10)\n\nlocal recentDictations = {}\n\nlocal function loadRecentDictations()\n    local f = io.open(RECENT_FILE, \"r\")\n    if not f then return end\n    local data = f:read(\"*a\"); f:close()\n    local ok, result = pcall(hs.json.decode, data)\n    if ok and type(result) == \"table\" then\n        -- Clear and populate in-place (preserve table reference)\n        for i = #recentDictations, 1, -1 do recentDictations[i] = nil end\n        for i, entry in ipairs(result) do recentDictations[i] = entry end\n    end\nend\n\nlocal function saveRecentDictations()\n    local ok, json = pcall(hs.json.encode, recentDictations)\n    if not ok then return end\n    local f = io.open(RECENT_FILE, \"w\")\n    if f then f:write(json); f:close() end\nend\n\nloadRecentDictations()\n",
+      "filePath": "/Users/vitaliy/.hammerspoon/init.lua",
+      "numLines": 30,
+      "startLine": 960,
+      "totalLines": 2863
+    },
+    "type": "text"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "8233d55f-3c99-4e6e-b8cc-52c4f4017101",
+  "version": "2.1.197"
+}

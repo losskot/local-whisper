@@ -1,0 +1,68 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_013zNcBSmqjAg5PY2yeJoKbA",
+        "input": {
+          "command": "python3 -c \"\nimport json\nd=json.load(open('/Users/vitaliy/.local-whisper/recent.json'))\nitems = d if isinstance(d,list) else d.get('items',d.get('recent',[]))\nprint('count:', len(items) if hasattr(items,'__len__') else 'n/a', type(d))\nfor i,it in enumerate(items if isinstance(items,list) else []):\n    if isinstance(it,dict):\n        t=it.get('ts') or it.get('time') or it.get('at') or ''\n        txt=(it.get('text') or it.get('content') or '')\n        print(f'--- [{i}] {t} ({len(txt)} chars) ---')\n        print(txt[:600])\n    else:\n        print(i, repr(it)[:300])\n\"",
+          "description": "Inspect recent.json dictations"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_01KL8iPqXuRFj1mGaxCgutsG",
+    "model": "claude-opus-4-8",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 4405,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 4405,
+      "cache_read_input_tokens": 46383,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 4405,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 4405,
+          "cache_read_input_tokens": 46383,
+          "input_tokens": 2,
+          "output_tokens": 1396,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 1396,
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "392ae835-c5d2-421b-a766-62203432d07e",
+  "requestId": "req_011CcfUzGLpkVWr653Mf3XtF",
+  "sessionId": "ef7d9c6a-1d4c-4be3-a355-88016657f998",
+  "timestamp": "2026-07-03T17:01:54.500Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "bce8b610-e48d-4da7-ba05-12ca28e64d98",
+  "version": "2.1.197"
+}

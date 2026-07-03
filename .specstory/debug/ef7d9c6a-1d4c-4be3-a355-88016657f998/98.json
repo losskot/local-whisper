@@ -1,0 +1,35 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "1355\t    runPreInsertActions(ctx)\n1356\t\n1357\t    local finalText = normalizeText(ctx.text)\n1358\t    if finalText == \"\" then\n1359\t        log(\"final: empty text after actions\")\n1360\t        hideOverlay()\n1361\t        return\n1362\t    end\n1363\t\n1364\t    if ctx.insert then\n1365\t        -- Track for undo\n1366\t        lastInsertedText = finalText\n1367\t        insertTextAtCursor(finalText, ctx.outputMode)\n1368\t        ctx.inserted = true\n1369\t\n1370\t        -- Press Enter after insertion if enter mode is on\n1371\t        if getEnterMode() then\n1372\t            hs.timer.doAfter(0.15, function()\n1373\t                hs.eventtap.keyStroke({}, \"return\")\n1374\t            end)\n1375\t        end\n1376\t    else\n1377\t        log(\"final: insertion disabled by action hooks\")\n1378\t    end\n1379\t\n1380\t    ctx.text = finalText\n1381\t    runPostInsertActions(ctx)\n1382\t\n1383\t    -- Track in recent dictations\n1384\t    table.insert(recentDictations, 1, {\n1385\t        text = ctx.originalText,\n1386\t        time = os.time(),\n1387\t        inserted = ctx.inserted,\n1388\t        app = capturedAppName or \"?\",\n1389\t    })\n1390\t    while #recentDictations \u003e 10 do\n1391\t        table.remove(recentDictations)\n1392\t    end\n1393\t    saveRecentDictations()\n1394\t\n1395\t    local display = finalText\n1396\t    if detectedLang then display = display .. \" [\" .. detectedLang:upper() .. \"]\" end\n1397\t    setOverlayText(display)\n1398\t    hs.sound.getByFile(\"/System/Library/Sounds/Glass.aiff\"):play()\n1399\t    hs.timer.doAfter(0.5, hideOverlay)\n1400\tend\n1401\t\n1402\t-- Insert transcribed text at cursor, with post-processing, optional LLM refinement, and action hooks",
+        "tool_use_id": "toolu_01Dwct1YfuXf2CutHDW98WhZ",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "a963adee-71fc-4fc4-bcf1-84778d4da61e",
+  "promptId": "e8a628b5-9b24-4d37-ad01-a8b95c4b9199",
+  "sessionId": "ef7d9c6a-1d4c-4be3-a355-88016657f998",
+  "sourceToolAssistantUUID": "a963adee-71fc-4fc4-bcf1-84778d4da61e",
+  "timestamp": "2026-07-03T17:11:43.385Z",
+  "toolUseResult": {
+    "file": {
+      "content": "    runPreInsertActions(ctx)\n\n    local finalText = normalizeText(ctx.text)\n    if finalText == \"\" then\n        log(\"final: empty text after actions\")\n        hideOverlay()\n        return\n    end\n\n    if ctx.insert then\n        -- Track for undo\n        lastInsertedText = finalText\n        insertTextAtCursor(finalText, ctx.outputMode)\n        ctx.inserted = true\n\n        -- Press Enter after insertion if enter mode is on\n        if getEnterMode() then\n            hs.timer.doAfter(0.15, function()\n                hs.eventtap.keyStroke({}, \"return\")\n            end)\n        end\n    else\n        log(\"final: insertion disabled by action hooks\")\n    end\n\n    ctx.text = finalText\n    runPostInsertActions(ctx)\n\n    -- Track in recent dictations\n    table.insert(recentDictations, 1, {\n        text = ctx.originalText,\n        time = os.time(),\n        inserted = ctx.inserted,\n        app = capturedAppName or \"?\",\n    })\n    while #recentDictations \u003e 10 do\n        table.remove(recentDictations)\n    end\n    saveRecentDictations()\n\n    local display = finalText\n    if detectedLang then display = display .. \" [\" .. detectedLang:upper() .. \"]\" end\n    setOverlayText(display)\n    hs.sound.getByFile(\"/System/Library/Sounds/Glass.aiff\"):play()\n    hs.timer.doAfter(0.5, hideOverlay)\nend\n\n-- Insert transcribed text at cursor, with post-processing, optional LLM refinement, and action hooks",
+      "filePath": "/Users/vitaliy/.hammerspoon/init.lua",
+      "numLines": 48,
+      "startLine": 1355,
+      "totalLines": 2863
+    },
+    "type": "text"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "5e67cb39-05b1-47bd-907b-8c157315e056",
+  "version": "2.1.197"
+}

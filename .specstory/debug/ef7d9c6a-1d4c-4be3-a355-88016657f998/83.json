@@ -1,0 +1,68 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01SgHy41C2RFUS2KrtWqtHFy",
+        "input": {
+          "command": "TMPDIR_REAL=$(getconf DARWIN_USER_TEMP_DIR); L=\"${TMPDIR_REAL}whisper-dictate/whisper-dictate.log\"; echo \"=== lines 90-175 (18:49-18:53 gap) ===\"; sed -n '90,175p' \"$L\"",
+          "description": "Read middle log window"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_01RYvcsD9zUAZArbGZ5nVnqf",
+    "model": "claude-opus-4-8",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 1119,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 1119,
+      "cache_read_input_tokens": 82865,
+      "inference_geo": "not_available",
+      "input_tokens": 124,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1119,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 1119,
+          "cache_read_input_tokens": 82865,
+          "input_tokens": 124,
+          "output_tokens": 660,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 660,
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "74c44cc4-56e6-4d16-81d1-70c7c57e0d7c",
+  "requestId": "req_011CcfVfFWZ8gMZBPjqBQSjt",
+  "sessionId": "ef7d9c6a-1d4c-4be3-a355-88016657f998",
+  "timestamp": "2026-07-03T17:10:37.822Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "70e9a5bd-d866-4854-a943-67a5fe9ffdd2",
+  "version": "2.1.197"
+}

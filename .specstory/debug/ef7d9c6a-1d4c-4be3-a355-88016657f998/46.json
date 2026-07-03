@@ -1,0 +1,68 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_014vFBxua7hq5nDW3NaViyVi",
+        "input": {
+          "command": "bd create \"stopRecording aborts before doFinalTranscription when Tink sound play() errors → overlay hangs, dictation lost\" --description=\"Root cause of frozen dictation (2026-07-03 18:54-18:56 Claude recording, ~97s, never inserted). In init.lua ~line 1870, stopRecording() calls hs.sound.getByFile('/System/Library/Sounds/Tink.aiff'):play() UNGUARDED, right before scheduling hs.timer.doAfter(0.3, doFinalTranscription) at line 1873. If getByFile returns nil or play() errors (audio subsystem under load/contention — note warmup needed 2 attempts at 18:46:53), stopRecording throws. It is called from the release-poller doEvery callback (line 1898-1903) which is NOT wrapped in pcall, so the error is swallowed by HS timer, doFinalTranscription is never scheduled, overlay stays pinned, and all streamed segment text is discarded (never written to recent.json). Fix: wrap the sound play in pcall, and/or move doAfter(doFinalTranscription) before the sound play, and wrap stopRecording body in pcall. Also consider persisting streamed segment text to a crash-recovery file so partial dictations survive a finalize failure.\" -t bug -p 1 --json 2\u003e\u00261 | python3 -c \"import sys,json; d=json.load(sys.stdin); print('created', d.get('id'))\" 2\u003e\u00261 || echo \"bd create output above\"",
+          "description": "File bd bug for the freeze"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_019MCLd1ULQnFJL4oUjrfJom",
+    "model": "claude-opus-4-8",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 3219,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 3219,
+      "cache_read_input_tokens": 62292,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 3219,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 3219,
+          "cache_read_input_tokens": 62292,
+          "input_tokens": 2,
+          "output_tokens": 6440,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 6440,
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "435f0d2b-ae3e-4cf0-96bb-290406e84d0a",
+  "requestId": "req_011CcfV7XExRnGhg3uHJwDdS",
+  "sessionId": "ef7d9c6a-1d4c-4be3-a355-88016657f998",
+  "timestamp": "2026-07-03T17:04:43.315Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "71038fa3-854d-4337-942d-e9eb7af041dc",
+  "version": "2.1.197"
+}

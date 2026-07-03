@@ -1,0 +1,60 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "text": "Разобрался — и это важно. Полный дифф показывает, что **рабочая копия [hammerspoon/init.lua](hammerspoon/init.lua) ещё до моих правок содержала откат нескольких ваших недавних коммитов** (я эти участки не трогал):\n\n- `getOutputMode`/`cycleOutput` — убран режим **copy** (коммиты 60c56aa)\n- `insertTextAtCursor` — убраны блоки **osascript** для буфера обмена (коммит a3d96af, это HEAD)\n- `hideOverlay` — рефактор из forward-declaration в `local function`\n\nТо есть развёрнутый конфиг, который реально грузит Hammerspoon, **отстаёт от HEAD**. Мои изменения легли поверх этой старой базы. Я **ничего не коммитил** — разберитесь с этим расхождением перед любым коммитом (иначе откатите osascript-фикс буфера и режим copy).\n\n---\n\n## 1. Баг исправлен полностью ✅\n\nВнёс в [hammerspoon/init.lua](hammerspoon/init.lua) (+85/−34), синтаксис проверен через `hs`, **применено live через `hs.reload()`**, в рантайме `_whisperRecovery` присутствует:\n\n| Что | Как |\n|---|---|\n| **Корень бага** | В `stopRecording` планирование `doFinalTranscription` теперь идёт **первым**, до звука — ничто ниже не может его отменить |\n| **Все `:play()` защищены** | Новый `_whisperRecovery.play()` оборачивает `getByFile():play()` в `pcall` + nil-guard (5 мест: Tink/Glass/Pop/Basso×2) |\n| **Crash-recovery** | Каждый распознанный сегмент пишется на диск (`.snapshot()`); при успешной вставке снимок удаляется (`.clear()`); осиротевший снимок при следующей записи/перезагрузке подхватывается в «Recent» с меткой `[recovered]` (`.salvage()`) |\n\nПобочно: `_whisperRecovery` пришлось сделать одним глобальным объектом-таблицей — ваш main-chunk был **ровно на лимите Lua в 200 локальных переменных**, любой новый `local` его ломал (см. предложение №4 ниже).\n\n## 2. Код-ревью — предложения (не реализовано, по желанию)\n\nПриоритет по убыванию:\n\n1. **Ограничить параллелизм whisper (главная причина «зависла вся система»).** В потерянной сессии одновременно крутилось **5 процессов large-v3-turbo** + финальные. Это и пекло CPU, и провоцировало ту самую нехватку аудио-подсистемы, из-за которой `getByFile` возвращал nil. Семафор на 2–3 одновременных `hs.task` убрал бы *триггер*, а не только симптом.\n2. **Обернуть тело `doFinalTranscription` в `pcall` → `hideOverlay()` при ошибке.** Сейчас, если `getChunkFiles()`/`splitAtSilence()` бросит — overlay снова зависнет (текст теперь спасётся recovery, но UI застрянет).\n3. **Watchdog на финализацию/refine.** Если Ollama-refine или вставка подвиснет, overlay висит на «Refining…» бесконечно — таймаут авто-скрытия (например, 30 с) это закрыл бы.\n4. **Разгрузить main-chunk от 200-локального лимита.** Файл упёрся в потолок Lua. Сгруппировать связанные локалы в таблицы (`state.pipeline`, `state.bar`, …), иначе следующая же фича не соберётся.\n5. **Хранить чанки прошлой сессии до успешной финализации** (сейчас `chunk_000…` перезаписываются следующей записью — из-за этого seg1–3 потерянной сессии невосстановимы; будь чанки живы, восстановил бы всё).\n\nГотов реализовать любой из пунктов — скажите какие. `bd` в этом окружении недоступен (бинарник не в PATH), поэтому issue не завёл — команда для #1–#5 дам, если нужно.\n\n## 3. Восстановленный текст за ~30 минут → [RECOVERED_18-54_dictation.txt](RECOVERED_18-54_dictation.txt)\n\n5 сессий распознавания, хронологически:\n\n| # | Время | Прил. | Статус | Тема |\n|---|---|---|---|---|\n| 1 | 18:52 | Claude | ✅ | Стратегия PDF: DI vs Sonnet, Confidence Rate, 2 шага |\n| 2 | 18:53 | Claude | ✅ | Цены: DI 1¢, Sonnet 3.5¢, переход на Haiku |\n| 3 | 18:54–18:56 | Claude | ⚠️ **потеряна** | enrichment, координаты, дешёвая модель, словари — **seg4–5 восстановлены, seg1–3 обрывки** |\n| 4 | 18:59 | Code | ✅ | сообщение-запрос ко мне |\n| 5 | 19:01 | Chatbox | ✅ | Python Intel-сборка на macOS |\n\nКлючевое из потерянной сессии 3 (восстановлено из уцелевших WAV):\n\u003e …таких как координаты, чтобы уменьшить размер чисто алгоритмически и отправить в маленькую, дико дешёвую модель, которая полностью обработает этот результат — так же со **словарями, с синонимами** — просто превратит сырое текстовое содержимое в набор искомых полей. Но это вторичная идея, если не достигнем нужного качества в текущем процессе…\n\nПолный текст всех сессий — в файле. Начало seg1–3 сессии 3 (первые ~40 символов каждого) — максимум, что осталось; аудио перезаписано. С новым фиксом такие потери больше не случатся: текст осядет в «Recent» даже при зависании финализации.",
+        "type": "text"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_01UD824gzijx6fBLPMiF4cRy",
+    "model": "claude-opus-4-8",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "end_turn",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 3618,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 3618,
+      "cache_read_input_tokens": 132344,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 3618,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 3618,
+          "cache_read_input_tokens": 132344,
+          "input_tokens": 2,
+          "output_tokens": 6153,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 6153,
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "11595248-7de2-4c73-b46b-a23722965fc4",
+  "requestId": "req_011CcfWL3Hg5SdP476DThUsv",
+  "sessionId": "ef7d9c6a-1d4c-4be3-a355-88016657f998",
+  "timestamp": "2026-07-03T17:20:58.391Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "ce3d5c41-5af5-45cc-a7c2-4a3c71251c3d",
+  "version": "2.1.197"
+}

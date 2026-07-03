@@ -1,0 +1,70 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01WkorHjiku2jULQdB9GdNsY",
+        "input": {
+          "file_path": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+          "new_string": "local function saveRecentDictations()\n    local ok, json = pcall(hs.json.encode, recentDictations)\n    if not ok then return end\n    local f = io.open(RECENT_FILE, \"w\")\n    if f then f:write(json); f:close() end\nend\n\nloadRecentDictations()\n\n--------------------------------------------------------------------------------\n-- Best-effort sound feedback\n--\n-- hs.sound.getByFile() can return nil (or :play() can throw) if the audio\n-- subsystem is busy/contested. These calls are pure feedback, so they must\n-- NEVER be able to abort the caller. Previously an unguarded play() inside\n-- stopRecording() could throw and prevent doFinalTranscription() from being\n-- scheduled — hanging the overlay and losing the entire dictation.\n--------------------------------------------------------------------------------\nlocal function playSound(path)\n    pcall(function()\n        local snd = hs.sound.getByFile(path)\n        if snd then snd:play() end\n    end)\nend\n\n--------------------------------------------------------------------------------\n-- Crash recovery for streamed transcription\n--\n-- Accepted segment text lives only in memory (pipelineResults) until\n-- pipelineFinalize() inserts it. If finalization never runs — the stop path\n-- aborts, an insert error is thrown, or Hammerspoon is reloaded mid-transcription\n-- — that text would be lost forever. To make partial dictations survivable we:\n--   * snapshot accepted segments to disk as each one completes,\n--   * clear the snapshot once the text is safely inserted, and\n--   * salvage any orphaned snapshot (on next recording start or on reload) into\n--     the recent-dictations list so it can be retrieved from the menu bar.\n--------------------------------------------------------------------------------\nlocal RECOVERY_FILE = WHISPER_TMP .. \"/last-session-recovery.txt\"\n\nlocal function writeRecoverySnapshot()\n    local parts = {}\n    for n = 1, (pipelineNextSeg - 1) do\n        local t = pipelineResults[n]\n        if t and t ~= \"\" then table.insert(parts, t) end\n    end\n    if #parts == 0 then return end\n    local text = table.concat(parts, \" \"):gsub(\"%s+\", \" \")\n    local f = io.open(RECOVERY_FILE, \"w\")\n    if f then f:write(text); f:close() end\nend\n\nlocal function clearRecoverySnapshot()\n    os.remove(RECOVERY_FILE)\nend\n\nlocal function salvageOrphanRecovery()\n    local f = io.open(RECOVERY_FILE, \"r\")\n    if not f then return end\n    local text = f:read(\"*a\"); f:close()\n    text = (text or \"\"):gsub(\"^%s+\", \"\"):gsub(\"%s+$\", \"\")\n    if text ~= \"\" then\n        log(\"recovery: salvaged orphaned session text (\" .. #text .. \" chars) → recent dictations\")\n        table.insert(recentDictations, 1, {\n            text = text,\n            time = os.time(),\n            inserted = false,\n            app = \"[recovered]\",\n        })\n        while #recentDictations \u003e 10 do table.remove(recentDictations) end\n        saveRecentDictations()\n    end\n    os.remove(RECOVERY_FILE)\nend\n\n-- On load: recover any text stranded by a previous crash/freeze/reload.\nsalvageOrphanRecovery()",
+          "old_string": "local function saveRecentDictations()\n    local ok, json = pcall(hs.json.encode, recentDictations)\n    if not ok then return end\n    local f = io.open(RECENT_FILE, \"w\")\n    if f then f:write(json); f:close() end\nend\n\nloadRecentDictations()",
+          "replace_all": false
+        },
+        "name": "Edit",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_01N4igAiTvnqcWyEMxHa9AaT",
+    "model": "claude-opus-4-8",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 873,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 873,
+      "cache_read_input_tokens": 108069,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 873,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 873,
+          "cache_read_input_tokens": 108069,
+          "input_tokens": 2,
+          "output_tokens": 1368,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 1368,
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "c2cd1cf0-d6db-4b15-8a32-d78f419b7448",
+  "requestId": "req_011CcfVv9kwjxZHBDbrgoDwB",
+  "sessionId": "ef7d9c6a-1d4c-4be3-a355-88016657f998",
+  "timestamp": "2026-07-03T17:14:09.295Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "e401952c-2a35-4190-877c-380d3a097f28",
+  "version": "2.1.197"
+}

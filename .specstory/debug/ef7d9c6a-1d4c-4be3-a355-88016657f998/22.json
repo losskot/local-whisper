@@ -1,0 +1,68 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_017G5WfqooJ7tLaBxyKfPRkU",
+        "input": {
+          "command": "ls -la ~/whisper.cpp/build/bin/whisper-cli 2\u003e\u00261; echo \"=== models ===\"; ls -la ~/whisper.cpp/models/*.bin 2\u003e\u00261; echo \"=== config ===\"; ls -la ~/.local-whisper/ 2\u003e\u00261; for f in ~/.local-whisper/model ~/.local-whisper/lang; do echo \"-- $f --\"; cat \"$f\" 2\u003e\u00261; done",
+          "description": "Locate whisper-cli, models, config"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_01GUnLNvkvr6ykgXpo74U7TV",
+    "model": "claude-opus-4-8",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 7640,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 7640,
+      "cache_read_input_tokens": 38743,
+      "inference_geo": "not_available",
+      "input_tokens": 63,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 7640,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 7640,
+          "cache_read_input_tokens": 38743,
+          "input_tokens": 63,
+          "output_tokens": 2167,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 2167,
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "1dad834b-eacf-40e4-ab64-2a48494324f4",
+  "requestId": "req_011CcfUu5VKWLQGx7xPtt8F3",
+  "sessionId": "ef7d9c6a-1d4c-4be3-a355-88016657f998",
+  "timestamp": "2026-07-03T17:00:56.822Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "ecc19652-53d7-4edd-89a4-56d190f4396b",
+  "version": "2.1.197"
+}

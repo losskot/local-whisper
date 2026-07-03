@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "1009:_whisperRecovery = { file = WHISPER_TMP .. \"/last-session-recovery.txt\" }\n=== syntax check ===\nSYNTAX OK",
+        "is_error": false,
+        "tool_use_id": "toolu_01WfQDJPREHGgFV5JLSjEkAB",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "b76e3cef-eb63-4d00-9eab-f538a4476119",
+  "promptId": "e8a628b5-9b24-4d37-ad01-a8b95c4b9199",
+  "sessionId": "ef7d9c6a-1d4c-4be3-a355-88016657f998",
+  "sourceToolAssistantUUID": "b76e3cef-eb63-4d00-9eab-f538a4476119",
+  "timestamp": "2026-07-03T17:17:00.637Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "1009:_whisperRecovery = { file = WHISPER_TMP .. \"/last-session-recovery.txt\" }\n=== syntax check ===\nSYNTAX OK"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "1aaaa204-7344-44d5-a4d2-ec240f3bf2cb",
+  "version": "2.1.197"
+}

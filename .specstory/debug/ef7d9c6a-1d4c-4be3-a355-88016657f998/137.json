@@ -1,0 +1,59 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01Apsid2eRcVBB4tXZ9oj3Cx",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "00e75e39-61fb-4b5d-b6d4-e6a53b362d4b",
+  "promptId": "e8a628b5-9b24-4d37-ad01-a8b95c4b9199",
+  "sessionId": "ef7d9c6a-1d4c-4be3-a355-88016657f998",
+  "sourceToolAssistantUUID": "00e75e39-61fb-4b5d-b6d4-e6a53b362d4b",
+  "timestamp": "2026-07-03T17:14:29.951Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+    "newString": "    -- Schedule finalization FIRST so nothing below can prevent it (the brief delay\n    -- lets ffmpeg flush its last chunk). This ordering is load-bearing: an unguarded\n    -- sound:play() here used to be able to throw and abort stopRecording before this\n    -- line ever ran, hanging the overlay and losing the whole dictation.\n    hs.timer.doAfter(0.3, doFinalTranscription)\n\n    playSound(\"/System/Library/Sounds/Tink.aiff\")\nend",
+    "oldString": "    hs.sound.getByFile(\"/System/Library/Sounds/Tink.aiff\"):play()\n\n    -- Brief delay for ffmpeg to finalize last chunk\n    hs.timer.doAfter(0.3, doFinalTranscription)\nend",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          "     end",
+          "     ffmpegTask = nil",
+          " ",
+          "-    hs.sound.getByFile(\"/System/Library/Sounds/Tink.aiff\"):play()",
+          "-",
+          "-    -- Brief delay for ffmpeg to finalize last chunk",
+          "+    -- Schedule finalization FIRST so nothing below can prevent it (the brief delay",
+          "+    -- lets ffmpeg flush its last chunk). This ordering is load-bearing: an unguarded",
+          "+    -- sound:play() here used to be able to throw and abort stopRecording before this",
+          "+    -- line ever ran, hanging the overlay and losing the whole dictation.",
+          "     hs.timer.doAfter(0.3, doFinalTranscription)",
+          "+",
+          "+    playSound(\"/System/Library/Sounds/Tink.aiff\")",
+          " end",
+          " ",
+          " --------------------------------------------------------------------------------"
+        ],
+        "newLines": 13,
+        "newStart": 1938,
+        "oldLines": 10,
+        "oldStart": 1938
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "954ad06a-f36e-4394-8687-983208fd81d6",
+  "version": "2.1.197"
+}

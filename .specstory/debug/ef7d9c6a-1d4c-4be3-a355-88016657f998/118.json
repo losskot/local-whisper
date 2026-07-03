@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua\nlrwxr-xr-x  1 vitaliy  staff  66 Jul  2 01:22 /Users/vitaliy/.hammerspoon/init.lua -\u003e /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+        "is_error": false,
+        "tool_use_id": "toolu_01Gb9XcrvpbgjCAod5pYSY2U",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "5bcbfdb1-30cc-4cff-81a0-1137b4767d86",
+  "promptId": "e8a628b5-9b24-4d37-ad01-a8b95c4b9199",
+  "sessionId": "ef7d9c6a-1d4c-4be3-a355-88016657f998",
+  "sourceToolAssistantUUID": "5bcbfdb1-30cc-4cff-81a0-1137b4767d86",
+  "timestamp": "2026-07-03T17:13:33.633Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua\nlrwxr-xr-x  1 vitaliy  staff  66 Jul  2 01:22 /Users/vitaliy/.hammerspoon/init.lua -\u003e /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "6c78d0b3-09b0-496a-ac36-8d75da70f5fa",
+  "version": "2.1.197"
+}

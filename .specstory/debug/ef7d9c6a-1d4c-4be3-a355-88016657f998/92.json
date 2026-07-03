@@ -1,0 +1,35 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "1403\tlocal function insertTranscribedText(text, detectedLang)\n1404\t    if text == \"\" or isHallucination(text) then\n1405\t        hideOverlay()\n1406\t        return\n1407\t    end\n1408\t\n1409\t    -- Apply app-aware post-processing\n1410\t    text = postProcess(text, capturedAppBundleID)\n1411\t    if text == \"\" then hideOverlay(); return end\n1412\t\n1413\t    -- Skip LLM refinement for voice commands (refine would strip the prefix)\n1414\t    local isVoiceCommand = text:lower():match(\"voice%s+command\")\n1415\t\n1416\t    -- Optional LLM refinement (async, skips short text and voice commands)\n1417\t    if not isVoiceCommand and getRefineMode() and #text \u003e= 50 then\n1418\t        setOverlayText(\"Refining...\")\n1419\t        refineWithOllama(text, function(refined)\n1420\t            finishInsertion(refined, detectedLang)\n1421\t        end)\n1422\t    else\n1423\t        finishInsertion(text, detectedLang)\n1424\t    end\n1425\tend\n1426\t\n1427\t-- Max seconds per whisper call — must stay BELOW whisper's 30s internal window.\n1428\t-- Exceeding 30s forces a window boundary crossing where the model reliably drops\n1429\t-- 5-10s of content at the seam. 25s gives a safe margin inside one window.\n1430\t\n1431\t\n1432\t--------------------------------------------------------------------------------\n1433\t-- Transcription pipeline (streaming during recording + finalization at stop)\n1434\t--------------------------------------------------------------------------------\n1435\t\n1436\tlocal function pipelineReset()\n1437\t    pipelineResults    = {}\n1438\t    pipelineLang       = nil\n1439\t    pipelineNextChunk  = 1\n1440\t    pipelineNextSeg    = 1\n1441\t    pipelineTotal      = 0\n1442\t    pipelineDone       = 0\n1443\t    pipelineFinalizing = false\n1444\t    barState.segChunks = {}\n1445\t    barState.txnSecs   = 0\n1446\t    barState.frozen    = false\n1447\tend\n1448\t\n1449\tlocal function pipelineFinalize()\n1450\t    local parts = {}",
+        "tool_use_id": "toolu_01GCVi21npMhyB7yUGBWtjQu",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "d2e8f9e0-aa63-4a54-af3b-024bac53a8d8",
+  "promptId": "e8a628b5-9b24-4d37-ad01-a8b95c4b9199",
+  "sessionId": "ef7d9c6a-1d4c-4be3-a355-88016657f998",
+  "sourceToolAssistantUUID": "d2e8f9e0-aa63-4a54-af3b-024bac53a8d8",
+  "timestamp": "2026-07-03T17:11:12.043Z",
+  "toolUseResult": {
+    "file": {
+      "content": "local function insertTranscribedText(text, detectedLang)\n    if text == \"\" or isHallucination(text) then\n        hideOverlay()\n        return\n    end\n\n    -- Apply app-aware post-processing\n    text = postProcess(text, capturedAppBundleID)\n    if text == \"\" then hideOverlay(); return end\n\n    -- Skip LLM refinement for voice commands (refine would strip the prefix)\n    local isVoiceCommand = text:lower():match(\"voice%s+command\")\n\n    -- Optional LLM refinement (async, skips short text and voice commands)\n    if not isVoiceCommand and getRefineMode() and #text \u003e= 50 then\n        setOverlayText(\"Refining...\")\n        refineWithOllama(text, function(refined)\n            finishInsertion(refined, detectedLang)\n        end)\n    else\n        finishInsertion(text, detectedLang)\n    end\nend\n\n-- Max seconds per whisper call — must stay BELOW whisper's 30s internal window.\n-- Exceeding 30s forces a window boundary crossing where the model reliably drops\n-- 5-10s of content at the seam. 25s gives a safe margin inside one window.\n\n\n--------------------------------------------------------------------------------\n-- Transcription pipeline (streaming during recording + finalization at stop)\n--------------------------------------------------------------------------------\n\nlocal function pipelineReset()\n    pipelineResults    = {}\n    pipelineLang       = nil\n    pipelineNextChunk  = 1\n    pipelineNextSeg    = 1\n    pipelineTotal      = 0\n    pipelineDone       = 0\n    pipelineFinalizing = false\n    barState.segChunks = {}\n    barState.txnSecs   = 0\n    barState.frozen    = false\nend\n\nlocal function pipelineFinalize()\n    local parts = {}",
+      "filePath": "/Users/vitaliy/.hammerspoon/init.lua",
+      "numLines": 48,
+      "startLine": 1403,
+      "totalLines": 2863
+    },
+    "type": "text"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "13c0160b-328f-4a96-8d06-07b8d1c7677b",
+  "version": "2.1.197"
+}

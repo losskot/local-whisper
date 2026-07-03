@@ -1,0 +1,70 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01Apsid2eRcVBB4tXZ9oj3Cx",
+        "input": {
+          "file_path": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+          "new_string": "    -- Schedule finalization FIRST so nothing below can prevent it (the brief delay\n    -- lets ffmpeg flush its last chunk). This ordering is load-bearing: an unguarded\n    -- sound:play() here used to be able to throw and abort stopRecording before this\n    -- line ever ran, hanging the overlay and losing the whole dictation.\n    hs.timer.doAfter(0.3, doFinalTranscription)\n\n    playSound(\"/System/Library/Sounds/Tink.aiff\")\nend",
+          "old_string": "    hs.sound.getByFile(\"/System/Library/Sounds/Tink.aiff\"):play()\n\n    -- Brief delay for ffmpeg to finalize last chunk\n    hs.timer.doAfter(0.3, doFinalTranscription)\nend",
+          "replace_all": false
+        },
+        "name": "Edit",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_01KhKxeosWYMXvs2Qu54zPhy",
+    "model": "claude-opus-4-8",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 1393,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 1393,
+      "cache_read_input_tokens": 110402,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1393,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 1393,
+          "cache_read_input_tokens": 110402,
+          "input_tokens": 2,
+          "output_tokens": 440,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 440,
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "14c4bde0-7a2a-40d1-b865-e58c6a10e87e",
+  "requestId": "req_011CcfVxcZZ7jmN7auozYU83",
+  "sessionId": "ef7d9c6a-1d4c-4be3-a355-88016657f998",
+  "timestamp": "2026-07-03T17:14:28.883Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "00e75e39-61fb-4b5d-b6d4-e6a53b362d4b",
+  "version": "2.1.197"
+}

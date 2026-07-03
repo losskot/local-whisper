@@ -1,0 +1,68 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01LhE2SMAxej6w4Ja9KJBwjq",
+        "input": {
+          "command": "cd /Users/vitaliy/Documents/GitHub/local-whisper; git diff hammerspoon/init.lua | head -120",
+          "description": "View full diff head"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_015ZSq1jusu2V6zBgqdHQQ7k",
+    "model": "claude-opus-4-8",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 1082,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 1082,
+      "cache_read_input_tokens": 131262,
+      "inference_geo": "not_available",
+      "input_tokens": 124,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1082,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 1082,
+          "cache_read_input_tokens": 131262,
+          "input_tokens": 124,
+          "output_tokens": 1645,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 1645,
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "02643c80-6f07-4442-9f98-87d926c76454",
+  "requestId": "req_011CcfWHzPVmd8qB2EXH69NA",
+  "sessionId": "ef7d9c6a-1d4c-4be3-a355-88016657f998",
+  "timestamp": "2026-07-03T17:19:12.629Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "a1356fa7-da5a-4e82-946f-66b226887d27",
+  "version": "2.1.197"
+}

@@ -1,0 +1,69 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01P3CUAJRU6WfG8BNRwGvmvo",
+        "input": {
+          "file_path": "/Users/vitaliy/.hammerspoon/init.lua",
+          "limit": 10,
+          "offset": 1816
+        },
+        "name": "Read",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_01SFdK93GENQ1kA6sQjwGTMf",
+    "model": "claude-opus-4-8",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 3855,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 3855,
+      "cache_read_input_tokens": 99604,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 3855,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 3855,
+          "cache_read_input_tokens": 99604,
+          "input_tokens": 2,
+          "output_tokens": 564,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 564,
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "d97b9715-8e3a-4e59-8eed-a79b1c2bcd56",
+  "requestId": "req_011CcfVpuzpaQzfv5b9mHHje",
+  "sessionId": "ef7d9c6a-1d4c-4be3-a355-88016657f998",
+  "timestamp": "2026-07-03T17:12:47.441Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "78e4cbe4-8eb0-4970-8368-44b6bc2811fa",
+  "version": "2.1.197"
+}

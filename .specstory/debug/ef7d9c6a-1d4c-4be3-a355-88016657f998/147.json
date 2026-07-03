@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "=== remaining unguarded getByFile:play ===\nnone ✓\n\n=== syntax check ===\nno lua CLI; will check via hammerspoon",
+        "is_error": false,
+        "tool_use_id": "toolu_01HUeah8FpJUU3ucWPRsRG3k",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "f2af9585-4633-4c0a-98ab-3866ba6bd98f",
+  "promptId": "e8a628b5-9b24-4d37-ad01-a8b95c4b9199",
+  "sessionId": "ef7d9c6a-1d4c-4be3-a355-88016657f998",
+  "sourceToolAssistantUUID": "f2af9585-4633-4c0a-98ab-3866ba6bd98f",
+  "timestamp": "2026-07-03T17:14:50.214Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "=== remaining unguarded getByFile:play ===\nnone ✓\n\n=== syntax check ===\nno lua CLI; will check via hammerspoon"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "8c0852d7-06e0-4897-84d2-4a49b0e4ccb6",
+  "version": "2.1.197"
+}

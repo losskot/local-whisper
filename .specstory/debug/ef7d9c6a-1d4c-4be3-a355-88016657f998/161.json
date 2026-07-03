@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "SYNTAX ERROR: [string \"local ok,err = pcall(function() assert(loadfi...\"]:1: ...aliy/Documents/GitHub/local-whisper/hammerspoon/init.lua:2929: too many local variables (limit is 200) in main function near '='",
+        "is_error": false,
+        "tool_use_id": "toolu_01A4sCu1FqZcTDvdrENFpdKg",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "7dce4a29-dbef-4660-a3c2-28909eef3805",
+  "promptId": "e8a628b5-9b24-4d37-ad01-a8b95c4b9199",
+  "sessionId": "ef7d9c6a-1d4c-4be3-a355-88016657f998",
+  "sourceToolAssistantUUID": "7dce4a29-dbef-4660-a3c2-28909eef3805",
+  "timestamp": "2026-07-03T17:16:13.300Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "SYNTAX ERROR: [string \"local ok,err = pcall(function() assert(loadfi...\"]:1: ...aliy/Documents/GitHub/local-whisper/hammerspoon/init.lua:2929: too many local variables (limit is 200) in main function near '='"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "3a77208b-e3f5-4455-87e5-3a0afba3d4c3",
+  "version": "2.1.197"
+}

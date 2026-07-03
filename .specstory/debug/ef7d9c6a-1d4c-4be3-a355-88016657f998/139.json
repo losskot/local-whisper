@@ -1,0 +1,51 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_014VCQGkY1R33yTHzNrwaURW",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "4459bc48-9881-4cca-a605-3bbec331df16",
+  "promptId": "e8a628b5-9b24-4d37-ad01-a8b95c4b9199",
+  "sessionId": "ef7d9c6a-1d4c-4be3-a355-88016657f998",
+  "sourceToolAssistantUUID": "4459bc48-9881-4cca-a605-3bbec331df16",
+  "timestamp": "2026-07-03T17:14:35.455Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+    "newString": "            log(\"recording: first chunk ready after \" .. (attempt * 0.05) .. \"s — audio flowing\")\n            playSound(\"/System/Library/Sounds/Pop.aiff\")",
+    "oldString": "            log(\"recording: first chunk ready after \" .. (attempt * 0.05) .. \"s — audio flowing\")\n            hs.sound.getByFile(\"/System/Library/Sounds/Pop.aiff\"):play()",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          "         local attr = hs.fs.attributes(firstChunk)",
+          "         if (attr and attr.size and attr.size \u003e 200) then",
+          "             log(\"recording: first chunk ready after \" .. (attempt * 0.05) .. \"s — audio flowing\")",
+          "-            hs.sound.getByFile(\"/System/Library/Sounds/Pop.aiff\"):play()",
+          "+            playSound(\"/System/Library/Sounds/Pop.aiff\")",
+          "         elseif attempt \u003e= 200 then",
+          "             -- 10 seconds elapsed and still no audio data — abort with error",
+          "             log(\"recording: first chunk timeout — aborting, device not producing audio\")"
+        ],
+        "newLines": 7,
+        "newStart": 1814,
+        "oldLines": 7,
+        "oldStart": 1814
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "7451c534-0d21-4a3c-8450-0edddeb0935a",
+  "version": "2.1.197"
+}

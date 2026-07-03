@@ -1,0 +1,68 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_012WnnCB9uQDXowKRGDMG8r6",
+        "input": {
+          "command": "HS=$(command -v hs || echo /Applications/Hammerspoon.app/Contents/Frameworks/hs/hs); ls -la \"$HS\" 2\u003e/dev/null; if [ -x \"$HS\" ]; then \"$HS\" -c \"local ok,err = pcall(function() assert(loadfile(os.getenv('HOME')..'/Documents/GitHub/local-whisper/hammerspoon/init.lua')) end); if ok then print('SYNTAX OK') else print('SYNTAX ERROR: '..tostring(err)) end\" 2\u003e\u00261 | tail -5; else echo \"hs CLI not found\"; fi",
+          "description": "Syntax-check via Hammerspoon CLI"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_019uQQkmaZAg4yqNQCmzCCC5",
+    "model": "claude-opus-4-8",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 529,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 529,
+      "cache_read_input_tokens": 113363,
+      "inference_geo": "not_available",
+      "input_tokens": 124,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 529,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 529,
+          "cache_read_input_tokens": 113363,
+          "input_tokens": 124,
+          "output_tokens": 297,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 297,
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "541f7fda-7b5a-47a7-92ea-4b289bc454f3",
+  "requestId": "req_011CcfVzggQkyEhcmMEQGFAz",
+  "sessionId": "ef7d9c6a-1d4c-4be3-a355-88016657f998",
+  "timestamp": "2026-07-03T17:14:56.313Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "8975f4a8-61cf-4779-8c6e-79ddd5e94937",
+  "version": "2.1.197"
+}

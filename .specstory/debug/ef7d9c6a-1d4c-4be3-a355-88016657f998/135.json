@@ -1,0 +1,60 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "text": "Now the core `stopRecording` reorder and the remaining unguarded sound plays:",
+        "type": "text"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_01KhKxeosWYMXvs2Qu54zPhy",
+    "model": "claude-opus-4-8",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 1393,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 1393,
+      "cache_read_input_tokens": 110402,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1393,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 1393,
+          "cache_read_input_tokens": 110402,
+          "input_tokens": 2,
+          "output_tokens": 440,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 440,
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "5620ab14-83b8-47ff-9ae5-cd92440f987d",
+  "requestId": "req_011CcfVxcZZ7jmN7auozYU83",
+  "sessionId": "ef7d9c6a-1d4c-4be3-a355-88016657f998",
+  "timestamp": "2026-07-03T17:14:24.844Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "14c4bde0-7a2a-40d1-b865-e58c6a10e87e",
+  "version": "2.1.197"
+}

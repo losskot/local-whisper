@@ -1,0 +1,68 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01MukkuF1AfK67GrLPRM42dj",
+        "input": {
+          "command": "which bd luac lua luajit 2\u003e\u00261; echo \"---PATH---\"; echo $PATH; echo \"---brew---\"; which brew 2\u003e\u00261",
+          "description": "Check for bd, lua compiler, brew"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_01X3grHwSV9R1PcAHdC8RFhu",
+    "model": "claude-opus-4-8",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 7776,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 7776,
+      "cache_read_input_tokens": 16532,
+      "inference_geo": "not_available",
+      "input_tokens": 8668,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 7776,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 7776,
+          "cache_read_input_tokens": 16532,
+          "input_tokens": 8668,
+          "output_tokens": 737,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 737,
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "01e23a1e-1ce2-4a07-ba30-7264c87a575c",
+  "requestId": "req_011CcfWkJ5bHD8AGvkK9Hq1v",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "timestamp": "2026-07-03T17:24:53.034Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "eaaaa655-a225-4952-82ef-c158e51d34f6",
+  "version": "2.1.197"
+}

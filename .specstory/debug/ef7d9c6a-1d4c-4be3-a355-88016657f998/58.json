@@ -1,0 +1,68 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01L9jurSenoAwWkAKUavJZuc",
+        "input": {
+          "command": "ls -la ~/Documents/GitHub/local-whisper/.beads/*.db 2\u003e\u00261; find / -name bd -type f -perm +111 2\u003e/dev/null | head; echo \"--- npx? ---\"; which npx node go 2\u003e\u00261",
+          "description": "Search for bd binary broadly"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_01B3cFUx8yYzw5tHKvmLx2vg",
+    "model": "claude-opus-4-8",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 415,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 415,
+      "cache_read_input_tokens": 73635,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 415,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 415,
+          "cache_read_input_tokens": 73635,
+          "input_tokens": 2,
+          "output_tokens": 158,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 158,
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "89a12131-d9b7-4d21-9571-a7fe80d23393",
+  "requestId": "req_011CcfVHBZJxycV2qThHKk9u",
+  "sessionId": "ef7d9c6a-1d4c-4be3-a355-88016657f998",
+  "timestamp": "2026-07-03T17:05:32.128Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "ae22fba2-c94d-4fe4-b14a-f039c13585e3",
+  "version": "2.1.197"
+}

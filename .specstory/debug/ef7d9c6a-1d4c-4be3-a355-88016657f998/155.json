@@ -1,0 +1,60 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "text": "Now update the call sites to use the `recovery` table:",
+        "type": "text"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_01C78PTPaajPXYcW4REvJBK7",
+    "model": "claude-opus-4-8",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 4560,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 4560,
+      "cache_read_input_tokens": 114485,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 4560,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 4560,
+          "cache_read_input_tokens": 114485,
+          "input_tokens": 2,
+          "output_tokens": 312,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 312,
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "278d70fa-6bd6-4906-a2ff-3e39ac4c4209",
+  "requestId": "req_011CcfW5VijeohN6Ph75PrXt",
+  "sessionId": "ef7d9c6a-1d4c-4be3-a355-88016657f998",
+  "timestamp": "2026-07-03T17:15:58.998Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "8a785ff5-2aa5-49f0-add8-a7d56d8960e6",
+  "version": "2.1.197"
+}

@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "=== updated refs ===\n1009:_whisperRecovery = { file = WHISPER_TMP .. \"/last-session-_whisperRecovery.txt\" }\n1011:function _whisperRecovery.play(path)\n1018:function _whisperRecovery.snapshot()\n1026:    local f = io.open(_whisperRecovery.file, \"w\")\n1030:function _whisperRecovery.clear()\n1031:    os.remove(_whisperRecovery.file)\n1034:function _whisperRecovery.salvage()\n1035:    local f = io.open(_whisperRecovery.file, \"r\")\n1050:    os.remove(_whisperRecovery.file)\n1054:_whisperRecovery.salvage()\n1460:    _whisperRecovery.clear()  -- text is safely persisted; drop the crash-recovery snapshot\n1465:    _whisperRecovery.play(\"/System/Library/Sounds/Glass.aiff\")\n1504:    _whisperRecovery.salvage()  -- rescue text from a prior session that never finalized\n1540:    _whisperRecovery.snapshot()  -- persist accepted segments so a finalize failure can't lose them\n1815:            _whisperRecovery.play(\"/System/Library/Sounds/Pop.aiff\")\n1819:            _whisperRecovery.play(\"/System/Library/Sounds/Basso.aiff\")\n1891:            _whisperRecovery.play(\"/System/Library/Sounds/Basso.aiff\")\n1945:    _whisperRecovery.play(\"/System/Library/Sounds/Tink.aiff\")",
+        "is_error": false,
+        "tool_use_id": "toolu_01S6fDn1Bz6GFu7HoxtUaKkS",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "0a15711c-b16d-4448-a063-e0d7537f451a",
+  "promptId": "e8a628b5-9b24-4d37-ad01-a8b95c4b9199",
+  "sessionId": "ef7d9c6a-1d4c-4be3-a355-88016657f998",
+  "sourceToolAssistantUUID": "0a15711c-b16d-4448-a063-e0d7537f451a",
+  "timestamp": "2026-07-03T17:16:43.138Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "=== updated refs ===\n1009:_whisperRecovery = { file = WHISPER_TMP .. \"/last-session-_whisperRecovery.txt\" }\n1011:function _whisperRecovery.play(path)\n1018:function _whisperRecovery.snapshot()\n1026:    local f = io.open(_whisperRecovery.file, \"w\")\n1030:function _whisperRecovery.clear()\n1031:    os.remove(_whisperRecovery.file)\n1034:function _whisperRecovery.salvage()\n1035:    local f = io.open(_whisperRecovery.file, \"r\")\n1050:    os.remove(_whisperRecovery.file)\n1054:_whisperRecovery.salvage()\n1460:    _whisperRecovery.clear()  -- text is safely persisted; drop the crash-recovery snapshot\n1465:    _whisperRecovery.play(\"/System/Library/Sounds/Glass.aiff\")\n1504:    _whisperRecovery.salvage()  -- rescue text from a prior session that never finalized\n1540:    _whisperRecovery.snapshot()  -- persist accepted segments so a finalize failure can't lose them\n1815:            _whisperRecovery.play(\"/System/Library/Sounds/Pop.aiff\")\n1819:            _whisperRecovery.play(\"/System/Library/Sounds/Basso.aiff\")\n1891:            _whisperRecovery.play(\"/System/Library/Sounds/Basso.aiff\")\n1945:    _whisperRecovery.play(\"/System/Library/Sounds/Tink.aiff\")"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "747eeaac-bfa9-4731-a9ea-4f376f15b058",
+  "version": "2.1.197"
+}

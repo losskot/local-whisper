@@ -1,0 +1,56 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01NaCMR86wUFSXpEXtLbF72K",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "91b94980-c262-446f-965f-30e64bc0aa21",
+  "promptId": "e8a628b5-9b24-4d37-ad01-a8b95c4b9199",
+  "sessionId": "ef7d9c6a-1d4c-4be3-a355-88016657f998",
+  "sourceToolAssistantUUID": "91b94980-c262-446f-965f-30e64bc0aa21",
+  "timestamp": "2026-07-03T17:14:21.872Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+    "newString": "    saveRecentDictations()\n    clearRecoverySnapshot()  -- text is safely persisted; drop the crash-recovery snapshot\n\n    local display = finalText\n    if detectedLang then display = display .. \" [\" .. detectedLang:upper() .. \"]\" end\n    setOverlayText(display)\n    playSound(\"/System/Library/Sounds/Glass.aiff\")",
+    "oldString": "    saveRecentDictations()\n\n    local display = finalText\n    if detectedLang then display = display .. \" [\" .. detectedLang:upper() .. \"]\" end\n    setOverlayText(display)\n    hs.sound.getByFile(\"/System/Library/Sounds/Glass.aiff\"):play()",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          "         table.remove(recentDictations)",
+          "     end",
+          "     saveRecentDictations()",
+          "+    clearRecoverySnapshot()  -- text is safely persisted; drop the crash-recovery snapshot",
+          " ",
+          "     local display = finalText",
+          "     if detectedLang then display = display .. \" [\" .. detectedLang:upper() .. \"]\" end",
+          "     setOverlayText(display)",
+          "-    hs.sound.getByFile(\"/System/Library/Sounds/Glass.aiff\"):play()",
+          "+    playSound(\"/System/Library/Sounds/Glass.aiff\")",
+          "     hs.timer.doAfter(0.5, hideOverlay)",
+          " end",
+          " "
+        ],
+        "newLines": 12,
+        "newStart": 1459,
+        "oldLines": 11,
+        "oldStart": 1459
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "5620ab14-83b8-47ff-9ae5-cd92440f987d",
+  "version": "2.1.197"
+}

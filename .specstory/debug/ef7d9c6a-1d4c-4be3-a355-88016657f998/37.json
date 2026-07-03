@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "857:                    log(\"overlay pinned\")\n944:local pipelineTotal      = 0      -- total segments expected (fixed when recording stops)\n945:local pipelineDone       = 0      -- segments completed so far\n1101:            fn = function() stopMeeting() end,\n1164:        fn = function() emergencyStop() end,\n1245:local function stopRecordingIndicator()\n1262:function emergencyStop()\n1268:    stopRecordingIndicator()\n1441:    pipelineTotal      = 0\n1442:    pipelineDone       = 0\n1449:local function pipelineFinalize()\n1451:    for n = 1, pipelineTotal do\n1456:    log(\"pipeline: finalized \" .. pipelineTotal .. \" seg(s): '\" .. finalText:sub(1, 120) .. \"'\")\n1473:    pipelineDone = pipelineDone + 1\n1476:    log(\"pipeline: seg \" .. n .. \" complete (done=\" .. pipelineDone .. \"/\" .. pipelineTotal .. \", txnSecs=\" .. barState.txnSecs .. \")\")\n1479:        local left = pipelineTotal - pipelineDone\n1592:local function doFinalTranscription()\n1596:    log(\"final: START — total chunks=\" .. #allChunks\n1629:    pipelineTotal      = pipelineNextSeg - 1\n1631:    log(\"final: pipelineTotal=\" .. pipelineTotal .. \", pipelineDone=\" .. pipelineDone)\n1633:    if pipelineTotal == 0 then\n1639:    local left = pipelineTotal - pipelineDone\n1645:    if pipelineDone \u003e= pipelineTotal then\n1654:local stopRecording -- forward declaration (defined below in Start/stop section)\n1678:                    stopRecording()\n1755:            stopRecordingIndicator()\n1840:stopRecording = function()\n1862:    stopRecordingIndicator()\n1872:    -- Brief delay for ffmpeg to finalize last chunk\n1903:                    stopRecording()\n1908:            stopRecording()\n2271:    function stopTimer() {\n2297:    function requestStop() {\n2306:    function setStoppingState() {\n2371:local function setNotepadStoppingState()\n2390:local function maybeFinalizeMeetingSave()\n2594:local function emitFinalPartialWindow()",
+        "is_error": false,
+        "tool_use_id": "toolu_01RFNNhQb3AQStcuXjUKiVTY",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "5ea94221-47ae-459e-a3bc-eea808ccf03d",
+  "promptId": "d5674c17-c844-4911-a5b7-5366032bd0d7",
+  "sessionId": "ef7d9c6a-1d4c-4be3-a355-88016657f998",
+  "sourceToolAssistantUUID": "5ea94221-47ae-459e-a3bc-eea808ccf03d",
+  "timestamp": "2026-07-03T17:03:09.545Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "857:                    log(\"overlay pinned\")\n944:local pipelineTotal      = 0      -- total segments expected (fixed when recording stops)\n945:local pipelineDone       = 0      -- segments completed so far\n1101:            fn = function() stopMeeting() end,\n1164:        fn = function() emergencyStop() end,\n1245:local function stopRecordingIndicator()\n1262:function emergencyStop()\n1268:    stopRecordingIndicator()\n1441:    pipelineTotal      = 0\n1442:    pipelineDone       = 0\n1449:local function pipelineFinalize()\n1451:    for n = 1, pipelineTotal do\n1456:    log(\"pipeline: finalized \" .. pipelineTotal .. \" seg(s): '\" .. finalText:sub(1, 120) .. \"'\")\n1473:    pipelineDone = pipelineDone + 1\n1476:    log(\"pipeline: seg \" .. n .. \" complete (done=\" .. pipelineDone .. \"/\" .. pipelineTotal .. \", txnSecs=\" .. barState.txnSecs .. \")\")\n1479:        local left = pipelineTotal - pipelineDone\n1592:local function doFinalTranscription()\n1596:    log(\"final: START — total chunks=\" .. #allChunks\n1629:    pipelineTotal      = pipelineNextSeg - 1\n1631:    log(\"final: pipelineTotal=\" .. pipelineTotal .. \", pipelineDone=\" .. pipelineDone)\n1633:    if pipelineTotal == 0 then\n1639:    local left = pipelineTotal - pipelineDone\n1645:    if pipelineDone \u003e= pipelineTotal then\n1654:local stopRecording -- forward declaration (defined below in Start/stop section)\n1678:                    stopRecording()\n1755:            stopRecordingIndicator()\n1840:stopRecording = function()\n1862:    stopRecordingIndicator()\n1872:    -- Brief delay for ffmpeg to finalize last chunk\n1903:                    stopRecording()\n1908:            stopRecording()\n2271:    function stopTimer() {\n2297:    function requestStop() {\n2306:    function setStoppingState() {\n2371:local function setNotepadStoppingState()\n2390:local function maybeFinalizeMeetingSave()\n2594:local function emitFinalPartialWindow()"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "d29b1893-c1f7-4837-8e94-141130a879d3",
+  "version": "2.1.197"
+}

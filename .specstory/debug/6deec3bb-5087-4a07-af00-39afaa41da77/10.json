@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "bd not found\nluac not found\nlua not found\nluajit not found\n---PATH---\n/usr/local/bin:/usr/local/sbin:/Users/vitaliy/.local/bin:/Users/vitaliy/Documents/GitHub/bash:/usr/local/opt/python@3.11/bin:/usr/local/sbin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/pkg/env/global/bin:/opt/X11/bin:/Applications/VMware Fusion.app/Contents/Public:/usr/local/go/bin:/Users/vitaliy/.cargo/bin:/Users/vitaliy/Documents/GitHub/bash:/usr/local/opt/python@3.11/bin:/usr/local/sbin:/Users/vitaliy/go/bin\n---brew---\n/usr/local/bin/brew",
+        "is_error": false,
+        "tool_use_id": "toolu_01MukkuF1AfK67GrLPRM42dj",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "eaaaa655-a225-4952-82ef-c158e51d34f6",
+  "promptId": "b87252f6-da26-4810-8031-1fdf3a0c95e9",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "sourceToolAssistantUUID": "eaaaa655-a225-4952-82ef-c158e51d34f6",
+  "timestamp": "2026-07-03T17:24:56.942Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "bd not found\nluac not found\nlua not found\nluajit not found\n---PATH---\n/usr/local/bin:/usr/local/sbin:/Users/vitaliy/.local/bin:/Users/vitaliy/Documents/GitHub/bash:/usr/local/opt/python@3.11/bin:/usr/local/sbin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/pkg/env/global/bin:/opt/X11/bin:/Applications/VMware Fusion.app/Contents/Public:/usr/local/go/bin:/Users/vitaliy/.cargo/bin:/Users/vitaliy/Documents/GitHub/bash:/usr/local/opt/python@3.11/bin:/usr/local/sbin:/Users/vitaliy/go/bin\n---brew---\n/usr/local/bin/brew"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "f7cdac7f-906c-469e-bd06-d9fc9401473d",
+  "version": "2.1.197"
+}

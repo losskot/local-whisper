@@ -1,0 +1,60 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "text": "Hammerspoon перезагрузился чисто, `_whisperRecovery` присутствует в рантайме с корректным путём. **Фикс применён и работает.**\n\nТеперь соберу полную реконструкцию всех сессий за последние полчаса в структурированный документ.",
+        "type": "text"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_01LnhyViwiDKBZ7hVpo412Go",
+    "model": "claude-opus-4-8",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 1280,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 1280,
+      "cache_read_input_tokens": 124439,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1280,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 1280,
+          "cache_read_input_tokens": 124439,
+          "input_tokens": 2,
+          "output_tokens": 2275,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 2275,
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "cc57e7eb-bf94-4d62-b513-d4c472055426",
+  "requestId": "req_011CcfWCSk6eJTaNSJ3ahdiK",
+  "sessionId": "ef7d9c6a-1d4c-4be3-a355-88016657f998",
+  "timestamp": "2026-07-03T17:17:41.244Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "6d4ae249-56a4-4fd7-ac08-a7521750e563",
+  "version": "2.1.197"
+}

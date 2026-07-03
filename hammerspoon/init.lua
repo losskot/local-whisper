@@ -195,7 +195,6 @@ end
 local function getOutputMode()
     local mode = readFile(OUTPUT_FILE):gsub("%s+", "")
     if mode == "type" then return "type" end
-    if mode == "copy" then return "copy" end
     return "paste"
 end
 
@@ -428,8 +427,7 @@ local function cycleModel()
 end
 
 local function cycleOutput()
-    local cur = getOutputMode()
-    local next = (cur == "paste") and "type" or (cur == "type") and "copy" or "paste"
+    local next = (getOutputMode() == "paste") and "type" or "paste"
     writeFile(OUTPUT_FILE, next)
     return next
 end
@@ -691,8 +689,6 @@ local function refreshOverlayLabels()
     overlay[EL.refine].textColor = refineOn and CLR.refineOn or CLR.refineOff
 end
 
-local hideOverlay  -- forward declaration (defined after createOverlay)
-
 local function createOverlay()
     local screen = hs.screen.mainScreen()
     local frame = screen:frame()
@@ -911,7 +907,7 @@ local function showOverlay()
     overlay:show()
 end
 
-hideOverlay = function()
+local function hideOverlay()
     if overlayPinned then return end  -- pinned overlay stays open
     if overlay then overlay:delete(); overlay = nil end
 end
@@ -990,6 +986,72 @@ local function saveRecentDictations()
 end
 
 loadRecentDictations()
+
+--------------------------------------------------------------------------------
+-- Sound feedback + crash recovery
+--
+-- Bundled into a single table to keep the main chunk under Lua's 200-local cap.
+--
+-- .play(): hs.sound.getByFile() can return nil (or :play() can throw) if the
+--   audio subsystem is busy/contested. Feedback sounds must NEVER abort their
+--   caller — an unguarded play() inside stopRecording() used to throw and
+--   prevent doFinalTranscription() from being scheduled, hanging the overlay
+--   and losing the whole dictation.
+--
+-- .snapshot()/.clear()/.salvage(): accepted segment text lives only in memory
+--   (pipelineResults) until pipelineFinalize() inserts it. If finalization never
+--   runs (stop path aborts, insert throws, or Hammerspoon reloads mid-run) that
+--   text would be lost. So we snapshot accepted segments to disk as they
+--   complete, clear the snapshot once text is safely inserted, and salvage any
+--   orphaned snapshot (on next recording start or on reload) into recent
+--   dictations so it can be retrieved from the menu bar.
+--------------------------------------------------------------------------------
+_whisperRecovery = { file = WHISPER_TMP .. "/last-session-recovery.txt" }
+
+function _whisperRecovery.play(path)
+    pcall(function()
+        local snd = hs.sound.getByFile(path)
+        if snd then snd:play() end
+    end)
+end
+
+function _whisperRecovery.snapshot()
+    local parts = {}
+    for n = 1, (pipelineNextSeg - 1) do
+        local t = pipelineResults[n]
+        if t and t ~= "" then table.insert(parts, t) end
+    end
+    if #parts == 0 then return end
+    local text = table.concat(parts, " "):gsub("%s+", " ")
+    local f = io.open(_whisperRecovery.file, "w")
+    if f then f:write(text); f:close() end
+end
+
+function _whisperRecovery.clear()
+    os.remove(_whisperRecovery.file)
+end
+
+function _whisperRecovery.salvage()
+    local f = io.open(_whisperRecovery.file, "r")
+    if not f then return end
+    local text = f:read("*a"); f:close()
+    text = (text or ""):gsub("^%s+", ""):gsub("%s+$", "")
+    if text ~= "" then
+        log("recovery: salvaged orphaned session text (" .. #text .. " chars) → recent dictations")
+        table.insert(recentDictations, 1, {
+            text = text,
+            time = os.time(),
+            inserted = false,
+            app = "[recovered]",
+        })
+        while #recentDictations > 10 do table.remove(recentDictations) end
+        saveRecentDictations()
+    end
+    os.remove(_whisperRecovery.file)
+end
+
+-- On load: recover any text stranded by a previous crash/freeze/reload.
+_whisperRecovery.salvage()
 
 -- Auto-stop state
 local silentChunkCount = 0
@@ -1340,30 +1402,13 @@ end
 -- Final transcription
 --------------------------------------------------------------------------------
 
--- Bundle IDs of remote desktop / VM apps where clipboard paste does not work;
 -- Low-level text insertion at cursor
 local function insertTextAtCursor(text, mode)
     if mode == "paste" then
-        -- osascript forces clipboard ownership transfer (works even when Windows owns RDP clipboard).
-        -- pbcopy alone fails when the clipboard was last used from Windows side.
-        local escaped = text:gsub("\\", "\\\\"):gsub('"', '\\"')
-        local task = hs.task.new("/usr/bin/osascript", function(exitCode, _, _)
-            if exitCode ~= 0 then
-                hs.pasteboard.setContents(text)
-            end
-            hs.eventtap.keyStroke({"cmd"}, 9)  -- keycode 9 = V (ANSI)
-        end, {"-e", 'set the clipboard to "' .. escaped .. '"'})
-        task:start()
-    elseif mode == "copy" then
-        -- Copy to clipboard only — no auto-paste. Useful for remote desktop
-        -- where clipboard sync is asynchronous; user pastes manually when ready.
-        local escaped = text:gsub("\\", "\\\\"):gsub('"', '\\"')
-        local task = hs.task.new("/usr/bin/osascript", function(exitCode, _, _)
-            if exitCode ~= 0 then
-                hs.pasteboard.setContents(text)
-            end
-        end, {"-e", 'set the clipboard to "' .. escaped .. '"'})
-        task:start()
+        -- Note: we intentionally don't save/restore clipboard — getContents() can block
+        -- for 60+ seconds if another app holds a large object on the clipboard.
+        hs.pasteboard.setContents(text)
+        hs.eventtap.keyStroke({"cmd"}, 9)  -- keycode 9 = V (ANSI), works regardless of keyboard layout
     else
         hs.eventtap.keyStrokes(text)
     end
@@ -1412,11 +1457,12 @@ local function finishInsertion(text, detectedLang)
         table.remove(recentDictations)
     end
     saveRecentDictations()
+    _whisperRecovery.clear()  -- text is safely persisted; drop the crash-recovery snapshot
 
     local display = finalText
     if detectedLang then display = display .. " [" .. detectedLang:upper() .. "]" end
     setOverlayText(display)
-    hs.sound.getByFile("/System/Library/Sounds/Glass.aiff"):play()
+    _whisperRecovery.play("/System/Library/Sounds/Glass.aiff")
     hs.timer.doAfter(0.5, hideOverlay)
 end
 
@@ -1455,6 +1501,7 @@ end
 --------------------------------------------------------------------------------
 
 local function pipelineReset()
+    _whisperRecovery.salvage()  -- rescue text from a prior session that never finalized
     pipelineResults    = {}
     pipelineLang       = nil
     pipelineNextChunk  = 1
@@ -1490,6 +1537,7 @@ end
 
 local function onPipelineDone(n, text, detected)
     pipelineResults[n] = text
+    _whisperRecovery.snapshot()  -- persist accepted segments so a finalize failure can't lose them
     if detected and not pipelineLang then pipelineLang = detected end
     pipelineDone = pipelineDone + 1
     -- Advance transcription progress bar
@@ -1764,11 +1812,11 @@ local function startActualRecording()
         local attr = hs.fs.attributes(firstChunk)
         if (attr and attr.size and attr.size > 200) then
             log("recording: first chunk ready after " .. (attempt * 0.05) .. "s — audio flowing")
-            hs.sound.getByFile("/System/Library/Sounds/Pop.aiff"):play()
+            _whisperRecovery.play("/System/Library/Sounds/Pop.aiff")
         elseif attempt >= 200 then
             -- 10 seconds elapsed and still no audio data — abort with error
             log("recording: first chunk timeout — aborting, device not producing audio")
-            hs.sound.getByFile("/System/Library/Sounds/Basso.aiff"):play()
+            _whisperRecovery.play("/System/Library/Sounds/Basso.aiff")
             setOverlayText("Нет аудио")
             isRecording = false
             if ffmpegTask and ffmpegTask:isRunning() then ffmpegTask:interrupt() end
@@ -1840,7 +1888,7 @@ tryWarmup = function()
             warmupAttempt = 0
             log("warmup: FAILED after " .. 10 .. " attempts — audio device unresponsive")
             setOverlayText("Микрофон недоступен")
-            hs.sound.getByFile("/System/Library/Sounds/Basso.aiff"):play()
+            _whisperRecovery.play("/System/Library/Sounds/Basso.aiff")
             hs.timer.doAfter(2.5, hideOverlay)
         end
     end)
@@ -1888,10 +1936,13 @@ stopRecording = function()
     end
     ffmpegTask = nil
 
-    hs.sound.getByFile("/System/Library/Sounds/Tink.aiff"):play()
-
-    -- Brief delay for ffmpeg to finalize last chunk
+    -- Schedule finalization FIRST so nothing below can prevent it (the brief delay
+    -- lets ffmpeg flush its last chunk). This ordering is load-bearing: an unguarded
+    -- sound:play() here used to be able to throw and abort stopRecording before this
+    -- line ever ran, hanging the overlay and losing the whole dictation.
     hs.timer.doAfter(0.3, doFinalTranscription)
+
+    _whisperRecovery.play("/System/Library/Sounds/Tink.aiff")
 end
 
 --------------------------------------------------------------------------------

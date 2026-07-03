@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "13:local WHISPER_TMP = TMPDIR .. \"/whisper-dictate\"\n75:local RECENT_FILE = CONFIG_DIR .. \"/recent.json\"\n940:local pipelineResults    = {}     -- [seg_n] = text, filled as each segment completes\n941:local pipelineLang       = nil    -- first detected language across all segments\n942:local pipelineNextChunk  = 1      -- 1-based index of next chunk not yet claimed by pipeline\n943:local pipelineNextSeg    = 1      -- next segment number to assign (1-indexed)\n946:local pipelineFinalizing = false  -- true once we know the final total (recording stopped)\n967:local recentDictations = {}\n976:        for i = #recentDictations, 1, -1 do recentDictations[i] = nil end\n977:        for i, entry in ipairs(result) do recentDictations[i] = entry end\n981:local function saveRecentDictations()\n982:    local ok, json = pcall(hs.json.encode, recentDictations)\n1128:    if #recentDictations \u003e 0 then\n1131:        for _, entry in ipairs(recentDictations) do\n1383:    -- Track in recent dictations\n1384:    table.insert(recentDictations, 1, {\n1390:    while #recentDictations \u003e 10 do\n1391:        table.remove(recentDictations)\n1393:    saveRecentDictations()\n1403:local function insertTranscribedText(text, detectedLang)\n1437:    pipelineResults    = {}\n1438:    pipelineLang       = nil\n1439:    pipelineNextChunk  = 1\n1440:    pipelineNextSeg    = 1\n1443:    pipelineFinalizing = false\n1452:        local t = pipelineResults[n] or \"\"\n1467:    insertTranscribedText(finalText, pipelineLang)\n1471:    pipelineResults[n] = text\n1472:    if detected and not pipelineLang then pipelineLang = detected end\n1478:    if pipelineFinalizing then\n1499:    local prevText   = (pipelineResults[segN - 1] or \"\"):sub(-300)  -- last ~300 chars fits ~60 tokens\n1573:    if safeCount \u003c pipelineNextChunk + 25 - 2 then return end\n1576:    for j = pipelineNextChunk, safeCount do\n1585:    local segN = pipelineNextSeg\n1586:    pipelineNextSeg    = pipelineNextSeg    + 1\n1587:    pipelineNextChunk  = pipelineNextChunk  + #firstGroup\n1597:        .. \", streamed=\" .. (pipelineNextSeg - 1) .. \" segs\"\n1598:        .. \" (next unclaimed chunk idx=\" .. pipelineNextChunk .. \")\")\n1602:    for j = pipelineNextChunk, #allChunks do\n1606:    if pipelineNextSeg == 1 and #remaining \u003c 2 then\n1620:            local segN = pipelineNextSeg\n1621:            pipelineNextSeg   = pipelineNextSeg   + 1\n1622:            pipelineNextChunk = pipelineNextChunk + #grp\n1629:    pipelineTotal      = pipelineNextSeg - 1\n1630:    pipelineFinalizing = true\n2080:        log(\"meeting: startup recovery — switched stranded output to \" .. fallback)",
+        "is_error": false,
+        "tool_use_id": "toolu_01RCKLWq9YQvoQn1FGmhZ7cE",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "26c408b2-e73e-4679-8803-018688a54ee1",
+  "promptId": "e8a628b5-9b24-4d37-ad01-a8b95c4b9199",
+  "sessionId": "ef7d9c6a-1d4c-4be3-a355-88016657f998",
+  "sourceToolAssistantUUID": "26c408b2-e73e-4679-8803-018688a54ee1",
+  "timestamp": "2026-07-03T17:11:08.652Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "13:local WHISPER_TMP = TMPDIR .. \"/whisper-dictate\"\n75:local RECENT_FILE = CONFIG_DIR .. \"/recent.json\"\n940:local pipelineResults    = {}     -- [seg_n] = text, filled as each segment completes\n941:local pipelineLang       = nil    -- first detected language across all segments\n942:local pipelineNextChunk  = 1      -- 1-based index of next chunk not yet claimed by pipeline\n943:local pipelineNextSeg    = 1      -- next segment number to assign (1-indexed)\n946:local pipelineFinalizing = false  -- true once we know the final total (recording stopped)\n967:local recentDictations = {}\n976:        for i = #recentDictations, 1, -1 do recentDictations[i] = nil end\n977:        for i, entry in ipairs(result) do recentDictations[i] = entry end\n981:local function saveRecentDictations()\n982:    local ok, json = pcall(hs.json.encode, recentDictations)\n1128:    if #recentDictations \u003e 0 then\n1131:        for _, entry in ipairs(recentDictations) do\n1383:    -- Track in recent dictations\n1384:    table.insert(recentDictations, 1, {\n1390:    while #recentDictations \u003e 10 do\n1391:        table.remove(recentDictations)\n1393:    saveRecentDictations()\n1403:local function insertTranscribedText(text, detectedLang)\n1437:    pipelineResults    = {}\n1438:    pipelineLang       = nil\n1439:    pipelineNextChunk  = 1\n1440:    pipelineNextSeg    = 1\n1443:    pipelineFinalizing = false\n1452:        local t = pipelineResults[n] or \"\"\n1467:    insertTranscribedText(finalText, pipelineLang)\n1471:    pipelineResults[n] = text\n1472:    if detected and not pipelineLang then pipelineLang = detected end\n1478:    if pipelineFinalizing then\n1499:    local prevText   = (pipelineResults[segN - 1] or \"\"):sub(-300)  -- last ~300 chars fits ~60 tokens\n1573:    if safeCount \u003c pipelineNextChunk + 25 - 2 then return end\n1576:    for j = pipelineNextChunk, safeCount do\n1585:    local segN = pipelineNextSeg\n1586:    pipelineNextSeg    = pipelineNextSeg    + 1\n1587:    pipelineNextChunk  = pipelineNextChunk  + #firstGroup\n1597:        .. \", streamed=\" .. (pipelineNextSeg - 1) .. \" segs\"\n1598:        .. \" (next unclaimed chunk idx=\" .. pipelineNextChunk .. \")\")\n1602:    for j = pipelineNextChunk, #allChunks do\n1606:    if pipelineNextSeg == 1 and #remaining \u003c 2 then\n1620:            local segN = pipelineNextSeg\n1621:            pipelineNextSeg   = pipelineNextSeg   + 1\n1622:            pipelineNextChunk = pipelineNextChunk + #grp\n1629:    pipelineTotal      = pipelineNextSeg - 1\n1630:    pipelineFinalizing = true\n2080:        log(\"meeting: startup recovery — switched stranded output to \" .. fallback)"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "413c0894-c72a-4402-a7a2-5ac38b87ca1f",
+  "version": "2.1.197"
+}

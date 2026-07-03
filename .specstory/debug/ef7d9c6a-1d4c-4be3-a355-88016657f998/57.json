@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "README.md\ndolt-monitor.pid.lock\nexport-state.json\nhooks\ninteractions.jsonl\nissues.jsonl\nmetadata.json",
+        "is_error": false,
+        "tool_use_id": "toolu_01AFMgdGeJQQ4NoCYX6kXwLE",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "b1683c44-a0ec-4d61-b167-8fa4450e8e04",
+  "promptId": "d5674c17-c844-4911-a5b7-5366032bd0d7",
+  "sessionId": "ef7d9c6a-1d4c-4be3-a355-88016657f998",
+  "sourceToolAssistantUUID": "b1683c44-a0ec-4d61-b167-8fa4450e8e04",
+  "timestamp": "2026-07-03T17:05:26.725Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "README.md\ndolt-monitor.pid.lock\nexport-state.json\nhooks\ninteractions.jsonl\nissues.jsonl\nmetadata.json"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "89a12131-d9b7-4d21-9571-a7fe80d23393",
+  "version": "2.1.197"
+}

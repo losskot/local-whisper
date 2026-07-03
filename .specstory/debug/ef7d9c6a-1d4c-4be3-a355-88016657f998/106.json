@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "1398:    hs.sound.getByFile(\"/System/Library/Sounds/Glass.aiff\"):play()\n1746:            hs.sound.getByFile(\"/System/Library/Sounds/Pop.aiff\"):play()\n1750:            hs.sound.getByFile(\"/System/Library/Sounds/Basso.aiff\"):play()\n1774:local warmupTick = hs.sound.getByFile(\"/System/Library/Sounds/Tink.aiff\")\n1784:    if warmupTick then warmupTick:play() end\n1822:            hs.sound.getByFile(\"/System/Library/Sounds/Basso.aiff\"):play()\n1870:    hs.sound.getByFile(\"/System/Library/Sounds/Tink.aiff\"):play()",
+        "is_error": false,
+        "tool_use_id": "toolu_01CmbubkvkQG8VEcE5E26zhM",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "f2ea3cbf-8517-4641-a3f3-eb252296b34e",
+  "promptId": "e8a628b5-9b24-4d37-ad01-a8b95c4b9199",
+  "sessionId": "ef7d9c6a-1d4c-4be3-a355-88016657f998",
+  "sourceToolAssistantUUID": "f2ea3cbf-8517-4641-a3f3-eb252296b34e",
+  "timestamp": "2026-07-03T17:12:37.596Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "1398:    hs.sound.getByFile(\"/System/Library/Sounds/Glass.aiff\"):play()\n1746:            hs.sound.getByFile(\"/System/Library/Sounds/Pop.aiff\"):play()\n1750:            hs.sound.getByFile(\"/System/Library/Sounds/Basso.aiff\"):play()\n1774:local warmupTick = hs.sound.getByFile(\"/System/Library/Sounds/Tink.aiff\")\n1784:    if warmupTick then warmupTick:play() end\n1822:            hs.sound.getByFile(\"/System/Library/Sounds/Basso.aiff\"):play()\n1870:    hs.sound.getByFile(\"/System/Library/Sounds/Tink.aiff\"):play()"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "4207c184-767f-4d9e-9b53-10cf48174bfb",
+  "version": "2.1.197"
+}

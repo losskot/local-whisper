@@ -1,0 +1,27 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "Refusing to write through symlink: /Users/vitaliy/.hammerspoon/init.lua. Resolve the symlink and pass the real target path explicitly.",
+        "is_error": true,
+        "tool_use_id": "toolu_01LD9WLtZR9stntWcMmp2sKS",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "73cf626b-08ba-4677-a97d-6f1c7d5cb237",
+  "promptId": "e8a628b5-9b24-4d37-ad01-a8b95c4b9199",
+  "sessionId": "ef7d9c6a-1d4c-4be3-a355-88016657f998",
+  "sourceToolAssistantUUID": "73cf626b-08ba-4677-a97d-6f1c7d5cb237",
+  "timestamp": "2026-07-03T17:13:29.354Z",
+  "toolUseResult": "Error: Refusing to write through symlink: /Users/vitaliy/.hammerspoon/init.lua. Resolve the symlink and pass the real target path explicitly.",
+  "type": "user",
+  "userType": "external",
+  "uuid": "8ac6daa0-ea75-465b-bbc5-39fdaa6edf89",
+  "version": "2.1.197"
+}

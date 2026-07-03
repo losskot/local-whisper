@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "=== /Users/vitaliy/Documents/GitHub/local-whisper/.claude/settings.json ===\ncat: /Users/vitaliy/Documents/GitHub/local-whisper/.claude/settings.json: No such file or directory",
+        "is_error": false,
+        "tool_use_id": "toolu_0174yH9NrdaKZ8tda3sbBqpb",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "69149e7b-de9a-4f00-85f1-18e269f981ae",
+  "promptId": "d5674c17-c844-4911-a5b7-5366032bd0d7",
+  "sessionId": "ef7d9c6a-1d4c-4be3-a355-88016657f998",
+  "sourceToolAssistantUUID": "69149e7b-de9a-4f00-85f1-18e269f981ae",
+  "timestamp": "2026-07-03T17:08:26.599Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "=== /Users/vitaliy/Documents/GitHub/local-whisper/.claude/settings.json ===\ncat: /Users/vitaliy/Documents/GitHub/local-whisper/.claude/settings.json: No such file or directory"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "f6ad0e3e-1725-4d45-bc9c-50adee087078",
+  "version": "2.1.197"
+}

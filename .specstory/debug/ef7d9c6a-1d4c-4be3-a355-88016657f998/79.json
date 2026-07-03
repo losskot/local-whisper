@@ -1,0 +1,29 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "text": "\u003cide_opened_file\u003eThe user opened the file /Users/vitaliy/Documents/GitHub/local-whisper/RECOVERED_18-54_dictation.txt in the IDE. This may or may not be related to the current task.\u003c/ide_opened_file\u003e",
+        "type": "text"
+      },
+      {
+        "text": "исправить полностью и сделай код ревью с предложениями и восстанови весь текст который был за последние полчаса с маленькой структурой с разделением на сессии распознавания",
+        "type": "text"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "b98c1a60-a9a4-4709-9c5d-7df7d2c2295d",
+  "permissionMode": "auto",
+  "promptId": "e8a628b5-9b24-4d37-ad01-a8b95c4b9199",
+  "promptSource": "sdk",
+  "sessionId": "ef7d9c6a-1d4c-4be3-a355-88016657f998",
+  "timestamp": "2026-07-03T17:10:26.446Z",
+  "type": "user",
+  "userType": "external",
+  "uuid": "4959c2fe-9b2a-48d3-9c69-94caa095f234",
+  "version": "2.1.197"
+}

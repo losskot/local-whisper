@@ -1,0 +1,60 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "text": "Найдено главное. Теперь соберу ранние строки лога и прочитаю логику остановки/финализации в init.lua, чтобы точно назвать причину зависания.",
+        "type": "text"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_01BmpZofFKXCD3BDb9crSeQQ",
+    "model": "claude-opus-4-8",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 3602,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 3602,
+      "cache_read_input_tokens": 50788,
+      "inference_geo": "not_available",
+      "input_tokens": 124,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 3602,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 3602,
+          "cache_read_input_tokens": 50788,
+          "input_tokens": 124,
+          "output_tokens": 3357,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 3357,
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "84cfc4f0-7c0c-4b89-9bc2-225362b3c476",
+  "requestId": "req_011CcfV2rEKqZr35k9FHHSnx",
+  "sessionId": "ef7d9c6a-1d4c-4be3-a355-88016657f998",
+  "timestamp": "2026-07-03T17:03:04.389Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "8561e69d-8ba1-429f-9b9b-1d26af043478",
+  "version": "2.1.197"
+}
