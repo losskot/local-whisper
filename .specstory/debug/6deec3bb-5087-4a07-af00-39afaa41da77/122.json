@@ -1,0 +1,68 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01DYnfsLEjZbhQVXcupyTjb3",
+        "input": {
+          "command": "cd /Users/vitaliy/Documents/GitHub/local-whisper\nperl -i -pe '\n  s/\\bpipelineResults\\b/PL.results/g;\n  s/\\bpipelineLang\\b/PL.lang/g;\n  s/\\bpipelineNextChunk\\b/PL.nextChunk/g;\n  s/\\bpipelineNextSeg\\b/PL.nextSeg/g;\n  s/\\bpipelineTotal\\b/PL.total/g;\n  s/\\bpipelineDone\\b/PL.done/g;\n  s/\\bpipelineFinalizing\\b/PL.finalizing/g;\n  s/\\bstreamTimer\\b/PL.streamTimer/g;\n' hammerspoon/init.lua\necho \"=== leftover old names (should be 0) ===\"\ngrep -cnE \"\\b(pipelineResults|pipelineLang|pipelineNextChunk|pipelineNextSeg|pipelineTotal|pipelineDone|pipelineFinalizing|streamTimer)\\b\" hammerspoon/init.lua\necho \"=== accidental PL.PL or double-dots? ===\"\ngrep -nE \"PL\\.PL|PL\\.\\.\" hammerspoon/init.lua | head\necho \"=== syntax check ===\"\nhs -c 'local f,e=loadfile(\"/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua\"); return f and \"SYNTAX OK\" or (\"ERR: \"..tostring(e))'",
+          "description": "Rewrite pipeline references and syntax-check"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_01FMhmm5YP4tKwGXv44M7EYN",
+    "model": "claude-opus-4-8",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 2308,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 2308,
+      "cache_read_input_tokens": 71711,
+      "inference_geo": "not_available",
+      "input_tokens": 389,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 2308,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 2308,
+          "cache_read_input_tokens": 71711,
+          "input_tokens": 389,
+          "output_tokens": 628,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 628,
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "9d22da3d-d9c1-4408-ad39-71962e0e54cf",
+  "requestId": "req_011CcfZJ4BJAZjx3GDV5FAss",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "timestamp": "2026-07-03T17:58:14.136Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "03b80dd7-6544-41db-ae78-aa26dff59466",
+  "version": "2.1.197"
+}

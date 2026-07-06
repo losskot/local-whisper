@@ -1,0 +1,35 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "1626\tlocal function onPipelineDone(n, text, detected)\n1627\t    PL.results[n] = text\n1628\t    _whisperRecovery.snapshot()  -- persist accepted segments so a finalize failure can't lose them\n1629\t    if detected and not PL.lang then PL.lang = detected end\n1630\t    PL.done = PL.done + 1\n1631\t    -- Advance transcription progress bar\n1632\t    barState.txnSecs = barState.txnSecs + (barState.segChunks[n] or 0)\n1633\t    log(\"pipeline: seg \" .. n .. \" complete (done=\" .. PL.done .. \"/\" .. PL.total .. \", txnSecs=\" .. barState.txnSecs .. \")\")\n1634\t    if overlay then updateProgressBar() end\n1635\t    if PL.finalizing then\n1636\t        local left = PL.total - PL.done\n1637\t        if left \u003e 0 then\n1638\t            setOverlayText(string.format(\"Transcribing... (%d left)\", left))\n1639\t        else\n1640\t            pipelineFinalize()\n1641\t        end\n1642\t    end\n1643\tend\n1644\t\n1645\t-- Concat chunkGroup → WAV → whisper, then call onPipelineDone(segN, text, lang).",
+        "tool_use_id": "toolu_019N4GswRcNr5STQYhzYSPqh",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "fac03de4-ab32-4166-9706-539cea677eaf",
+  "promptId": "b87252f6-da26-4810-8031-1fdf3a0c95e9",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "sourceToolAssistantUUID": "fac03de4-ab32-4166-9706-539cea677eaf",
+  "timestamp": "2026-07-03T18:05:15.074Z",
+  "toolUseResult": {
+    "file": {
+      "content": "local function onPipelineDone(n, text, detected)\n    PL.results[n] = text\n    _whisperRecovery.snapshot()  -- persist accepted segments so a finalize failure can't lose them\n    if detected and not PL.lang then PL.lang = detected end\n    PL.done = PL.done + 1\n    -- Advance transcription progress bar\n    barState.txnSecs = barState.txnSecs + (barState.segChunks[n] or 0)\n    log(\"pipeline: seg \" .. n .. \" complete (done=\" .. PL.done .. \"/\" .. PL.total .. \", txnSecs=\" .. barState.txnSecs .. \")\")\n    if overlay then updateProgressBar() end\n    if PL.finalizing then\n        local left = PL.total - PL.done\n        if left \u003e 0 then\n            setOverlayText(string.format(\"Transcribing... (%d left)\", left))\n        else\n            pipelineFinalize()\n        end\n    end\nend\n\n-- Concat chunkGroup → WAV → whisper, then call onPipelineDone(segN, text, lang).",
+      "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+      "numLines": 20,
+      "startLine": 1626,
+      "totalLines": 3028
+    },
+    "type": "text"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "3814fdd9-43a3-49b3-8445-06718c976a66",
+  "version": "2.1.197"
+}

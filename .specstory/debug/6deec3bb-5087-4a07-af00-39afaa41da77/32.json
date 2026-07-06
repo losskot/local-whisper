@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "=== loadfile syntax check via HS (compiles, does NOT run) ===\nSYNTAX OK\n=== HS lua version ===\nLua 5.4",
+        "is_error": false,
+        "tool_use_id": "toolu_01LomJybvX4pFoE2Vni1WKzH",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "75a55636-0fc1-44bb-8bc5-009663ea9f1e",
+  "promptId": "b87252f6-da26-4810-8031-1fdf3a0c95e9",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "sourceToolAssistantUUID": "75a55636-0fc1-44bb-8bc5-009663ea9f1e",
+  "timestamp": "2026-07-03T17:26:03.406Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "=== loadfile syntax check via HS (compiles, does NOT run) ===\nSYNTAX OK\n=== HS lua version ===\nLua 5.4"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "b4b3bfb2-f1e1-4963-b18d-19995cd9ddf0",
+  "version": "2.1.197"
+}

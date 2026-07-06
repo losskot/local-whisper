@@ -1,0 +1,61 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "signature": "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",
+        "thinking": "",
+        "type": "thinking"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_01FEbCCSWZ9SDi6LJ68C8DgW",
+    "model": "claude-opus-4-8",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 757,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 757,
+      "cache_read_input_tokens": 76967,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 757,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 757,
+          "cache_read_input_tokens": 76967,
+          "input_tokens": 2,
+          "output_tokens": 844,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 844,
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "e7bce5d0-54f1-4414-84d2-e2eae551a479",
+  "requestId": "req_011CcfZLvrMZBrKk1KHNbmkJ",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "timestamp": "2026-07-03T17:58:56.352Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "51fb918a-7224-4517-8ade-ea414c9a0fde",
+  "version": "2.1.197"
+}

@@ -1,0 +1,60 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "text": "Everything confirmed. Syntax check via Hammerspoon's own Lua 5.4 works (`SYNTAX OK`), and beads is `github.com/steveyegge/beads`. Let me read the beads README for the install command and install it.",
+        "type": "text"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_017eJmQvfUBZ1wQfZ4rVvuAU",
+    "model": "claude-opus-4-8",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 5276,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 5276,
+      "cache_read_input_tokens": 36741,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 5276,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 5276,
+          "cache_read_input_tokens": 36741,
+          "input_tokens": 2,
+          "output_tokens": 305,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 305,
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "20c8d9eb-5303-4653-b8b6-00e016a49e12",
+  "requestId": "req_011CcfWrJr9Pp1Sewy6CqUn9",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "timestamp": "2026-07-03T17:26:08.594Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "3a131a41-c9ab-4654-bd7d-cef749eca163",
+  "version": "2.1.197"
+}

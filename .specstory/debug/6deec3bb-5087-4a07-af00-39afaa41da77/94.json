@@ -1,0 +1,37 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": [
+          {
+            "tool_name": "TodoWrite",
+            "type": "tool_reference"
+          }
+        ],
+        "tool_use_id": "toolu_01PrkBGMTYBxqLCFBbwiYyRq",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "f3218aa9-c5f1-48de-a226-495dce712a54",
+  "promptId": "b87252f6-da26-4810-8031-1fdf3a0c95e9",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "sourceToolAssistantUUID": "f3218aa9-c5f1-48de-a226-495dce712a54",
+  "timestamp": "2026-07-03T17:55:52.363Z",
+  "toolUseResult": {
+    "matches": [
+      "TodoWrite"
+    ],
+    "query": "select:TodoWrite",
+    "total_deferred_tools": 234
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "020986d8-e538-44ce-9f5b-1e7090e3ee1c",
+  "version": "2.1.197"
+}

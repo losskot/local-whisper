@@ -1,0 +1,92 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01WZGEre5XrSGAbCPnhU7Xni",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "6304967d-5cea-4ea8-ba3e-3dbfc4452d08",
+  "promptId": "b87252f6-da26-4810-8031-1fdf3a0c95e9",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "sourceToolAssistantUUID": "6304967d-5cea-4ea8-ba3e-3dbfc4452d08",
+  "timestamp": "2026-07-03T18:01:35.805Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+    "newString": "--------------------------------------------------------------------------------\n-- Whisper concurrency semaphore (code-review item #1)\n--------------------------------------------------------------------------------\n-- Root cause of the \"whole system froze\" hang: up to 5 whisper-cli processes\n-- (large-v3-turbo streaming segments + the final ones) ran at once, pegging the\n-- CPU hard enough to starve the audio subsystem — which is what made\n-- hs.sound.getByFile() return nil and left the overlay wedged. Capping how many\n-- whisper-cli processes run concurrently throttles the trigger, not just the\n-- symptom. All three whisper spawn sites go through startWhisper() below.\n\nlocal MAX_WHISPER = 2  -- max concurrent whisper-cli processes (reviewer suggested 2–3)\n\n-- Start queued jobs while a slot is free. Single-threaded (hs callbacks run on\n-- the main thread), so no locking needed.\nlocal function pumpWhisperQueue()\n    while PL.whisperActive \u003c MAX_WHISPER and #PL.whisperQueue \u003e 0 do\n        local job = table.remove(PL.whisperQueue, 1)\n        PL.whisperActive = PL.whisperActive + 1\n        local t = hs.task.new(WHISPER_BIN, function(code, out, err)\n            PL.whisperActive = math.max(0, PL.whisperActive - 1)  -- clamp: killall can fire late callbacks\n            local ok, e = pcall(job.cb, code, out, err)\n            if not ok then log(\"whisper: callback error: \" .. tostring(e)) end\n            pumpWhisperQueue()\n        end, job.args)\n        if t then\n            t:start()\n        else\n            -- hs.task.new can return nil under resource pressure; free the slot\n            -- and let the caller's callback run so the pipeline doesn't stall.\n            PL.whisperActive = math.max(0, PL.whisperActive - 1)\n            log(\"whisper: hs.task.new returned nil, running callback with error code\")\n            pcall(job.cb, -1, \"\", \"\")\n        end\n    end\nend\n\n-- Enqueue a whisper-cli run. cb receives (exitCode, stdout, stderr), same as a\n-- raw hs.task callback, so existing callbacks work unchanged.\nlocal function startWhisper(args, cb)\n    table.insert(PL.whisperQueue, { args = args, cb = cb })\n    pumpWhisperQueue()\nend\n\n--------------------------------------------------------------------------------\n-- Partial transcription (live preview while recording)\n--------------------------------------------------------------------------------\n\nlocal function doPartialTranscribe()",
+    "oldString": "--------------------------------------------------------------------------------\n-- Partial transcription (live preview while recording)\n--------------------------------------------------------------------------------\n\nlocal function doPartialTranscribe()",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          " end",
+          " ",
+          " --------------------------------------------------------------------------------",
+          "+-- Whisper concurrency semaphore (code-review item #1)",
+          "+--------------------------------------------------------------------------------",
+          "+-- Root cause of the \"whole system froze\" hang: up to 5 whisper-cli processes",
+          "+-- (large-v3-turbo streaming segments + the final ones) ran at once, pegging the",
+          "+-- CPU hard enough to starve the audio subsystem — which is what made",
+          "+-- hs.sound.getByFile() return nil and left the overlay wedged. Capping how many",
+          "+-- whisper-cli processes run concurrently throttles the trigger, not just the",
+          "+-- symptom. All three whisper spawn sites go through startWhisper() below.",
+          "+",
+          "+local MAX_WHISPER = 2  -- max concurrent whisper-cli processes (reviewer suggested 2–3)",
+          "+",
+          "+-- Start queued jobs while a slot is free. Single-threaded (hs callbacks run on",
+          "+-- the main thread), so no locking needed.",
+          "+local function pumpWhisperQueue()",
+          "+    while PL.whisperActive \u003c MAX_WHISPER and #PL.whisperQueue \u003e 0 do",
+          "+        local job = table.remove(PL.whisperQueue, 1)",
+          "+        PL.whisperActive = PL.whisperActive + 1",
+          "+        local t = hs.task.new(WHISPER_BIN, function(code, out, err)",
+          "+            PL.whisperActive = math.max(0, PL.whisperActive - 1)  -- clamp: killall can fire late callbacks",
+          "+            local ok, e = pcall(job.cb, code, out, err)",
+          "+            if not ok then log(\"whisper: callback error: \" .. tostring(e)) end",
+          "+            pumpWhisperQueue()",
+          "+        end, job.args)",
+          "+        if t then",
+          "+            t:start()",
+          "+        else",
+          "+            -- hs.task.new can return nil under resource pressure; free the slot",
+          "+            -- and let the caller's callback run so the pipeline doesn't stall.",
+          "+            PL.whisperActive = math.max(0, PL.whisperActive - 1)",
+          "+            log(\"whisper: hs.task.new returned nil, running callback with error code\")",
+          "+            pcall(job.cb, -1, \"\", \"\")",
+          "+        end",
+          "+    end",
+          "+end",
+          "+",
+          "+-- Enqueue a whisper-cli run. cb receives (exitCode, stdout, stderr), same as a",
+          "+-- raw hs.task callback, so existing callbacks work unchanged.",
+          "+local function startWhisper(args, cb)",
+          "+    table.insert(PL.whisperQueue, { args = args, cb = cb })",
+          "+    pumpWhisperQueue()",
+          "+end",
+          "+",
+          "+--------------------------------------------------------------------------------",
+          " -- Partial transcription (live preview while recording)",
+          " --------------------------------------------------------------------------------",
+          " "
+        ],
+        "newLines": 49,
+        "newStart": 1354,
+        "oldLines": 6,
+        "oldStart": 1354
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "73afb2ae-5601-4b57-8caa-331bcb215386",
+  "version": "2.1.197"
+}

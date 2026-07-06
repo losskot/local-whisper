@@ -1,0 +1,35 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "1348\t    lastCheckedChunk = 0\n1349\t    pipelineReset()\n1350\t    forceHideOverlay()\n1351\t    updateMenuBar()\n1352\t    os.execute(\"killall whisper-cli 2\u003e/dev/null\")\n1353\t    hs.notify.new({ title = \"local-whisper\", informativeText = \"Stopped\" }):send()\n1354\tend\n1355\t\n1356\t--------------------------------------------------------------------------------\n1357\t-- Partial transcription (live preview while recording)\n1358\t--------------------------------------------------------------------------------\n1359\t\n1360\tlocal function doPartialTranscribe()\n1361\t    if partialBusy or not isRecording then return end",
+        "tool_use_id": "toolu_019Caq2VXsPhramWCdyp1v3F",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "607c7435-1554-426f-91ab-53b71510ea58",
+  "promptId": "b87252f6-da26-4810-8031-1fdf3a0c95e9",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "sourceToolAssistantUUID": "607c7435-1554-426f-91ab-53b71510ea58",
+  "timestamp": "2026-07-03T18:00:49.516Z",
+  "toolUseResult": {
+    "file": {
+      "content": "    lastCheckedChunk = 0\n    pipelineReset()\n    forceHideOverlay()\n    updateMenuBar()\n    os.execute(\"killall whisper-cli 2\u003e/dev/null\")\n    hs.notify.new({ title = \"local-whisper\", informativeText = \"Stopped\" }):send()\nend\n\n--------------------------------------------------------------------------------\n-- Partial transcription (live preview while recording)\n--------------------------------------------------------------------------------\n\nlocal function doPartialTranscribe()\n    if partialBusy or not isRecording then return end",
+      "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+      "numLines": 14,
+      "startLine": 1348,
+      "totalLines": 2949
+    },
+    "type": "text"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "1fffb2ba-6265-4e02-826c-cd61cdd49f04",
+  "version": "2.1.197"
+}

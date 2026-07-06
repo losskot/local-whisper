@@ -1,0 +1,35 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "908\tend\n909\t\n910\tlocal function hideOverlay()\n911\t    if overlayPinned then return end  -- pinned overlay stays open\n912\t    if overlay then overlay:delete(); overlay = nil end\n913\tend\n914\t\n915\tlocal function forceHideOverlay()\n916\t    overlayPinned = false\n917\t    if overlay then overlay:delete(); overlay = nil end\n918\tend\n919\t\n920\tlocal function setOverlayText(text)\n921\t    if overlay then overlay[EL.text].text = text end\n922\tend\n923\t\n924\tlocal function setOverlayStatus()\n925\t    refreshOverlayLabels()\n926\tend\n927\t\n928\t--------------------------------------------------------------------------------\n929\t-- State\n930\t--------------------------------------------------------------------------------\n931\t\n932\tlocal isRecording = false\n933\tlocal overlayPinned = false\n934\tlocal ffmpegTask = nil\n935\tlocal partialTimer = nil\n936\tlocal partialBusy = false\n937\tlocal lastChunkCount = 0",
+        "tool_use_id": "toolu_01XATAZPZuz31Ufx3xUGCGFx",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "f25f1bab-bbdb-4dc3-83d6-1a44463039c3",
+  "promptId": "b87252f6-da26-4810-8031-1fdf3a0c95e9",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "sourceToolAssistantUUID": "f25f1bab-bbdb-4dc3-83d6-1a44463039c3",
+  "timestamp": "2026-07-03T18:03:01.439Z",
+  "toolUseResult": {
+    "file": {
+      "content": "end\n\nlocal function hideOverlay()\n    if overlayPinned then return end  -- pinned overlay stays open\n    if overlay then overlay:delete(); overlay = nil end\nend\n\nlocal function forceHideOverlay()\n    overlayPinned = false\n    if overlay then overlay:delete(); overlay = nil end\nend\n\nlocal function setOverlayText(text)\n    if overlay then overlay[EL.text].text = text end\nend\n\nlocal function setOverlayStatus()\n    refreshOverlayLabels()\nend\n\n--------------------------------------------------------------------------------\n-- State\n--------------------------------------------------------------------------------\n\nlocal isRecording = false\nlocal overlayPinned = false\nlocal ffmpegTask = nil\nlocal partialTimer = nil\nlocal partialBusy = false\nlocal lastChunkCount = 0",
+      "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+      "numLines": 30,
+      "startLine": 908,
+      "totalLines": 2997
+    },
+    "type": "text"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "77324775-cbe7-42f9-bc7a-6709f6a0b71f",
+  "version": "2.1.197"
+}

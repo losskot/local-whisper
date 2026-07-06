@@ -1,0 +1,70 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_0181UMScj9V5KZX81wLAtq4C",
+        "input": {
+          "file_path": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+          "new_string": "-- Finalize/refine watchdog (code-review item #3). Once recording stops the\n-- overlay shows \"Transcribing…\" / \"Refining…\"; if the final transcription, an\n-- Ollama refine, or the text insertion wedges, nothing would ever take the\n-- overlay down and it hangs forever. armWatchdog() arms a no-progress timeout;\n-- it is re-armed on every completed segment (see onPipelineDone) so a genuinely\n-- long transcription is not cut off, and only fires when things truly stall.\nlocal WATCHDOG_SECS = 45\nlocal function armWatchdog()\n    cancelWatchdog()\n    PL.watchdog = hs.timer.doAfter(WATCHDOG_SECS, function()\n        PL.watchdog = nil\n        log(\"watchdog: finalize/refine stalled for \" .. WATCHDOG_SECS .. \"s — force-hiding overlay\")\n        forceHideOverlay()\n    end)\nend\n\nlocal function setOverlayText(text)\n    if overlay then overlay[EL.text].text = text end\nend",
+          "old_string": "local function setOverlayText(text)\n    if overlay then overlay[EL.text].text = text end\nend",
+          "replace_all": false
+        },
+        "name": "Edit",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011nv83Px7dxAmdm1pGPUEXv",
+    "model": "claude-opus-4-8",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 587,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 587,
+      "cache_read_input_tokens": 111419,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 587,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 587,
+          "cache_read_input_tokens": 111419,
+          "input_tokens": 2,
+          "output_tokens": 1173,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 1173,
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "b50fb4ea-932b-4cc2-88c1-c049e03d376c",
+  "requestId": "req_011CcfZohTT5x4kfdJbgUzUj",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "timestamp": "2026-07-03T18:05:04.999Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "b6e09814-0c6e-47b0-939c-3bde6154f2db",
+  "version": "2.1.197"
+}

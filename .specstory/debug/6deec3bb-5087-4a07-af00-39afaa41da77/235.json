@@ -1,0 +1,70 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01UtHZx36nYeTi2J3aTLYb2f",
+        "input": {
+          "file_path": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+          "new_string": "local function doFinalTranscription()\n    if PL.streamTimer then PL.streamTimer:stop(); PL.streamTimer = nil end\n\n    -- Arm the stall watchdog for the whole finalize→refine→insert path (item #3).\n    armWatchdog()\n\n    -- Body wrapped in pcall (item #2): if getChunkFiles()/splitAtSilence()/etc.\n    -- throws, the overlay would otherwise be stranded on \"Transcribing…\" forever.\n    -- On error we log and force the overlay down. Accepted segment text is already\n    -- persisted by _whisperRecovery.snapshot(), so a throw here doesn't lose text.\n    local ok, err = pcall(function()\n        local allChunks = getChunkFiles()\n        log(\"final: START — total chunks=\" .. #allChunks\n            .. \", streamed=\" .. (PL.nextSeg - 1) .. \" segs\"\n            .. \" (next unclaimed chunk idx=\" .. PL.nextChunk .. \")\")\n\n        -- Build remaining chunks not yet claimed by the streaming pipeline\n        local remaining = {}\n        for j = PL.nextChunk, #allChunks do\n            table.insert(remaining, allChunks[j])\n        end\n\n        if PL.nextSeg == 1 and #remaining \u003c 2 then\n            log(\"final: not enough chunks, skipping\")\n            hideOverlay()\n            return\n        end\n\n        setOverlayText(\"Transcribing...\")\n\n        -- Dispatch remaining chunks as final pipeline segments\n        if #remaining \u003e= 2 then\n            local finalGroups = splitAtSilence(remaining, 25)\n            for _, grp in ipairs(finalGroups) do\n                local gfirst = grp[1]:match(\"([^/]+)$\") or grp[1]\n                local glast  = grp[#grp]:match(\"([^/]+)$\") or grp[#grp]\n                local segN = PL.nextSeg\n                PL.nextSeg   = PL.nextSeg   + 1\n                PL.nextChunk = PL.nextChunk + #grp\n                log(\"final: dispatching seg \" .. segN .. \" → \" .. #grp .. \" chunks (\" .. gfirst .. \" … \" .. glast .. \")\")\n                dispatchSegment(segN, grp)\n            end\n        end\n\n        -- Fix the total and start finalization mode\n        PL.total      = PL.nextSeg - 1\n        PL.finalizing = true\n        log(\"final: PL.total=\" .. PL.total .. \", PL.done=\" .. PL.done)\n\n        if PL.total == 0 then\n            log(\"final: no segments at all, skipping\")\n            hideOverlay(); return\n        end\n\n        -- Update overlay with pending count (stream segs may still be running)\n        local left = PL.total - PL.done\n        if left \u003e 1 then\n            setOverlayText(string.format(\"Transcribing... (%d left)\", left))\n        end\n\n        -- Edge case: all streaming segs completed before recording stopped\n        if PL.done \u003e= PL.total then\n            pipelineFinalize()\n        end\n    end)\n\n    if not ok then\n        log(\"final: ERROR in doFinalTranscription — \" .. tostring(err))\n        hideOverlay()\n    end\nend",
+          "old_string": "local function doFinalTranscription()\n    if PL.streamTimer then PL.streamTimer:stop(); PL.streamTimer = nil end\n\n    local allChunks = getChunkFiles()\n    log(\"final: START — total chunks=\" .. #allChunks\n        .. \", streamed=\" .. (PL.nextSeg - 1) .. \" segs\"\n        .. \" (next unclaimed chunk idx=\" .. PL.nextChunk .. \")\")\n\n    -- Build remaining chunks not yet claimed by the streaming pipeline\n    local remaining = {}\n    for j = PL.nextChunk, #allChunks do\n        table.insert(remaining, allChunks[j])\n    end\n\n    if PL.nextSeg == 1 and #remaining \u003c 2 then\n        log(\"final: not enough chunks, skipping\")\n        hideOverlay()\n        return\n    end\n\n    setOverlayText(\"Transcribing...\")\n\n    -- Dispatch remaining chunks as final pipeline segments\n    if #remaining \u003e= 2 then\n        local finalGroups = splitAtSilence(remaining, 25)\n        for _, grp in ipairs(finalGroups) do\n            local gfirst = grp[1]:match(\"([^/]+)$\") or grp[1]\n            local glast  = grp[#grp]:match(\"([^/]+)$\") or grp[#grp]\n            local segN = PL.nextSeg\n            PL.nextSeg   = PL.nextSeg   + 1\n            PL.nextChunk = PL.nextChunk + #grp\n            log(\"final: dispatching seg \" .. segN .. \" → \" .. #grp .. \" chunks (\" .. gfirst .. \" … \" .. glast .. \")\")\n            dispatchSegment(segN, grp)\n        end\n    end\n\n    -- Fix the total and start finalization mode\n    PL.total      = PL.nextSeg - 1\n    PL.finalizing = true\n    log(\"final: PL.total=\" .. PL.total .. \", PL.done=\" .. PL.done)\n\n    if PL.total == 0 then\n        log(\"final: no segments at all, skipping\")\n        hideOverlay(); return\n    end\n\n    -- Update overlay with pending count (stream segs may still be running)\n    local left = PL.total - PL.done\n    if left \u003e 1 then\n        setOverlayText(string.format(\"Transcribing... (%d left)\", left))\n    end\n\n    -- Edge case: all streaming segs completed before recording stopped\n    if PL.done \u003e= PL.total then\n        pipelineFinalize()\n    end\nend",
+          "replace_all": false
+        },
+        "name": "Edit",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_01MY1BsdLxUnAUhESjp6NLhK",
+    "model": "claude-opus-4-8",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 1322,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 1322,
+      "cache_read_input_tokens": 116014,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1322,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 1322,
+          "cache_read_input_tokens": 116014,
+          "input_tokens": 2,
+          "output_tokens": 2216,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 2216,
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "d08250a7-b92e-4318-b947-3b26f07031da",
+  "requestId": "req_011CcfZswcc2m4qmrbuY5ifg",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "timestamp": "2026-07-03T18:06:07.642Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "e9351fd7-0bb5-4d98-bfcc-45465f988ae8",
+  "version": "2.1.197"
+}

@@ -1,0 +1,35 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "1560\t    if text == \"\" then hideOverlay(); return end\n1561\t\n1562\t    -- Skip LLM refinement for voice commands (refine would strip the prefix)\n1563\t    local isVoiceCommand = text:lower():match(\"voice%s+command\")\n1564\t\n1565\t    -- Optional LLM refinement (async, skips short text and voice commands)\n1566\t    if not isVoiceCommand and getRefineMode() and #text \u003e= 50 then\n1567\t        setOverlayText(\"Refining...\")\n1568\t        refineWithOllama(text, function(refined)\n1569\t            finishInsertion(refined, detectedLang)\n1570\t        end)\n1571\t    else\n1572\t        finishInsertion(text, detectedLang)\n1573\t    end\n1574\tend\n1575\t",
+        "tool_use_id": "toolu_01DWhvB49r95QZoxB5NwPGpk",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "c5895b4f-aa71-4b51-9691-28143740de1f",
+  "promptId": "b87252f6-da26-4810-8031-1fdf3a0c95e9",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "sourceToolAssistantUUID": "c5895b4f-aa71-4b51-9691-28143740de1f",
+  "timestamp": "2026-07-03T18:05:27.081Z",
+  "toolUseResult": {
+    "file": {
+      "content": "    if text == \"\" then hideOverlay(); return end\n\n    -- Skip LLM refinement for voice commands (refine would strip the prefix)\n    local isVoiceCommand = text:lower():match(\"voice%s+command\")\n\n    -- Optional LLM refinement (async, skips short text and voice commands)\n    if not isVoiceCommand and getRefineMode() and #text \u003e= 50 then\n        setOverlayText(\"Refining...\")\n        refineWithOllama(text, function(refined)\n            finishInsertion(refined, detectedLang)\n        end)\n    else\n        finishInsertion(text, detectedLang)\n    end\nend\n",
+      "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+      "numLines": 16,
+      "startLine": 1560,
+      "totalLines": 3029
+    },
+    "type": "text"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "6a36b431-a58d-4549-a2f5-0211bfd1056a",
+  "version": "2.1.197"
+}

@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "1877:    os.execute(\"rm -rf '\" .. CHUNK_DIR .. \"'\")",
+        "is_error": false,
+        "tool_use_id": "toolu_01C5NDGTLf68o1xSVMdwXUec",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "186d3850-ba73-485f-a695-93424ebd6ae0",
+  "promptId": "0faf16ba-1170-44d2-9c15-b85e94438f5d",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "sourceToolAssistantUUID": "186d3850-ba73-485f-a695-93424ebd6ae0",
+  "timestamp": "2026-07-03T18:12:27.255Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "1877:    os.execute(\"rm -rf '\" .. CHUNK_DIR .. \"'\")"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "0d9b32d8-1d7a-48da-b496-d3a417c23e66",
+  "version": "2.1.197"
+}

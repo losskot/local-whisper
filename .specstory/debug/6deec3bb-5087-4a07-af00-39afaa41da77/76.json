@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "=== /Users/vitaliy/Documents/GitHub/local-whisper/.claude/settings.json ===\ncat: /Users/vitaliy/Documents/GitHub/local-whisper/.claude/settings.json: No such file or directory\n=== /Users/vitaliy/Documents/GitHub/local-whisper/.claude/settings.local.json ===\ncat: /Users/vitaliy/Documents/GitHub/local-whisper/.claude/settings.local.json: No such file or directory\n=== /Users/vitaliy/.claude/settings.json ===\n{\n  \"permissions\": {\n    \"allow\": [\n      \"mcp__claude_ai_Tavily_2__tavily_search\"\n    ]\n  },\n  \"model\": \"opus\",\n  \"enableWorkflows\": true,\n  \"theme\": \"light-daltonized\",\n  \"agentPushNotifEnabled\": true,\n  \"effortLevel\": \"medium\"\n}",
+        "is_error": false,
+        "tool_use_id": "toolu_01EqEQaRJe3Epo5ihFefdnUJ",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "399d0ba7-7ed6-4b8c-8a62-ceef1190294b",
+  "promptId": "b87252f6-da26-4810-8031-1fdf3a0c95e9",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "sourceToolAssistantUUID": "399d0ba7-7ed6-4b8c-8a62-ceef1190294b",
+  "timestamp": "2026-07-03T17:54:44.418Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "=== /Users/vitaliy/Documents/GitHub/local-whisper/.claude/settings.json ===\ncat: /Users/vitaliy/Documents/GitHub/local-whisper/.claude/settings.json: No such file or directory\n=== /Users/vitaliy/Documents/GitHub/local-whisper/.claude/settings.local.json ===\ncat: /Users/vitaliy/Documents/GitHub/local-whisper/.claude/settings.local.json: No such file or directory\n=== /Users/vitaliy/.claude/settings.json ===\n{\n  \"permissions\": {\n    \"allow\": [\n      \"mcp__claude_ai_Tavily_2__tavily_search\"\n    ]\n  },\n  \"model\": \"opus\",\n  \"enableWorkflows\": true,\n  \"theme\": \"light-daltonized\",\n  \"agentPushNotifEnabled\": true,\n  \"effortLevel\": \"medium\"\n}"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "42e5afe2-b477-4605-ab80-bb29a531785b",
+  "version": "2.1.197"
+}

@@ -1,0 +1,35 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "1512\tlocal function pipelineReset()\n1513\t    _whisperRecovery.salvage()  -- rescue text from a prior session that never finalized\n1514\t    PL.results    = {}\n1515\t    PL.lang       = nil\n1516\t    PL.nextChunk  = 1\n1517\t    PL.nextSeg    = 1\n1518\t    PL.total      = 0\n1519\t    PL.done       = 0\n1520\t    PL.finalizing = false\n1521\t    barState.segChunks = {}\n1522\t    barState.txnSecs   = 0\n1523\t    barState.frozen    = false\n1524\tend\n1525\t\n1526\tlocal function pipelineFinalize()\n1527\t    local parts = {}\n1528\t    for n = 1, PL.total do\n1529\t        local t = PL.results[n] or \"\"\n1530\t        if t ~= \"\" then table.insert(parts, t) end\n1531\t    end\n1532\t    local finalText = table.concat(parts, \" \"):gsub(\"^%s+\", \"\"):gsub(\"%s+$\", \"\"):gsub(\"%s+\", \" \")\n1533\t    log(\"pipeline: finalized \" .. PL.total .. \" seg(s): '\" .. finalText:sub(1, 120) .. \"'\")\n1534\t    if finalText == \"\" then\n1535\t        if overlay then overlay[EL.bar_bg].fillColor={red=0.3,green=0.3,blue=0.3,alpha=0}; overlay[EL.bar_rec].fillColor={red=1,green=0.35,blue=0.15,alpha=0}; overlay[EL.bar_txn].fillColor={red=0.2,green=0.75,blue=1,alpha=0} end\n1536\t        hideOverlay(); return\n1537\t    end\n1538\t    -- Show blue bar at 100% briefly before inserting\n1539\t    barState.txnSecs = barState.maxSecs\n1540\t    if overlay then updateProgressBar() end\n1541\t    hs.timer.doAfter(0.4, function()\n1542\t        if overlay then overlay[EL.bar_bg].fillColor={red=0.3,green=0.3,blue=0.3,alpha=0}; overlay[EL.bar_rec].fillColor={red=1,green=0.35,blue=0.15,alpha=0}; overlay[EL.bar_txn].fillColor={red=0.2,green=0.75,blue=1,alpha=0} end\n1543\t    end)\n1544\t    insertTranscribedText(finalText, PL.lang)\n1545\tend\n1546\t\n1547\tlocal function onPipelineDone(n, text, detected)\n1548\t    PL.results[n] = text\n1549\t    _whisperRecovery.snapshot()  -- persist accepted segments so a finalize failure can't lose them\n1550\t    if detected and not PL.lang then PL.lang = detected end\n1551\t    PL.done = PL.done + 1\n1552\t    -- Advance transcription progress bar\n1553\t    barState.txnSecs = barState.txnSecs + (barState.segChunks[n] or 0)\n1554\t    log(\"pipeline: seg \" .. n .. \" complete (done=\" .. PL.done .. \"/\" .. PL.total .. \", txnSecs=\" .. barState.txnSecs .. \")\")\n1555\t    if overlay then updateProgressBar() end\n1556\t    if PL.finalizing then\n1557\t        local left = PL.total - PL.done\n1558\t        if left \u003e 0 then\n1559\t            setOverlayText(string.format(\"Transcribing... (%d left)\", left))\n1560\t        else\n1561\t            pipelineFinalize()\n1562\t        end\n1563\t    end\n1564\tend\n1565\t\n1566\t-- Concat chunkGroup → WAV → whisper, then call onPipelineDone(segN, text, lang).\n1567\t-- Fully async; multiple segments can run concurrently.",
+        "tool_use_id": "toolu_01PrJGhJbRtzonn2TXPLokWf",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "74426e1f-417f-4370-9e8e-0e29bda527d8",
+  "promptId": "b87252f6-da26-4810-8031-1fdf3a0c95e9",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "sourceToolAssistantUUID": "74426e1f-417f-4370-9e8e-0e29bda527d8",
+  "timestamp": "2026-07-03T18:01:00.286Z",
+  "toolUseResult": {
+    "file": {
+      "content": "local function pipelineReset()\n    _whisperRecovery.salvage()  -- rescue text from a prior session that never finalized\n    PL.results    = {}\n    PL.lang       = nil\n    PL.nextChunk  = 1\n    PL.nextSeg    = 1\n    PL.total      = 0\n    PL.done       = 0\n    PL.finalizing = false\n    barState.segChunks = {}\n    barState.txnSecs   = 0\n    barState.frozen    = false\nend\n\nlocal function pipelineFinalize()\n    local parts = {}\n    for n = 1, PL.total do\n        local t = PL.results[n] or \"\"\n        if t ~= \"\" then table.insert(parts, t) end\n    end\n    local finalText = table.concat(parts, \" \"):gsub(\"^%s+\", \"\"):gsub(\"%s+$\", \"\"):gsub(\"%s+\", \" \")\n    log(\"pipeline: finalized \" .. PL.total .. \" seg(s): '\" .. finalText:sub(1, 120) .. \"'\")\n    if finalText == \"\" then\n        if overlay then overlay[EL.bar_bg].fillColor={red=0.3,green=0.3,blue=0.3,alpha=0}; overlay[EL.bar_rec].fillColor={red=1,green=0.35,blue=0.15,alpha=0}; overlay[EL.bar_txn].fillColor={red=0.2,green=0.75,blue=1,alpha=0} end\n        hideOverlay(); return\n    end\n    -- Show blue bar at 100% briefly before inserting\n    barState.txnSecs = barState.maxSecs\n    if overlay then updateProgressBar() end\n    hs.timer.doAfter(0.4, function()\n        if overlay then overlay[EL.bar_bg].fillColor={red=0.3,green=0.3,blue=0.3,alpha=0}; overlay[EL.bar_rec].fillColor={red=1,green=0.35,blue=0.15,alpha=0}; overlay[EL.bar_txn].fillColor={red=0.2,green=0.75,blue=1,alpha=0} end\n    end)\n    insertTranscribedText(finalText, PL.lang)\nend\n\nlocal function onPipelineDone(n, text, detected)\n    PL.results[n] = text\n    _whisperRecovery.snapshot()  -- persist accepted segments so a finalize failure can't lose them\n    if detected and not PL.lang then PL.lang = detected end\n    PL.done = PL.done + 1\n    -- Advance transcription progress bar\n    barState.txnSecs = barState.txnSecs + (barState.segChunks[n] or 0)\n    log(\"pipeline: seg \" .. n .. \" complete (done=\" .. PL.done .. \"/\" .. PL.total .. \", txnSecs=\" .. barState.txnSecs .. \")\")\n    if overlay then updateProgressBar() end\n    if PL.finalizing then\n        local left = PL.total - PL.done\n        if left \u003e 0 then\n            setOverlayText(string.format(\"Transcribing... (%d left)\", left))\n        else\n            pipelineFinalize()\n        end\n    end\nend\n\n-- Concat chunkGroup → WAV → whisper, then call onPipelineDone(segN, text, lang).\n-- Fully async; multiple segments can run concurrently.",
+      "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+      "numLines": 56,
+      "startLine": 1512,
+      "totalLines": 2949
+    },
+    "type": "text"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "95dd616d-ca34-4f85-a3de-a830e3f7a620",
+  "version": "2.1.197"
+}

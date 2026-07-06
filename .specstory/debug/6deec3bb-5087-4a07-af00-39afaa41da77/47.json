@@ -1,0 +1,68 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_018q9MJZGmBAkexu4gZ2Hn2o",
+        "input": {
+          "command": "curl -sSL https://raw.githubusercontent.com/steveyegge/beads/main/scripts/install.sh 2\u003e\u00261 | sed -n '80,220p'",
+          "description": "Read rest of install script"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_01LcBrpEt7zLaVHtNcWpkgNo",
+    "model": "claude-opus-4-8",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 1232,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 1232,
+      "cache_read_input_tokens": 43342,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1232,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 1232,
+          "cache_read_input_tokens": 43342,
+          "input_tokens": 2,
+          "output_tokens": 179,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 179,
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "8f56e718-dd42-4f2c-8833-d6a434ea1e0c",
+  "requestId": "req_011CcfX3YAtjmnB2vW2osdwr",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "timestamp": "2026-07-03T17:28:39.084Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "43c86d5a-2a48-4394-9823-4b7fe3f1d38b",
+  "version": "2.1.197"
+}

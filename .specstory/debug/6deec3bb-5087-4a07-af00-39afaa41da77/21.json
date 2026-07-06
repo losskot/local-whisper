@@ -1,0 +1,27 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "Exit code 1\n=== brew lua availability ===\n✔︎ JSON API packages.tahoe.jws.json\n==\u003e lua: stable 5.5.0 (bottled)\nPowerful, lightweight programming language\n=== luarocks/luac already anywhere? ===\n(eval):1: no matches found: /usr/local/bin/luac*",
+        "is_error": true,
+        "tool_use_id": "toolu_01DPwhhJ94wgzx8TP1uGdYsL",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "3b2bfaeb-0753-456a-bddd-0ab0a9f7afc3",
+  "promptId": "b87252f6-da26-4810-8031-1fdf3a0c95e9",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "sourceToolAssistantUUID": "3b2bfaeb-0753-456a-bddd-0ab0a9f7afc3",
+  "timestamp": "2026-07-03T17:25:31.821Z",
+  "toolUseResult": "Error: Exit code 1\n=== brew lua availability ===\n✔︎ JSON API packages.tahoe.jws.json\n==\u003e lua: stable 5.5.0 (bottled)\nPowerful, lightweight programming language\n=== luarocks/luac already anywhere? ===\n(eval):1: no matches found: /usr/local/bin/luac*",
+  "type": "user",
+  "userType": "external",
+  "uuid": "73c8a256-6598-4c5f-bff2-68fdeeab52c7",
+  "version": "2.1.197"
+}

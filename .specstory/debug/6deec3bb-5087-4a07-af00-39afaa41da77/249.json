@@ -1,0 +1,35 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "1866\tlocal warmupTask = nil\n1867\tlocal warmupTimer = nil\n1868\tlocal isWarmingUp = false\n1869\tlocal warmupAttempt = 0\n1870\t\n1871\tlocal function startActualRecording()\n1872\t    isWarmingUp = false\n1873\t    warmupAttempt = 0\n1874\t    isRecording = true\n1875\t    log(\"recording: start\")\n1876\t\n1877\t    os.execute(\"rm -rf '\" .. CHUNK_DIR .. \"'\")\n1878\t    os.execute(\"mkdir -p '\" .. CHUNK_DIR .. \"'\")\n1879\t\n1880\t    captureActiveApp()\n1881\t    log(\"recording: app=\" .. tostring(capturedAppName) .. \" (\" .. tostring(capturedAppBundleID) .. \")\")\n1882\t\n1883\t    setOverlayText(\"\")\n1884\t    startRecordingIndicator()\n1885\t    updateMenuBar()\n1886\t    -- Pop is played once the first chunk appears on disk (audio is truly flowing)\n1887\t\n1888\t    ffmpegTask = hs.task.new(FFMPEG, function(code, out, err)\n1889\t        log(\"recording: ffmpeg exited \" .. tostring(code))\n1890\t        if code == 251 or code == 1 then\n1891\t            log(\"recording: ERROR — ffmpeg failed to open audio device '\" .. AUDIO_DEVICE .. \"'. Check device format (should be :default, :0, :1) and microphone permissions.\")\n1892\t        end\n1893\t    end, {\n1894\t        \"-f\", \"avfoundation\", \"-i\", AUDIO_DEVICE,\n1895\t        \"-ac\", \"1\", \"-ar\", \"16000\",\n1896\t        \"-f\", \"segment\", \"-segment_time\", \"1\", \"-segment_format\", \"wav\",\n1897\t        CHUNK_DIR .. \"/chunk_%03d.wav\"\n1898\t    })\n1899\t    ffmpegTask:start()\n1900\t\n1901\t    lastChunkCount = 0\n1902\t    partialBusy = false\n1903\t    silentChunkCount = 0\n1904\t    lastCheckedChunk = 0\n1905\t\n1906\t    -- Reset streaming pipeline state for this recording session\n1907\t    pipelineReset()\n1908\t    if PL.streamTimer then PL.streamTimer:stop(); PL.streamTimer = nil end\n1909\t    PL.streamTimer = hs.timer.doEvery(3, streamCheckAndDispatch)\n1910\t\n1911\t    -- Poll until first chunk exists on disk → audio is truly flowing → play Pop\n1912\t    -- Uses recursive doAfter (not doEvery) to avoid stop-within-callback issues.\n1913\t    local function pollForFirstChunk(attempt)\n1914\t        if not isRecording then return end  -- recording already stopped, don't play Pop\n1915\t        local firstChunk = CHUNK_DIR .. \"/chunk_000.wav\"\n1916\t        local attr = hs.fs.attributes(firstChunk)\n1917\t        if (attr and attr.size and attr.size \u003e 200) then\n1918\t            log(\"recording: first chunk ready after \" .. (attempt * 0.05) .. \"s — audio flowing\")\n1919\t            _whisperRecovery.play(\"/System/Library/Sounds/Pop.aiff\")\n1920\t        elseif attempt \u003e= 200 then\n1921\t            -- 10 seconds elapsed and still no audio data — abort with error\n1922\t            log(\"recording: first chunk timeout — aborting, device not producing audio\")\n1923\t            _whisperRecovery.play(\"/System/Library/Sounds/Basso.aiff\")\n1924\t            setOverlayText(\"Нет аудио\")\n1925\t            isRecording = false\n1926\t            if ffmpegTask and ffmpegTask:isRunning() then ffmpegTask:interrupt() end\n1927\t            ffmpegTask = nil\n1928\t            stopRecordingIndicator()\n1929\t            updateMenuBar()\n1930\t            hs.timer.doAfter(2.0, hideOverlay)",
+        "tool_use_id": "toolu_01UqitWYLDBAKXuoLn1RvtoS",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "7f5cb1db-da42-4162-be4c-4927d5215853",
+  "promptId": "b87252f6-da26-4810-8031-1fdf3a0c95e9",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "sourceToolAssistantUUID": "7f5cb1db-da42-4162-be4c-4927d5215853",
+  "timestamp": "2026-07-03T18:06:43.046Z",
+  "toolUseResult": {
+    "file": {
+      "content": "local warmupTask = nil\nlocal warmupTimer = nil\nlocal isWarmingUp = false\nlocal warmupAttempt = 0\n\nlocal function startActualRecording()\n    isWarmingUp = false\n    warmupAttempt = 0\n    isRecording = true\n    log(\"recording: start\")\n\n    os.execute(\"rm -rf '\" .. CHUNK_DIR .. \"'\")\n    os.execute(\"mkdir -p '\" .. CHUNK_DIR .. \"'\")\n\n    captureActiveApp()\n    log(\"recording: app=\" .. tostring(capturedAppName) .. \" (\" .. tostring(capturedAppBundleID) .. \")\")\n\n    setOverlayText(\"\")\n    startRecordingIndicator()\n    updateMenuBar()\n    -- Pop is played once the first chunk appears on disk (audio is truly flowing)\n\n    ffmpegTask = hs.task.new(FFMPEG, function(code, out, err)\n        log(\"recording: ffmpeg exited \" .. tostring(code))\n        if code == 251 or code == 1 then\n            log(\"recording: ERROR — ffmpeg failed to open audio device '\" .. AUDIO_DEVICE .. \"'. Check device format (should be :default, :0, :1) and microphone permissions.\")\n        end\n    end, {\n        \"-f\", \"avfoundation\", \"-i\", AUDIO_DEVICE,\n        \"-ac\", \"1\", \"-ar\", \"16000\",\n        \"-f\", \"segment\", \"-segment_time\", \"1\", \"-segment_format\", \"wav\",\n        CHUNK_DIR .. \"/chunk_%03d.wav\"\n    })\n    ffmpegTask:start()\n\n    lastChunkCount = 0\n    partialBusy = false\n    silentChunkCount = 0\n    lastCheckedChunk = 0\n\n    -- Reset streaming pipeline state for this recording session\n    pipelineReset()\n    if PL.streamTimer then PL.streamTimer:stop(); PL.streamTimer = nil end\n    PL.streamTimer = hs.timer.doEvery(3, streamCheckAndDispatch)\n\n    -- Poll until first chunk exists on disk → audio is truly flowing → play Pop\n    -- Uses recursive doAfter (not doEvery) to avoid stop-within-callback issues.\n    local function pollForFirstChunk(attempt)\n        if not isRecording then return end  -- recording already stopped, don't play Pop\n        local firstChunk = CHUNK_DIR .. \"/chunk_000.wav\"\n        local attr = hs.fs.attributes(firstChunk)\n        if (attr and attr.size and attr.size \u003e 200) then\n            log(\"recording: first chunk ready after \" .. (attempt * 0.05) .. \"s — audio flowing\")\n            _whisperRecovery.play(\"/System/Library/Sounds/Pop.aiff\")\n        elseif attempt \u003e= 200 then\n            -- 10 seconds elapsed and still no audio data — abort with error\n            log(\"recording: first chunk timeout — aborting, device not producing audio\")\n            _whisperRecovery.play(\"/System/Library/Sounds/Basso.aiff\")\n            setOverlayText(\"Нет аудио\")\n            isRecording = false\n            if ffmpegTask and ffmpegTask:isRunning() then ffmpegTask:interrupt() end\n            ffmpegTask = nil\n            stopRecordingIndicator()\n            updateMenuBar()\n            hs.timer.doAfter(2.0, hideOverlay)",
+      "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+      "numLines": 65,
+      "startLine": 1866,
+      "totalLines": 3044
+    },
+    "type": "text"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "c7fb4e80-ca72-49c1-896c-817c3d511dbc",
+  "version": "2.1.197"
+}

@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "=== inspect live state (module-level names aren't globally exposed by default, check via debug) ===\nhas _whisperRecovery global\n=== check chunk dirs on disk to confirm rotation happened from the reload-triggered recording above ===\ndrwxr-xr-x@  32 vitaliy  staff    1024 Jul  3 19:56 chunks",
+        "is_error": false,
+        "tool_use_id": "toolu_016XHcgrQ9dh5kJCCpSRzrrq",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "9b43a800-c0c5-4cfe-a214-5e23e42c26b9",
+  "promptId": "0faf16ba-1170-44d2-9c15-b85e94438f5d",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "sourceToolAssistantUUID": "9b43a800-c0c5-4cfe-a214-5e23e42c26b9",
+  "timestamp": "2026-07-03T18:13:34.023Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "=== inspect live state (module-level names aren't globally exposed by default, check via debug) ===\nhas _whisperRecovery global\n=== check chunk dirs on disk to confirm rotation happened from the reload-triggered recording above ===\ndrwxr-xr-x@  32 vitaliy  staff    1024 Jul  3 19:56 chunks"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "c01fccc1-401b-495c-8295-66363f1f46e9",
+  "version": "2.1.197"
+}

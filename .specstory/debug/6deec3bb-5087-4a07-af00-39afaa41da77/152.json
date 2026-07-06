@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "1393:        local whisperTask = hs.task.new(WHISPER_BIN, function(code2, out2)\n1625:            hs.task.new(WHISPER_BIN, function(code2, out2, err2)\n1635:            hs.task.new(WHISPER_BIN, function(code2, out2)",
+        "is_error": false,
+        "tool_use_id": "toolu_011YTYvGckwp1Mz3RzpiPCHg",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "84eb6df2-d673-46f5-b18f-c30f665ba111",
+  "promptId": "b87252f6-da26-4810-8031-1fdf3a0c95e9",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "sourceToolAssistantUUID": "84eb6df2-d673-46f5-b18f-c30f665ba111",
+  "timestamp": "2026-07-03T18:00:05.171Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "1393:        local whisperTask = hs.task.new(WHISPER_BIN, function(code2, out2)\n1625:            hs.task.new(WHISPER_BIN, function(code2, out2, err2)\n1635:            hs.task.new(WHISPER_BIN, function(code2, out2)"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "8e5daf84-23f0-4396-b70e-fdcc4d6dc136",
+  "version": "2.1.197"
+}

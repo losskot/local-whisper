@@ -1,0 +1,68 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01GrF4xaBQvMivLSRRrogHdh",
+        "input": {
+          "command": "export GOBIN=/Users/vitaliy/go/bin; go install github.com/steveyegge/beads/cmd/bd@latest 2\u003e\u00261 | tail -20; echo \"exit: $?\"",
+          "description": "Install beads bd via go install"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_01Sj3bCWNsoQP2Uj4JCsUtXU",
+    "model": "claude-opus-4-8",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 363,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 363,
+      "cache_read_input_tokens": 42017,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 363,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 363,
+          "cache_read_input_tokens": 42017,
+          "input_tokens": 2,
+          "output_tokens": 336,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 336,
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "4942d589-eae1-4c8b-8c14-78445c996bf3",
+  "requestId": "req_011CcfWrmFt6be2QnxJFD6gJ",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "timestamp": "2026-07-03T17:26:16.422Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "418af573-c73c-4006-a155-da2699b758ef",
+  "version": "2.1.197"
+}

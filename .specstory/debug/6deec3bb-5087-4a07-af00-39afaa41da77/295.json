@@ -1,0 +1,108 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_016gSrvEkXs8reWfMtBMnDJF",
+        "input": {
+          "todos": [
+            {
+              "activeForm": "Setting up Lua validation",
+              "content": "Prereq: self-compile/validate Lua (hs loadfile bridge)",
+              "status": "completed"
+            },
+            {
+              "activeForm": "Installing bd",
+              "content": "Prereq: install bd into PATH (user runs cp; rule added)",
+              "status": "completed"
+            },
+            {
+              "activeForm": "Grouping locals into state tables",
+              "content": "Item 4: relieve 200-local limit by grouping locals into tables",
+              "status": "completed"
+            },
+            {
+              "activeForm": "Adding whisper concurrency semaphore",
+              "content": "Item 1: semaphore limiting concurrent whisper hs.task to 2-3",
+              "status": "completed"
+            },
+            {
+              "activeForm": "Wrapping doFinalTranscription in pcall",
+              "content": "Item 2: wrap doFinalTranscription body in pcall -\u003e hideOverlay on error",
+              "status": "completed"
+            },
+            {
+              "activeForm": "Adding finalization watchdog",
+              "content": "Item 3: watchdog auto-hide overlay after timeout on finalize/refine",
+              "status": "completed"
+            },
+            {
+              "activeForm": "Preserving previous session chunks",
+              "content": "Item 5: preserve previous session chunks until successful finalization",
+              "status": "completed"
+            },
+            {
+              "activeForm": "Validating and reloading",
+              "content": "Validate + live-reload after each change",
+              "status": "completed"
+            }
+          ]
+        },
+        "name": "TodoWrite",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_01PQEQwvM61MNmMJ2TNwqL9A",
+    "model": "claude-sonnet-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 727,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 727,
+      "cache_read_input_tokens": 122935,
+      "inference_geo": "not_available",
+      "input_tokens": 389,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 727,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 727,
+          "cache_read_input_tokens": 122935,
+          "input_tokens": 389,
+          "output_tokens": 526,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 526,
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "bafec82e-ca48-4d3d-abfa-395e067116c3",
+  "requestId": "req_011CcfsDA9BcUrHMxg5PW6v2",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "timestamp": "2026-07-03T21:53:11.699Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "ba311c36-14ae-49e2-9e99-40ee33855729",
+  "version": "2.1.197"
+}

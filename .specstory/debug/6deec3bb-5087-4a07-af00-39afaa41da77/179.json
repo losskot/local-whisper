@@ -1,0 +1,70 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01K7DzTMJAbDSerwMpZnPsa3",
+        "input": {
+          "file_path": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+          "new_string": "            startWhisper(args, function(code2, out2)\n                log(\"pipeline: seg \" .. segN .. \" whisper(\" .. lang .. \") exit=\" .. tostring(code2))\n                if code2 ~= 0 then onPipelineDone(segN, \"\", nil); return end\n                onWhisperDone(out2 or \"\", lang)\n            end)",
+          "old_string": "            hs.task.new(WHISPER_BIN, function(code2, out2)\n                log(\"pipeline: seg \" .. segN .. \" whisper(\" .. lang .. \") exit=\" .. tostring(code2))\n                if code2 ~= 0 then onPipelineDone(segN, \"\", nil); return end\n                onWhisperDone(out2 or \"\", lang)\n            end, args):start()",
+          "replace_all": false
+        },
+        "name": "Edit",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_01ETugUrKo2JsQRcqde8Tyxb",
+    "model": "claude-opus-4-8",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 595,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 595,
+      "cache_read_input_tokens": 97927,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 595,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 595,
+          "cache_read_input_tokens": 97927,
+          "input_tokens": 2,
+          "output_tokens": 397,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 397,
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "67adb07c-4e10-43f8-b248-4d704e3c4ff2",
+  "requestId": "req_011CcfZayJ5zh5RSaC3oJTcR",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "timestamp": "2026-07-03T18:02:00.520Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "d0ce90c3-d834-4a3a-8d75-c28e867d71fa",
+  "version": "2.1.197"
+}

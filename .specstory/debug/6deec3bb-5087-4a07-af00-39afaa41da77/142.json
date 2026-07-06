@@ -1,0 +1,60 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "text": "~27 refs total, distinctive names. Let me replace the declaration block with an `MC` table, then rewrite references.",
+        "type": "text"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_01T1KERWyrCocSnZQRE1qgJr",
+    "model": "claude-opus-4-8",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 692,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 692,
+      "cache_read_input_tokens": 79198,
+      "inference_geo": "not_available",
+      "input_tokens": 389,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 692,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 692,
+          "cache_read_input_tokens": 79198,
+          "input_tokens": 389,
+          "output_tokens": 824,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 824,
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "35ff1c2e-2e61-40ff-befa-ec11ca654af8",
+  "requestId": "req_011CcfZNg6eggGsWRMDfyRBS",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "timestamp": "2026-07-03T17:59:11.556Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "6cd1fd2c-9689-40b3-a0f1-1bb7c106c47d",
+  "version": "2.1.197"
+}

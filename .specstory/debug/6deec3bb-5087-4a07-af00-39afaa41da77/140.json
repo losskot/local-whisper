@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "MEETINGS_DIR                       3\nMEETING_CHUNK_SECONDS              6\nMEETING_OVERLAP_SECONDS            3\nMEETING_TRANSCRIBE_POLL_SECONDS    2\nMEETING_WINDOW_TIMEOUT_SECONDS     3\nMEETING_PCM_BYTES_PER_SEC          4\nMEETING_AGGREGATE_NAME             1\nMEETING_HELPER_BIN                 5",
+        "is_error": false,
+        "tool_use_id": "toolu_01Fycws7UNnAKnYzqtKnce5Z",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "57f752ab-1dbf-4f59-a181-6607b4993b3c",
+  "promptId": "b87252f6-da26-4810-8031-1fdf3a0c95e9",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "sourceToolAssistantUUID": "57f752ab-1dbf-4f59-a181-6607b4993b3c",
+  "timestamp": "2026-07-03T17:59:08.892Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "MEETINGS_DIR                       3\nMEETING_CHUNK_SECONDS              6\nMEETING_OVERLAP_SECONDS            3\nMEETING_TRANSCRIBE_POLL_SECONDS    2\nMEETING_WINDOW_TIMEOUT_SECONDS     3\nMEETING_PCM_BYTES_PER_SEC          4\nMEETING_AGGREGATE_NAME             1\nMEETING_HELPER_BIN                 5"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "0c58b7fd-8574-4bec-8371-5c1a62a2c587",
+  "version": "2.1.197"
+}

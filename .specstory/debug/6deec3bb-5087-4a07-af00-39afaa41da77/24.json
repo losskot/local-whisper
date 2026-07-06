@@ -1,0 +1,68 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01Cwtxivfem2gaSsYVE3fMnk",
+        "input": {
+          "command": "grep -n \"ipc\" /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua | head; echo \"exit-grep-done\"",
+          "description": "Check if hs.ipc is loaded in init.lua"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_01DWgCHZYnyqqQ3qoZPe1fk4",
+    "model": "claude-opus-4-8",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 925,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 925,
+      "cache_read_input_tokens": 35370,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 925,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 925,
+          "cache_read_input_tokens": 35370,
+          "input_tokens": 2,
+          "output_tokens": 347,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 347,
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "5d96482b-87a5-4bf6-8521-e177a9f3548a",
+  "requestId": "req_011CcfWoyvYt4GpUxe6piD8C",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "timestamp": "2026-07-03T17:25:39.021Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "3496f4a7-c1e8-446a-b763-d1e7ddcf99e9",
+  "version": "2.1.197"
+}

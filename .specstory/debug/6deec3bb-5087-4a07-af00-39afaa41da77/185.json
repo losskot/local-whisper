@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "=== remaining raw whisper spawns (should be 0) ===\n1374:        local t = hs.task.new(WHISPER_BIN, function(code, out, err)\n=== startWhisper call sites (expect 3) ===\n5\n=== syntax check ===\nSYNTAX OK",
+        "is_error": false,
+        "tool_use_id": "toolu_01T1p7XYQBiEJ9kBVn1YjaBH",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "d1c457a9-f19b-4f79-860b-f6d78ad47fb0",
+  "promptId": "b87252f6-da26-4810-8031-1fdf3a0c95e9",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "sourceToolAssistantUUID": "d1c457a9-f19b-4f79-860b-f6d78ad47fb0",
+  "timestamp": "2026-07-03T18:02:15.079Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "=== remaining raw whisper spawns (should be 0) ===\n1374:        local t = hs.task.new(WHISPER_BIN, function(code, out, err)\n=== startWhisper call sites (expect 3) ===\n5\n=== syntax check ===\nSYNTAX OK"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "4b8bf3ee-f3de-47cb-92b6-daaad654f771",
+  "version": "2.1.197"
+}

@@ -1,0 +1,62 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01Y754TWyY9Y4go5qfx7dnjV",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "ae494bce-54a9-4e13-a4a5-4271e7cf0bab",
+  "promptId": "0faf16ba-1170-44d2-9c15-b85e94438f5d",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "sourceToolAssistantUUID": "ae494bce-54a9-4e13-a4a5-4271e7cf0bab",
+  "timestamp": "2026-07-03T18:12:35.672Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+    "newString": "    -- Preserve the previous session's raw chunks instead of deleting them\n    -- outright (code-review item #5). A prior incident: a session froze before\n    -- finalizing, and the very next recording's blind `rm -rf` wiped its\n    -- unprocessed chunks before anyone noticed — losing audio that was still\n    -- fully recoverable on disk. Rotating into one generation of backup means a\n    -- session that fails to finalize survives through the *next* recording too,\n    -- giving a window to notice and recover before it's finally purged.\n    local prevChunkDir = CHUNK_DIR .. \"_prev\"\n    os.execute(\"rm -rf '\" .. prevChunkDir .. \"'\")  -- drop the backup from 2 sessions ago\n    if hs.fs.attributes(CHUNK_DIR) then\n        os.execute(\"mv '\" .. CHUNK_DIR .. \"' '\" .. prevChunkDir .. \"'\")\n    end\n    os.execute(\"mkdir -p '\" .. CHUNK_DIR .. \"'\")",
+    "oldString": "    os.execute(\"rm -rf '\" .. CHUNK_DIR .. \"'\")\n    os.execute(\"mkdir -p '\" .. CHUNK_DIR .. \"'\")",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          "     isRecording = true",
+          "     log(\"recording: start\")",
+          " ",
+          "-    os.execute(\"rm -rf '\" .. CHUNK_DIR .. \"'\")",
+          "+    -- Preserve the previous session's raw chunks instead of deleting them",
+          "+    -- outright (code-review item #5). A prior incident: a session froze before",
+          "+    -- finalizing, and the very next recording's blind `rm -rf` wiped its",
+          "+    -- unprocessed chunks before anyone noticed — losing audio that was still",
+          "+    -- fully recoverable on disk. Rotating into one generation of backup means a",
+          "+    -- session that fails to finalize survives through the *next* recording too,",
+          "+    -- giving a window to notice and recover before it's finally purged.",
+          "+    local prevChunkDir = CHUNK_DIR .. \"_prev\"",
+          "+    os.execute(\"rm -rf '\" .. prevChunkDir .. \"'\")  -- drop the backup from 2 sessions ago",
+          "+    if hs.fs.attributes(CHUNK_DIR) then",
+          "+        os.execute(\"mv '\" .. CHUNK_DIR .. \"' '\" .. prevChunkDir .. \"'\")",
+          "+    end",
+          "     os.execute(\"mkdir -p '\" .. CHUNK_DIR .. \"'\")",
+          " ",
+          "     captureActiveApp()"
+        ],
+        "newLines": 18,
+        "newStart": 1874,
+        "oldLines": 7,
+        "oldStart": 1874
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "8eed5528-d082-4f08-94e0-abb58757c7af",
+  "version": "2.1.197"
+}

@@ -1,0 +1,68 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_019XqZTcToXLEyFQr4CgqTJj",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "5aa8776b-49d6-4b69-af03-4513f54efa59",
+  "promptId": "b87252f6-da26-4810-8031-1fdf3a0c95e9",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "sourceToolAssistantUUID": "5aa8776b-49d6-4b69-af03-4513f54efa59",
+  "timestamp": "2026-07-03T18:01:47.204Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+    "newString": "        startWhisper(whisperArgs, function(code2, out2)\n            partialBusy = false\n            lastChunkCount = completed\n            if code2 ~= 0 or not isRecording then return end\n            local text = (out2 or \"\"):gsub(\"^%s+\", \"\"):gsub(\"%s+$\", \"\"):gsub(\"%s+\", \" \")\n            if text ~= \"\" and not isHallucination(text) then\n                local display = text\n                if #display \u003e 200 then display = \"...\" .. display:sub(-197) end\n                setOverlayText(display)\n                log(\"partial: \" .. text)\n            end\n        end)",
+    "oldString": "        local whisperTask = hs.task.new(WHISPER_BIN, function(code2, out2)\n            partialBusy = false\n            lastChunkCount = completed\n            if code2 ~= 0 or not isRecording then return end\n            local text = (out2 or \"\"):gsub(\"^%s+\", \"\"):gsub(\"%s+$\", \"\"):gsub(\"%s+\", \" \")\n            if text ~= \"\" and not isHallucination(text) then\n                local display = text\n                if #display \u003e 200 then display = \"...\" .. display:sub(-197) end\n                setOverlayText(display)\n                log(\"partial: \" .. text)\n            end\n        end, whisperArgs)\n        whisperTask:start()",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          "         local whisperArgs = { \"-m\", getPartialModelPath(), \"-f\", batchWav, \"-l\", lang, \"-nt\", \"--no-prints\" }",
+          "         local promptArgs = getPromptArgs()",
+          "         for _, a in ipairs(promptArgs) do table.insert(whisperArgs, a) end",
+          "-        local whisperTask = hs.task.new(WHISPER_BIN, function(code2, out2)",
+          "+        startWhisper(whisperArgs, function(code2, out2)",
+          "             partialBusy = false",
+          "             lastChunkCount = completed",
+          "             if code2 ~= 0 or not isRecording then return end"
+        ],
+        "newLines": 7,
+        "newStart": 1433,
+        "oldLines": 7,
+        "oldStart": 1433
+      },
+      {
+        "lines": [
+          "                 setOverlayText(display)",
+          "                 log(\"partial: \" .. text)",
+          "             end",
+          "-        end, whisperArgs)",
+          "-        whisperTask:start()",
+          "+        end)",
+          "     end, { \"-y\", \"-f\", \"concat\", \"-safe\", \"0\", \"-i\", batchList, \"-c\", \"copy\", batchWav })",
+          "     concatTask:start()",
+          " end"
+        ],
+        "newLines": 7,
+        "newStart": 1444,
+        "oldLines": 8,
+        "oldStart": 1444
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "6111856a-1385-4564-9ef0-04900692ebe8",
+  "version": "2.1.197"
+}

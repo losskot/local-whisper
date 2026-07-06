@@ -1,0 +1,61 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "signature": "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",
+        "thinking": "",
+        "type": "thinking"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_01JjHj6r2o6BXCFkxtVLfAdf",
+    "model": "claude-opus-4-8",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 413,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 413,
+      "cache_read_input_tokens": 99467,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 413,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 413,
+          "cache_read_input_tokens": 99467,
+          "input_tokens": 2,
+          "output_tokens": 942,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 942,
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "4b8bf3ee-f3de-47cb-92b6-daaad654f771",
+  "requestId": "req_011CcfZcPZsMynM4WoasmUm6",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "timestamp": "2026-07-03T18:02:26.630Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "16c0dde8-0e76-4e1e-b832-d179b6b8383f",
+  "version": "2.1.197"
+}

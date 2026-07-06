@@ -1,0 +1,55 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01MExPt2wy1jVyssbHnzBYVN",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "84dc51dc-9716-44c8-944c-0c85f48e964a",
+  "promptId": "b87252f6-da26-4810-8031-1fdf3a0c95e9",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "sourceToolAssistantUUID": "84dc51dc-9716-44c8-944c-0c85f48e964a",
+  "timestamp": "2026-07-03T18:02:08.846Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+    "newString": "    barState.segChunks = {}\n    barState.txnSecs   = 0\n    barState.frozen    = false\n    -- Drop any queued whisper jobs from the prior session and clear the\n    -- semaphore. whisperActive is zeroed here (any in-flight tasks were just\n    -- killed via `killall whisper-cli`); the clamp in pumpWhisperQueue keeps\n    -- late-firing kill callbacks from driving the count negative.\n    PL.whisperQueue  = {}\n    PL.whisperActive = 0\nend",
+    "oldString": "    barState.segChunks = {}\n    barState.txnSecs   = 0\n    barState.frozen    = false\nend",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          "     barState.segChunks = {}",
+          "     barState.txnSecs   = 0",
+          "     barState.frozen    = false",
+          "+    -- Drop any queued whisper jobs from the prior session and clear the",
+          "+    -- semaphore. whisperActive is zeroed here (any in-flight tasks were just",
+          "+    -- killed via `killall whisper-cli`); the clamp in pumpWhisperQueue keeps",
+          "+    -- late-firing kill callbacks from driving the count negative.",
+          "+    PL.whisperQueue  = {}",
+          "+    PL.whisperActive = 0",
+          " end",
+          " ",
+          " local function pipelineFinalize()"
+        ],
+        "newLines": 12,
+        "newStart": 1563,
+        "oldLines": 6,
+        "oldStart": 1563
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "bd4cc559-f221-4bd4-ba9a-134c37031f15",
+  "version": "2.1.197"
+}

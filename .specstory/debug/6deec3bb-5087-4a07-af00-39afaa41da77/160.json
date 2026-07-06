@@ -1,0 +1,60 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "text": "I now understand all three whisper spawn sites and the finalization flow. Let me implement item #1 (semaphore). First I'll add the helper before `doPartialTranscribe`. Let me see the insertion point.",
+        "type": "text"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_01RRi9S48yATXjmG3PSJG6oS",
+    "model": "claude-opus-4-8",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 4233,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 4233,
+      "cache_read_input_tokens": 85375,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 4233,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 4233,
+          "cache_read_input_tokens": 85375,
+          "input_tokens": 2,
+          "output_tokens": 2587,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 2587,
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "6ddba7b6-a191-4b9b-b584-45c0031ee182",
+  "requestId": "req_011CcfZTTgRLN8gMGTz9z8CW",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "timestamp": "2026-07-03T18:00:48.113Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "424b523d-7c4d-4190-a254-f9ce9576a48f",
+  "version": "2.1.197"
+}

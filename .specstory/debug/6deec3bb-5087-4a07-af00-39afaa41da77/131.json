@@ -1,0 +1,51 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_016GzkbaHUWVUi6vi23oUrEu",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "58f39d0c-b68e-4768-9a90-c2ac25ef11d2",
+  "promptId": "b87252f6-da26-4810-8031-1fdf3a0c95e9",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "sourceToolAssistantUUID": "58f39d0c-b68e-4768-9a90-c2ac25ef11d2",
+  "timestamp": "2026-07-03T17:58:35.618Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+    "newString": "    streamTimer = nil,    -- fires every 3s during recording to dispatch ready segments",
+    "oldString": "    PL.streamTimer = nil,    -- fires every 3s during recording to dispatch ready segments",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          "     total       = 0,      -- total segments expected (fixed when recording stops)",
+          "     done        = 0,      -- segments completed so far",
+          "     finalizing  = false,  -- true once we know the final total (recording stopped)",
+          "-    PL.streamTimer = nil,    -- fires every 3s during recording to dispatch ready segments",
+          "+    streamTimer = nil,    -- fires every 3s during recording to dispatch ready segments",
+          "     -- Concurrency + reliability state (added in the code-review pass):",
+          "     whisperActive = 0,    -- # of whisper-cli hs.tasks running now (semaphore, item #1)",
+          "     whisperQueue  = {},   -- FIFO of queued {bin,args,cb} awaiting a free whisper slot"
+        ],
+        "newLines": 7,
+        "newStart": 948,
+        "oldLines": 7,
+        "oldStart": 948
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "b16b8055-c046-4f40-8009-42c04f5c5e7f",
+  "version": "2.1.197"
+}

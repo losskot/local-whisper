@@ -1,0 +1,68 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01YUHt7CRqcGYsxgzd3zoakC",
+        "input": {
+          "command": "cd /private/tmp/claude-502/-Users-vitaliy-Documents-GitHub-local-whisper/6deec3bb-5087-4a07-af00-39afaa41da77/scratchpad\nBASE=https://github.com/gastownhall/beads/releases/download/v1.0.4\ncurl -fsSL -o bd.tar.gz \"$BASE/beads_1.0.4_darwin_arm64.tar.gz\" \u0026\u0026 curl -fsSL -o checksums.txt \"$BASE/checksums.txt\" \u0026\u0026 echo \"downloaded\"\necho \"=== verify ===\"\nEXPECTED=$(awk '/beads_1.0.4_darwin_arm64.tar.gz/{print $1}' checksums.txt)\nACTUAL=$(shasum -a 256 bd.tar.gz | awk '{print $1}')\necho \"expected: $EXPECTED\"; echo \"actual:   $ACTUAL\"\n[ \"$EXPECTED\" = \"$ACTUAL\" ] \u0026\u0026 echo \"CHECKSUM OK\" || echo \"CHECKSUM MISMATCH\"",
+          "description": "Download and verify beads darwin arm64 binary"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_01VLMdKH6mprUgFTJ6EuDMUK",
+    "model": "claude-opus-4-8",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 1340,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 1340,
+      "cache_read_input_tokens": 47426,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1340,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 1340,
+          "cache_read_input_tokens": 47426,
+          "input_tokens": 2,
+          "output_tokens": 507,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 507,
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "6466f41f-efff-428b-9bd7-5f9761958b94",
+  "requestId": "req_011CcfX6rNbgmP6yQpqreMSV",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "timestamp": "2026-07-03T17:29:29.618Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "b0eca868-dd77-40a0-8830-7a92dc170372",
+  "version": "2.1.197"
+}

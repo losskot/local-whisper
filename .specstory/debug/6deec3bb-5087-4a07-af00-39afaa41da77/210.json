@@ -1,0 +1,64 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_019GgeL1auth2pGTkr4xkBMK",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "154b1ca2-19ed-454b-a17c-78be2e0125b8",
+  "promptId": "b87252f6-da26-4810-8031-1fdf3a0c95e9",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "sourceToolAssistantUUID": "154b1ca2-19ed-454b-a17c-78be2e0125b8",
+  "timestamp": "2026-07-03T18:04:47.983Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+    "newString": "-- Disarm the finalize/refine watchdog (item #3). Called whenever the overlay is\n-- taken down so a stale timer can't fire after we've already finished.\nlocal function cancelWatchdog()\n    if PL and PL.watchdog then PL.watchdog:stop(); PL.watchdog = nil end\nend\n\nlocal function hideOverlay()\n    if overlayPinned then return end  -- pinned overlay stays open\n    cancelWatchdog()\n    if overlay then overlay:delete(); overlay = nil end\nend\n\nlocal function forceHideOverlay()\n    overlayPinned = false\n    cancelWatchdog()\n    if overlay then overlay:delete(); overlay = nil end\nend",
+    "oldString": "local function hideOverlay()\n    if overlayPinned then return end  -- pinned overlay stays open\n    if overlay then overlay:delete(); overlay = nil end\nend\n\nlocal function forceHideOverlay()\n    overlayPinned = false\n    if overlay then overlay:delete(); overlay = nil end\nend",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          "     overlay:show()",
+          " end",
+          " ",
+          "+-- Disarm the finalize/refine watchdog (item #3). Called whenever the overlay is",
+          "+-- taken down so a stale timer can't fire after we've already finished.",
+          "+local function cancelWatchdog()",
+          "+    if PL and PL.watchdog then PL.watchdog:stop(); PL.watchdog = nil end",
+          "+end",
+          "+",
+          " local function hideOverlay()",
+          "     if overlayPinned then return end  -- pinned overlay stays open",
+          "+    cancelWatchdog()",
+          "     if overlay then overlay:delete(); overlay = nil end",
+          " end",
+          " ",
+          " local function forceHideOverlay()",
+          "     overlayPinned = false",
+          "+    cancelWatchdog()",
+          "     if overlay then overlay:delete(); overlay = nil end",
+          " end",
+          " "
+        ],
+        "newLines": 21,
+        "newStart": 913,
+        "oldLines": 13,
+        "oldStart": 913
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "b6377c47-56e0-42b8-9b41-94acc354ec18",
+  "version": "2.1.197"
+}

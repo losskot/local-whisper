@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "[19:55:31] recording: app=Claude (com.anthropic.claudefordesktop)\n[19:55:31] startRecordingIndicator: overlay element count = 17\n[19:55:31] startRecordingIndicator: bar_bg idx=15 bar_rec idx=16\n[19:55:33] recording: first chunk ready after 1.9s — audio flowing\n[19:55:53] recording: stop\n[19:55:53] recording: ffmpeg exited 255\n[19:56:21] overlay: X close\n[19:56:23] warmup: probing audio device...\n[19:56:23] warmup: attempt 1/10\n[19:56:24] warmup: no response, retrying...\n[19:56:24] warmup: attempt 2/10\n[19:56:25] warmup: device ready on attempt 2\n[19:56:25] recording: start\n[19:56:25] recording: app=Claude (com.anthropic.claudefordesktop)\n[19:56:25] startRecordingIndicator: overlay element count = 17\n[19:56:25] startRecordingIndicator: bar_bg idx=15 bar_rec idx=16\n[19:56:27] recording: first chunk ready after 1.8s — audio flowing\n[19:56:52] stream: dispatching seg 1 (25 chunks, live during recording)\n[19:56:52] pipeline: seg 1 concat → /var/folders/ph/3yv4hw8567g12wy09lntpvt40000gp/T//whisper-dictate/pipe_seg_1.wav (25 chunks)\n[19:56:53] pipeline: seg 1 concat OK (719576 bytes), starting whisper lang=auto\n[19:56:55] recording: stop\n[19:56:55] recording: ffmpeg exited 255\n[19:56:55] final: START — total chunks=30, streamed=1 segs (next unclaimed chunk idx=26)\n[19:56:55] final: dispatching seg 2 → 5 chunks (chunk_025.wav … chunk_029.wav)\n[19:56:55] pipeline: seg 2 concat → /var/folders/ph/3yv4hw8567g12wy09lntpvt40000gp/T//whisper-dictate/pipe_seg_2.wav (5 chunks)\n[19:56:55] final: pipelineTotal=2, pipelineDone=0\n[19:56:57] pipeline: seg 2 concat OK (127428 bytes), starting whisper lang=auto\n[19:56:59] pipeline: seg 1 whisper(auto) exit=0\n[19:56:59] pipeline: seg 1 auto-detected: ru\n[19:56:59] pipeline: seg 1 accepted text (331 chars): 'Клоуд-код расширения для Visual Studio Code имеет то'\n[19:56:59] pipeline: seg 1 complete (done=1/2, txnSecs=25)\n[19:57:03] pipeline: seg 2 whisper(auto) exit=0\n[19:57:03] pipeline: seg 2 auto-detected: ru\n[19:57:03] pipeline: seg 2 accepted text (71 chars): 'дай мне факт, который ты взял откуда-то.'\n[19:57:03] pipeline: seg 2 complete (done=2/2, txnSecs=30)\n[19:57:03] pipeline: finalized 2 seg(s): 'Клоуд-код расширения для Visual Studio Code имеет тонкую красную границу �'\n[19:57:03] action: inserted [Claude]: Клоуд-код расширения для Visual Studio Code имеет тонкую красную границу в каких-то ситуациях в input-контроле ввода опромта. Почему это становится красным? Мне не надо соображения, пожелания. дай мне факт, который ты взял откуда-то.\n[20:13:05] actions: loaded /Users/vitaliy/.hammerspoon/local_whisper_actions.lua\n[20:13:05] actions: enabled\n[20:13:05] loaded (trigger=rightCmd, lang=auto, output=paste, model=large-v3-turbo-q5_0, preferred=ru,uk)\n=== hs console errors (last 50 lines of console.log if any) ===\n-- Loading extension: console\nhas console API",
+        "is_error": false,
+        "tool_use_id": "toolu_019PpFDPkyRazb3TJDshiFhi",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "d41385e5-3e74-4c83-aa9d-567b17b6033b",
+  "promptId": "0faf16ba-1170-44d2-9c15-b85e94438f5d",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "sourceToolAssistantUUID": "d41385e5-3e74-4c83-aa9d-567b17b6033b",
+  "timestamp": "2026-07-03T18:13:25.446Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "[19:55:31] recording: app=Claude (com.anthropic.claudefordesktop)\n[19:55:31] startRecordingIndicator: overlay element count = 17\n[19:55:31] startRecordingIndicator: bar_bg idx=15 bar_rec idx=16\n[19:55:33] recording: first chunk ready after 1.9s — audio flowing\n[19:55:53] recording: stop\n[19:55:53] recording: ffmpeg exited 255\n[19:56:21] overlay: X close\n[19:56:23] warmup: probing audio device...\n[19:56:23] warmup: attempt 1/10\n[19:56:24] warmup: no response, retrying...\n[19:56:24] warmup: attempt 2/10\n[19:56:25] warmup: device ready on attempt 2\n[19:56:25] recording: start\n[19:56:25] recording: app=Claude (com.anthropic.claudefordesktop)\n[19:56:25] startRecordingIndicator: overlay element count = 17\n[19:56:25] startRecordingIndicator: bar_bg idx=15 bar_rec idx=16\n[19:56:27] recording: first chunk ready after 1.8s — audio flowing\n[19:56:52] stream: dispatching seg 1 (25 chunks, live during recording)\n[19:56:52] pipeline: seg 1 concat → /var/folders/ph/3yv4hw8567g12wy09lntpvt40000gp/T//whisper-dictate/pipe_seg_1.wav (25 chunks)\n[19:56:53] pipeline: seg 1 concat OK (719576 bytes), starting whisper lang=auto\n[19:56:55] recording: stop\n[19:56:55] recording: ffmpeg exited 255\n[19:56:55] final: START — total chunks=30, streamed=1 segs (next unclaimed chunk idx=26)\n[19:56:55] final: dispatching seg 2 → 5 chunks (chunk_025.wav … chunk_029.wav)\n[19:56:55] pipeline: seg 2 concat → /var/folders/ph/3yv4hw8567g12wy09lntpvt40000gp/T//whisper-dictate/pipe_seg_2.wav (5 chunks)\n[19:56:55] final: pipelineTotal=2, pipelineDone=0\n[19:56:57] pipeline: seg 2 concat OK (127428 bytes), starting whisper lang=auto\n[19:56:59] pipeline: seg 1 whisper(auto) exit=0\n[19:56:59] pipeline: seg 1 auto-detected: ru\n[19:56:59] pipeline: seg 1 accepted text (331 chars): 'Клоуд-код расширения для Visual Studio Code имеет то'\n[19:56:59] pipeline: seg 1 complete (done=1/2, txnSecs=25)\n[19:57:03] pipeline: seg 2 whisper(auto) exit=0\n[19:57:03] pipeline: seg 2 auto-detected: ru\n[19:57:03] pipeline: seg 2 accepted text (71 chars): 'дай мне факт, который ты взял откуда-то.'\n[19:57:03] pipeline: seg 2 complete (done=2/2, txnSecs=30)\n[19:57:03] pipeline: finalized 2 seg(s): 'Клоуд-код расширения для Visual Studio Code имеет тонкую красную границу �'\n[19:57:03] action: inserted [Claude]: Клоуд-код расширения для Visual Studio Code имеет тонкую красную границу в каких-то ситуациях в input-контроле ввода опромта. Почему это становится красным? Мне не надо соображения, пожелания. дай мне факт, который ты взял откуда-то.\n[20:13:05] actions: loaded /Users/vitaliy/.hammerspoon/local_whisper_actions.lua\n[20:13:05] actions: enabled\n[20:13:05] loaded (trigger=rightCmd, lang=auto, output=paste, model=large-v3-turbo-q5_0, preferred=ru,uk)\n=== hs console errors (last 50 lines of console.log if any) ===\n-- Loading extension: console\nhas console API"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "e426dd44-9ece-4c74-bb3d-32fc0e09199c",
+  "version": "2.1.197"
+}

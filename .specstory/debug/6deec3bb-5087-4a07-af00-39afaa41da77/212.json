@@ -1,0 +1,60 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "text": "Now add `armWatchdog` + timeout constant right after the overlay hide functions (so `onPipelineDone` and `doFinalTranscription`, both later, can call it):",
+        "type": "text"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011nv83Px7dxAmdm1pGPUEXv",
+    "model": "claude-opus-4-8",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 587,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 587,
+      "cache_read_input_tokens": 111419,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 587,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 587,
+          "cache_read_input_tokens": 111419,
+          "input_tokens": 2,
+          "output_tokens": 1173,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 1173,
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "d04dee15-43ca-4493-a960-59c167008c9d",
+  "requestId": "req_011CcfZohTT5x4kfdJbgUzUj",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "timestamp": "2026-07-03T18:04:59.110Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "b50fb4ea-932b-4cc2-88c1-c049e03d376c",
+  "version": "2.1.197"
+}

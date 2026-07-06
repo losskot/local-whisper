@@ -1,0 +1,35 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "930\t--------------------------------------------------------------------------------\n931\t\n932\tlocal isRecording = false\n933\tlocal overlayPinned = false\n934\tlocal ffmpegTask = nil\n935\tlocal partialTimer = nil\n936\tlocal partialBusy = false\n937\tlocal lastChunkCount = 0\n938\t\n939\t-- Streaming transcription pipeline state (reset each recording session)\n940\tlocal pipelineResults    = {}     -- [seg_n] = text, filled as each segment completes\n941\tlocal pipelineLang       = nil    -- first detected language across all segments\n942\tlocal pipelineNextChunk  = 1      -- 1-based index of next chunk not yet claimed by pipeline\n943\tlocal pipelineNextSeg    = 1      -- next segment number to assign (1-indexed)\n944\tlocal pipelineTotal      = 0      -- total segments expected (fixed when recording stops)\n945\tlocal pipelineDone       = 0      -- segments completed so far\n946\tlocal pipelineFinalizing = false  -- true once we know the final total (recording stopped)\n947\tlocal streamTimer        = nil    -- fires every 3s during recording to dispatch ready segments\n948\t\n949\t-- Menu bar\n950\tlocal menuBar = nil\n951\t\n952\t-- Recording indicator state\n953\tlocal pulseTimer = nil\n954\tlocal clockTimer = nil\n955\tlocal recordingStartTime = 0\n956\t\n957\t-- Progress bar state (grouped to save local variable slots)\n958\tlocal barState = { txnSecs = 0, maxSecs = 180, segChunks = {} }\n959\tlocal pulseAlpha = 1.0\n960\tlocal pulseFading = true\n961\t\n962\t-- Undo state\n963\tlocal lastInsertedText = nil\n964\t\n965\t-- Recent dictations (newest first, max 10)\n966\t\n967\tlocal recentDictations = {}\n968\t\n969\tlocal function loadRecentDictations()\n970\t    local f = io.open(RECENT_FILE, \"r\")\n971\t    if not f then return end\n972\t    local data = f:read(\"*a\"); f:close()\n973\t    local ok, result = pcall(hs.json.decode, data)\n974\t    if ok and type(result) == \"table\" then",
+        "tool_use_id": "toolu_01Q69t8bePi26oJ2Ek2Gxte7",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "0099cac8-f8cd-47bf-a37a-ae7b063355c8",
+  "promptId": "b87252f6-da26-4810-8031-1fdf3a0c95e9",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "sourceToolAssistantUUID": "0099cac8-f8cd-47bf-a37a-ae7b063355c8",
+  "timestamp": "2026-07-03T17:57:38.911Z",
+  "toolUseResult": {
+    "file": {
+      "content": "--------------------------------------------------------------------------------\n\nlocal isRecording = false\nlocal overlayPinned = false\nlocal ffmpegTask = nil\nlocal partialTimer = nil\nlocal partialBusy = false\nlocal lastChunkCount = 0\n\n-- Streaming transcription pipeline state (reset each recording session)\nlocal pipelineResults    = {}     -- [seg_n] = text, filled as each segment completes\nlocal pipelineLang       = nil    -- first detected language across all segments\nlocal pipelineNextChunk  = 1      -- 1-based index of next chunk not yet claimed by pipeline\nlocal pipelineNextSeg    = 1      -- next segment number to assign (1-indexed)\nlocal pipelineTotal      = 0      -- total segments expected (fixed when recording stops)\nlocal pipelineDone       = 0      -- segments completed so far\nlocal pipelineFinalizing = false  -- true once we know the final total (recording stopped)\nlocal streamTimer        = nil    -- fires every 3s during recording to dispatch ready segments\n\n-- Menu bar\nlocal menuBar = nil\n\n-- Recording indicator state\nlocal pulseTimer = nil\nlocal clockTimer = nil\nlocal recordingStartTime = 0\n\n-- Progress bar state (grouped to save local variable slots)\nlocal barState = { txnSecs = 0, maxSecs = 180, segChunks = {} }\nlocal pulseAlpha = 1.0\nlocal pulseFading = true\n\n-- Undo state\nlocal lastInsertedText = nil\n\n-- Recent dictations (newest first, max 10)\n\nlocal recentDictations = {}\n\nlocal function loadRecentDictations()\n    local f = io.open(RECENT_FILE, \"r\")\n    if not f then return end\n    local data = f:read(\"*a\"); f:close()\n    local ok, result = pcall(hs.json.decode, data)\n    if ok and type(result) == \"table\" then",
+      "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+      "numLines": 45,
+      "startLine": 930,
+      "totalLines": 2935
+    },
+    "type": "text"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "7257d6f4-13f2-48da-ade9-3b75b92492e6",
+  "version": "2.1.197"
+}

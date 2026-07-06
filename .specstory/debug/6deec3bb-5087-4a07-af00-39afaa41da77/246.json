@@ -1,0 +1,35 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "1041\t-- .snapshot()/.clear()/.salvage(): accepted segment text lives only in memory\n1042\t--   (PL.results) until pipelineFinalize() inserts it. If finalization never\n1043\t--   runs (stop path aborts, insert throws, or Hammerspoon reloads mid-run) that\n1044\t--   text would be lost. So we snapshot accepted segments to disk as they\n1045\t--   complete, clear the snapshot once text is safely inserted, and salvage any\n1046\t--   orphaned snapshot (on next recording start or on reload) into recent\n1047\t--   dictations so it can be retrieved from the menu bar.\n1048\t--------------------------------------------------------------------------------\n1049\t_whisperRecovery = { file = WHISPER_TMP .. \"/last-session-recovery.txt\" }\n1050\t\n1051\tfunction _whisperRecovery.play(path)\n1052\t    pcall(function()\n1053\t        local snd = hs.sound.getByFile(path)\n1054\t        if snd then snd:play() end\n1055\t    end)\n1056\tend\n1057\t\n1058\tfunction _whisperRecovery.snapshot()\n1059\t    local parts = {}\n1060\t    for n = 1, (PL.nextSeg - 1) do\n1061\t        local t = PL.results[n]\n1062\t        if t and t ~= \"\" then table.insert(parts, t) end\n1063\t    end\n1064\t    if #parts == 0 then return end\n1065\t    local text = table.concat(parts, \" \"):gsub(\"%s+\", \" \")\n1066\t    local f = io.open(_whisperRecovery.file, \"w\")\n1067\t    if f then f:write(text); f:close() end\n1068\tend\n1069\t\n1070\tfunction _whisperRecovery.clear()\n1071\t    os.remove(_whisperRecovery.file)\n1072\tend\n1073\t\n1074\tfunction _whisperRecovery.salvage()\n1075\t    local f = io.open(_whisperRecovery.file, \"r\")\n1076\t    if not f then return end\n1077\t    local text = f:read(\"*a\"); f:close()\n1078\t    text = (text or \"\"):gsub(\"^%s+\", \"\"):gsub(\"%s+$\", \"\")\n1079\t    if text ~= \"\" then\n1080\t        log(\"recovery: salvaged orphaned session text (\" .. #text .. \" chars) → recent dictations\")\n1081\t        table.insert(recentDictations, 1, {\n1082\t            text = text,\n1083\t            time = os.time(),\n1084\t            inserted = false,\n1085\t            app = \"[recovered]\",\n1086\t        })\n1087\t        while #recentDictations \u003e 10 do table.remove(recentDictations) end\n1088\t        saveRecentDictations()\n1089\t    end\n1090\t    os.remove(_whisperRecovery.file)\n1091\tend\n1092\t\n1093\t-- On load: recover any text stranded by a previous crash/freeze/reload.\n1094\t_whisperRecovery.salvage()\n1095\t",
+        "tool_use_id": "toolu_01KqtiPkmdaLaeCqqj9pFhYE",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "97723799-61a8-4742-86f7-fc15a891f995",
+  "promptId": "b87252f6-da26-4810-8031-1fdf3a0c95e9",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "sourceToolAssistantUUID": "97723799-61a8-4742-86f7-fc15a891f995",
+  "timestamp": "2026-07-03T18:06:39.385Z",
+  "toolUseResult": {
+    "file": {
+      "content": "-- .snapshot()/.clear()/.salvage(): accepted segment text lives only in memory\n--   (PL.results) until pipelineFinalize() inserts it. If finalization never\n--   runs (stop path aborts, insert throws, or Hammerspoon reloads mid-run) that\n--   text would be lost. So we snapshot accepted segments to disk as they\n--   complete, clear the snapshot once text is safely inserted, and salvage any\n--   orphaned snapshot (on next recording start or on reload) into recent\n--   dictations so it can be retrieved from the menu bar.\n--------------------------------------------------------------------------------\n_whisperRecovery = { file = WHISPER_TMP .. \"/last-session-recovery.txt\" }\n\nfunction _whisperRecovery.play(path)\n    pcall(function()\n        local snd = hs.sound.getByFile(path)\n        if snd then snd:play() end\n    end)\nend\n\nfunction _whisperRecovery.snapshot()\n    local parts = {}\n    for n = 1, (PL.nextSeg - 1) do\n        local t = PL.results[n]\n        if t and t ~= \"\" then table.insert(parts, t) end\n    end\n    if #parts == 0 then return end\n    local text = table.concat(parts, \" \"):gsub(\"%s+\", \" \")\n    local f = io.open(_whisperRecovery.file, \"w\")\n    if f then f:write(text); f:close() end\nend\n\nfunction _whisperRecovery.clear()\n    os.remove(_whisperRecovery.file)\nend\n\nfunction _whisperRecovery.salvage()\n    local f = io.open(_whisperRecovery.file, \"r\")\n    if not f then return end\n    local text = f:read(\"*a\"); f:close()\n    text = (text or \"\"):gsub(\"^%s+\", \"\"):gsub(\"%s+$\", \"\")\n    if text ~= \"\" then\n        log(\"recovery: salvaged orphaned session text (\" .. #text .. \" chars) → recent dictations\")\n        table.insert(recentDictations, 1, {\n            text = text,\n            time = os.time(),\n            inserted = false,\n            app = \"[recovered]\",\n        })\n        while #recentDictations \u003e 10 do table.remove(recentDictations) end\n        saveRecentDictations()\n    end\n    os.remove(_whisperRecovery.file)\nend\n\n-- On load: recover any text stranded by a previous crash/freeze/reload.\n_whisperRecovery.salvage()\n",
+      "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+      "numLines": 55,
+      "startLine": 1041,
+      "totalLines": 3044
+    },
+    "type": "text"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "fb7a9d40-74d6-4a35-870d-14cc26dd1408",
+  "version": "2.1.197"
+}

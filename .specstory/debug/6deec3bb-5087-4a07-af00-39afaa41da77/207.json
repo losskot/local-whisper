@@ -1,0 +1,52 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01McFr1VjwzPuC1yHBtHgJvf",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "d1c944ca-1691-44a6-8285-856c5584ffef",
+  "promptId": "b87252f6-da26-4810-8031-1fdf3a0c95e9",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "sourceToolAssistantUUID": "d1c944ca-1691-44a6-8285-856c5584ffef",
+  "timestamp": "2026-07-03T18:04:35.999Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+    "newString": "-- at 200 locals and this chunk sits right at the ceiling). Fields formerly named\n-- pipelineResults, pipelineLang, ... streamTimer now live here as PL.results, etc.\n-- (PL itself is forward-declared up in the Overlay UI section.)\nPL = {",
+    "oldString": "-- at 200 locals and this chunk sits right at the ceiling). Fields formerly named\n-- pipelineResults, pipelineLang, ... streamTimer now live here as PL.results, etc.\nlocal PL = {",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          " -- Grouped into one table to conserve main-chunk local slots (Lua caps a function",
+          " -- at 200 locals and this chunk sits right at the ceiling). Fields formerly named",
+          " -- pipelineResults, pipelineLang, ... streamTimer now live here as PL.results, etc.",
+          "-local PL = {",
+          "+-- (PL itself is forward-declared up in the Overlay UI section.)",
+          "+PL = {",
+          "     results     = {},     -- [seg_n] = text, filled as each segment completes",
+          "     lang        = nil,    -- first detected language across all segments",
+          "     nextChunk   = 1,      -- 1-based index of next chunk not yet claimed by pipeline"
+        ],
+        "newLines": 8,
+        "newStart": 946,
+        "oldLines": 7,
+        "oldStart": 946
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "15b3a0f0-c395-44a7-b50f-1f8d38b368cf",
+  "version": "2.1.197"
+}

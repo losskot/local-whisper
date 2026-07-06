@@ -1,0 +1,68 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_017JSp9c8N7ahgwGQ3bucXAg",
+        "input": {
+          "command": "cd /tmp \u0026\u0026 curl -fsSL https://raw.githubusercontent.com/steveyegge/beads/main/scripts/install.sh | bash 2\u003e\u00261 | tail -30; echo \"=== which bd ===\"; which bd 2\u003e\u00261; ls -la /Users/vitaliy/.local/bin/bd /usr/local/bin/bd 2\u003e\u00261",
+          "description": "Run beads installer"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_01EMCTKoLyh2rhBRtjAvYTXa",
+    "model": "claude-opus-4-8",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 1953,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 1953,
+      "cache_read_input_tokens": 44574,
+      "inference_geo": "not_available",
+      "input_tokens": 124,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1953,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 1953,
+          "cache_read_input_tokens": 44574,
+          "input_tokens": 124,
+          "output_tokens": 447,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 447,
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "e52b3f2d-9bba-422b-acb9-a66843f789ac",
+  "requestId": "req_011CcfX3zYtzXA3C949tWfH5",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "timestamp": "2026-07-03T17:28:49.285Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "a74e3092-6798-4bc1-89b3-9a6f73addf57",
+  "version": "2.1.197"
+}

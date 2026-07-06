@@ -1,0 +1,50 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01JowTNvYvrxDXmZN33kzaF1",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "21aceaf8-6555-4c79-98d9-f3fd6c98a7e3",
+  "promptId": "b87252f6-da26-4810-8031-1fdf3a0c95e9",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "sourceToolAssistantUUID": "21aceaf8-6555-4c79-98d9-f3fd6c98a7e3",
+  "timestamp": "2026-07-03T18:05:23.523Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+    "newString": "    if PL.finalizing then\n        local left = PL.total - PL.done\n        if left \u003e 0 then\n            armWatchdog()  -- progress made; reset the no-progress stall timer\n            setOverlayText(string.format(\"Transcribing... (%d left)\", left))\n        else\n            pipelineFinalize()\n        end\n    end\nend",
+    "oldString": "    if PL.finalizing then\n        local left = PL.total - PL.done\n        if left \u003e 0 then\n            setOverlayText(string.format(\"Transcribing... (%d left)\", left))\n        else\n            pipelineFinalize()\n        end\n    end\nend",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          "     if PL.finalizing then",
+          "         local left = PL.total - PL.done",
+          "         if left \u003e 0 then",
+          "+            armWatchdog()  -- progress made; reset the no-progress stall timer",
+          "             setOverlayText(string.format(\"Transcribing... (%d left)\", left))",
+          "         else",
+          "             pipelineFinalize()"
+        ],
+        "newLines": 7,
+        "newStart": 1635,
+        "oldLines": 6,
+        "oldStart": 1635
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "e5a59c6a-baff-4d9e-ab5e-f49a6732f8c7",
+  "version": "2.1.197"
+}

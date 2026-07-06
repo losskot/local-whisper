@@ -1,0 +1,60 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "text": "Main chunk down from 200 → ~186 locals — comfortable ~14-slot headroom now. Item #4 done. Let me update tracking and locate the current transcription/finalization code for items #1/2/3/5.",
+        "type": "text"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_01LS7c7WZnV17D7Nc1rxgK5A",
+    "model": "claude-opus-4-8",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 910,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 910,
+      "cache_read_input_tokens": 81169,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 910,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 910,
+          "cache_read_input_tokens": 81169,
+          "input_tokens": 2,
+          "output_tokens": 1314,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 1314,
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "f36b7bf4-f4b0-455d-8b64-5bcb210e8dd6",
+  "requestId": "req_011CcfZQpKoZDc2WRwFLHNaP",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "timestamp": "2026-07-03T17:59:53.608Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "aac4e7a6-2208-47be-966d-ecec58d84cad",
+  "version": "2.1.197"
+}

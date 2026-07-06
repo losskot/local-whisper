@@ -1,0 +1,55 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_014gTKbAyiExNrkSQNNst6XC",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "b7802346-b4cc-46b1-9591-d3c0de475891",
+  "promptId": "b87252f6-da26-4810-8031-1fdf3a0c95e9",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "sourceToolAssistantUUID": "b7802346-b4cc-46b1-9591-d3c0de475891",
+  "timestamp": "2026-07-03T18:04:29.257Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+    "newString": "local overlay = nil\nlocal btnColor = { red = 0.5, green = 0.8, blue = 1.0, alpha = 1.0 }\nlocal btnHover = { red = 0.7, green = 0.9, blue = 1.0, alpha = 1.0 }\n\n-- Forward declaration: the streaming/finalization pipeline state table is\n-- populated in the State section below, but hideOverlay()/forceHideOverlay()\n-- (defined just after this) need to disarm PL.watchdog, so PL must be in scope\n-- here. Same forward-declare pattern as `overlay` above.\nlocal PL",
+    "oldString": "local overlay = nil\nlocal btnColor = { red = 0.5, green = 0.8, blue = 1.0, alpha = 1.0 }\nlocal btnHover = { red = 0.7, green = 0.9, blue = 1.0, alpha = 1.0 }",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          " local btnColor = { red = 0.5, green = 0.8, blue = 1.0, alpha = 1.0 }",
+          " local btnHover = { red = 0.7, green = 0.9, blue = 1.0, alpha = 1.0 }",
+          " ",
+          "+-- Forward declaration: the streaming/finalization pipeline state table is",
+          "+-- populated in the State section below, but hideOverlay()/forceHideOverlay()",
+          "+-- (defined just after this) need to disarm PL.watchdog, so PL must be in scope",
+          "+-- here. Same forward-declare pattern as `overlay` above.",
+          "+local PL",
+          "+",
+          " -- Element indices: 1=bg, 2=lang, 3=sep1, 4=output, 5=sep2, 6=enter, 7=sep3, 8=model, 9=sep4, 10=refine, 11=text, 12=dot, 13=timer, 14=close, 15=bar_bg, 16=bar_rec, 17=bar_txn",
+          " local EL = { lang = 2, output = 4, enter = 6, model = 8, refine = 10, text = 11, dot = 12, timer = 13, close = 14, bar_bg = 15, bar_rec = 16, bar_txn = 17 }",
+          " "
+        ],
+        "newLines": 12,
+        "newStart": 667,
+        "oldLines": 6,
+        "oldStart": 667
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "9f411286-ca04-44d7-a601-e1235d4b3e6e",
+  "version": "2.1.197"
+}

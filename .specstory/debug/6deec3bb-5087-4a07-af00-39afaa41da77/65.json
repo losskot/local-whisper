@@ -1,0 +1,60 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "text": "The classifier blocked *executing* the freshly downloaded binary (a sensible guard). I'll just place it in PATH without running it — the \"prerequisite\" the user asked for is that `bd` be available. Let me extract and install without execution.",
+        "type": "text"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_016VvcfFbawEEpz4dB9B8Eeb",
+    "model": "claude-opus-4-8",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 719,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 719,
+      "cache_read_input_tokens": 49430,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 719,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 719,
+          "cache_read_input_tokens": 49430,
+          "input_tokens": 2,
+          "output_tokens": 964,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 964,
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "1ec83604-4216-4084-9e6b-79ec421eaddc",
+  "requestId": "req_011CcfX9UoAB7Pa7MFrxmyb8",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "timestamp": "2026-07-03T17:30:07.992Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "23191cd7-489d-4951-adc2-56ac8e8526c7",
+  "version": "2.1.197"
+}

@@ -1,0 +1,35 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "2010\t\n2011\tlocal MEETINGS_DIR = CONFIG_DIR .. \"/meetings\"\n2012\tlocal MEETING_CHUNK_SECONDS = 8                       -- step between window starts\n2013\tlocal MEETING_OVERLAP_SECONDS = 4                     -- audio reused at the head of each window for context\n2014\tlocal MEETING_TRANSCRIBE_POLL_SECONDS = 2\n2015\tlocal MEETING_WINDOW_TIMEOUT_SECONDS = 60             -- watchdog: kill task if it runs longer than this\n2016\tlocal MEETING_PCM_BYTES_PER_SEC = 16000 * 2           -- 16 kHz, mono, 16-bit\n2017\tlocal MEETING_AGGREGATE_NAME = \"local-whisper Output\"\n2018\tlocal MEETING_HELPER_BIN = CONFIG_DIR .. \"/bin/aggregate-audio\"\n2019\t-- meetingRecording and meetingStartTime are forward-declared before buildMenuBarMenu\n2020\tlocal meetingFfmpegTask = nil\n2021\tlocal meetingChunkDir = WHISPER_TMP .. \"/meeting_chunks\"\n2022\tlocal meetingPcmPath = meetingChunkDir .. \"/recording.pcm\"\n2023\tlocal meetingTranscript = {}\n2024\tlocal meetingNotepad = nil\n2025\tlocal meetingTranscribeTimer = nil\n2026\tlocal meetingControlTimer = nil\n2027\tlocal meetingNextWindowIdx = 1\n2028\tlocal meetingLastEmittedText = \"\"\n2029\tlocal meetingStopFlushed = false\n2030\tlocal meetingWindowQueue = {}        -- pending windows waiting to slice+transcribe\n2031\tlocal meetingProcessing = false      -- one slice+whisper pipeline at a time",
+        "tool_use_id": "toolu_016vLEDBrNVJznNWtSzeWa3i",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "0d22a2bf-e15c-4ced-89a2-b9a5cadc6a11",
+  "promptId": "b87252f6-da26-4810-8031-1fdf3a0c95e9",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "sourceToolAssistantUUID": "0d22a2bf-e15c-4ced-89a2-b9a5cadc6a11",
+  "timestamp": "2026-07-03T17:58:58.613Z",
+  "toolUseResult": {
+    "file": {
+      "content": "\nlocal MEETINGS_DIR = CONFIG_DIR .. \"/meetings\"\nlocal MEETING_CHUNK_SECONDS = 8                       -- step between window starts\nlocal MEETING_OVERLAP_SECONDS = 4                     -- audio reused at the head of each window for context\nlocal MEETING_TRANSCRIBE_POLL_SECONDS = 2\nlocal MEETING_WINDOW_TIMEOUT_SECONDS = 60             -- watchdog: kill task if it runs longer than this\nlocal MEETING_PCM_BYTES_PER_SEC = 16000 * 2           -- 16 kHz, mono, 16-bit\nlocal MEETING_AGGREGATE_NAME = \"local-whisper Output\"\nlocal MEETING_HELPER_BIN = CONFIG_DIR .. \"/bin/aggregate-audio\"\n-- meetingRecording and meetingStartTime are forward-declared before buildMenuBarMenu\nlocal meetingFfmpegTask = nil\nlocal meetingChunkDir = WHISPER_TMP .. \"/meeting_chunks\"\nlocal meetingPcmPath = meetingChunkDir .. \"/recording.pcm\"\nlocal meetingTranscript = {}\nlocal meetingNotepad = nil\nlocal meetingTranscribeTimer = nil\nlocal meetingControlTimer = nil\nlocal meetingNextWindowIdx = 1\nlocal meetingLastEmittedText = \"\"\nlocal meetingStopFlushed = false\nlocal meetingWindowQueue = {}        -- pending windows waiting to slice+transcribe\nlocal meetingProcessing = false      -- one slice+whisper pipeline at a time",
+      "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+      "numLines": 22,
+      "startLine": 2010,
+      "totalLines": 2944
+    },
+    "type": "text"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "04d99675-6ff4-4a7f-b1dd-bd925a1a2b3c",
+  "version": "2.1.197"
+}

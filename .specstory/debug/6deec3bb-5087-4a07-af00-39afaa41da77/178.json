@@ -1,0 +1,58 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01Uc6Nz7LNUDwxrLZZ1psAsQ",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "9269bb42-f841-43ea-8b8f-ae4a5e17d423",
+  "promptId": "b87252f6-da26-4810-8031-1fdf3a0c95e9",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "sourceToolAssistantUUID": "9269bb42-f841-43ea-8b8f-ae4a5e17d423",
+  "timestamp": "2026-07-03T18:01:55.705Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+    "newString": "            startWhisper(args, function(code2, out2, err2)\n                log(\"pipeline: seg \" .. segN .. \" whisper(auto) exit=\" .. tostring(code2))\n                if code2 ~= 0 then onPipelineDone(segN, \"\", nil); return end\n                local detected = (err2 or \"\"):match(\"auto%-detected language:%s*(%w+)\")\n                log(\"pipeline: seg \" .. segN .. \" auto-detected: \" .. tostring(detected))\n                onWhisperDone(out2 or \"\", detected)\n            end)",
+    "oldString": "            hs.task.new(WHISPER_BIN, function(code2, out2, err2)\n                log(\"pipeline: seg \" .. segN .. \" whisper(auto) exit=\" .. tostring(code2))\n                if code2 ~= 0 then onPipelineDone(segN, \"\", nil); return end\n                local detected = (err2 or \"\"):match(\"auto%-detected language:%s*(%w+)\")\n                log(\"pipeline: seg \" .. segN .. \" auto-detected: \" .. tostring(detected))\n                onWhisperDone(out2 or \"\", detected)\n            end, args):start()",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          "         if lang == \"auto\" then",
+          "             local args = { \"-m\", getModelPath(), \"-f\", segWav, \"-l\", \"auto\", \"-nt\" }",
+          "             for _, a in ipairs(promptArgs) do table.insert(args, a) end",
+          "-            hs.task.new(WHISPER_BIN, function(code2, out2, err2)",
+          "+            startWhisper(args, function(code2, out2, err2)",
+          "                 log(\"pipeline: seg \" .. segN .. \" whisper(auto) exit=\" .. tostring(code2))",
+          "                 if code2 ~= 0 then onPipelineDone(segN, \"\", nil); return end",
+          "                 local detected = (err2 or \"\"):match(\"auto%-detected language:%s*(%w+)\")",
+          "                 log(\"pipeline: seg \" .. segN .. \" auto-detected: \" .. tostring(detected))",
+          "                 onWhisperDone(out2 or \"\", detected)",
+          "-            end, args):start()",
+          "+            end)",
+          "         else",
+          "             local args = { \"-m\", getModelPath(), \"-f\", segWav, \"-l\", lang, \"-nt\", \"--no-prints\" }",
+          "             for _, a in ipairs(promptArgs) do table.insert(args, a) end"
+        ],
+        "newLines": 13,
+        "newStart": 1664,
+        "oldLines": 13,
+        "oldStart": 1664
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "67adb07c-4e10-43f8-b248-4d704e3c4ff2",
+  "version": "2.1.197"
+}

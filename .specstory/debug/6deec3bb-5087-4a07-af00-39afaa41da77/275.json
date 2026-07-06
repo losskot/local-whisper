@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "2026-07-03 20:13:05.264 hs[97405:3220691] *** CFMessagePort: dropping corrupt reply Mach message (0b000100)\nerror communicating with Hammerspoon: message port was invalidated\nerror unregistering CLI instance with Hammerspoon: message port invalid (transport errors are normal if Hammerspoon is reloading)\nreload issued, exit=69",
+        "is_error": false,
+        "tool_use_id": "toolu_01Qw4GMJDT8W2LbsnS6Vpj6k",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "5fecf788-d4af-4a81-934d-96c07a62d51f",
+  "promptId": "0faf16ba-1170-44d2-9c15-b85e94438f5d",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "sourceToolAssistantUUID": "5fecf788-d4af-4a81-934d-96c07a62d51f",
+  "timestamp": "2026-07-03T18:13:05.269Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "2026-07-03 20:13:05.264 hs[97405:3220691] *** CFMessagePort: dropping corrupt reply Mach message (0b000100)\nerror communicating with Hammerspoon: message port was invalidated\nerror unregistering CLI instance with Hammerspoon: message port invalid (transport errors are normal if Hammerspoon is reloading)\nreload issued, exit=69"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "85e85dec-5f30-493d-aab4-fe95163c11fc",
+  "version": "2.1.197"
+}

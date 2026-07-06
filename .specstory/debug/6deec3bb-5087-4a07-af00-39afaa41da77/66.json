@@ -1,0 +1,68 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01RdumHonBhaTTeDT5SG8btU",
+        "input": {
+          "command": "SP=/private/tmp/claude-502/-Users-vitaliy-Documents-GitHub-local-whisper/6deec3bb-5087-4a07-af00-39afaa41da77/scratchpad\ntar -xzf \"$SP/bd.tar.gz\" -C \"$SP\"\nBIN=\"$(find \"$SP\" -type f -name bd | head -1)\"\necho \"found: $BIN\"\nmkdir -p /Users/vitaliy/.local/bin\ncp \"$BIN\" /Users/vitaliy/.local/bin/bd\nchmod +x /Users/vitaliy/.local/bin/bd\nls -la /Users/vitaliy/.local/bin/bd\necho \"=== in PATH? ===\"\ncommand -v bd 2\u003e\u00261 || echo \"(new shell needed to pick up, but ~/.local/bin is already in PATH)\"",
+          "description": "Extract and place bd in PATH without executing"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_016VvcfFbawEEpz4dB9B8Eeb",
+    "model": "claude-opus-4-8",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 719,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 719,
+      "cache_read_input_tokens": 49430,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 719,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 719,
+          "cache_read_input_tokens": 49430,
+          "input_tokens": 2,
+          "output_tokens": 964,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 964,
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "23191cd7-489d-4951-adc2-56ac8e8526c7",
+  "requestId": "req_011CcfX9UoAB7Pa7MFrxmyb8",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "timestamp": "2026-07-03T17:30:11.036Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "46d53cef-59b1-4f74-ad15-65bf3c1e615a",
+  "version": "2.1.197"
+}

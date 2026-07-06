@@ -1,0 +1,35 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "939\t-- Streaming transcription pipeline state (reset each recording session).\n940\t-- Grouped into one table to conserve main-chunk local slots (Lua caps a function\n941\t-- at 200 locals and this chunk sits right at the ceiling). Fields formerly named\n942\t-- PL.results, PL.lang, ... PL.streamTimer now live here as PL.results, etc.\n943\tlocal PL = {\n944\t    results     = {},     -- [seg_n] = text, filled as each segment completes\n945\t    lang        = nil,    -- first detected language across all segments\n946\t    nextChunk   = 1,      -- 1-based index of next chunk not yet claimed by pipeline\n947\t    nextSeg     = 1,      -- next segment number to assign (1-indexed)\n948\t    total       = 0,      -- total segments expected (fixed when recording stops)\n949\t    done        = 0,      -- segments completed so far\n950\t    finalizing  = false,  -- true once we know the final total (recording stopped)\n951\t    PL.streamTimer = nil,    -- fires every 3s during recording to dispatch ready segments\n952\t    -- Concurrency + reliability state (added in the code-review pass):\n953\t    whisperActive = 0,    -- # of whisper-cli hs.tasks running now (semaphore, item #1)\n954\t    whisperQueue  = {},   -- FIFO of queued {bin,args,cb} awaiting a free whisper slot\n955\t    watchdog      = nil,  -- timer that force-hides the overlay if finalize/refine hangs (#3)\n956\t}\n957\t\n958\t-- Menu bar",
+        "tool_use_id": "toolu_01JwFGqX5BBrJZXQCrgjswct",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "40faa995-6235-440e-b732-c2644df1bc46",
+  "promptId": "b87252f6-da26-4810-8031-1fdf3a0c95e9",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "sourceToolAssistantUUID": "40faa995-6235-440e-b732-c2644df1bc46",
+  "timestamp": "2026-07-03T17:58:26.542Z",
+  "toolUseResult": {
+    "file": {
+      "content": "-- Streaming transcription pipeline state (reset each recording session).\n-- Grouped into one table to conserve main-chunk local slots (Lua caps a function\n-- at 200 locals and this chunk sits right at the ceiling). Fields formerly named\n-- PL.results, PL.lang, ... PL.streamTimer now live here as PL.results, etc.\nlocal PL = {\n    results     = {},     -- [seg_n] = text, filled as each segment completes\n    lang        = nil,    -- first detected language across all segments\n    nextChunk   = 1,      -- 1-based index of next chunk not yet claimed by pipeline\n    nextSeg     = 1,      -- next segment number to assign (1-indexed)\n    total       = 0,      -- total segments expected (fixed when recording stops)\n    done        = 0,      -- segments completed so far\n    finalizing  = false,  -- true once we know the final total (recording stopped)\n    PL.streamTimer = nil,    -- fires every 3s during recording to dispatch ready segments\n    -- Concurrency + reliability state (added in the code-review pass):\n    whisperActive = 0,    -- # of whisper-cli hs.tasks running now (semaphore, item #1)\n    whisperQueue  = {},   -- FIFO of queued {bin,args,cb} awaiting a free whisper slot\n    watchdog      = nil,  -- timer that force-hides the overlay if finalize/refine hangs (#3)\n}\n\n-- Menu bar",
+      "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+      "numLines": 20,
+      "startLine": 939,
+      "totalLines": 2944
+    },
+    "type": "text"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "46241d41-68f8-4634-a0ce-bd1f26e5efee",
+  "version": "2.1.197"
+}

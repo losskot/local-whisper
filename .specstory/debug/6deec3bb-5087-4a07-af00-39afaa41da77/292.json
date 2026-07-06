@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": " hammerspoon/init.lua | 356 ++++++++++++++++++++++++++++++++++-----------------\n 1 file changed, 238 insertions(+), 118 deletions(-)\n=== final syntax check ===\nSYNTAX OK\n=== final local count ===\n191",
+        "is_error": false,
+        "tool_use_id": "toolu_01JmLt6KXA1QQziFJUUzBUzr",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "f86064be-b352-4b35-92d1-bf83dd3d3654",
+  "promptId": "1e9f845b-ab92-413b-8c26-278d056ab7b9",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "sourceToolAssistantUUID": "f86064be-b352-4b35-92d1-bf83dd3d3654",
+  "timestamp": "2026-07-03T21:53:02.698Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": " hammerspoon/init.lua | 356 ++++++++++++++++++++++++++++++++++-----------------\n 1 file changed, 238 insertions(+), 118 deletions(-)\n=== final syntax check ===\nSYNTAX OK\n=== final local count ===\n191"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "b5940fed-b743-4745-83c3-f91dbcd1a515",
+  "version": "2.1.197"
+}

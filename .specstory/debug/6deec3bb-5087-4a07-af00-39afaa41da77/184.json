@@ -1,0 +1,68 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01T1p7XYQBiEJ9kBVn1YjaBH",
+        "input": {
+          "command": "cd /Users/vitaliy/Documents/GitHub/local-whisper\necho \"=== remaining raw whisper spawns (should be 0) ===\"\ngrep -nE \"hs\\.task\\.new\\(WHISPER_BIN\" hammerspoon/init.lua\necho \"=== startWhisper call sites (expect 3) ===\"\ngrep -nc \"startWhisper(\" hammerspoon/init.lua\necho \"=== syntax check ===\"\nhs -c 'local f,e=loadfile(\"/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua\"); return f and \"SYNTAX OK\" or (\"ERR: \"..tostring(e))'",
+          "description": "Verify semaphore wiring and syntax"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_01VQAx4K5ryksF317s1QVtcF",
+    "model": "claude-opus-4-8",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 480,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 480,
+      "cache_read_input_tokens": 98987,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 480,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 480,
+          "cache_read_input_tokens": 98987,
+          "input_tokens": 2,
+          "output_tokens": 315,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 315,
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "bd4cc559-f221-4bd4-ba9a-134c37031f15",
+  "requestId": "req_011CcfZbwcf5jh7Brc5GkVpZ",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "timestamp": "2026-07-03T18:02:13.363Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "d1c457a9-f19b-4f79-860b-f6d78ad47fb0",
+  "version": "2.1.197"
+}

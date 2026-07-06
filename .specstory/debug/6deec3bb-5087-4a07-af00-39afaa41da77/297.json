@@ -1,0 +1,60 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "text": "## Summary\n\n**Prerequisites solved:**\n- **Self-compilation**: Hammerspoon's `hs` CLI bridge is running; I now syntax-check every edit with `hs -c 'loadfile(...)'` (Hammerspoon's own Lua 5.4 compiler) and reload live with `hs -c \"hs.reload()\"` — no more asking you to click reload.\n- **bd**: v1.0.4 darwin-arm64 downloaded and checksum-verified against the official release; you ran the `cp` yourself (security guard requires that for third-party binaries), and `bd` is now installed with a permission rule in [.claude/settings.local.json](.claude/settings.local.json).\n\n**All 5 code-review items implemented in [hammerspoon/init.lua](hammerspoon/init.lua):**\n\n1. **Whisper semaphore** — new `startWhisper()`/`pumpWhisperQueue()` cap concurrent `whisper-cli` processes at `MAX_WHISPER = 2`; all 3 spawn sites (partial, auto-lang final, fixed-lang final) route through it.\n2. **pcall around `doFinalTranscription`** — body wrapped; any throw logs and force-hides the overlay instead of leaving it stuck.\n3. **Watchdog** — `armWatchdog()`/`cancelWatchdog()` force-hide the overlay after 45s of no progress; armed at finalize start, re-armed on each completed segment and before Ollama refine; disarmed in both overlay-hide paths.\n4. **200-local ceiling** — the main chunk was pinned at exactly 200/200 (hard cap). Grouped `pipeline*`/`streamTimer` → `PL` table and 8 `MEETING_*` constants → `MC` table, bringing it to 191/200 — 9 slots of headroom for future work.\n5. **Chunk preservation** — `rm -rf` on the chunk dir replaced with a rotate-to-`_prev` move; an unfinalized session's audio now survives through the *next* recording instead of being wiped instantly.\n\nVerified: syntax-checks clean, live `hs.reload()` succeeded with no errors, log shows the config loaded cleanly (`[20:13:05] loaded (...)`).\n\n**Not yet exercised**: the semaphore/watchdog/chunk-rotation code paths haven't run against a real dictation since reload — that needs an actual trigger-key recording, which I intentionally didn't simulate. Worth doing one real test dictation to confirm `chunks_prev` appears and everything behaves as expected in practice.",
+        "type": "text"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_01D5DTvSgFEejq6w9eur58BJ",
+    "model": "claude-sonnet-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "end_turn",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 964,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 964,
+      "cache_read_input_tokens": 123662,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 964,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 964,
+          "cache_read_input_tokens": 123662,
+          "input_tokens": 2,
+          "output_tokens": 870,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 870,
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "7bc68455-485c-40ef-b0d9-6d90bc407551",
+  "requestId": "req_011CcfsDqEux3W14zh9ZpsbL",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "timestamp": "2026-07-03T21:53:22.040Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "317be0bf-ec14-423d-94e4-68887c7d79e1",
+  "version": "2.1.197"
+}

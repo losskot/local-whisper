@@ -1,0 +1,76 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_013X967Ct5dnYcQfpwRnvZxX",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "5586cd1c-40c2-420d-93d5-0640c9bb90ab",
+  "promptId": "b87252f6-da26-4810-8031-1fdf3a0c95e9",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "sourceToolAssistantUUID": "5586cd1c-40c2-420d-93d5-0640c9bb90ab",
+  "timestamp": "2026-07-03T17:58:06.299Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+    "newString": "-- Streaming transcription pipeline state (reset each recording session).\n-- Grouped into one table to conserve main-chunk local slots (Lua caps a function\n-- at 200 locals and this chunk sits right at the ceiling). Fields formerly named\n-- pipelineResults, pipelineLang, ... streamTimer now live here as PL.results, etc.\nlocal PL = {\n    results     = {},     -- [seg_n] = text, filled as each segment completes\n    lang        = nil,    -- first detected language across all segments\n    nextChunk   = 1,      -- 1-based index of next chunk not yet claimed by pipeline\n    nextSeg     = 1,      -- next segment number to assign (1-indexed)\n    total       = 0,      -- total segments expected (fixed when recording stops)\n    done        = 0,      -- segments completed so far\n    finalizing  = false,  -- true once we know the final total (recording stopped)\n    streamTimer = nil,    -- fires every 3s during recording to dispatch ready segments\n    -- Concurrency + reliability state (added in the code-review pass):\n    whisperActive = 0,    -- # of whisper-cli hs.tasks running now (semaphore, item #1)\n    whisperQueue  = {},   -- FIFO of queued {bin,args,cb} awaiting a free whisper slot\n    watchdog      = nil,  -- timer that force-hides the overlay if finalize/refine hangs (#3)\n}",
+    "oldString": "-- Streaming transcription pipeline state (reset each recording session)\nlocal pipelineResults    = {}     -- [seg_n] = text, filled as each segment completes\nlocal pipelineLang       = nil    -- first detected language across all segments\nlocal pipelineNextChunk  = 1      -- 1-based index of next chunk not yet claimed by pipeline\nlocal pipelineNextSeg    = 1      -- next segment number to assign (1-indexed)\nlocal pipelineTotal      = 0      -- total segments expected (fixed when recording stops)\nlocal pipelineDone       = 0      -- segments completed so far\nlocal pipelineFinalizing = false  -- true once we know the final total (recording stopped)\nlocal streamTimer        = nil    -- fires every 3s during recording to dispatch ready segments",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          " local partialBusy = false",
+          " local lastChunkCount = 0",
+          " ",
+          "--- Streaming transcription pipeline state (reset each recording session)",
+          "-local pipelineResults    = {}     -- [seg_n] = text, filled as each segment completes",
+          "-local pipelineLang       = nil    -- first detected language across all segments",
+          "-local pipelineNextChunk  = 1      -- 1-based index of next chunk not yet claimed by pipeline",
+          "-local pipelineNextSeg    = 1      -- next segment number to assign (1-indexed)",
+          "-local pipelineTotal      = 0      -- total segments expected (fixed when recording stops)",
+          "-local pipelineDone       = 0      -- segments completed so far",
+          "-local pipelineFinalizing = false  -- true once we know the final total (recording stopped)",
+          "-local streamTimer        = nil    -- fires every 3s during recording to dispatch ready segments",
+          "+-- Streaming transcription pipeline state (reset each recording session).",
+          "+-- Grouped into one table to conserve main-chunk local slots (Lua caps a function",
+          "+-- at 200 locals and this chunk sits right at the ceiling). Fields formerly named",
+          "+-- pipelineResults, pipelineLang, ... streamTimer now live here as PL.results, etc.",
+          "+local PL = {",
+          "+    results     = {},     -- [seg_n] = text, filled as each segment completes",
+          "+    lang        = nil,    -- first detected language across all segments",
+          "+    nextChunk   = 1,      -- 1-based index of next chunk not yet claimed by pipeline",
+          "+    nextSeg     = 1,      -- next segment number to assign (1-indexed)",
+          "+    total       = 0,      -- total segments expected (fixed when recording stops)",
+          "+    done        = 0,      -- segments completed so far",
+          "+    finalizing  = false,  -- true once we know the final total (recording stopped)",
+          "+    streamTimer = nil,    -- fires every 3s during recording to dispatch ready segments",
+          "+    -- Concurrency + reliability state (added in the code-review pass):",
+          "+    whisperActive = 0,    -- # of whisper-cli hs.tasks running now (semaphore, item #1)",
+          "+    whisperQueue  = {},   -- FIFO of queued {bin,args,cb} awaiting a free whisper slot",
+          "+    watchdog      = nil,  -- timer that force-hides the overlay if finalize/refine hangs (#3)",
+          "+}",
+          " ",
+          " -- Menu bar",
+          " local menuBar = nil"
+        ],
+        "newLines": 24,
+        "newStart": 936,
+        "oldLines": 15,
+        "oldStart": 936
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "e2ba8056-9897-44f9-9f7c-f8dd6242bf1b",
+  "version": "2.1.197"
+}

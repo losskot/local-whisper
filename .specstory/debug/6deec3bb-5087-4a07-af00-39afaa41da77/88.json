@@ -1,0 +1,68 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_013FBvGtAjJRNTQCr7pEpGKR",
+        "input": {
+          "command": "grep -n \"doFinalTranscription\\|getChunkFiles\\|splitAtSilence\\|hideOverlay\\|hs.task.new\\|function.*[Tt]ranscri\\|refine\\|Refining\\|semaphore\\|chunk_\\|getByFile\\|whisper-cli\" /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua | head -80",
+          "description": "Locate key functions and call sites"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_01Nn3X4SeZy9uzfd18NrBof5",
+    "model": "claude-opus-4-8",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 633,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 633,
+      "cache_read_input_tokens": 55080,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 633,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 633,
+          "cache_read_input_tokens": 55080,
+          "input_tokens": 2,
+          "output_tokens": 1181,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 1181,
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "3a101b7c-cbcc-4d60-80f6-9378d102e4fa",
+  "requestId": "req_011CcfZ6Wqaqig7czYWUhkzH",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "timestamp": "2026-07-03T17:55:46.994Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "468f79fb-b1e9-4e9c-8926-ad82ca4c9522",
+  "version": "2.1.197"
+}

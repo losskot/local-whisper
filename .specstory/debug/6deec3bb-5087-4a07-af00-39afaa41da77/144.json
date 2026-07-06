@@ -1,0 +1,70 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_011qoR3rzJdHWaRn27CUUDzA",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "3da7b55c-8d30-4593-8ce8-eb0ad9b86fee",
+  "promptId": "b87252f6-da26-4810-8031-1fdf3a0c95e9",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "sourceToolAssistantUUID": "3da7b55c-8d30-4593-8ce8-eb0ad9b86fee",
+  "timestamp": "2026-07-03T17:59:19.789Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+    "newString": "-- Meeting-mode constants, grouped into one table to conserve main-chunk local\n-- slots (Lua's 200-per-function cap). Formerly MEETINGS_DIR, MEETING_CHUNK_SECONDS,\n-- ... MEETING_HELPER_BIN; now MC.dir, MC.chunkSecs, ... MC.helperBin.\nlocal MC = {\n    dir             = CONFIG_DIR .. \"/meetings\",\n    chunkSecs       = 8,                    -- step between window starts\n    overlapSecs     = 4,                    -- audio reused at the head of each window for context\n    transcribePoll  = 2,\n    windowTimeout   = 60,                   -- watchdog: kill task if it runs longer than this\n    pcmBytesPerSec  = 16000 * 2,            -- 16 kHz, mono, 16-bit\n    aggregateName   = \"local-whisper Output\",\n    helperBin       = CONFIG_DIR .. \"/bin/aggregate-audio\",\n}",
+    "oldString": "local MEETINGS_DIR = CONFIG_DIR .. \"/meetings\"\nlocal MEETING_CHUNK_SECONDS = 8                       -- step between window starts\nlocal MEETING_OVERLAP_SECONDS = 4                     -- audio reused at the head of each window for context\nlocal MEETING_TRANSCRIBE_POLL_SECONDS = 2\nlocal MEETING_WINDOW_TIMEOUT_SECONDS = 60             -- watchdog: kill task if it runs longer than this\nlocal MEETING_PCM_BYTES_PER_SEC = 16000 * 2           -- 16 kHz, mono, 16-bit\nlocal MEETING_AGGREGATE_NAME = \"local-whisper Output\"\nlocal MEETING_HELPER_BIN = CONFIG_DIR .. \"/bin/aggregate-audio\"",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          " -- Meeting mode",
+          " --------------------------------------------------------------------------------",
+          " ",
+          "-local MEETINGS_DIR = CONFIG_DIR .. \"/meetings\"",
+          "-local MEETING_CHUNK_SECONDS = 8                       -- step between window starts",
+          "-local MEETING_OVERLAP_SECONDS = 4                     -- audio reused at the head of each window for context",
+          "-local MEETING_TRANSCRIBE_POLL_SECONDS = 2",
+          "-local MEETING_WINDOW_TIMEOUT_SECONDS = 60             -- watchdog: kill task if it runs longer than this",
+          "-local MEETING_PCM_BYTES_PER_SEC = 16000 * 2           -- 16 kHz, mono, 16-bit",
+          "-local MEETING_AGGREGATE_NAME = \"local-whisper Output\"",
+          "-local MEETING_HELPER_BIN = CONFIG_DIR .. \"/bin/aggregate-audio\"",
+          "+-- Meeting-mode constants, grouped into one table to conserve main-chunk local",
+          "+-- slots (Lua's 200-per-function cap). Formerly MEETINGS_DIR, MEETING_CHUNK_SECONDS,",
+          "+-- ... MEETING_HELPER_BIN; now MC.dir, MC.chunkSecs, ... MC.helperBin.",
+          "+local MC = {",
+          "+    dir             = CONFIG_DIR .. \"/meetings\",",
+          "+    chunkSecs       = 8,                    -- step between window starts",
+          "+    overlapSecs     = 4,                    -- audio reused at the head of each window for context",
+          "+    transcribePoll  = 2,",
+          "+    windowTimeout   = 60,                   -- watchdog: kill task if it runs longer than this",
+          "+    pcmBytesPerSec  = 16000 * 2,            -- 16 kHz, mono, 16-bit",
+          "+    aggregateName   = \"local-whisper Output\",",
+          "+    helperBin       = CONFIG_DIR .. \"/bin/aggregate-audio\",",
+          "+}",
+          " -- meetingRecording and meetingStartTime are forward-declared before buildMenuBarMenu",
+          " local meetingFfmpegTask = nil",
+          " local meetingChunkDir = WHISPER_TMP .. \"/meeting_chunks\""
+        ],
+        "newLines": 19,
+        "newStart": 2008,
+        "oldLines": 14,
+        "oldStart": 2008
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "336656cb-3b8e-4df7-9fbf-52f0f6bb2f40",
+  "version": "2.1.197"
+}

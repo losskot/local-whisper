@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "=== top-level (col-0) 'local' declarations in main chunk ===\n199\n=== of which are 'local function' ===\n92\n=== top-level plain locals (col-0, not function) ===\n107\n=== also col-0 forward decls like 'local X, Y' ===\n1106:local startMeeting, stopMeeting",
+        "is_error": false,
+        "tool_use_id": "toolu_016NBjBXQ4taVfGYYmr9679N",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "823a78e8-3768-41cf-af45-e8cc1eefcf19",
+  "promptId": "b87252f6-da26-4810-8031-1fdf3a0c95e9",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "sourceToolAssistantUUID": "823a78e8-3768-41cf-af45-e8cc1eefcf19",
+  "timestamp": "2026-07-03T17:56:26.324Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "=== top-level (col-0) 'local' declarations in main chunk ===\n199\n=== of which are 'local function' ===\n92\n=== top-level plain locals (col-0, not function) ===\n107\n=== also col-0 forward decls like 'local X, Y' ===\n1106:local startMeeting, stopMeeting"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "0cf0713b-905b-483b-924c-90387ae10ae9",
+  "version": "2.1.197"
+}

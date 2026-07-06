@@ -1,0 +1,65 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_0181UMScj9V5KZX81wLAtq4C",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "b6e09814-0c6e-47b0-939c-3bde6154f2db",
+  "promptId": "b87252f6-da26-4810-8031-1fdf3a0c95e9",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "sourceToolAssistantUUID": "b6e09814-0c6e-47b0-939c-3bde6154f2db",
+  "timestamp": "2026-07-03T18:05:06.077Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+    "newString": "-- Finalize/refine watchdog (code-review item #3). Once recording stops the\n-- overlay shows \"Transcribing…\" / \"Refining…\"; if the final transcription, an\n-- Ollama refine, or the text insertion wedges, nothing would ever take the\n-- overlay down and it hangs forever. armWatchdog() arms a no-progress timeout;\n-- it is re-armed on every completed segment (see onPipelineDone) so a genuinely\n-- long transcription is not cut off, and only fires when things truly stall.\nlocal WATCHDOG_SECS = 45\nlocal function armWatchdog()\n    cancelWatchdog()\n    PL.watchdog = hs.timer.doAfter(WATCHDOG_SECS, function()\n        PL.watchdog = nil\n        log(\"watchdog: finalize/refine stalled for \" .. WATCHDOG_SECS .. \"s — force-hiding overlay\")\n        forceHideOverlay()\n    end)\nend\n\nlocal function setOverlayText(text)\n    if overlay then overlay[EL.text].text = text end\nend",
+    "oldString": "local function setOverlayText(text)\n    if overlay then overlay[EL.text].text = text end\nend",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          "     if overlay then overlay:delete(); overlay = nil end",
+          " end",
+          " ",
+          "+-- Finalize/refine watchdog (code-review item #3). Once recording stops the",
+          "+-- overlay shows \"Transcribing…\" / \"Refining…\"; if the final transcription, an",
+          "+-- Ollama refine, or the text insertion wedges, nothing would ever take the",
+          "+-- overlay down and it hangs forever. armWatchdog() arms a no-progress timeout;",
+          "+-- it is re-armed on every completed segment (see onPipelineDone) so a genuinely",
+          "+-- long transcription is not cut off, and only fires when things truly stall.",
+          "+local WATCHDOG_SECS = 45",
+          "+local function armWatchdog()",
+          "+    cancelWatchdog()",
+          "+    PL.watchdog = hs.timer.doAfter(WATCHDOG_SECS, function()",
+          "+        PL.watchdog = nil",
+          "+        log(\"watchdog: finalize/refine stalled for \" .. WATCHDOG_SECS .. \"s — force-hiding overlay\")",
+          "+        forceHideOverlay()",
+          "+    end)",
+          "+end",
+          "+",
+          " local function setOverlayText(text)",
+          "     if overlay then overlay[EL.text].text = text end",
+          " end"
+        ],
+        "newLines": 22,
+        "newStart": 931,
+        "oldLines": 6,
+        "oldStart": 931
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "09c99360-17a8-42e9-8237-005e1f9c5839",
+  "version": "2.1.197"
+}

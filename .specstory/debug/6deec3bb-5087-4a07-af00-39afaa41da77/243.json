@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "14:local CHUNK_DIR = WHISPER_TMP .. \"/chunks\"\n335:    local ok, iter, dir = pcall(hs.fs.dir, CHUNK_DIR)\n339:            table.insert(chunks, CHUNK_DIR .. \"/\" .. file)\n1041:-- .snapshot()/.clear()/.salvage(): accepted segment text lives only in memory\n1044:--   text would be lost. So we snapshot accepted segments to disk as they\n1045:--   complete, clear the snapshot once text is safely inserted, and salvage any\n1046:--   orphaned snapshot (on next recording start or on reload) into recent\n1049:_whisperRecovery = { file = WHISPER_TMP .. \"/last-session-recovery.txt\" }\n1051:function _whisperRecovery.play(path)\n1058:function _whisperRecovery.snapshot()\n1066:    local f = io.open(_whisperRecovery.file, \"w\")\n1070:function _whisperRecovery.clear()\n1071:    os.remove(_whisperRecovery.file)\n1074:function _whisperRecovery.salvage()\n1075:    local f = io.open(_whisperRecovery.file, \"r\")\n1080:        log(\"recovery: salvaged orphaned session text (\" .. #text .. \" chars) → recent dictations\")\n1090:    os.remove(_whisperRecovery.file)\n1094:_whisperRecovery.salvage()\n1542:    _whisperRecovery.clear()  -- text is safely persisted; drop the crash-recovery snapshot\n1547:    _whisperRecovery.play(\"/System/Library/Sounds/Glass.aiff\")\n1587:    _whisperRecovery.salvage()  -- rescue text from a prior session that never finalized\n1629:    _whisperRecovery.snapshot()  -- persist accepted segments so a finalize failure can't lose them\n1760:    -- persisted by _whisperRecovery.snapshot(), so a throw here doesn't lose text.\n1877:    os.execute(\"rm -rf '\" .. CHUNK_DIR .. \"'\")\n1878:    os.execute(\"mkdir -p '\" .. CHUNK_DIR .. \"'\")\n1897:        CHUNK_DIR .. \"/chunk_%03d.wav\"\n1915:        local firstChunk = CHUNK_DIR .. \"/chunk_000.wav\"\n1919:            _whisperRecovery.play(\"/System/Library/Sounds/Pop.aiff\")\n1923:            _whisperRecovery.play(\"/System/Library/Sounds/Basso.aiff\")\n1995:            _whisperRecovery.play(\"/System/Library/Sounds/Basso.aiff\")\n2049:    _whisperRecovery.play(\"/System/Library/Sounds/Tink.aiff\")\n2883:    os.execute(\"rm -rf '\" .. meetingChunkDir .. \"'\")\n2981:-- Used by tools/meeting-doctor.sh. Prints a one-shot snapshot of meeting",
+        "is_error": false,
+        "tool_use_id": "toolu_01XEFBH3fvWt89K8cexJjmei",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "3c357bd1-32f0-416c-835f-87edca667122",
+  "promptId": "b87252f6-da26-4810-8031-1fdf3a0c95e9",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "sourceToolAssistantUUID": "3c357bd1-32f0-416c-835f-87edca667122",
+  "timestamp": "2026-07-03T18:06:33.896Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "14:local CHUNK_DIR = WHISPER_TMP .. \"/chunks\"\n335:    local ok, iter, dir = pcall(hs.fs.dir, CHUNK_DIR)\n339:            table.insert(chunks, CHUNK_DIR .. \"/\" .. file)\n1041:-- .snapshot()/.clear()/.salvage(): accepted segment text lives only in memory\n1044:--   text would be lost. So we snapshot accepted segments to disk as they\n1045:--   complete, clear the snapshot once text is safely inserted, and salvage any\n1046:--   orphaned snapshot (on next recording start or on reload) into recent\n1049:_whisperRecovery = { file = WHISPER_TMP .. \"/last-session-recovery.txt\" }\n1051:function _whisperRecovery.play(path)\n1058:function _whisperRecovery.snapshot()\n1066:    local f = io.open(_whisperRecovery.file, \"w\")\n1070:function _whisperRecovery.clear()\n1071:    os.remove(_whisperRecovery.file)\n1074:function _whisperRecovery.salvage()\n1075:    local f = io.open(_whisperRecovery.file, \"r\")\n1080:        log(\"recovery: salvaged orphaned session text (\" .. #text .. \" chars) → recent dictations\")\n1090:    os.remove(_whisperRecovery.file)\n1094:_whisperRecovery.salvage()\n1542:    _whisperRecovery.clear()  -- text is safely persisted; drop the crash-recovery snapshot\n1547:    _whisperRecovery.play(\"/System/Library/Sounds/Glass.aiff\")\n1587:    _whisperRecovery.salvage()  -- rescue text from a prior session that never finalized\n1629:    _whisperRecovery.snapshot()  -- persist accepted segments so a finalize failure can't lose them\n1760:    -- persisted by _whisperRecovery.snapshot(), so a throw here doesn't lose text.\n1877:    os.execute(\"rm -rf '\" .. CHUNK_DIR .. \"'\")\n1878:    os.execute(\"mkdir -p '\" .. CHUNK_DIR .. \"'\")\n1897:        CHUNK_DIR .. \"/chunk_%03d.wav\"\n1915:        local firstChunk = CHUNK_DIR .. \"/chunk_000.wav\"\n1919:            _whisperRecovery.play(\"/System/Library/Sounds/Pop.aiff\")\n1923:            _whisperRecovery.play(\"/System/Library/Sounds/Basso.aiff\")\n1995:            _whisperRecovery.play(\"/System/Library/Sounds/Basso.aiff\")\n2049:    _whisperRecovery.play(\"/System/Library/Sounds/Tink.aiff\")\n2883:    os.execute(\"rm -rf '\" .. meetingChunkDir .. \"'\")\n2981:-- Used by tools/meeting-doctor.sh. Prints a one-shot snapshot of meeting"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "6fa3ed96-297a-4502-98fa-a866fde34f22",
+  "version": "2.1.197"
+}

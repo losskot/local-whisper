@@ -1,0 +1,34 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "=== hs cli ===\n/usr/local/bin/hs\n-rwxr-xr-x@ 1 vitaliy  admin  200272 Feb 26 11:48 /Applications/Hammerspoon.app/Contents/Frameworks/hs/hs\n=== HS running ===\n669\n=== go ===\n/usr/local/go/bin/go\n=== beads/bd search ===",
+        "is_error": false,
+        "tool_use_id": "toolu_01PyZqusYGn2FrAs3eecRr6T",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "758765a7-2d5d-4891-8db7-23a7cb819954",
+  "promptId": "b87252f6-da26-4810-8031-1fdf3a0c95e9",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "sourceToolAssistantUUID": "758765a7-2d5d-4891-8db7-23a7cb819954",
+  "timestamp": "2026-07-03T17:25:12.083Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "returnCodeInterpretation": "No matches found",
+    "stderr": "",
+    "stdout": "=== hs cli ===\n/usr/local/bin/hs\n-rwxr-xr-x@ 1 vitaliy  admin  200272 Feb 26 11:48 /Applications/Hammerspoon.app/Contents/Frameworks/hs/hs\n=== HS running ===\n669\n=== go ===\n/usr/local/go/bin/go\n=== beads/bd search ==="
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "40196969-6ad5-4cd3-9420-4cd099601148",
+  "version": "2.1.197"
+}

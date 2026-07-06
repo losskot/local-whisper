@@ -1,0 +1,70 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_014gTKbAyiExNrkSQNNst6XC",
+        "input": {
+          "file_path": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+          "new_string": "local overlay = nil\nlocal btnColor = { red = 0.5, green = 0.8, blue = 1.0, alpha = 1.0 }\nlocal btnHover = { red = 0.7, green = 0.9, blue = 1.0, alpha = 1.0 }\n\n-- Forward declaration: the streaming/finalization pipeline state table is\n-- populated in the State section below, but hideOverlay()/forceHideOverlay()\n-- (defined just after this) need to disarm PL.watchdog, so PL must be in scope\n-- here. Same forward-declare pattern as `overlay` above.\nlocal PL",
+          "old_string": "local overlay = nil\nlocal btnColor = { red = 0.5, green = 0.8, blue = 1.0, alpha = 1.0 }\nlocal btnHover = { red = 0.7, green = 0.9, blue = 1.0, alpha = 1.0 }",
+          "replace_all": false
+        },
+        "name": "Edit",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_01XwTCNV18hB6gtSWNnP6NRC",
+    "model": "claude-opus-4-8",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 2949,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 2949,
+      "cache_read_input_tokens": 104733,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 2949,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 2949,
+          "cache_read_input_tokens": 104733,
+          "input_tokens": 2,
+          "output_tokens": 3280,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 3280,
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "d4c0f6f6-dafb-4f93-b788-1f9b39cc38e2",
+  "requestId": "req_011CcfZimzAnt8rNtVYCuuDB",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "timestamp": "2026-07-03T18:04:28.070Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "b7802346-b4cc-46b1-9591-d3c0de475891",
+  "version": "2.1.197"
+}

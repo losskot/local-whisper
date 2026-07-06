@@ -1,0 +1,70 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01McFr1VjwzPuC1yHBtHgJvf",
+        "input": {
+          "file_path": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+          "new_string": "-- at 200 locals and this chunk sits right at the ceiling). Fields formerly named\n-- pipelineResults, pipelineLang, ... streamTimer now live here as PL.results, etc.\n-- (PL itself is forward-declared up in the Overlay UI section.)\nPL = {",
+          "old_string": "-- at 200 locals and this chunk sits right at the ceiling). Fields formerly named\n-- pipelineResults, pipelineLang, ... streamTimer now live here as PL.results, etc.\nlocal PL = {",
+          "replace_all": false
+        },
+        "name": "Edit",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_01ScjosfQmWje3djehivCudJ",
+    "model": "claude-opus-4-8",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 3348,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 3348,
+      "cache_read_input_tokens": 107682,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 3348,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 3348,
+          "cache_read_input_tokens": 107682,
+          "input_tokens": 2,
+          "output_tokens": 321,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 321,
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "9f411286-ca04-44d7-a601-e1235d4b3e6e",
+  "requestId": "req_011CcfZnHUXy114y5AwG4pcP",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "timestamp": "2026-07-03T18:04:34.940Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "d1c944ca-1691-44a6-8285-856c5584ffef",
+  "version": "2.1.197"
+}

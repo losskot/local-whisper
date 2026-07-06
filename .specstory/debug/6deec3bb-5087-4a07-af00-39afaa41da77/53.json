@@ -1,0 +1,27 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "Permission for this action was denied by the Claude Code auto mode classifier. Reason: [Code from External] Piping an agent-chosen external install script (curl ... | bash) into a shell executes untrusted remote code; the user did not name this source.. If you have other tasks that don't depend on this action, continue working on those. IMPORTANT: You *may* attempt to accomplish this action using other tools that might naturally be used to accomplish this goal, e.g. using head instead of cat. But you *should not* attempt to work around this denial in malicious ways, e.g. do not use your ability to run tests to execute non-test actions. You should only try to work around this restriction in reasonable ways that do not attempt to bypass the intent behind this denial. If you believe this capability is essential to complete the user's request, STOP and explain to the user what you were trying to do and why you need this permission. Let the user decide how to proceed. To allow this type of action in the future, the user can add a Bash permission rule to their settings.",
+        "is_error": true,
+        "tool_use_id": "toolu_017JSp9c8N7ahgwGQ3bucXAg",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "a74e3092-6798-4bc1-89b3-9a6f73addf57",
+  "promptId": "b87252f6-da26-4810-8031-1fdf3a0c95e9",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "sourceToolAssistantUUID": "a74e3092-6798-4bc1-89b3-9a6f73addf57",
+  "timestamp": "2026-07-03T17:29:00.308Z",
+  "toolUseResult": "Error: Permission for this action was denied by the Claude Code auto mode classifier. Reason: [Code from External] Piping an agent-chosen external install script (curl ... | bash) into a shell executes untrusted remote code; the user did not name this source.. If you have other tasks that don't depend on this action, continue working on those. IMPORTANT: You *may* attempt to accomplish this action using other tools that might naturally be used to accomplish this goal, e.g. using head instead of cat. But you *should not* attempt to work around this denial in malicious ways, e.g. do not use your ability to run tests to execute non-test actions. You should only try to work around this restriction in reasonable ways that do not attempt to bypass the intent behind this denial. If you believe this capability is essential to complete the user's request, STOP and explain to the user what you were trying to do and why you need this permission. Let the user decide how to proceed. To allow this type of action in the future, the user can add a Bash permission rule to their settings.",
+  "type": "user",
+  "userType": "external",
+  "uuid": "f03ac6f5-8f59-4d06-9390-c08d0b11c416",
+  "version": "2.1.197"
+}

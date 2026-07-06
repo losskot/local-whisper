@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "1349:    pipelineReset()\n1512:local function pipelineReset()\n1526:local function pipelineFinalize()\n1547:local function onPipelineDone(n, text, detected)\n1812:    pipelineReset()",
+        "is_error": false,
+        "tool_use_id": "toolu_01BCfapmcpunhqXf9QgCRnQu",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "85b181a1-3ccf-46e2-a8ce-c4ca9df716af",
+  "promptId": "b87252f6-da26-4810-8031-1fdf3a0c95e9",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "sourceToolAssistantUUID": "85b181a1-3ccf-46e2-a8ce-c4ca9df716af",
+  "timestamp": "2026-07-03T18:00:55.569Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "1349:    pipelineReset()\n1512:local function pipelineReset()\n1526:local function pipelineFinalize()\n1547:local function onPipelineDone(n, text, detected)\n1812:    pipelineReset()"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "2aadde7d-a342-402c-93cf-55afb79a66cd",
+  "version": "2.1.197"
+}

@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "1567:        setOverlayText(\"Refining...\")\n1626:local function onPipelineDone(n, text, detected)\n1749:local function doFinalTranscription()",
+        "is_error": false,
+        "tool_use_id": "toolu_01VVLEyN6visrTP5a2TWGz22",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "d3bbc3f8-da17-4648-8bad-0d71e655774a",
+  "promptId": "b87252f6-da26-4810-8031-1fdf3a0c95e9",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "sourceToolAssistantUUID": "d3bbc3f8-da17-4648-8bad-0d71e655774a",
+  "timestamp": "2026-07-03T18:05:12.213Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "1567:        setOverlayText(\"Refining...\")\n1626:local function onPipelineDone(n, text, detected)\n1749:local function doFinalTranscription()"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "65e27735-002d-4f8e-8d07-0c02ff22efa6",
+  "version": "2.1.197"
+}

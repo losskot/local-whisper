@@ -1,0 +1,68 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_016XHcgrQ9dh5kJCCpSRzrrq",
+        "input": {
+          "command": "echo \"=== inspect live state (module-level names aren't globally exposed by default, check via debug) ===\"\nhs -c 'return _whisperRecovery ~= nil and \"has _whisperRecovery global\" or \"missing\"' 2\u003e\u00261\necho \"=== check chunk dirs on disk to confirm rotation happened from the reload-triggered recording above ===\"\nTMPDIR_REAL=$(getconf DARWIN_USER_TEMP_DIR)\nls -la \"${TMPDIR_REAL}whisper-dictate/\" 2\u003e\u00261 | grep -i chunk",
+          "description": "Check live state and chunk directory rotation"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_01N1eUPioouEYs8Sa21LQcRF",
+    "model": "claude-sonnet-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 1735,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 1735,
+      "cache_read_input_tokens": 120611,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1735,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 1735,
+          "cache_read_input_tokens": 120611,
+          "input_tokens": 2,
+          "output_tokens": 465,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 465,
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "c3da6906-88e0-49e2-95a4-5c62afacbbad",
+  "requestId": "req_011CcfaToxBXP2U6kHgNbNao",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "timestamp": "2026-07-03T18:13:31.989Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "9b43a800-c0c5-4cfe-a214-5e23e42c26b9",
+  "version": "2.1.197"
+}

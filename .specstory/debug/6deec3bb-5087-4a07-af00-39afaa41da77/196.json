@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "910:local function hideOverlay()\n915:local function forceHideOverlay()\n920:local function setOverlayText(text)",
+        "is_error": false,
+        "tool_use_id": "toolu_01Ejy4SM61Yd2NKjtB6Jq5iY",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "ddfb62fa-9a59-4ca6-9009-b4aa141f83ba",
+  "promptId": "b87252f6-da26-4810-8031-1fdf3a0c95e9",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "sourceToolAssistantUUID": "ddfb62fa-9a59-4ca6-9009-b4aa141f83ba",
+  "timestamp": "2026-07-03T18:02:58.497Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "910:local function hideOverlay()\n915:local function forceHideOverlay()\n920:local function setOverlayText(text)"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "719a8092-eaa7-44f4-9ac3-119827dff002",
+  "version": "2.1.197"
+}

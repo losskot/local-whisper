@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "go: downloading go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.61.0\ngo: downloading github.com/dolthub/go-icu-regex v0.0.0-20260412212219-49724d547866\ngo: downloading github.com/gofrs/flock v0.8.1\ngo: downloading github.com/golang-jwt/jwt/v5 v5.3.0\ngo: downloading github.com/sony/gobreaker v0.5.0\ngo: downloading go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.61.0\ngo: downloading github.com/google/s2a-go v0.1.9\ngo: downloading golang.org/x/xerrors v0.0.0-20231012003039-104605ab7028\ngo: downloading github.com/googleapis/enterprise-certificate-proxy v0.3.6\ngo: downloading github.com/envoyproxy/go-control-plane/envoy v1.36.0\ngo: downloading github.com/klauspost/compress v1.18.5\ngo: downloading github.com/pierrec/lz4/v4 v4.1.21\ngo: downloading github.com/felixge/httpsnoop v1.0.4\ngo: downloading github.com/spiffe/go-spiffe/v2 v2.6.0\ngo: downloading github.com/cncf/xds/go v0.0.0-20251210132809-ee656c7534f5\ngo: downloading github.com/go-jose/go-jose/v4 v4.1.4\ngo: downloading github.com/envoyproxy/protoc-gen-validate v1.3.0\ngo: downloading cel.dev/expr v0.25.1\n# github.com/dolthub/go-icu-regex/internal/icu\nfile.cpp:3:10: fatal error: 'unicode/regex.h' file not found\nexit: 0",
+        "is_error": false,
+        "tool_use_id": "toolu_01GrF4xaBQvMivLSRRrogHdh",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "418af573-c73c-4006-a155-da2699b758ef",
+  "promptId": "b87252f6-da26-4810-8031-1fdf3a0c95e9",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "sourceToolAssistantUUID": "418af573-c73c-4006-a155-da2699b758ef",
+  "timestamp": "2026-07-03T17:28:17.143Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "go: downloading go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.61.0\ngo: downloading github.com/dolthub/go-icu-regex v0.0.0-20260412212219-49724d547866\ngo: downloading github.com/gofrs/flock v0.8.1\ngo: downloading github.com/golang-jwt/jwt/v5 v5.3.0\ngo: downloading github.com/sony/gobreaker v0.5.0\ngo: downloading go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.61.0\ngo: downloading github.com/google/s2a-go v0.1.9\ngo: downloading golang.org/x/xerrors v0.0.0-20231012003039-104605ab7028\ngo: downloading github.com/googleapis/enterprise-certificate-proxy v0.3.6\ngo: downloading github.com/envoyproxy/go-control-plane/envoy v1.36.0\ngo: downloading github.com/klauspost/compress v1.18.5\ngo: downloading github.com/pierrec/lz4/v4 v4.1.21\ngo: downloading github.com/felixge/httpsnoop v1.0.4\ngo: downloading github.com/spiffe/go-spiffe/v2 v2.6.0\ngo: downloading github.com/cncf/xds/go v0.0.0-20251210132809-ee656c7534f5\ngo: downloading github.com/go-jose/go-jose/v4 v4.1.4\ngo: downloading github.com/envoyproxy/protoc-gen-validate v1.3.0\ngo: downloading cel.dev/expr v0.25.1\n# github.com/dolthub/go-icu-regex/internal/icu\nfile.cpp:3:10: fatal error: 'unicode/regex.h' file not found\nexit: 0"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "b05f74dd-b666-41e6-9f36-5c3320e63ec4",
+  "version": "2.1.197"
+}

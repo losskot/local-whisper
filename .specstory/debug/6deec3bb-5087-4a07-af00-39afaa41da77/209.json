@@ -1,0 +1,70 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_019GgeL1auth2pGTkr4xkBMK",
+        "input": {
+          "file_path": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+          "new_string": "-- Disarm the finalize/refine watchdog (item #3). Called whenever the overlay is\n-- taken down so a stale timer can't fire after we've already finished.\nlocal function cancelWatchdog()\n    if PL and PL.watchdog then PL.watchdog:stop(); PL.watchdog = nil end\nend\n\nlocal function hideOverlay()\n    if overlayPinned then return end  -- pinned overlay stays open\n    cancelWatchdog()\n    if overlay then overlay:delete(); overlay = nil end\nend\n\nlocal function forceHideOverlay()\n    overlayPinned = false\n    cancelWatchdog()\n    if overlay then overlay:delete(); overlay = nil end\nend",
+          "old_string": "local function hideOverlay()\n    if overlayPinned then return end  -- pinned overlay stays open\n    if overlay then overlay:delete(); overlay = nil end\nend\n\nlocal function forceHideOverlay()\n    overlayPinned = false\n    if overlay then overlay:delete(); overlay = nil end\nend",
+          "replace_all": false
+        },
+        "name": "Edit",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_018WRmqcK2JKHZMrGDj4Rsqa",
+    "model": "claude-opus-4-8",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 389,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 389,
+      "cache_read_input_tokens": 111030,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 389,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 389,
+          "cache_read_input_tokens": 111030,
+          "input_tokens": 2,
+          "output_tokens": 519,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 519,
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "6f8e6b37-804d-483f-b497-b532baeb24ef",
+  "requestId": "req_011CcfZnnHPDMQDP37CLt2aA",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "timestamp": "2026-07-03T18:04:46.896Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "154b1ca2-19ed-454b-a17c-78be2e0125b8",
+  "version": "2.1.197"
+}

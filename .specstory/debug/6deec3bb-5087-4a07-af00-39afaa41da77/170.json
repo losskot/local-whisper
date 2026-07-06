@@ -1,0 +1,60 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "text": "Now I'll add the whisper semaphore helper before `doPartialTranscribe`. The design routes all 3 whisper spawn sites through a FIFO queue capped at `MAX_WHISPER`, with a guarded decrement so abort/killall can't drive the counter negative.",
+        "type": "text"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_01T8fmiZwgvA7fuLFU3eoyNE",
+    "model": "claude-opus-4-8",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 1410,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 1410,
+      "cache_read_input_tokens": 92817,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1410,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 1410,
+          "cache_read_input_tokens": 92817,
+          "input_tokens": 2,
+          "output_tokens": 2580,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 2580,
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "6aab252c-52d6-4bdb-92df-98213a3afd70",
+  "requestId": "req_011CcfZWtH6uVqUAgQAUwSPw",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "timestamp": "2026-07-03T18:01:23.994Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "313f01b5-a5c0-4f80-b1f3-a4637196c30a",
+  "version": "2.1.197"
+}

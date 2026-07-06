@@ -1,0 +1,72 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01JmLt6KXA1QQziFJUUzBUzr",
+        "input": {
+          "command": "cd /Users/vitaliy/Documents/GitHub/local-whisper\ngit diff --stat hammerspoon/init.lua\necho \"=== final syntax check ===\"\nhs -c 'local f,e=loadfile(\"/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua\"); return f and \"SYNTAX OK\" or (\"ERR: \"..tostring(e))'\necho \"=== final local count ===\"\ngrep -cE \"^local \" hammerspoon/init.lua",
+          "description": "Final diff stat and validation"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": {
+      "cache_miss_reason": {
+        "type": "previous_message_not_found"
+      }
+    },
+    "id": "msg_01Vu4ZaUtHMCsEFgsgVsiVpv",
+    "model": "claude-sonnet-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 98184,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 98184,
+      "cache_read_input_tokens": 24751,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 98184,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 98184,
+          "cache_read_input_tokens": 24751,
+          "input_tokens": 2,
+          "output_tokens": 630,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 630,
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "90ba85e0-602d-4c8f-a745-1ee8eb6cedde",
+  "requestId": "req_011CcfsCLzWwTEY2KET2PoAZ",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "timestamp": "2026-07-03T21:53:00.542Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "f86064be-b352-4b35-92d1-bf83dd3d3654",
+  "version": "2.1.197"
+}

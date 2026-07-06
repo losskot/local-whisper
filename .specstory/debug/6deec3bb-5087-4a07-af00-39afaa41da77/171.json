@@ -1,0 +1,70 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01WZGEre5XrSGAbCPnhU7Xni",
+        "input": {
+          "file_path": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+          "new_string": "--------------------------------------------------------------------------------\n-- Whisper concurrency semaphore (code-review item #1)\n--------------------------------------------------------------------------------\n-- Root cause of the \"whole system froze\" hang: up to 5 whisper-cli processes\n-- (large-v3-turbo streaming segments + the final ones) ran at once, pegging the\n-- CPU hard enough to starve the audio subsystem — which is what made\n-- hs.sound.getByFile() return nil and left the overlay wedged. Capping how many\n-- whisper-cli processes run concurrently throttles the trigger, not just the\n-- symptom. All three whisper spawn sites go through startWhisper() below.\n\nlocal MAX_WHISPER = 2  -- max concurrent whisper-cli processes (reviewer suggested 2–3)\n\n-- Start queued jobs while a slot is free. Single-threaded (hs callbacks run on\n-- the main thread), so no locking needed.\nlocal function pumpWhisperQueue()\n    while PL.whisperActive \u003c MAX_WHISPER and #PL.whisperQueue \u003e 0 do\n        local job = table.remove(PL.whisperQueue, 1)\n        PL.whisperActive = PL.whisperActive + 1\n        local t = hs.task.new(WHISPER_BIN, function(code, out, err)\n            PL.whisperActive = math.max(0, PL.whisperActive - 1)  -- clamp: killall can fire late callbacks\n            local ok, e = pcall(job.cb, code, out, err)\n            if not ok then log(\"whisper: callback error: \" .. tostring(e)) end\n            pumpWhisperQueue()\n        end, job.args)\n        if t then\n            t:start()\n        else\n            -- hs.task.new can return nil under resource pressure; free the slot\n            -- and let the caller's callback run so the pipeline doesn't stall.\n            PL.whisperActive = math.max(0, PL.whisperActive - 1)\n            log(\"whisper: hs.task.new returned nil, running callback with error code\")\n            pcall(job.cb, -1, \"\", \"\")\n        end\n    end\nend\n\n-- Enqueue a whisper-cli run. cb receives (exitCode, stdout, stderr), same as a\n-- raw hs.task callback, so existing callbacks work unchanged.\nlocal function startWhisper(args, cb)\n    table.insert(PL.whisperQueue, { args = args, cb = cb })\n    pumpWhisperQueue()\nend\n\n--------------------------------------------------------------------------------\n-- Partial transcription (live preview while recording)\n--------------------------------------------------------------------------------\n\nlocal function doPartialTranscribe()",
+          "old_string": "--------------------------------------------------------------------------------\n-- Partial transcription (live preview while recording)\n--------------------------------------------------------------------------------\n\nlocal function doPartialTranscribe()",
+          "replace_all": false
+        },
+        "name": "Edit",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_01T8fmiZwgvA7fuLFU3eoyNE",
+    "model": "claude-opus-4-8",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 1410,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 1410,
+      "cache_read_input_tokens": 92817,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1410,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 1410,
+          "cache_read_input_tokens": 92817,
+          "input_tokens": 2,
+          "output_tokens": 2580,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 2580,
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "313f01b5-a5c0-4f80-b1f3-a4637196c30a",
+  "requestId": "req_011CcfZWtH6uVqUAgQAUwSPw",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "timestamp": "2026-07-03T18:01:34.729Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "6304967d-5cea-4ea8-ba3e-3dbfc4452d08",
+  "version": "2.1.197"
+}

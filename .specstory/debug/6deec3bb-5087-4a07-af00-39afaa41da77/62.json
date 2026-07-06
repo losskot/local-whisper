@@ -1,0 +1,68 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01HmCsMKcc8pWYUKbmDYVbw7",
+        "input": {
+          "command": "SP=/private/tmp/claude-502/-Users-vitaliy-Documents-GitHub-local-whisper/6deec3bb-5087-4a07-af00-39afaa41da77/scratchpad\ntar -xzf \"$SP/bd.tar.gz\" -C \"$SP\" \u0026\u0026 ls -la \"$SP\" | grep -i bd\necho \"=== find bd binary ===\"\nfind \"$SP\" -type f -name bd\nmkdir -p /Users/vitaliy/.local/bin\ncp \"$(find \"$SP\" -type f -name bd | head -1)\" /Users/vitaliy/.local/bin/bd\nchmod +x /Users/vitaliy/.local/bin/bd\necho \"=== installed, test (may hit Gatekeeper) ===\"\n/Users/vitaliy/.local/bin/bd version 2\u003e\u00261 | head",
+          "description": "Extract and install bd binary"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_01JK7VpR7UAKiDQFPHo35BCe",
+    "model": "claude-opus-4-8",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 664,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 664,
+      "cache_read_input_tokens": 48766,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 664,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 664,
+          "cache_read_input_tokens": 48766,
+          "input_tokens": 2,
+          "output_tokens": 385,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 385,
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "7e8ad109-0950-4f2d-97ea-8ca5491fec92",
+  "requestId": "req_011CcfX7yjPdFxKmofbdCgvU",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "timestamp": "2026-07-03T17:29:43.416Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "f11b3bb7-dbd8-4f6c-a4a1-01122389280a",
+  "version": "2.1.197"
+}
