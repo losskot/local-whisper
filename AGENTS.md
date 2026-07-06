@@ -37,6 +37,58 @@ Everything runs inside `~/.hammerspoon/init.lua` — no external bash scripts at
 - No Python anywhere — this is a pure C/Lua stack
 - Log to `$TMPDIR/whisper-dictate/whisper-dictate.log` for debugging
 
+## Development & Deployment
+
+### Deployment model (symlink — no copy needed)
+
+`~/.hammerspoon/init.lua` is a symlink pointing to `hammerspoon/init.lua` in this repo.
+**Editing the repo file IS deployment.** There is no copy or install step.
+
+```bash
+ls -la ~/.hammerspoon/init.lua
+# → … -> /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua
+```
+
+### Syntax validation (before every reload)
+
+Use Hammerspoon's own Lua 5.4 compiler via the `hs` IPC bridge — no external tool needed:
+
+```bash
+hs -c 'local f,e=loadfile(os.getenv("HOME").."/Documents/GitHub/local-whisper/hammerspoon/init.lua"); return f and "SYNTAX OK" or ("ERR: "..tostring(e))'
+```
+
+`loadfile()` compiles without executing — it is safe to call on a live config.
+Expected success output: `SYNTAX OK`
+On error: `ERR: <file>:<line>: <message>`
+
+### Live reload
+
+```bash
+hs -c "hs.reload()"
+```
+
+Expected output includes `"Message port invalidated."` — this is **normal**; the Hammerspoon process restarts its IPC listener and the connection drops. Wait ~2s for reload to complete, then re-run the syntax check or test commands.
+
+### Lua 200-local-per-function hard ceiling
+
+Lua 5.4 (Hammerspoon's runtime) enforces a **hard limit of 200 locals per function**. The top-level chunk of `init.lua` counts as one function. This limit is a compiler error — exceeding it prevents the file from loading at all.
+
+**Current count: ~191/200** — headroom is tight. Before adding any new top-level `local`, check the count:
+
+```bash
+grep -c '^\s*local ' hammerspoon/init.lua
+```
+
+**Mitigation already in place** — instead of adding bare top-level locals, group related state into existing tables:
+
+| Table | Contents |
+|-------|----------|
+| `PL`  | All pipeline/transcription state (`results`, `lang`, `nextChunk`, `nextSeg`, `total`, `done`, `finalizing`, `streamTimer`, `whisperActive`, `whisperQueue`, `watchdog`) |
+| `MC`  | Meeting-mode constants (`MEETING_PAUSE_SECS`, `MEETING_MAX_GAP`, etc.) |
+| `barState` | Menu bar animation state |
+
+**Rule**: Never add a new top-level `local` without first verifying the count stays ≤ 200. If at or near 200, group into an existing table or create a new one.
+
 ## Testing & debugging
 
 ### Slash commands
