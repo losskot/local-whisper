@@ -1,25 +1,35 @@
 {
   "attachment": {
-    "addedBlocks": [
-      "## claude.ai Airtable\nThe Airtable MCP Server provides tools to interact with Airtable bases.\n\nOne of the core workflows is to find and display records from a given table. For example, \"Show me projects on the roadmap shipping this week\".\n\nTo do this, you will need to call the tools in this order:\n1) search_bases → searches for bases by name. Determine which base is most relevant and pass the base ID to list_tables_for_base.\n2) list_tables_for_base(baseId) → fetches tableIds and their corresponding fields (fieldId, type). Use this to decide which tables and fields are relevant.\n3) get_table_schema(baseId, tables) → required when filtering on singleSelect/multipleSelects fields. Fetches detailed field schema including choice IDs and names. Call this before filtering to get the correct choice IDs. Each table entry must include tableId and fieldIds.\n4) (a) if available, use display_records_for_table(baseId, tableId, ...params) → displays records only from the relevant table(s). Use params to filter, sort, select fields, and paginate.\n   (b) otherwise, use list_records_for_table(baseId, tableId, ...params) → lists records only from the relevant table(s). Use params to filter, sort, select fields, and paginate.\n\nPlanning \u0026 selection:\n- If the user did not specify a base, call list_bases, rank likely candidates by base name/description, then run list_tables_for_base on the top candidate.\n\nInterfaces and pages:\n- If the user asks about interfaces, pages, or dashboards, use list_pages_for_base(baseId) to discover available interfaces and pages, then use list_records_for_page or get_record_for_page to read data through them.\n- Some bases may have permissionLevel \"none\", meaning the user has interface-only access (shared via specific interfaces, not as a full base collaborator). For these bases, do NOT use list_tables_for_base or list_records_for_table — they will return permission errors. Use the page-based tools above instead.\n\nID formats:\n- Always operate on Airtable internal IDs. Never substitute user-facing names for IDs.\n- Examples: base … [truncated]",
-      "## claude.ai Kiwi flights search\nFlight search for Kiwi.com. Use search-flight to find one-way and return flights between two locations for given dates and passengers. Use feedback-to-devs to forward user feedback, bug reports, or feature requests to the developers."
+    "content": "- deep-research: Deep research harness — fan-out web searches, fetch sources, adversarially verify claims, synthesize a cited report. - When the user wants a deep, multi-source, fact-checked research report on any topic. BEFORE invoking, check if the question is specific enough to research directly — if underspecified (e.g., \"what car to buy\" without budget/use-case/region), ask 2-3 clarifying questions to narrow scope. Then pass the refined question as args, weaving the answers in.\n- update-config: Use this skill to configure the Claude Code harness via settings.json. Automated behaviors (\"from now on when X\", \"each time X\", \"whenever X\", \"before/after X\") require hooks configured in settings.json - the harness executes these, not Claude, so memory/preferences cannot fulfill them. Also use for: permissions (\"allow X\", \"add permission\", \"move permission to\"), env vars (\"set X=Y\"), hook troubleshooting, or any changes to settings.json/settings.local.json files. Examples: \"allow npm commands\", \"add bq permission to global settings\", \"move permission to user settings\", \"set DEBUG=true\", \"when claude stops show X\". For simple settings like theme/model, suggest the /config command.\n- keybindings-help: Use when the user wants to customize keyboard shortcuts, rebind keys, add chord bindings, or modify ~/.claude/keybindings.json. Examples: \"rebind ctrl+s\", \"add a chord shortcut\", \"change the submit key\", \"customize keybindings\".\n- verify: Verify that a code change actually does what it's supposed to by running the app and observing behavior. Use when asked to verify a PR, confirm a fix works, test a change manually, check that a feature works, or validate local changes before pushing.\n- code-review: Review the current diff for correctness bugs and reuse/simplification/efficiency cleanups at the given effort level (low/medium: fewer, high-confidence findings; high→max: broader coverage, may include uncertain findings; ultra: deep multi-agent review in the cloud). Pass --comment to post findings as inline PR comments, or --fix to apply the findings to the working tree after the review.\n- simplify: Review the changed code for reuse, simplification, efficiency, and altitude cleanups, then apply the fixes. Quality only — it does not hunt for bugs; use /code-review for that.\n- fewer-permission-prompts: Scan your transcripts for common read-only Bash and MCP tool calls, then add a prioritized allowlist to project .claude/settings.json to reduce permission prompts.\n- loop: Run a prompt or slash command on a recurring interval (e.g. /loop 5m /foo). Omit the interval to let the model self-pace. - When the user wants to set up a recurring task, poll for status, or run something repeatedly on an interval (e.g. \"check the deploy every 5 minutes\", \"keep running /babysit-prs\"). Do NOT invoke for one-off tasks.\n- schedule: Create, update, list, or run scheduled cloud agents (routines) that execute on a cron schedule. - When the user wants to schedule a recurring cloud agent, set up automated tasks, create a cron job for Claude Code, or manage their scheduled agents/routines. Also use when the user wants a one-time scheduled run (\"run this once at 3pm\", \"remind me to check X tomorrow\").\n- claude-api: Reference for the Claude API / Anthropic SDK — model ids, pricing, params, streaming, tool use, MCP, agents, caching, token counting, model migration.\nTRIGGER — read BEFORE opening the target file; don't skip because it \"looks like a one-liner\" — whenever: the prompt names Claude/Anthropic in any form (Claude, Anthropic, Fable, Opus, Sonnet, Haiku, `anthropic`, `@anthropic-ai`, `claude-*`, `us.anthropic.*`, `[1m]`); the user asks about an LLM (pricing/model choice/limits/caching) — never answer from memory; OR the task is LLM-shaped with provider unstated (agent/MCP/tool-definition/multi-agent/RAG/LLM-judge/computer-use; generate/summarize/extract/classify/rewrite/converse over NL; debugging refusals/cutoffs/streaming/tool-calls/tokens).\nSKIP only when another provider is being worked on (overrides all triggers): OpenAI/GPT/Gemini/Llama/Mistral/Cohere/Ollama named in the query; OR `grep -rE 'openai|langchain_openai|google.generativeai|genai|mistralai|cohere|ollama'` over the project hits (run this grep FIRST if no provider named — don't Read the file).\n- run: Launch and drive this project's app to see a change working. Use when asked to run, start, or screenshot the app, or to confirm a change works in the real app (not just tests). First looks for a project skill that already covers launching the app; otherwise falls back to built-in patterns per project type (CLI, server, TUI, Electron, browser-driven, library).\n- init: Initialize a new CLAUDE.md file with codebase documentation\n- review: Review a GitHub pull request; for your working diff use /code-review\n- security-review: Complete a security review of the pending changes on the current branch",
+    "isInitial": true,
+    "names": [
+      "deep-research",
+      "update-config",
+      "keybindings-help",
+      "verify",
+      "code-review",
+      "simplify",
+      "fewer-permission-prompts",
+      "loop",
+      "schedule",
+      "claude-api",
+      "run",
+      "init",
+      "review",
+      "security-review"
     ],
-    "addedNames": [
-      "claude.ai Airtable",
-      "claude.ai Kiwi flights search"
-    ],
-    "removedNames": [],
-    "type": "mcp_instructions_delta"
+    "skillCount": 14,
+    "type": "skill_listing"
   },
   "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
   "entrypoint": "claude-vscode",
   "gitBranch": "main",
   "isSidechain": false,
-  "parentUuid": "59ac56ae-25e7-4dfa-a24c-b2bf334f1261",
+  "parentUuid": "863e2251-1691-4d6a-88f9-6ef6a4b04fd8",
   "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
   "timestamp": "2026-07-03T17:24:41.815Z",
   "type": "attachment",
   "userType": "external",
-  "uuid": "863e2251-1691-4d6a-88f9-6ef6a4b04fd8",
+  "uuid": "3e5167fd-6c56-4d86-8e8a-fec913b07c4d",
   "version": "2.1.197"
 }

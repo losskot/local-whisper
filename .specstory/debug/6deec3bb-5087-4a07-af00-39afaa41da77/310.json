@@ -1,0 +1,51 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "sdk-ts",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "id": "toolu_bdrk_01KFTy3SBQMraFLFJtWZRw2R",
+        "input": {
+          "file_path": "/Users/vitaliy/Documents/GitHub/local-whisper/AGENTS.md"
+        },
+        "name": "Read",
+        "type": "tool_use"
+      }
+    ],
+    "id": "msg_bdrk_01D74HF4PN2JqBZ8rYUSEWP4",
+    "model": "claude-sonnet-4-6",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_5m_input_tokens": 10091
+      },
+      "cache_creation_input_tokens": 10091,
+      "cache_read_input_tokens": 136391,
+      "inference_geo": "",
+      "input_tokens": 3,
+      "iterations": [],
+      "output_tokens": 111,
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "3b8030e4-5bdc-4489-85ad-ad33b0b5e2ee",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "slug": "purring-cooking-otter",
+  "timestamp": "2026-07-06T02:29:00.711Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "d81abbff-a101-4063-9bb0-7c83248ed3f7",
+  "version": "2.1.112"
+}

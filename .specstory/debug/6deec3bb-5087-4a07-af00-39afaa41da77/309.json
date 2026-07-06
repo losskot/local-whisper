@@ -1,0 +1,48 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "sdk-ts",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "signature": "Eq8CCmcIDxABGAIqQAqqSi34RsYknK5WFOTE1DzVvH4S2Q5x+r2R53PB3xyv3sX0VqiL1TzhhZcdRFkB7Lsrk1/gg0D1f/9jLunBacIyEWNsYXVkZS1zb25uZXQtNC02OABCCHRoaW5raW5nEgyA7qEQKdOWqlKHz4YaDDChHGFGQ0BtndqJ/iIwApkrHEMH07uJmPQJ13Do162IOrTbYVoDV3xPua3YzYufOw9D3Zx3OUDkU9A9iD05KnZ6TC8x1pxlemuDrvqGyZjRUhy+kbdP6AdXiD5jT5MxRSdSLLIjy1d/dwR+KHDFfsNw6DfsltqkCGouMg1o+9+cYiBtnbEYZ7HE+37kp5k0gdqNKvJTXyD/Uv1QlFtdb2Vi0c7EhSMMr5M35m+GV/zHIADThKCVGAE=",
+        "thinking": "Let me read the current AGENTS.md to see exactly where to insert the new section, then make the edit.",
+        "type": "thinking"
+      }
+    ],
+    "id": "msg_bdrk_01D74HF4PN2JqBZ8rYUSEWP4",
+    "model": "claude-sonnet-4-6",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_5m_input_tokens": 10091
+      },
+      "cache_creation_input_tokens": 10091,
+      "cache_read_input_tokens": 136391,
+      "inference_geo": "",
+      "input_tokens": 3,
+      "iterations": [],
+      "output_tokens": 111,
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "59b08a27-22d3-4fb3-9a3a-0db690252e45",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "slug": "purring-cooking-otter",
+  "timestamp": "2026-07-06T02:29:00.255Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "3b8030e4-5bdc-4489-85ad-ad33b0b5e2ee",
+  "version": "2.1.112"
+}

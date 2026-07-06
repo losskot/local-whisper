@@ -1,0 +1,28 @@
+{
+  "compactMetadata": {
+    "durationMs": 125072,
+    "postTokens": 6089,
+    "preCompactDiscoveredTools": [
+      "TodoWrite"
+    ],
+    "preTokens": 230160,
+    "trigger": "auto"
+  },
+  "content": "Conversation compacted",
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "sdk-ts",
+  "gitBranch": "main",
+  "isMeta": false,
+  "isSidechain": false,
+  "level": "info",
+  "logicalParentUuid": "aa5091a8-31fa-4867-9b76-e3bba30ec523",
+  "parentUuid": null,
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "slug": "purring-cooking-otter",
+  "subtype": "compact_boundary",
+  "timestamp": "2026-07-06T02:28:55.845Z",
+  "type": "system",
+  "userType": "external",
+  "uuid": "96840cf3-1778-4fe6-91c3-2e52bf6dc21c",
+  "version": "2.1.112"
+}

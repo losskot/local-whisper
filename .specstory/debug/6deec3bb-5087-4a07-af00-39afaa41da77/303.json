@@ -1,0 +1,29 @@
+{
+  "attachment": {
+    "content": {
+      "file": {
+        "content": "{\n  \"permissions\": {\n    \"allow\": [\n      \"Bash(bd:*)\",\n      \"Bash(/Users/vitaliy/.local/bin/bd:*)\"\n    ]\n  }\n}\n",
+        "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/.claude/settings.local.json",
+        "numLines": 9,
+        "startLine": 1,
+        "totalLines": 9
+      },
+      "type": "text"
+    },
+    "displayPath": ".claude/settings.local.json",
+    "filename": "/Users/vitaliy/Documents/GitHub/local-whisper/.claude/settings.local.json",
+    "type": "file"
+  },
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "sdk-ts",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "parentUuid": "14151d7a-e2ad-4b40-accf-07536088f1ed",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "slug": "purring-cooking-otter",
+  "timestamp": "2026-07-06T02:28:55.519Z",
+  "type": "attachment",
+  "userType": "external",
+  "uuid": "546e9c3b-dd50-40be-bafd-61259f62a7b1",
+  "version": "2.1.112"
+}

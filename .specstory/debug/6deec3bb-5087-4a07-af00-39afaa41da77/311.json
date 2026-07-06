@@ -1,0 +1,32 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "sdk-ts",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "File unchanged since last read. The content from the earlier Read tool_result in this conversation is still current — refer to that instead of re-reading.",
+        "tool_use_id": "toolu_bdrk_01KFTy3SBQMraFLFJtWZRw2R",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "d81abbff-a101-4063-9bb0-7c83248ed3f7",
+  "promptId": "9a142558-96ff-44e0-8af7-50b6438c56b9",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "slug": "purring-cooking-otter",
+  "sourceToolAssistantUUID": "d81abbff-a101-4063-9bb0-7c83248ed3f7",
+  "timestamp": "2026-07-06T02:29:00.817Z",
+  "toolUseResult": {
+    "file": {
+      "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/AGENTS.md"
+    },
+    "type": "file_unchanged"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "54377cc2-4bf6-4a17-98c8-629b2811a8ff",
+  "version": "2.1.112"
+}

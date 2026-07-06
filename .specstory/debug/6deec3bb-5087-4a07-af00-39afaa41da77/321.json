@@ -1,0 +1,52 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "sdk-ts",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "id": "toolu_bdrk_01CFhzaBg8uhQkBjnTyDEdj1",
+        "input": {
+          "command": "git stash \u0026\u0026 git pull --rebase \u0026\u0026 git stash pop \u0026\u0026 git push",
+          "description": "Stash, pull rebase, pop, push"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "id": "msg_bdrk_01TS5wR1Bii4nUcVXmu1Ewit",
+    "model": "claude-sonnet-4-6",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_5m_input_tokens": 128
+      },
+      "cache_creation_input_tokens": 128,
+      "cache_read_input_tokens": 147950,
+      "inference_geo": "",
+      "input_tokens": 1,
+      "iterations": [],
+      "output_tokens": 95,
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "23fa4f93-eee4-4038-8ed2-206c850fc290",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "slug": "purring-cooking-otter",
+  "timestamp": "2026-07-06T02:29:46.195Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "e1602449-b7e7-4acd-8a85-a3a1c668eed0",
+  "version": "2.1.112"
+}

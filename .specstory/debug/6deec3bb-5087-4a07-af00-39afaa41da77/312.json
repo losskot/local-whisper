@@ -1,0 +1,54 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "sdk-ts",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "id": "toolu_bdrk_01CTA3fB9FJqrDJGr3rjtftU",
+        "input": {
+          "file_path": "/Users/vitaliy/Documents/GitHub/local-whisper/AGENTS.md",
+          "new_string": "## Development \u0026 Deployment\n\n### Deployment model (symlink — no copy needed)\n\n`~/.hammerspoon/init.lua` is a symlink pointing to `hammerspoon/init.lua` in this repo.\n**Editing the repo file IS deployment.** There is no copy or install step.\n\n```bash\nls -la ~/.hammerspoon/init.lua\n# → … -\u003e /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua\n```\n\n### Syntax validation (before every reload)\n\nUse Hammerspoon's own Lua 5.4 compiler via the `hs` IPC bridge — no external tool needed:\n\n```bash\nhs -c 'local f,e=loadfile(os.getenv(\"HOME\")..\"/Documents/GitHub/local-whisper/hammerspoon/init.lua\"); return f and \"SYNTAX OK\" or (\"ERR: \"..tostring(e))'\n```\n\n`loadfile()` compiles without executing — it is safe to call on a live config.\nExpected success output: `SYNTAX OK`\nOn error: `ERR: \u003cfile\u003e:\u003cline\u003e: \u003cmessage\u003e`\n\n### Live reload\n\n```bash\nhs -c \"hs.reload()\"\n```\n\nExpected output includes `\"Message port invalidated.\"` — this is **normal**; the Hammerspoon process restarts its IPC listener and the connection drops. Wait ~2s for reload to complete, then re-run the syntax check or test commands.\n\n### Lua 200-local-per-function hard ceiling\n\nLua 5.4 (Hammerspoon's runtime) enforces a **hard limit of 200 locals per function**. The top-level chunk of `init.lua` counts as one function. This limit is a compiler error — exceeding it prevents the file from loading at all.\n\n**Current count: ~191/200** — headroom is tight. Before adding any new top-level `local`, check the count:\n\n```bash\ngrep -c '^\\s*local ' hammerspoon/init.lua\n```\n\n**Mitigation already in place** — instead of adding bare top-level locals, group related state into existing tables:\n\n| Table | Contents |\n|-------|----------|\n| `PL`  | All pipeline/transcription state (`results`, `lang`, `nextChunk`, `nextSeg`, `total`, `done`, `finalizing`, `streamTimer`, `whisperActive`, `whisperQueue`, `watchdog`) |\n| `MC`  | Meeting-mode constants (`MEETING_PAUSE_SECS`, `MEETING_MAX_GAP`, etc.) |\n| `barState` | Menu bar animation state |\n\n**Rule**: Never add a new top-level `local` without first verifying the count stays ≤ 200. If at or near 200, group into an existing table or create a new one.\n\n## Testing \u0026 debugging",
+          "old_string": "## Testing \u0026 debugging",
+          "replace_all": false
+        },
+        "name": "Edit",
+        "type": "tool_use"
+      }
+    ],
+    "id": "msg_bdrk_01BSiUt8NoiSHRiGpoXbPYmH",
+    "model": "claude-sonnet-4-6",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_5m_input_tokens": 155
+      },
+      "cache_creation_input_tokens": 155,
+      "cache_read_input_tokens": 146482,
+      "inference_geo": "",
+      "input_tokens": 1,
+      "iterations": [],
+      "output_tokens": 784,
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "54377cc2-4bf6-4a17-98c8-629b2811a8ff",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "slug": "purring-cooking-otter",
+  "timestamp": "2026-07-06T02:29:17.065Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "dcbf8b1c-2574-4d9a-a7b1-f0ea0ed2a7c0",
+  "version": "2.1.112"
+}

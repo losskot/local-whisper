@@ -1,0 +1,28 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "sdk-ts",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "Exit code 128\nerror: cannot pull with rebase: You have unstaged changes.\nerror: Please commit or stash them.",
+        "is_error": true,
+        "tool_use_id": "toolu_bdrk_01Rc3uSXgCSa3weg8Yfqmu1x",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "bd5803f2-d7bf-43ba-bab3-9a2092c34eab",
+  "promptId": "9a142558-96ff-44e0-8af7-50b6438c56b9",
+  "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
+  "slug": "purring-cooking-otter",
+  "sourceToolAssistantUUID": "bd5803f2-d7bf-43ba-bab3-9a2092c34eab",
+  "timestamp": "2026-07-06T02:29:42.192Z",
+  "toolUseResult": "Error: Exit code 128\nerror: cannot pull with rebase: You have unstaged changes.\nerror: Please commit or stash them.",
+  "type": "user",
+  "userType": "external",
+  "uuid": "23fa4f93-eee4-4038-8ed2-206c850fc290",
+  "version": "2.1.112"
+}

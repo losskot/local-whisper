@@ -12,14 +12,15 @@
     "type": "mcp_instructions_delta"
   },
   "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
-  "entrypoint": "claude-vscode",
+  "entrypoint": "sdk-ts",
   "gitBranch": "main",
   "isSidechain": false,
-  "parentUuid": "59ac56ae-25e7-4dfa-a24c-b2bf334f1261",
+  "parentUuid": "c57c53fa-25e2-4fb2-bfe0-02d0eb637078",
   "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
-  "timestamp": "2026-07-03T17:24:41.815Z",
+  "slug": "purring-cooking-otter",
+  "timestamp": "2026-07-06T02:28:55.844Z",
   "type": "attachment",
   "userType": "external",
-  "uuid": "863e2251-1691-4d6a-88f9-6ef6a4b04fd8",
-  "version": "2.1.197"
+  "uuid": "59b08a27-22d3-4fb3-9a3a-0db690252e45",
+  "version": "2.1.112"
 }
