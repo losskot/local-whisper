@@ -1729,10 +1729,8 @@ end
 
 -- Fired every 3s during recording. Dispatches a segment when enough chunks
 -- have accumulated and the silence-aware split gives a meaningful group.
-local function restartFfmpegFromChunk(startN)
+local function doRestartFfmpegFromChunk(startN)
     if not isRecording then return end
-    log("ffmpeg-stall: restarting ffmpeg from chunk " .. startN)
-    if ffmpegTask and ffmpegTask:isRunning() then ffmpegTask:interrupt() end
     ffmpegTask = hs.task.new(FFMPEG, function(code, out, err)
         log("recording: ffmpeg exited " .. tostring(code) .. " (restarted instance)")
     end, {
@@ -1745,7 +1743,47 @@ local function restartFfmpegFromChunk(startN)
     ffmpegTask:setEnvironment({ HOME = os.getenv("HOME"), PATH = os.getenv("PATH") or "/usr/bin:/bin" })
     ffmpegTask:start()
     PL.ffmpegStallTicks = 0
-    PL.lastChunkSeen    = startN  -- reset baseline after restart
+    PL.lastChunkSeen    = startN
+end
+
+local function restartFfmpegFromChunk(startN)
+    if not isRecording then return end
+    log("ffmpeg-stall: restarting ffmpeg from chunk " .. startN)
+    -- Kill current (stalled) ffmpeg first
+    if ffmpegTask and ffmpegTask:isRunning() then ffmpegTask:interrupt() end
+    ffmpegTask = nil
+
+    -- Play back the last 2 recorded chunks so user knows where to continue
+    local allChunks = getChunkFiles()
+    local nChunks   = #allChunks
+    local replayList = WHISPER_TMP .. "/stall_replay.txt"
+    local replayWav  = WHISPER_TMP .. "/stall_replay.wav"
+    local startIdx = math.max(1, nChunks - 1)
+    local f = io.open(replayList, "w")
+    if f then
+        for i = startIdx, nChunks do
+            f:write("file '" .. allChunks[i] .. "'\n")
+        end
+        f:close()
+        local concatTask = hs.task.new(FFMPEG, function(code)
+            if code == 0 and isRecording then
+                local snd = hs.sound.getByFile(replayWav)
+                if snd then
+                    snd:volume(1.0)
+                    snd:play()
+                    -- Give ~2.5s for playback then restart recording
+                    hs.timer.doAfter(2.5, function() doRestartFfmpegFromChunk(startN) end)
+                else
+                    doRestartFfmpegFromChunk(startN)
+                end
+            else
+                doRestartFfmpegFromChunk(startN)
+            end
+        end, { "-y", "-f", "concat", "-safe", "0", "-i", replayList, "-c", "copy", replayWav })
+        concatTask:start()
+    else
+        doRestartFfmpegFromChunk(startN)
+    end
 end
 
 local function streamCheckAndDispatch()
