@@ -667,6 +667,12 @@ local overlay = nil
 local btnColor = { red = 0.5, green = 0.8, blue = 1.0, alpha = 1.0 }
 local btnHover = { red = 0.7, green = 0.9, blue = 1.0, alpha = 1.0 }
 
+-- Forward declaration: the streaming/finalization pipeline state table is
+-- populated in the State section below, but hideOverlay()/forceHideOverlay()
+-- (defined just after this) need to disarm PL.watchdog, so PL must be in scope
+-- here. Same forward-declare pattern as `overlay` above.
+local PL
+
 -- Element indices: 1=bg, 2=lang, 3=sep1, 4=output, 5=sep2, 6=enter, 7=sep3, 8=model, 9=sep4, 10=refine, 11=text, 12=dot, 13=timer, 14=close, 15=bar_bg, 16=bar_rec, 17=bar_txn
 local EL = { lang = 2, output = 4, enter = 6, model = 8, refine = 10, text = 11, dot = 12, timer = 13, close = 14, bar_bg = 15, bar_rec = 16, bar_txn = 17 }
 
@@ -907,14 +913,38 @@ local function showOverlay()
     overlay:show()
 end
 
+-- Disarm the finalize/refine watchdog (item #3). Called whenever the overlay is
+-- taken down so a stale timer can't fire after we've already finished.
+local function cancelWatchdog()
+    if PL and PL.watchdog then PL.watchdog:stop(); PL.watchdog = nil end
+end
+
 local function hideOverlay()
     if overlayPinned then return end  -- pinned overlay stays open
+    cancelWatchdog()
     if overlay then overlay:delete(); overlay = nil end
 end
 
 local function forceHideOverlay()
     overlayPinned = false
+    cancelWatchdog()
     if overlay then overlay:delete(); overlay = nil end
+end
+
+-- Finalize/refine watchdog (code-review item #3). Once recording stops the
+-- overlay shows "Transcribing…" / "Refining…"; if the final transcription, an
+-- Ollama refine, or the text insertion wedges, nothing would ever take the
+-- overlay down and it hangs forever. armWatchdog() arms a no-progress timeout;
+-- it is re-armed on every completed segment (see onPipelineDone) so a genuinely
+-- long transcription is not cut off, and only fires when things truly stall.
+local WATCHDOG_SECS = 45
+local function armWatchdog()
+    cancelWatchdog()
+    PL.watchdog = hs.timer.doAfter(WATCHDOG_SECS, function()
+        PL.watchdog = nil
+        log("watchdog: finalize/refine stalled for " .. WATCHDOG_SECS .. "s — force-hiding overlay")
+        forceHideOverlay()
+    end)
 end
 
 local function setOverlayText(text)
@@ -936,15 +966,27 @@ local partialTimer = nil
 local partialBusy = false
 local lastChunkCount = 0
 
--- Streaming transcription pipeline state (reset each recording session)
-local pipelineResults    = {}     -- [seg_n] = text, filled as each segment completes
-local pipelineLang       = nil    -- first detected language across all segments
-local pipelineNextChunk  = 1      -- 1-based index of next chunk not yet claimed by pipeline
-local pipelineNextSeg    = 1      -- next segment number to assign (1-indexed)
-local pipelineTotal      = 0      -- total segments expected (fixed when recording stops)
-local pipelineDone       = 0      -- segments completed so far
-local pipelineFinalizing = false  -- true once we know the final total (recording stopped)
-local streamTimer        = nil    -- fires every 3s during recording to dispatch ready segments
+-- Streaming transcription pipeline state (reset each recording session).
+-- Grouped into one table to conserve main-chunk local slots (Lua caps a function
+-- at 200 locals and this chunk sits right at the ceiling). Fields formerly named
+-- pipelineResults, pipelineLang, ... streamTimer now live here as PL.results, etc.
+-- (PL itself is forward-declared up in the Overlay UI section.)
+PL = {
+    results     = {},     -- [seg_n] = text, filled as each segment completes
+    lang        = nil,    -- first detected language across all segments
+    nextChunk   = 1,      -- 1-based index of next chunk not yet claimed by pipeline
+    nextSeg     = 1,      -- next segment number to assign (1-indexed)
+    total       = 0,      -- total segments expected (fixed when recording stops)
+    done        = 0,      -- segments completed so far
+    finalizing  = false,  -- true once we know the final total (recording stopped)
+    streamTimer = nil,    -- fires every 3s during recording to dispatch ready segments
+    ffmpegStallTicks = 0,  -- # of consecutive 3s ticks with no new chunks (stall detector)
+    lastChunkSeen   = 0,   -- chunk count on last streamCheck tick
+    -- Concurrency + reliability state (added in the code-review pass):
+    whisperActive = 0,    -- # of whisper-cli hs.tasks running now (semaphore, item #1)
+    whisperQueue  = {},   -- FIFO of queued {bin,args,cb} awaiting a free whisper slot
+    watchdog      = nil,  -- timer that force-hides the overlay if finalize/refine hangs (#3)
+}
 
 -- Menu bar
 local menuBar = nil
@@ -999,7 +1041,7 @@ loadRecentDictations()
 --   and losing the whole dictation.
 --
 -- .snapshot()/.clear()/.salvage(): accepted segment text lives only in memory
---   (pipelineResults) until pipelineFinalize() inserts it. If finalization never
+--   (PL.results) until pipelineFinalize() inserts it. If finalization never
 --   runs (stop path aborts, insert throws, or Hammerspoon reloads mid-run) that
 --   text would be lost. So we snapshot accepted segments to disk as they
 --   complete, clear the snapshot once text is safely inserted, and salvage any
@@ -1017,8 +1059,8 @@ end
 
 function _whisperRecovery.snapshot()
     local parts = {}
-    for n = 1, (pipelineNextSeg - 1) do
-        local t = pipelineResults[n]
+    for n = 1, (PL.nextSeg - 1) do
+        local t = PL.results[n]
         if t and t ~= "" then table.insert(parts, t) end
     end
     if #parts == 0 then return end
@@ -1330,7 +1372,7 @@ function emergencyStop()
     isRecording = false
     if partialTimer then partialTimer:stop(); partialTimer = nil end
     if silenceTimer then silenceTimer:stop(); silenceTimer = nil end
-    if streamTimer  then streamTimer:stop();  streamTimer  = nil end
+    if PL.streamTimer  then PL.streamTimer:stop();  PL.streamTimer  = nil end
     stopRecordingIndicator()
     if ffmpegTask and ffmpegTask:isRunning() then ffmpegTask:interrupt() end
     ffmpegTask = nil
@@ -1342,6 +1384,49 @@ function emergencyStop()
     updateMenuBar()
     os.execute("killall whisper-cli 2>/dev/null")
     hs.notify.new({ title = "local-whisper", informativeText = "Stopped" }):send()
+end
+
+--------------------------------------------------------------------------------
+-- Whisper concurrency semaphore (code-review item #1)
+--------------------------------------------------------------------------------
+-- Root cause of the "whole system froze" hang: up to 5 whisper-cli processes
+-- (large-v3-turbo streaming segments + the final ones) ran at once, pegging the
+-- CPU hard enough to starve the audio subsystem — which is what made
+-- hs.sound.getByFile() return nil and left the overlay wedged. Capping how many
+-- whisper-cli processes run concurrently throttles the trigger, not just the
+-- symptom. All three whisper spawn sites go through startWhisper() below.
+
+local MAX_WHISPER = 2  -- max concurrent whisper-cli processes (reviewer suggested 2–3)
+
+-- Start queued jobs while a slot is free. Single-threaded (hs callbacks run on
+-- the main thread), so no locking needed.
+local function pumpWhisperQueue()
+    while PL.whisperActive < MAX_WHISPER and #PL.whisperQueue > 0 do
+        local job = table.remove(PL.whisperQueue, 1)
+        PL.whisperActive = PL.whisperActive + 1
+        local t = hs.task.new(WHISPER_BIN, function(code, out, err)
+            PL.whisperActive = math.max(0, PL.whisperActive - 1)  -- clamp: killall can fire late callbacks
+            local ok, e = pcall(job.cb, code, out, err)
+            if not ok then log("whisper: callback error: " .. tostring(e)) end
+            pumpWhisperQueue()
+        end, job.args)
+        if t then
+            t:start()
+        else
+            -- hs.task.new can return nil under resource pressure; free the slot
+            -- and let the caller's callback run so the pipeline doesn't stall.
+            PL.whisperActive = math.max(0, PL.whisperActive - 1)
+            log("whisper: hs.task.new returned nil, running callback with error code")
+            pcall(job.cb, -1, "", "")
+        end
+    end
+end
+
+-- Enqueue a whisper-cli run. cb receives (exitCode, stdout, stderr), same as a
+-- raw hs.task callback, so existing callbacks work unchanged.
+local function startWhisper(args, cb)
+    table.insert(PL.whisperQueue, { args = args, cb = cb })
+    pumpWhisperQueue()
 end
 
 --------------------------------------------------------------------------------
@@ -1381,7 +1466,7 @@ local function doPartialTranscribe()
         local whisperArgs = { "-m", getPartialModelPath(), "-f", batchWav, "-l", lang, "-nt", "--no-prints" }
         local promptArgs = getPromptArgs()
         for _, a in ipairs(promptArgs) do table.insert(whisperArgs, a) end
-        local whisperTask = hs.task.new(WHISPER_BIN, function(code2, out2)
+        startWhisper(whisperArgs, function(code2, out2)
             partialBusy = false
             lastChunkCount = completed
             if code2 ~= 0 or not isRecording then return end
@@ -1392,8 +1477,7 @@ local function doPartialTranscribe()
                 setOverlayText(display)
                 log("partial: " .. text)
             end
-        end, whisperArgs)
-        whisperTask:start()
+        end)
     end, { "-y", "-f", "concat", "-safe", "0", "-i", batchList, "-c", "copy", batchWav })
     concatTask:start()
 end
@@ -1482,6 +1566,7 @@ local function insertTranscribedText(text, detectedLang)
 
     -- Optional LLM refinement (async, skips short text and voice commands)
     if not isVoiceCommand and getRefineMode() and #text >= 50 then
+        armWatchdog()  -- Ollama refine can hang; keep the stall timer covering it
         setOverlayText("Refining...")
         refineWithOllama(text, function(refined)
             finishInsertion(refined, detectedLang)
@@ -1502,26 +1587,34 @@ end
 
 local function pipelineReset()
     _whisperRecovery.salvage()  -- rescue text from a prior session that never finalized
-    pipelineResults    = {}
-    pipelineLang       = nil
-    pipelineNextChunk  = 1
-    pipelineNextSeg    = 1
-    pipelineTotal      = 0
-    pipelineDone       = 0
-    pipelineFinalizing = false
+    PL.results    = {}
+    PL.lang       = nil
+    PL.nextChunk  = 1
+    PL.nextSeg    = 1
+    PL.total      = 0
+    PL.done       = 0
+    PL.finalizing = false
     barState.segChunks = {}
     barState.txnSecs   = 0
     barState.frozen    = false
+    -- Drop any queued whisper jobs from the prior session and clear the
+    -- semaphore. whisperActive is zeroed here (any in-flight tasks were just
+    -- killed via `killall whisper-cli`); the clamp in pumpWhisperQueue keeps
+    -- late-firing kill callbacks from driving the count negative.
+    PL.whisperQueue     = {}
+    PL.whisperActive    = 0
+    PL.ffmpegStallTicks = 0
+    PL.lastChunkSeen    = 0
 end
 
 local function pipelineFinalize()
     local parts = {}
-    for n = 1, pipelineTotal do
-        local t = pipelineResults[n] or ""
+    for n = 1, PL.total do
+        local t = PL.results[n] or ""
         if t ~= "" then table.insert(parts, t) end
     end
     local finalText = table.concat(parts, " "):gsub("^%s+", ""):gsub("%s+$", ""):gsub("%s+", " ")
-    log("pipeline: finalized " .. pipelineTotal .. " seg(s): '" .. finalText:sub(1, 120) .. "'")
+    log("pipeline: finalized " .. PL.total .. " seg(s): '" .. finalText:sub(1, 120) .. "'")
     if finalText == "" then
         if overlay then overlay[EL.bar_bg].fillColor={red=0.3,green=0.3,blue=0.3,alpha=0}; overlay[EL.bar_rec].fillColor={red=1,green=0.35,blue=0.15,alpha=0}; overlay[EL.bar_txn].fillColor={red=0.2,green=0.75,blue=1,alpha=0} end
         hideOverlay(); return
@@ -1532,21 +1625,22 @@ local function pipelineFinalize()
     hs.timer.doAfter(0.4, function()
         if overlay then overlay[EL.bar_bg].fillColor={red=0.3,green=0.3,blue=0.3,alpha=0}; overlay[EL.bar_rec].fillColor={red=1,green=0.35,blue=0.15,alpha=0}; overlay[EL.bar_txn].fillColor={red=0.2,green=0.75,blue=1,alpha=0} end
     end)
-    insertTranscribedText(finalText, pipelineLang)
+    insertTranscribedText(finalText, PL.lang)
 end
 
 local function onPipelineDone(n, text, detected)
-    pipelineResults[n] = text
+    PL.results[n] = text
     _whisperRecovery.snapshot()  -- persist accepted segments so a finalize failure can't lose them
-    if detected and not pipelineLang then pipelineLang = detected end
-    pipelineDone = pipelineDone + 1
+    if detected and not PL.lang then PL.lang = detected end
+    PL.done = PL.done + 1
     -- Advance transcription progress bar
     barState.txnSecs = barState.txnSecs + (barState.segChunks[n] or 0)
-    log("pipeline: seg " .. n .. " complete (done=" .. pipelineDone .. "/" .. pipelineTotal .. ", txnSecs=" .. barState.txnSecs .. ")")
+    log("pipeline: seg " .. n .. " complete (done=" .. PL.done .. "/" .. PL.total .. ", txnSecs=" .. barState.txnSecs .. ")")
     if overlay then updateProgressBar() end
-    if pipelineFinalizing then
-        local left = pipelineTotal - pipelineDone
+    if PL.finalizing then
+        local left = PL.total - PL.done
         if left > 0 then
+            armWatchdog()  -- progress made; reset the no-progress stall timer
             setOverlayText(string.format("Transcribing... (%d left)", left))
         else
             pipelineFinalize()
@@ -1565,7 +1659,7 @@ local function dispatchSegment(segN, chunkGroup)
     -- Previous segment text gives Whisper decoder context so it doesn't lose
     -- meaning or mis-capitalize at segment boundaries.
     local userPrompt = readFile(PROMPT_FILE):gsub("%s+$", "")
-    local prevText   = (pipelineResults[segN - 1] or ""):sub(-300)  -- last ~300 chars fits ~60 tokens
+    local prevText   = (PL.results[segN - 1] or ""):sub(-300)  -- last ~300 chars fits ~60 tokens
     local combined   = ""
     if userPrompt ~= "" and prevText ~= "" then
         combined = userPrompt .. " " .. prevText
@@ -1613,21 +1707,21 @@ local function dispatchSegment(segN, chunkGroup)
         if lang == "auto" then
             local args = { "-m", getModelPath(), "-f", segWav, "-l", "auto", "-nt" }
             for _, a in ipairs(promptArgs) do table.insert(args, a) end
-            hs.task.new(WHISPER_BIN, function(code2, out2, err2)
+            startWhisper(args, function(code2, out2, err2)
                 log("pipeline: seg " .. segN .. " whisper(auto) exit=" .. tostring(code2))
                 if code2 ~= 0 then onPipelineDone(segN, "", nil); return end
                 local detected = (err2 or ""):match("auto%-detected language:%s*(%w+)")
                 log("pipeline: seg " .. segN .. " auto-detected: " .. tostring(detected))
                 onWhisperDone(out2 or "", detected)
-            end, args):start()
+            end)
         else
             local args = { "-m", getModelPath(), "-f", segWav, "-l", lang, "-nt", "--no-prints" }
             for _, a in ipairs(promptArgs) do table.insert(args, a) end
-            hs.task.new(WHISPER_BIN, function(code2, out2)
+            startWhisper(args, function(code2, out2)
                 log("pipeline: seg " .. segN .. " whisper(" .. lang .. ") exit=" .. tostring(code2))
                 if code2 ~= 0 then onPipelineDone(segN, "", nil); return end
                 onWhisperDone(out2 or "", lang)
-            end, args):start()
+            end)
         end
     end, { "-y", "-f", "concat", "-safe", "0", "-i", concatFile, "-c", "copy", segWav })
     concatTask:start()
@@ -1635,14 +1729,47 @@ end
 
 -- Fired every 3s during recording. Dispatches a segment when enough chunks
 -- have accumulated and the silence-aware split gives a meaningful group.
+local function restartFfmpegFromChunk(startN)
+    if not isRecording then return end
+    log("ffmpeg-stall: restarting ffmpeg from chunk " .. startN)
+    if ffmpegTask and ffmpegTask:isRunning() then ffmpegTask:interrupt() end
+    ffmpegTask = hs.task.new(FFMPEG, function(code, out, err)
+        log("recording: ffmpeg exited " .. tostring(code) .. " (restarted instance)")
+    end, {
+        "-f", "avfoundation", "-i", AUDIO_DEVICE,
+        "-ac", "1", "-ar", "16000",
+        "-f", "segment", "-segment_time", "1", "-segment_format", "wav",
+        "-segment_start_number", tostring(startN),
+        CHUNK_DIR .. "/chunk_%03d.wav"
+    })
+    ffmpegTask:setEnvironment({ HOME = os.getenv("HOME"), PATH = os.getenv("PATH") or "/usr/bin:/bin" })
+    ffmpegTask:start()
+    PL.ffmpegStallTicks = 0
+    PL.lastChunkSeen    = startN  -- reset baseline after restart
+end
+
 local function streamCheckAndDispatch()
     if not isRecording then return end
     local allChunks = getChunkFiles()
+    -- Stall detector: if chunk count hasn't grown in 2 consecutive ticks (6s), restart ffmpeg
+    local currentCount = #allChunks
+    if currentCount <= PL.lastChunkSeen then
+        PL.ffmpegStallTicks = PL.ffmpegStallTicks + 1
+        if PL.ffmpegStallTicks >= 2 then
+            log("ffmpeg-stall: no new chunks for " .. (PL.ffmpegStallTicks * 3) .. "s (stuck at " .. currentCount .. ") — restarting")
+            _whisperRecovery.play("/System/Library/Sounds/Basso.aiff")
+            restartFfmpegFromChunk(currentCount)
+            return
+        end
+    else
+        PL.ffmpegStallTicks = 0
+        PL.lastChunkSeen    = currentCount
+    end
     local safeCount = #allChunks - 2  -- leave last 2 chunks (still being written)
-    if safeCount < pipelineNextChunk + 25 - 2 then return end
+    if safeCount < PL.nextChunk + 25 - 2 then return end
 
     local candidates = {}
-    for j = pipelineNextChunk, safeCount do
+    for j = PL.nextChunk, safeCount do
         table.insert(candidates, allChunks[j])
     end
     if #candidates < 25 then return end
@@ -1651,68 +1778,82 @@ local function streamCheckAndDispatch()
     local firstGroup = groups[1]
     if not firstGroup or #firstGroup < 15 then return end  -- too short to bother
 
-    local segN = pipelineNextSeg
-    pipelineNextSeg    = pipelineNextSeg    + 1
-    pipelineNextChunk  = pipelineNextChunk  + #firstGroup
+    local segN = PL.nextSeg
+    PL.nextSeg    = PL.nextSeg    + 1
+    PL.nextChunk  = PL.nextChunk  + #firstGroup
     log("stream: dispatching seg " .. segN .. " (" .. #firstGroup .. " chunks, live during recording)")
     dispatchSegment(segN, firstGroup)
 end
 
 local function doFinalTranscription()
-    if streamTimer then streamTimer:stop(); streamTimer = nil end
+    if PL.streamTimer then PL.streamTimer:stop(); PL.streamTimer = nil end
 
-    local allChunks = getChunkFiles()
-    log("final: START — total chunks=" .. #allChunks
-        .. ", streamed=" .. (pipelineNextSeg - 1) .. " segs"
-        .. " (next unclaimed chunk idx=" .. pipelineNextChunk .. ")")
+    -- Arm the stall watchdog for the whole finalize→refine→insert path (item #3).
+    armWatchdog()
 
-    -- Build remaining chunks not yet claimed by the streaming pipeline
-    local remaining = {}
-    for j = pipelineNextChunk, #allChunks do
-        table.insert(remaining, allChunks[j])
-    end
+    -- Body wrapped in pcall (item #2): if getChunkFiles()/splitAtSilence()/etc.
+    -- throws, the overlay would otherwise be stranded on "Transcribing…" forever.
+    -- On error we log and force the overlay down. Accepted segment text is already
+    -- persisted by _whisperRecovery.snapshot(), so a throw here doesn't lose text.
+    local ok, err = pcall(function()
+        local allChunks = getChunkFiles()
+        log("final: START — total chunks=" .. #allChunks
+            .. ", streamed=" .. (PL.nextSeg - 1) .. " segs"
+            .. " (next unclaimed chunk idx=" .. PL.nextChunk .. ")")
 
-    if pipelineNextSeg == 1 and #remaining < 2 then
-        log("final: not enough chunks, skipping")
-        hideOverlay()
-        return
-    end
-
-    setOverlayText("Transcribing...")
-
-    -- Dispatch remaining chunks as final pipeline segments
-    if #remaining >= 2 then
-        local finalGroups = splitAtSilence(remaining, 25)
-        for _, grp in ipairs(finalGroups) do
-            local gfirst = grp[1]:match("([^/]+)$") or grp[1]
-            local glast  = grp[#grp]:match("([^/]+)$") or grp[#grp]
-            local segN = pipelineNextSeg
-            pipelineNextSeg   = pipelineNextSeg   + 1
-            pipelineNextChunk = pipelineNextChunk + #grp
-            log("final: dispatching seg " .. segN .. " → " .. #grp .. " chunks (" .. gfirst .. " … " .. glast .. ")")
-            dispatchSegment(segN, grp)
+        -- Build remaining chunks not yet claimed by the streaming pipeline
+        local remaining = {}
+        for j = PL.nextChunk, #allChunks do
+            table.insert(remaining, allChunks[j])
         end
-    end
 
-    -- Fix the total and start finalization mode
-    pipelineTotal      = pipelineNextSeg - 1
-    pipelineFinalizing = true
-    log("final: pipelineTotal=" .. pipelineTotal .. ", pipelineDone=" .. pipelineDone)
+        if PL.nextSeg == 1 and #remaining < 2 then
+            log("final: not enough chunks, skipping")
+            hideOverlay()
+            return
+        end
 
-    if pipelineTotal == 0 then
-        log("final: no segments at all, skipping")
-        hideOverlay(); return
-    end
+        setOverlayText("Transcribing...")
 
-    -- Update overlay with pending count (stream segs may still be running)
-    local left = pipelineTotal - pipelineDone
-    if left > 1 then
-        setOverlayText(string.format("Transcribing... (%d left)", left))
-    end
+        -- Dispatch remaining chunks as final pipeline segments
+        if #remaining >= 2 then
+            local finalGroups = splitAtSilence(remaining, 25)
+            for _, grp in ipairs(finalGroups) do
+                local gfirst = grp[1]:match("([^/]+)$") or grp[1]
+                local glast  = grp[#grp]:match("([^/]+)$") or grp[#grp]
+                local segN = PL.nextSeg
+                PL.nextSeg   = PL.nextSeg   + 1
+                PL.nextChunk = PL.nextChunk + #grp
+                log("final: dispatching seg " .. segN .. " → " .. #grp .. " chunks (" .. gfirst .. " … " .. glast .. ")")
+                dispatchSegment(segN, grp)
+            end
+        end
 
-    -- Edge case: all streaming segs completed before recording stopped
-    if pipelineDone >= pipelineTotal then
-        pipelineFinalize()
+        -- Fix the total and start finalization mode
+        PL.total      = PL.nextSeg - 1
+        PL.finalizing = true
+        log("final: PL.total=" .. PL.total .. ", PL.done=" .. PL.done)
+
+        if PL.total == 0 then
+            log("final: no segments at all, skipping")
+            hideOverlay(); return
+        end
+
+        -- Update overlay with pending count (stream segs may still be running)
+        local left = PL.total - PL.done
+        if left > 1 then
+            setOverlayText(string.format("Transcribing... (%d left)", left))
+        end
+
+        -- Edge case: all streaming segs completed before recording stopped
+        if PL.done >= PL.total then
+            pipelineFinalize()
+        end
+    end)
+
+    if not ok then
+        log("final: ERROR in doFinalTranscription — " .. tostring(err))
+        hideOverlay()
     end
 end
 
@@ -1770,7 +1911,18 @@ local function startActualRecording()
     isRecording = true
     log("recording: start")
 
-    os.execute("rm -rf '" .. CHUNK_DIR .. "'")
+    -- Preserve the previous session's raw chunks instead of deleting them
+    -- outright (code-review item #5). A prior incident: a session froze before
+    -- finalizing, and the very next recording's blind `rm -rf` wiped its
+    -- unprocessed chunks before anyone noticed — losing audio that was still
+    -- fully recoverable on disk. Rotating into one generation of backup means a
+    -- session that fails to finalize survives through the *next* recording too,
+    -- giving a window to notice and recover before it's finally purged.
+    local prevChunkDir = CHUNK_DIR .. "_prev"
+    os.execute("rm -rf '" .. prevChunkDir .. "'")  -- drop the backup from 2 sessions ago
+    if hs.fs.attributes(CHUNK_DIR) then
+        os.execute("mv '" .. CHUNK_DIR .. "' '" .. prevChunkDir .. "'")
+    end
     os.execute("mkdir -p '" .. CHUNK_DIR .. "'")
 
     captureActiveApp()
@@ -1801,8 +1953,8 @@ local function startActualRecording()
 
     -- Reset streaming pipeline state for this recording session
     pipelineReset()
-    if streamTimer then streamTimer:stop(); streamTimer = nil end
-    streamTimer = hs.timer.doEvery(3, streamCheckAndDispatch)
+    if PL.streamTimer then PL.streamTimer:stop(); PL.streamTimer = nil end
+    PL.streamTimer = hs.timer.doEvery(3, streamCheckAndDispatch)
 
     -- Poll until first chunk exists on disk → audio is truly flowing → play Pop
     -- Uses recursive doAfter (not doEvery) to avoid stop-within-callback issues.
@@ -1923,7 +2075,7 @@ stopRecording = function()
 
     if partialTimer then partialTimer:stop(); partialTimer = nil end
     if silenceTimer then silenceTimer:stop(); silenceTimer = nil end
-    if streamTimer then streamTimer:stop(); streamTimer = nil end
+    if PL.streamTimer then PL.streamTimer:stop(); PL.streamTimer = nil end
     partialBusy = false
     silentChunkCount = 0
     lastCheckedChunk = 0
@@ -1999,14 +2151,19 @@ end)
 -- Meeting mode
 --------------------------------------------------------------------------------
 
-local MEETINGS_DIR = CONFIG_DIR .. "/meetings"
-local MEETING_CHUNK_SECONDS = 8                       -- step between window starts
-local MEETING_OVERLAP_SECONDS = 4                     -- audio reused at the head of each window for context
-local MEETING_TRANSCRIBE_POLL_SECONDS = 2
-local MEETING_WINDOW_TIMEOUT_SECONDS = 60             -- watchdog: kill task if it runs longer than this
-local MEETING_PCM_BYTES_PER_SEC = 16000 * 2           -- 16 kHz, mono, 16-bit
-local MEETING_AGGREGATE_NAME = "local-whisper Output"
-local MEETING_HELPER_BIN = CONFIG_DIR .. "/bin/aggregate-audio"
+-- Meeting-mode constants, grouped into one table to conserve main-chunk local
+-- slots (Lua's 200-per-function cap). Formerly MC.dir, MC.chunkSecs,
+-- ... MC.helperBin; now MC.dir, MC.chunkSecs, ... MC.helperBin.
+local MC = {
+    dir             = CONFIG_DIR .. "/meetings",
+    chunkSecs       = 8,                    -- step between window starts
+    overlapSecs     = 4,                    -- audio reused at the head of each window for context
+    transcribePoll  = 2,
+    windowTimeout   = 60,                   -- watchdog: kill task if it runs longer than this
+    pcmBytesPerSec  = 16000 * 2,            -- 16 kHz, mono, 16-bit
+    aggregateName   = "local-whisper Output",
+    helperBin       = CONFIG_DIR .. "/bin/aggregate-audio",
+}
 -- meetingRecording and meetingStartTime are forward-declared before buildMenuBarMenu
 local meetingFfmpegTask = nil
 local meetingChunkDir = WHISPER_TMP .. "/meeting_chunks"
@@ -2035,11 +2192,11 @@ local saveMeetingOutput
 
 -- Run the aggregate-audio helper synchronously; returns (stdout, exitCode).
 local function runAudioHelper(...)
-    if not hs.fs.attributes(MEETING_HELPER_BIN) then return nil, -1 end
+    if not hs.fs.attributes(MC.helperBin) then return nil, -1 end
     local args = { ... }
     local quoted = {}
     for _, a in ipairs(args) do table.insert(quoted, "'" .. tostring(a):gsub("'", "'\\''") .. "'") end
-    local cmd = "'" .. MEETING_HELPER_BIN .. "' " .. table.concat(quoted, " ")
+    local cmd = "'" .. MC.helperBin .. "' " .. table.concat(quoted, " ")
     local out, ok, _, code = hs.execute(cmd)
     if out then out = out:gsub("%s+$", "") end
     if ok then return out, 0 end
@@ -2049,7 +2206,7 @@ end
 -- Check that everything meeting mode needs is in place.
 local function hasBlackHole()
     if not hs.audiodevice.findInputByName("BlackHole 2ch") then return false end
-    if not hs.fs.attributes(MEETING_HELPER_BIN) then return false end
+    if not hs.fs.attributes(MC.helperBin) then return false end
     return true
 end
 
@@ -2143,7 +2300,7 @@ end
 -- aggregate, a previous meeting got stuck and never restored. Drop us
 -- onto a sensible fallback so the user has audible sound at startup.
 local function recoverIfStrandedOnAggregate()
-    if not hs.fs.attributes(MEETING_HELPER_BIN) then return end
+    if not hs.fs.attributes(MC.helperBin) then return end
     local prior = runAudioHelper("default-uid")
     if prior ~= "com.local-whisper.aggregate-output" then return end
     local fallback = pickFallbackOutput()
@@ -2317,7 +2474,7 @@ local function meetingNotepadHTML(meetingTitle)
         <textarea id="notes" placeholder="Type your meeting notes here...&#10;&#10;Tips:&#10;- Key decisions&#10;- Action items&#10;- Questions to follow up"></textarea>
     </div>
     <div class="panel" id="panel-transcript">
-        <div class="transcript-empty" id="transcript-empty">Listening... first transcript chunk should appear in about ]] .. tostring(MEETING_CHUNK_SECONDS) .. [[ seconds.</div>
+        <div class="transcript-empty" id="transcript-empty">Listening... first transcript chunk should appear in about ]] .. tostring(MC.chunkSecs) .. [[ seconds.</div>
         <div id="transcript"></div>
     </div>
     <div class="status" id="status">Recording from BlackHole 2ch... waiting for first transcript chunk.</div>
@@ -2479,12 +2636,12 @@ local function maybeFinalizeMeetingSave()
 end
 
 -- Bounds (in seconds) of the Nth transcription window. Windows after the
--- first start MEETING_OVERLAP_SECONDS earlier than the previous one ended,
+-- first start MC.overlapSecs earlier than the previous one ended,
 -- giving whisper context across word boundaries.
 local function meetingWindowBounds(idx)
-    if idx == 1 then return 0, MEETING_CHUNK_SECONDS end
-    local startSec = MEETING_CHUNK_SECONDS * (idx - 1) - MEETING_OVERLAP_SECONDS
-    local endSec   = MEETING_CHUNK_SECONDS * idx
+    if idx == 1 then return 0, MC.chunkSecs end
+    local startSec = MC.chunkSecs * (idx - 1) - MC.overlapSecs
+    local endSec   = MC.chunkSecs * idx
     return startSec, endSec
 end
 
@@ -2547,7 +2704,7 @@ sliceAndTranscribeWindow = function(idx, startSec, endSec)
     local windowPath = string.format("%s/window_%04d.wav", meetingChunkDir, idx)
     local outPrefix  = string.format("%s/window_%04d", meetingChunkDir, idx)
     local outTxtPath = outPrefix .. ".txt"
-    local startLabelSec = MEETING_CHUNK_SECONDS * (idx - 1)
+    local startLabelSec = MC.chunkSecs * (idx - 1)
     local timeStr = string.format("%d:%02d",
         math.floor(startLabelSec / 60), startLabelSec % 60)
 
@@ -2624,9 +2781,9 @@ sliceAndTranscribeWindow = function(idx, startSec, endSec)
     -- Watchdog: if a window's pipeline runs longer than the timeout (whisper
     -- hangs, OS-level pipe stuck, whatever), kill it and release the lock so
     -- subsequent windows aren't blocked forever.
-    watchdog = hs.timer.doAfter(MEETING_WINDOW_TIMEOUT_SECONDS, function()
+    watchdog = hs.timer.doAfter(MC.windowTimeout, function()
         if released then return end
-        log("meeting: window " .. idx .. " timed out after " .. MEETING_WINDOW_TIMEOUT_SECONDS .. "s, killing")
+        log("meeting: window " .. idx .. " timed out after " .. MC.windowTimeout .. "s, killing")
         if task and task:isRunning() then task:terminate() end
         release("watchdog timeout")
     end)
@@ -2649,7 +2806,7 @@ local function emitReadyWindows()
     if not meetingRecording and not meetingStopping then return end
     local attr = hs.fs.attributes(meetingPcmPath)
     if not attr or attr.size <= 0 then return end
-    local recordedSec = attr.size / MEETING_PCM_BYTES_PER_SEC
+    local recordedSec = attr.size / MC.pcmBytesPerSec
     local startSec, endSec = meetingWindowBounds(meetingNextWindowIdx)
     while recordedSec >= endSec do
         log(string.format("meeting: enqueue window %d [%.1f, %.1f] (recorded %.1fs, queue=%d, processing=%s)",
@@ -2668,7 +2825,7 @@ local function emitFinalPartialWindow()
     meetingStopFlushed = true
     local attr = hs.fs.attributes(meetingPcmPath)
     if not attr or attr.size <= 0 then return end
-    local recordedSec = attr.size / MEETING_PCM_BYTES_PER_SEC
+    local recordedSec = attr.size / MC.pcmBytesPerSec
     local startSec, _ = meetingWindowBounds(meetingNextWindowIdx)
     if recordedSec - startSec < 1.0 then return end  -- skip tail under 1s
     enqueueWindow(meetingNextWindowIdx, startSec, recordedSec)
@@ -2678,9 +2835,9 @@ end
 
 -- Save meeting output as markdown
 saveMeetingOutput = function(notes, callback)
-    os.execute("mkdir -p '" .. MEETINGS_DIR .. "'")
+    os.execute("mkdir -p '" .. MC.dir .. "'")
     local filename = os.date("%Y-%m-%d-%H%M") .. ".md"
-    local filepath = MEETINGS_DIR .. "/" .. filename
+    local filepath = MC.dir .. "/" .. filename
 
     -- Build transcript text
     local transcriptText = ""
@@ -2816,7 +2973,7 @@ startMeeting = function()
     meetingFfmpegTask:start()
 
     -- Periodically slice ready overlapping windows out of the growing PCM
-    meetingTranscribeTimer = hs.timer.doEvery(MEETING_TRANSCRIBE_POLL_SECONDS, emitReadyWindows)
+    meetingTranscribeTimer = hs.timer.doEvery(MC.transcribePoll, emitReadyWindows)
     if meetingControlTimer then meetingControlTimer:stop(); meetingControlTimer = nil end
     meetingControlTimer = hs.timer.doEvery(0.5, pollMeetingControls)
 
@@ -2895,7 +3052,7 @@ function _G.meetingDoctor()
     local attr = hs.fs.attributes(meetingPcmPath)
     add("recordingPcmBytes", attr and attr.size or 0)
     if attr and attr.size > 0 then
-        add("recordingPcmSeconds", string.format("%.1f", attr.size / MEETING_PCM_BYTES_PER_SEC))
+        add("recordingPcmSeconds", string.format("%.1f", attr.size / MC.pcmBytesPerSec))
     end
     return table.concat(lines, "\n")
 end
