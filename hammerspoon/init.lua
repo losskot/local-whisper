@@ -673,6 +673,10 @@ local btnHover = { red = 0.7, green = 0.9, blue = 1.0, alpha = 1.0 }
 -- here. Same forward-declare pattern as `overlay` above.
 local PL
 
+-- Forward declarations so createOverlay's mouse callback can reference these
+-- before their definitions (local functions are only visible after definition).
+local hideOverlay, forceHideOverlay
+
 -- Element indices: 1=bg, 2=lang, 3=sep1, 4=output, 5=sep2, 6=enter, 7=sep3, 8=model, 9=sep4, 10=refine, 11=text, 12=dot, 13=timer, 14=close, 15=bar_bg, 16=bar_rec, 17=bar_txn
 local EL = { lang = 2, output = 4, enter = 6, model = 8, refine = 10, text = 11, dot = 12, timer = 13, close = 14, bar_bg = 15, bar_rec = 16, bar_txn = 17 }
 
@@ -919,13 +923,13 @@ local function cancelWatchdog()
     if PL and PL.watchdog then PL.watchdog:stop(); PL.watchdog = nil end
 end
 
-local function hideOverlay()
+hideOverlay = function()
     if overlayPinned then return end  -- pinned overlay stays open
     cancelWatchdog()
     if overlay then overlay:delete(); overlay = nil end
 end
 
-local function forceHideOverlay()
+forceHideOverlay = function()
     overlayPinned = false
     cancelWatchdog()
     if overlay then overlay:delete(); overlay = nil end
