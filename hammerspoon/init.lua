@@ -339,7 +339,17 @@ local function getChunkFiles()
             table.insert(chunks, CHUNK_DIR .. "/" .. file)
         end
     end
-    table.sort(chunks)
+    -- Numeric sort (not lexicographic): ffmpeg's segment muxer pads to a
+    -- minimum of 3 digits but does NOT truncate past 999, so any recording
+    -- longer than ~16.6 minutes (chunk_1000.wav onward) produces filenames
+    -- whose string order no longer matches recording order ("chunk_1000.wav"
+    -- sorts before "chunk_999.wav"). A plain table.sort(chunks) would then
+    -- silently scramble/drop audio order for the rest of the session.
+    table.sort(chunks, function(a, b)
+        local na = tonumber(a:match("chunk_(%d+)%.wav$")) or 0
+        local nb = tonumber(b:match("chunk_(%d+)%.wav$")) or 0
+        return na < nb
+    end)
     return chunks
 end
 
@@ -1054,11 +1064,21 @@ loadRecentDictations()
 --------------------------------------------------------------------------------
 _whisperRecovery = { file = WHISPER_TMP .. "/last-session-recovery.txt" }
 
-function _whisperRecovery.play(path)
-    pcall(function()
+function _whisperRecovery.play(path, vol)
+    local ok, err = pcall(function()
         local snd = hs.sound.getByFile(path)
-        if snd then snd:play() end
+        if not snd then
+            log("sound: getByFile returned nil for " .. path)
+            return
+        end
+        snd:volume(vol or 1.0)
+        if snd:play() == false then
+            log("sound: play() returned false for " .. path)
+        end
     end)
+    if not ok then
+        log("sound: play() threw for " .. path .. " -- " .. tostring(err))
+    end
 end
 
 function _whisperRecovery.snapshot()
@@ -2034,17 +2054,18 @@ end
 
 local tryWarmup  -- forward declaration for recursion
 
-local warmupTick = hs.sound.getByFile("/System/Library/Sounds/Tink.aiff")
-if warmupTick then warmupTick:volume(0.15) end
-
 tryWarmup = function()
     if not isWarmingUp then return end
 
     warmupAttempt = warmupAttempt + 1
     log("warmup: attempt " .. warmupAttempt .. "/" .. 10)
 
-    -- Subtle tick before each attempt
-    if warmupTick then warmupTick:play() end
+    -- Subtle tick before each attempt. Recreated fresh every call (via
+    -- _whisperRecovery.play) rather than reusing one hs.sound object created
+    -- once at file-load time -- a cached object can go silently dead after a
+    -- CoreAudio device change (e.g. Bluetooth mic connect/disconnect) and
+    -- then never play again for the rest of the Hammerspoon session.
+    _whisperRecovery.play("/System/Library/Sounds/Tink.aiff", 0.15)
     setOverlayText("... " .. warmupAttempt .. "/" .. 10)
 
     warmupTask = hs.task.new(FFMPEG,
@@ -3054,6 +3075,58 @@ end
 --------------------------------------------------------------------------------
 -- Startup
 --------------------------------------------------------------------------------
+
+-- Resolve the real repo folder behind ~/.hammerspoon/init.lua. debug.getinfo()
+-- reports the *symlink* path, not the repo path it points at, so this reads
+-- the symlink target with readlink first (falling back to debug.getinfo for
+-- the rare case init.lua isn't a symlink at all, e.g. a manual copy).
+local function resolveRepoHammerspoonDir()
+    local cfgPath = (hs.configdir or (HOME .. "/.hammerspoon")) .. "/init.lua"
+    local p = io.popen("readlink '" .. cfgPath .. "' 2>/dev/null")
+    local target = p and p:read("*l")
+    if p then p:close() end
+    local realPath = (target and target ~= "") and target or debug.getinfo(1, "S").source:gsub("^@", "")
+    return realPath:match("(.*/hammerspoon)/init%.lua$")
+end
+
+-- Log which commit is actually executing. init.lua is edited in place (the
+-- ~/.hammerspoon/init.lua symlink points straight at the repo file) but
+-- Hammerspoon only picks up changes on reload/relaunch -- a long-running
+-- Hammerspoon process keeps executing whatever was loaded at its last
+-- reload, even after the file on disk has since moved many commits ahead.
+-- If behavior feels stale/outdated, check this line in the log and compare
+-- against `git log -1` -- if it doesn't match, run hs.reload() (or restart
+-- Hammerspoon) to pick up the latest fixes.
+local repoHammerspoonDir = resolveRepoHammerspoonDir()
+if repoHammerspoonDir then
+    local gp = io.popen("git -C '" .. repoHammerspoonDir .. "' log -1 --format='%h %ci' 2>/dev/null")
+    local rev = gp and gp:read("*l")
+    if gp then gp:close() end
+    log("version: running from commit " .. (rev and rev ~= "" and rev or "unknown (not a git checkout?)"))
+else
+    log("version: could not resolve repo path (init.lua not a symlink into the repo?)")
+end
+
+-- Auto-reload the moment init.lua (or any file it needs) changes on disk, so
+-- there's never a gap between editing the repo file and Hammerspoon actually
+-- running it -- the exact "feels like an old version" confusion this is
+-- meant to close. Only meaningful because ~/.hammerspoon/init.lua is a
+-- symlink into the repo (see install.sh); watching the repo folder directly
+-- means it fires on git pulls/checkouts too, not just local edits.
+local configWatcher = nil
+if repoHammerspoonDir then
+    configWatcher = hs.pathwatcher.new(repoHammerspoonDir .. "/", function(paths)
+        for _, changed in ipairs(paths) do
+            if changed:match("init%.lua$") then
+                log("config: " .. changed .. " changed on disk -- reloading")
+                hs.reload()
+                return
+            end
+        end
+    end)
+    configWatcher:start()
+end
+
 
 -- Request mic permission (child processes via hs.task inherit it)
 if type(hs.microphoneState) == "function" and not hs.microphoneState() then

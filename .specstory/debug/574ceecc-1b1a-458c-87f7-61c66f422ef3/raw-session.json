@@ -1,6 +1,7 @@
 {
   "host": "",
   "sessionId": "574ceecc-1b1a-458c-87f7-61c66f422ef3",
+  "customTitle": "Португальский в списке языков",
   "version": 3,
   "requesterUsername": "",
   "responderUsername": "GitHub Copilot",
@@ -8,5 +9,491 @@
   "lastMessageDate": 0,
   "initialLocation": "panel",
   "isImported": false,
-  "requests": []
+  "requests": [
+    {
+      "requestId": "request_453c6149-1f38-4e36-a24f-64fb6bb9b74b",
+      "timestamp": 1780010095561,
+      "message": {
+        "text": "в списке языков все еще есть португальский",
+        "parts": [
+          {
+            "kind": "text"
+          }
+        ]
+      },
+      "response": [
+        {
+          "didStartServerIds": [],
+          "kind": "mcpServersStarting"
+        },
+        {
+          "generatedTitle": "Searched for Portuguese in init.lua file",
+          "id": "thinking_0",
+          "kind": "thinking",
+          "value": "The user is saying \"in the language list there is still Portuguese\" (in Russian). Let me look at the init.lua file to find where languages are listed and check for Portuguese."
+        },
+        {
+          "id": "",
+          "kind": "thinking",
+          "metadata": {
+            "stopReason": "other",
+            "vscodeReasoningDone": true
+          },
+          "value": ""
+        },
+        {
+          "invocationMessage": {
+            "supportAlertSyntax": false,
+            "supportHtml": false,
+            "supportThemeIcons": false,
+            "uris": {},
+            "value": "Searching for text `portuguese|pt|lang` (`**/hammerspoon/init.lua`)"
+          },
+          "isComplete": true,
+          "isConfirmed": {
+            "type": 1
+          },
+          "kind": "toolInvocationSerialized",
+          "pastTenseMessage": {
+            "supportAlertSyntax": false,
+            "supportHtml": false,
+            "supportThemeIcons": false,
+            "uris": {},
+            "value": "Searched for text `portuguese|pt|lang` (`**/hammerspoon/init.lua`), 20 results"
+          },
+          "resultDetails": [
+            {
+              "range": {
+                "endColumn": 38,
+                "endLineNumber": 21,
+                "startColumn": 36,
+                "startLineNumber": 21
+              },
+              "uri": {
+                "$mid": 1,
+                "external": "file:///Users/vitaliy/local-whisper/hammerspoon/init.lua",
+                "fsPath": "/Users/vitaliy/local-whisper/hammerspoon/init.lua",
+                "path": "/Users/vitaliy/local-whisper/hammerspoon/init.lua",
+                "scheme": "file"
+              }
+            },
+            {
+              "range": {
+                "endColumn": 70,
+                "endLineNumber": 21,
+                "startColumn": 68,
+                "startLineNumber": 21
+              },
+              "uri": {
+                "$mid": 1,
+                "external": "file:///Users/vitaliy/local-whisper/hammerspoon/init.lua",
+                "fsPath": "/Users/vitaliy/local-whisper/hammerspoon/init.lua",
+                "path": "/Users/vitaliy/local-whisper/hammerspoon/init.lua",
+                "scheme": "file"
+              }
+            },
+            {
+              "range": {
+                "endColumn": 11,
+                "endLineNumber": 70,
+                "startColumn": 7,
+                "startLineNumber": 70
+              },
+              "uri": {
+                "$mid": 1,
+                "external": "file:///Users/vitaliy/local-whisper/hammerspoon/init.lua",
+                "fsPath": "/Users/vitaliy/local-whisper/hammerspoon/init.lua",
+                "path": "/Users/vitaliy/local-whisper/hammerspoon/init.lua",
+                "scheme": "file"
+              }
+            },
+            {
+              "range": {
+                "endColumn": 39,
+                "endLineNumber": 70,
+                "startColumn": 35,
+                "startLineNumber": 70
+              },
+              "uri": {
+                "$mid": 1,
+                "external": "file:///Users/vitaliy/local-whisper/hammerspoon/init.lua",
+                "fsPath": "/Users/vitaliy/local-whisper/hammerspoon/init.lua",
+                "path": "/Users/vitaliy/local-whisper/hammerspoon/init.lua",
+                "scheme": "file"
+              }
+            },
+            {
+              "range": {
+                "endColumn": 21,
+                "endLineNumber": 72,
+                "startColumn": 17,
+                "startLineNumber": 72
+              },
+              "uri": {
+                "$mid": 1,
+                "external": "file:///Users/vitaliy/local-whisper/hammerspoon/init.lua",
+                "fsPath": "/Users/vitaliy/local-whisper/hammerspoon/init.lua",
+                "path": "/Users/vitaliy/local-whisper/hammerspoon/init.lua",
+                "scheme": "file"
+              }
+            },
+            {
+              "range": {
+                "endColumn": 60,
+                "endLineNumber": 72,
+                "startColumn": 56,
+                "startLineNumber": 72
+              },
+              "uri": {
+                "$mid": 1,
+                "external": "file:///Users/vitaliy/local-whisper/hammerspoon/init.lua",
+                "fsPath": "/Users/vitaliy/local-whisper/hammerspoon/init.lua",
+                "path": "/Users/vitaliy/local-whisper/hammerspoon/init.lua",
+                "scheme": "file"
+              }
+            },
+            {
+              "range": {
+                "endColumn": 13,
+                "endLineNumber": 74,
+                "startColumn": 11,
+                "startLineNumber": 74
+              },
+              "uri": {
+                "$mid": 1,
+                "external": "file:///Users/vitaliy/local-whisper/hammerspoon/init.lua",
+                "fsPath": "/Users/vitaliy/local-whisper/hammerspoon/init.lua",
+                "path": "/Users/vitaliy/local-whisper/hammerspoon/init.lua",
+                "scheme": "file"
+              }
+            },
+            {
+              "range": {
+                "endColumn": 43,
+                "endLineNumber": 74,
+                "startColumn": 41,
+                "startLineNumber": 74
+              },
+              "uri": {
+                "$mid": 1,
+                "external": "file:///Users/vitaliy/local-whisper/hammerspoon/init.lua",
+                "fsPath": "/Users/vitaliy/local-whisper/hammerspoon/init.lua",
+                "path": "/Users/vitaliy/local-whisper/hammerspoon/init.lua",
+                "scheme": "file"
+              }
+            },
+            {
+              "range": {
+                "endColumn": 20,
+                "endLineNumber": 87,
+                "startColumn": 18,
+                "startLineNumber": 87
+              },
+              "uri": {
+                "$mid": 1,
+                "external": "file:///Users/vitaliy/local-whisper/hammerspoon/init.lua",
+                "fsPath": "/Users/vitaliy/local-whisper/hammerspoon/init.lua",
+                "path": "/Users/vitaliy/local-whisper/hammerspoon/init.lua",
+                "scheme": "file"
+              }
+            },
+            {
+              "range": {
+                "endColumn": 57,
+                "endLineNumber": 87,
+                "startColumn": 55,
+                "startLineNumber": 87
+              },
+              "uri": {
+                "$mid": 1,
+                "external": "file:///Users/vitaliy/local-whisper/hammerspoon/init.lua",
+                "fsPath": "/Users/vitaliy/local-whisper/hammerspoon/init.lua",
+                "path": "/Users/vitaliy/local-whisper/hammerspoon/init.lua",
+                "scheme": "file"
+              }
+            },
+            {
+              "range": {
+                "endColumn": 28,
+                "endLineNumber": 91,
+                "startColumn": 26,
+                "startLineNumber": 91
+              },
+              "uri": {
+                "$mid": 1,
+                "external": "file:///Users/vitaliy/local-whisper/hammerspoon/init.lua",
+                "fsPath": "/Users/vitaliy/local-whisper/hammerspoon/init.lua",
+                "path": "/Users/vitaliy/local-whisper/hammerspoon/init.lua",
+                "scheme": "file"
+              }
+            },
+            {
+              "range": {
+                "endColumn": 31,
+                "endLineNumber": 102,
+                "startColumn": 29,
+                "startLineNumber": 102
+              },
+              "uri": {
+                "$mid": 1,
+                "external": "file:///Users/vitaliy/local-whisper/hammerspoon/init.lua",
+                "fsPath": "/Users/vitaliy/local-whisper/hammerspoon/init.lua",
+                "path": "/Users/vitaliy/local-whisper/hammerspoon/init.lua",
+                "scheme": "file"
+              }
+            },
+            {
+              "range": {
+                "endColumn": 36,
+                "endLineNumber": 103,
+                "startColumn": 34,
+                "startLineNumber": 103
+              },
+              "uri": {
+                "$mid": 1,
+                "external": "file:///Users/vitaliy/local-whisper/hammerspoon/init.lua",
+                "fsPath": "/Users/vitaliy/local-whisper/hammerspoon/init.lua",
+                "path": "/Users/vitaliy/local-whisper/hammerspoon/init.lua",
+                "scheme": "file"
+              }
+            },
+            {
+              "range": {
+                "endColumn": 33,
+                "endLineNumber": 109,
+                "startColumn": 31,
+                "startLineNumber": 109
+              },
+              "uri": {
+                "$mid": 1,
+                "external": "file:///Users/vitaliy/local-whisper/hammerspoon/init.lua",
+                "fsPath": "/Users/vitaliy/local-whisper/hammerspoon/init.lua",
+                "path": "/Users/vitaliy/local-whisper/hammerspoon/init.lua",
+                "scheme": "file"
+              }
+            },
+            {
+              "range": {
+                "endColumn": 69,
+                "endLineNumber": 138,
+                "startColumn": 67,
+                "startLineNumber": 138
+              },
+              "uri": {
+                "$mid": 1,
+                "external": "file:///Users/vitaliy/local-whisper/hammerspoon/init.lua",
+                "fsPath": "/Users/vitaliy/local-whisper/hammerspoon/init.lua",
+                "path": "/Users/vitaliy/local-whisper/hammerspoon/init.lua",
+                "scheme": "file"
+              }
+            },
+            {
+              "range": {
+                "endColumn": 23,
+                "endLineNumber": 196,
+                "startColumn": 19,
+                "startLineNumber": 196
+              },
+              "uri": {
+                "$mid": 1,
+                "external": "file:///Users/vitaliy/local-whisper/hammerspoon/init.lua",
+                "fsPath": "/Users/vitaliy/local-whisper/hammerspoon/init.lua",
+                "path": "/Users/vitaliy/local-whisper/hammerspoon/init.lua",
+                "scheme": "file"
+              }
+            },
+            {
+              "range": {
+                "endColumn": 15,
+                "endLineNumber": 197,
+                "startColumn": 11,
+                "startLineNumber": 197
+              },
+              "uri": {
+                "$mid": 1,
+                "external": "file:///Users/vitaliy/local-whisper/hammerspoon/init.lua",
+                "fsPath": "/Users/vitaliy/local-whisper/hammerspoon/init.lua",
+                "path": "/Users/vitaliy/local-whisper/hammerspoon/init.lua",
+                "scheme": "file"
+              }
+            },
+            {
+              "range": {
+                "endColumn": 31,
+                "endLineNumber": 197,
+                "startColumn": 27,
+                "startLineNumber": 197
+              },
+              "uri": {
+                "$mid": 1,
+                "external": "file:///Users/vitaliy/local-whisper/hammerspoon/init.lua",
+                "fsPath": "/Users/vitaliy/local-whisper/hammerspoon/init.lua",
+                "path": "/Users/vitaliy/local-whisper/hammerspoon/init.lua",
+                "scheme": "file"
+              }
+            },
+            {
+              "range": {
+                "endColumn": 12,
+                "endLineNumber": 198,
+                "startColumn": 8,
+                "startLineNumber": 198
+              },
+              "uri": {
+                "$mid": 1,
+                "external": "file:///Users/vitaliy/local-whisper/hammerspoon/init.lua",
+                "fsPath": "/Users/vitaliy/local-whisper/hammerspoon/init.lua",
+                "path": "/Users/vitaliy/local-whisper/hammerspoon/init.lua",
+                "scheme": "file"
+              }
+            },
+            {
+              "range": {
+                "endColumn": 28,
+                "endLineNumber": 198,
+                "startColumn": 24,
+                "startLineNumber": 198
+              },
+              "uri": {
+                "$mid": 1,
+                "external": "file:///Users/vitaliy/local-whisper/hammerspoon/init.lua",
+                "fsPath": "/Users/vitaliy/local-whisper/hammerspoon/init.lua",
+                "path": "/Users/vitaliy/local-whisper/hammerspoon/init.lua",
+                "scheme": "file"
+              }
+            }
+          ],
+          "source": {
+            "label": "Built-In",
+            "type": "internal"
+          },
+          "toolCallId": "toolu_bdrk_012mNKpa4pRfH5YrvWYE1v6V",
+          "toolId": "copilot_findTextInFiles"
+        }
+      ],
+      "result": {
+        "metadata": {},
+        "timings": {
+          "firstProgress": 0,
+          "totalElapsed": 0
+        }
+      },
+      "modelId": "copilot/claude-sonnet-4.6"
+    },
+    {
+      "requestId": "request_730fc1e7-6e9f-46e2-bd59-e0d7ce866124",
+      "timestamp": 1780010219868,
+      "message": {
+        "text": "посмотри в #file:.specstory историю настройки - мы применяем модель руского и украинского языков\n\nплюс ошибки \n\n2026-05-29 01:14:34: -- Loading extension: pasteboard\n2026-05-29 01:14:34: 01:14:34 ** Warning:hs.keycode: key 'v' not found in active keymap; using ANSI-standard US keyboard layout as fallback, returning '9'\n2026-05-29 01:14:35: 01:14:35 ** Warning:hs.keycode: key 'v' not found in active keymap; using ANSI-standard US keyboard layout as fallback, returning '9'\n\n\n",
+        "parts": [
+          {
+            "kind": "text"
+          },
+          {
+            "kind": "dynamic"
+          },
+          {
+            "kind": "text"
+          }
+        ]
+      },
+      "response": [
+        {
+          "didStartServerIds": [],
+          "kind": "mcpServersStarting"
+        }
+      ],
+      "result": {
+        "metadata": {},
+        "timings": {
+          "firstProgress": 0,
+          "totalElapsed": 0
+        }
+      },
+      "modelId": "copilot/claude-sonnet-4.6"
+    },
+    {
+      "requestId": "request_69153b5d-7715-4bea-8712-9891831a20c2",
+      "timestamp": 1780010385326,
+      "message": {
+        "text": "у меня в интерфейсе все еще португальский\nты точно понимаешь что мы меняем???",
+        "parts": [
+          {
+            "kind": "text"
+          }
+        ]
+      },
+      "response": [
+        {
+          "didStartServerIds": [],
+          "kind": "mcpServersStarting"
+        },
+        {
+          "id": "thinking_0",
+          "kind": "thinking",
+          "value": "The user is saying"
+        }
+      ],
+      "result": {
+        "metadata": {},
+        "timings": {
+          "firstProgress": 0,
+          "totalElapsed": 0
+        }
+      },
+      "modelId": "copilot/claude-sonnet-4.6"
+    },
+    {
+      "requestId": "request_24105c7a-fe90-4cb7-8ae0-b1d6d2db316a",
+      "timestamp": 1780010610902,
+      "message": {
+        "text": "А нам точно ничего ребилд не надо бил дить заново",
+        "parts": [
+          {
+            "kind": "text"
+          }
+        ]
+      },
+      "response": [
+        {
+          "didStartServerIds": [],
+          "kind": "mcpServersStarting"
+        }
+      ],
+      "result": {
+        "metadata": {},
+        "timings": {
+          "firstProgress": 0,
+          "totalElapsed": 0
+        }
+      },
+      "modelId": "copilot/claude-sonnet-4.6"
+    },
+    {
+      "requestId": "request_806ce4e6-2426-4178-8449-f366a6c472f3",
+      "timestamp": 1780010722290,
+      "message": {
+        "text": "И еще проблема, что когда я записываю очень долгий текст, ну, я не знаю, минуты-две, то начало текста теряется.",
+        "parts": [
+          {
+            "kind": "text"
+          }
+        ]
+      },
+      "response": [
+        {
+          "didStartServerIds": [],
+          "kind": "mcpServersStarting"
+        }
+      ],
+      "result": {
+        "metadata": {},
+        "timings": {
+          "firstProgress": 0,
+          "totalElapsed": 0
+        }
+      },
+      "modelId": "copilot/claude-sonnet-4.6"
+    }
+  ]
 }
