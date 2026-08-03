@@ -857,6 +857,7 @@ local ffmpegTask = nil
 local partialTimer = nil
 local partialBusy = false
 local lastChunkCount = 0
+local finalizationPending = false  -- true between stopRecording() and doFinalTranscription() actually starting
 
 -- Menu bar
 local menuBar = nil
@@ -1767,8 +1768,14 @@ stopRecording = function()
 
     hs.sound.getByFile("/System/Library/Sounds/Tink.aiff"):play()
 
-    -- Brief delay for ffmpeg to finalize last chunk
-    hs.timer.doAfter(0.3, doFinalTranscription)
+    -- Brief delay for ffmpeg to finalize last chunk. A short timer scheduled right as the
+    -- system suspends can be silently dropped across sleep (see sleepWatcher below), so track
+    -- pending state and recover on wake instead of just losing the recording silently.
+    finalizationPending = true
+    hs.timer.doAfter(0.3, function()
+        finalizationPending = false
+        doFinalTranscription()
+    end)
 end
 
 --------------------------------------------------------------------------------
@@ -1821,6 +1828,23 @@ hs.timer.doEvery(5, function()
         modTap:start()
     end
 end)
+
+-- Recover from macOS suspending the process mid-dictation: a stalled recording (isRecording
+-- still true) or a lost finalization timer (see stopRecording) both look like the app just
+-- hung with no feedback, when actually the system was asleep the whole time.
+local sleepWatcher = hs.caffeinate.watcher.new(function(eventType)
+    if eventType ~= hs.caffeinate.watcher.systemDidWake then return end
+    log("system: woke from sleep")
+    if finalizationPending then
+        finalizationPending = false
+        log("system: finalization timer was lost across sleep, resuming now")
+        doFinalTranscription()
+    elseif isRecording then
+        log("system: recording was still active across sleep, forcing stop")
+        stopRecording()
+    end
+end)
+sleepWatcher:start()
 
 --------------------------------------------------------------------------------
 -- Meeting mode
