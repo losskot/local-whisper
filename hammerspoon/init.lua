@@ -471,11 +471,10 @@ local function transcribeViaAPI(wavPath, lang, timeoutSecs, callback)
         "-F", "file=@" .. wavPath,
         "-F", "model=" .. API.MODEL_ID,
         "-F", "response_format=verbose_json",
+        -- Server translates to English if 'language' is omitted entirely (even with
+        -- task=transcribe) — always send it, "auto" included, to force transcription.
+        "-F", "language=" .. (lang or "auto"),
     }
-    if lang and lang ~= "auto" then
-        table.insert(args, "-F")
-        table.insert(args, "language=" .. lang)
-    end
     table.insert(args, API.URL)
 
     local task = hs.task.new(API.CURL_BIN, function(code, out, err)
