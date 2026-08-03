@@ -73,7 +73,7 @@ Expected output includes `"Message port invalidated."` — this is **normal**; t
 
 Lua 5.4 (Hammerspoon's runtime) enforces a **hard limit of 200 locals per function**. The top-level chunk of `init.lua` counts as one function. This limit is a compiler error — exceeding it prevents the file from loading at all.
 
-**Current count: ~196/200** — headroom is nearly gone. Before adding any new top-level `local`, check the count:
+**Current count: ~198/200** — only 1-2 slots left. Before adding any new top-level `local`, check the count:
 
 ```bash
 grep -c '^\s*local ' hammerspoon/init.lua

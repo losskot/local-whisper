@@ -413,11 +413,27 @@ local function getPartialModelPath()
     return getModelPath()  -- fall back to main model
 end
 
+-- Human-readable message for a curl exit code, for overlay/notification display.
+local CURL_ERROR_MESSAGES = {
+    [6] = "host not found",
+    [7] = "connection refused",
+    [22] = "server returned an error",
+    [28] = "request timed out",
+    [35] = "SSL error",
+}
+local function curlErrorMessage(code, err)
+    local msg = CURL_ERROR_MESSAGES[code] or ("curl error " .. tostring(code))
+    err = (err or ""):gsub("%s+$", "")
+    if err ~= "" then msg = msg .. ": " .. err end
+    return msg
+end
+
 -- Transcribe a WAV file via the remote OpenAI-compatible API instead of local whisper-cli.
 -- Returns the hs.task so callers can terminate it on timeout if needed.
+-- callback(text, detectedLang, errMsg) — errMsg is set (and text empty) on failure.
 local function transcribeViaAPI(wavPath, lang, timeoutSecs, callback)
     local args = {
-        "-s", "-m", tostring(timeoutSecs or 30),
+        "-s", "-S", "-f", "-m", tostring(timeoutSecs or 30),
         "-F", "file=@" .. wavPath,
         "-F", "model=whisper-1",
         "-F", "response_format=verbose_json",
@@ -430,17 +446,18 @@ local function transcribeViaAPI(wavPath, lang, timeoutSecs, callback)
 
     local task = hs.task.new(CURL_BIN, function(code, out, err)
         if code ~= 0 then
+            local errMsg = curlErrorMessage(code, err)
             log("api: curl failed code=" .. tostring(code) .. " err=" .. tostring(err))
-            callback("", nil)
+            callback("", nil, errMsg)
             return
         end
         local ok, decoded = pcall(hs.json.decode, out or "")
         if not ok or type(decoded) ~= "table" or not decoded.text then
             log("api: unexpected response: " .. tostring(out))
-            callback("", nil)
+            callback("", nil, "unexpected server response")
             return
         end
-        callback(decoded.text, decoded.language)
+        callback(decoded.text, decoded.language, nil)
     end, args)
     task:start()
     return task
@@ -1170,10 +1187,15 @@ local function doPartialTranscribe()
         -- In auto mode, use first preferred lang for speed during partial transcription
         if lang == "auto" then lang = getPreferredLangs()[1] end
 
-        local function onPartialText(text)
+        local function onPartialText(text, errMsg)
             partialBusy = false
             lastChunkCount = completed
             if not isRecording then return end
+            if errMsg then
+                setOverlayText("API error: " .. errMsg)
+                log("partial: " .. errMsg)
+                return
+            end
             text = (text or ""):gsub("^%s+", ""):gsub("%s+$", ""):gsub("%s+", " ")
             if text ~= "" and not isHallucination(text) then
                 local display = text
@@ -1184,7 +1206,7 @@ local function doPartialTranscribe()
         end
 
         if isApiMode() then
-            transcribeViaAPI(batchWav, lang, 10, function(text) onPartialText(text) end)
+            transcribeViaAPI(batchWav, lang, 10, onPartialText)
         else
             local whisperArgs = { "-m", getPartialModelPath(), "-f", batchWav, "-l", lang, "-nt", "--no-prints" }
             local promptArgs = getPromptArgs()
@@ -1349,6 +1371,7 @@ local function doFinalTranscription()
     local allTexts = {}
     local detectedLangOverall = nil
     local segIdx = 0
+    local apiErrorMsg = nil
 
     local function finishAll()
         log("final: finishAll — collected " .. #allTexts .. " text segment(s)")
@@ -1356,7 +1379,13 @@ local function doFinalTranscription()
         log("final combined (" .. totalSegs .. " seg(s)): '" .. finalText .. "'")
         if finalText == "" then
             hideProgressBar()
-            hideOverlay()
+            if apiErrorMsg then
+                setOverlayText("API error: " .. apiErrorMsg)
+                hs.notify.new({ title = "local-whisper", informativeText = "API error: " .. apiErrorMsg }):send()
+                hs.timer.doAfter(2.5, hideOverlay)
+            else
+                hideOverlay()
+            end
             return
         end
         -- Flash the blue bar to 100% to confirm all audio was transcribed, then fade it
@@ -1429,7 +1458,13 @@ local function doFinalTranscription()
 
             if isApiMode() then
                 log("final: seg " .. n .. " starting API transcription lang=" .. effectiveLang)
-                transcribeViaAPI(segWav, effectiveLang, 60, function(text, detected)
+                transcribeViaAPI(segWav, effectiveLang, 60, function(text, detected, errMsg)
+                    if errMsg then
+                        log("final: seg " .. n .. " API error: " .. errMsg)
+                        apiErrorMsg = errMsg
+                        onSegmentText("", nil)
+                        return
+                    end
                     log("final: seg " .. n .. " API response len=" .. #(text or ""))
                     text = (text or ""):gsub("^%s+", ""):gsub("%s+$", ""):gsub("%s+", " ")
                     onSegmentText(text, effectiveLang == "auto" and detected or effectiveLang)
