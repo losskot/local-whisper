@@ -613,7 +613,6 @@ end
 
 local overlay = nil
 local btnColor = { red = 0.5, green = 0.8, blue = 1.0, alpha = 1.0 }
-local btnHover = { red = 0.7, green = 0.9, blue = 1.0, alpha = 1.0 }
 
 -- Element indices: 1=bg, 2=lang, 3=sep1, 4=output, 5=sep2, 6=enter, 7=sep3, 8=model, 9=sep4, 10=refine, 11=text, 12=dot, 13=timer, 14=close
 local EL = { lang = 2, output = 4, enter = 6, model = 8, refine = 10, text = 11, dot = 12, timer = 13, close = 14 }
@@ -637,11 +636,11 @@ end
 
 local function createOverlay()
     local screen = hs.screen.mainScreen()
-    local frame = screen:frame()
+    local frame = screen:frame()  -- excludes menu bar, so y=frame.y sits right under it
     local width, height = 420, 100
     local padding = 20
     local x = frame.x + frame.w - width - padding
-    local y = frame.y + frame.h - height - padding - 50
+    local y = frame.y + padding
 
     overlay = hs.canvas.new({ x = x, y = y, w = width, h = height })
 
@@ -654,7 +653,7 @@ local function createOverlay()
         trackMouseUp = true,
     })
 
-    -- Clickable status labels (each cycles on click)
+    -- Informational status labels (not interactive — change settings via the menu bar)
     local sepColor = { red = 0.4, green = 0.4, blue = 0.4, alpha = 1 }
 
     -- 2: Language
@@ -662,7 +661,6 @@ local function createOverlay()
         id = "lang", type = "text", text = getLang():upper(),
         textColor = btnColor, textSize = 11,
         frame = { x = "4%", y = "6%", w = "10%", h = "25%" },
-        trackMouseUp = true, trackMouseEnterExit = true,
     })
     -- 3: Separator
     overlay:appendElements({
@@ -675,7 +673,6 @@ local function createOverlay()
         id = "output", type = "text", text = getOutputMode():upper(),
         textColor = btnColor, textSize = 11,
         frame = { x = "15%", y = "6%", w = "13%", h = "25%" },
-        trackMouseUp = true, trackMouseEnterExit = true,
     })
     -- 5: Separator
     overlay:appendElements({
@@ -688,7 +685,6 @@ local function createOverlay()
         id = "enter", type = "text", text = "⏎",
         textColor = getEnterMode() and enterOnColor or enterOffColor, textSize = 11,
         frame = { x = "29%", y = "6%", w = "5%", h = "25%" },
-        trackMouseUp = true, trackMouseEnterExit = true,
     })
     -- 7: Separator
     overlay:appendElements({
@@ -701,7 +697,6 @@ local function createOverlay()
         id = "model", type = "text", text = getModelName(),
         textColor = btnColor, textSize = 11,
         frame = { x = "36%", y = "6%", w = "20%", h = "25%" },
-        trackMouseUp = true, trackMouseEnterExit = true,
     })
     -- 9: Separator
     overlay:appendElements({
@@ -709,14 +704,13 @@ local function createOverlay()
         textColor = sepColor, textSize = 11,
         frame = { x = "54%", y = "6%", w = "2%", h = "25%" },
     })
-    -- 10: LLM refine toggle
+    -- 10: LLM refine status
     overlay:appendElements({
         id = "refine", type = "text",
         text = (getRefineMode() and hasOllama()) and "refine ✓" or "refine ✗",
         textColor = (getRefineMode() and hasOllama()) and refineOnColor or refineOffColor,
         textSize = 11,
         frame = { x = "57%", y = "6%", w = "18%", h = "25%" },
-        trackMouseUp = true, trackMouseEnterExit = true,
     })
     -- 11: Transcript text
     overlay:appendElements({
@@ -748,14 +742,13 @@ local function createOverlay()
         trackMouseDown = true, trackMouseUp = true, trackMouseEnterExit = true,
     })
 
-    overlay:level(hs.canvas.windowLevels.floating)
-    overlay:behavior(hs.canvas.windowBehaviors.canJoinAllSpaces)
+    -- High level + join-all-spaces/fullscreen-auxiliary so it shows above every app,
+    -- fullscreen space, and display — same as the system volume/brightness HUD.
+    overlay:level(hs.canvas.windowLevels.screenSaver)
+    overlay:behavior({ "canJoinAllSpaces", "stationary", "fullScreenAuxiliary" })
 
-    -- Map string IDs to numeric indices for element access
-    local idMap = { bg = 1, lang = EL.lang, output = EL.output, enter = EL.enter, model = EL.model, refine = EL.refine, close = EL.close }
-
-    -- Mouse handler: click bg to pin, click labels to cycle settings, X to close
-    overlay:canvasMouseEvents(true, true, true, false)  -- mouseDown + mouseUp + enterExit
+    -- Mouse handler: click bg to pin, X to close (settings live in the menu bar only)
+    overlay:canvasMouseEvents(true, true, false, false)  -- mouseDown + mouseUp
     overlay:mouseCallback(function(canvas, event, id, mx, my)
         -- Close button — hide immediately, delete deferred
         if id == "close" then
@@ -774,52 +767,15 @@ local function createOverlay()
             return
         end
 
-        if event == "mouseUp" then
-            if id == "bg" then
-                overlayPinned = not overlayPinned
-                if overlayPinned then
-                    canvas[1].fillColor = { red = 0.15, green = 0.15, blue = 0.2, alpha = 0.92 }
-                    log("overlay pinned")
-                else
-                    canvas[1].fillColor = { red = 0.1, green = 0.1, blue = 0.1, alpha = 0.85 }
-                    log("overlay unpinned")
-                    if not isRecording then hideOverlay() end
-                end
-                return
-            end
-
-            if id == "lang" then cycleLang()
-            elseif id == "output" then cycleOutput()
-            elseif id == "enter" then cycleEnter()
-            elseif id == "model" then cycleModel()
-            elseif id == "refine" then cycleRefine()
-            end
-            refreshOverlayLabels()
-
-        elseif event == "mouseEnter" then
-            local idx = idMap[id]
-            if not idx or id == "bg" then return end
-            if id == "close" then
-                canvas[idx].textColor = { red = 1, green = 0.3, blue = 0.3, alpha = 1 }
-            elseif id == "enter" then
-                canvas[idx].textColor = enterOnColor
-            elseif id == "refine" then
-                canvas[idx].textColor = refineOnColor
+        if event == "mouseUp" and id == "bg" then
+            overlayPinned = not overlayPinned
+            if overlayPinned then
+                canvas[1].fillColor = { red = 0.15, green = 0.15, blue = 0.2, alpha = 0.92 }
+                log("overlay pinned")
             else
-                canvas[idx].textColor = btnHover
-            end
-
-        elseif event == "mouseExit" then
-            local idx = idMap[id]
-            if not idx or id == "bg" then return end
-            if id == "close" then
-                canvas[idx].textColor = { red = 1, green = 1, blue = 1, alpha = 0.5 }
-            elseif id == "enter" then
-                canvas[idx].textColor = getEnterMode() and enterOnColor or enterOffColor
-            elseif id == "refine" then
-                canvas[idx].textColor = (getRefineMode() and hasOllama()) and refineOnColor or refineOffColor
-            else
-                canvas[idx].textColor = btnColor
+                canvas[1].fillColor = { red = 0.1, green = 0.1, blue = 0.1, alpha = 0.85 }
+                log("overlay unpinned")
+                if not isRecording then hideOverlay() end
             end
         end
     end)
@@ -1032,7 +988,7 @@ local function buildMenuBarMenu()
                 showOverlay()
                 overlayPinned = true
                 overlay[1].fillColor = { red = 0.15, green = 0.15, blue = 0.2, alpha = 0.92 }
-                setOverlayText("Click labels to change settings")
+                setOverlayText("Status — use the menu bar to change settings")
             end
         end,
     })
