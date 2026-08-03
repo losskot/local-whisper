@@ -4,6 +4,10 @@
 
 require("hs.ipc")
 
+-- Required so the overlay canvas can appear above full-screen apps/spaces on any
+-- display (e.g. a full-screen Remote Desktop session) — see hs.canvas:bringToFront notes.
+hs.dockicon.hide()
+
 --------------------------------------------------------------------------------
 -- Configuration
 --------------------------------------------------------------------------------
@@ -633,27 +637,27 @@ local function createOverlay()
         id = "bg",
         type = "rectangle", action = "fill",
         roundedRectRadii = { xRadius = 10, yRadius = 10 },
-        fillColor = { red = 0.1, green = 0.1, blue = 0.1, alpha = 0.85 },
+        fillColor = { red = 0.93, green = 0.93, blue = 0.95, alpha = 0.92 },
         trackMouseUp = true,
     })
 
     -- 2: Transcript text — left side of the single-line strip
     overlay:appendElements({
         id = "text", type = "text", text = "Listening...",
-        textColor = { red = 1, green = 1, blue = 1, alpha = 1.0 },
+        textColor = { red = 0.12, green = 0.12, blue = 0.14, alpha = 1.0 },
         textSize = 14,
         frame = { x = "4%", y = "16%", w = "58%", h = "55%" },
     })
     -- 3: Recording indicator (pulsing red dot) — right side
     overlay:appendElements({
         id = "dot", type = "oval", action = "fill",
-        fillColor = { red = 1, green = 0.15, blue = 0.15, alpha = 0.0 },
+        fillColor = { red = 0.85, green = 0.1, blue = 0.1, alpha = 0.0 },
         frame = { x = "81%", y = "24%", w = "4%", h = "30%" },
     })
     -- 4: Elapsed time display — right side
     overlay:appendElements({
         id = "timer", type = "text", text = "",
-        textColor = { red = 1, green = 0.4, blue = 0.4, alpha = 0.0 },
+        textColor = { red = 0.75, green = 0.15, blue = 0.15, alpha = 0.0 },
         textSize = 10,
         frame = { x = "64%", y = "18%", w = "16%", h = "45%" },
         textAlignment = "right",
@@ -662,7 +666,7 @@ local function createOverlay()
     overlay:appendElements({
         id = "bar_bg", type = "rectangle", action = "fill",
         roundedRectRadii = { xRadius = 2, yRadius = 2 },
-        fillColor = { red = 0.3, green = 0.3, blue = 0.3, alpha = 0.0 },
+        fillColor = { red = 0.55, green = 0.55, blue = 0.58, alpha = 0.0 },
         frame = { x = 17, y = 48, w = 386, h = 4 },
     })
     -- 6: Recording progress (red/orange) — total recorded duration
@@ -682,7 +686,7 @@ local function createOverlay()
     -- 8: Close button (X) — right edge, last element so it's on top and clickable
     overlay:appendElements({
         id = "close", type = "text", text = "✕",
-        textColor = { red = 1, green = 0.4, blue = 0.4, alpha = 0.8 },
+        textColor = { red = 0.75, green = 0.15, blue = 0.15, alpha = 0.85 },
         textSize = 16, textAlignment = "center",
         frame = { x = "87%", y = "12%", w = "10%", h = "45%" },
         trackMouseDown = true, trackMouseUp = true, trackMouseEnterExit = true,
@@ -716,10 +720,10 @@ local function createOverlay()
         if event == "mouseUp" and id == "bg" then
             overlayPinned = not overlayPinned
             if overlayPinned then
-                canvas[1].fillColor = { red = 0.15, green = 0.15, blue = 0.2, alpha = 0.92 }
+                canvas[1].fillColor = { red = 0.85, green = 0.89, blue = 0.97, alpha = 0.95 }
                 log("overlay pinned")
             else
-                canvas[1].fillColor = { red = 0.1, green = 0.1, blue = 0.1, alpha = 0.85 }
+                canvas[1].fillColor = { red = 0.93, green = 0.93, blue = 0.95, alpha = 0.92 }
                 log("overlay unpinned")
                 if not isRecording then hideOverlay() end
             end
@@ -933,7 +937,7 @@ local function buildMenuBarMenu()
             else
                 showOverlay()
                 overlayPinned = true
-                overlay[1].fillColor = { red = 0.15, green = 0.15, blue = 0.2, alpha = 0.92 }
+                overlay[1].fillColor = { red = 0.85, green = 0.89, blue = 0.97, alpha = 0.95 }
                 setOverlayText("Status — use the menu bar to change settings")
             end
         end,
@@ -1023,8 +1027,8 @@ local function startRecordingIndicator()
     pulseFading = true
 
     -- Show dot and timer
-    overlay[EL.dot].fillColor = { red = 1, green = 0.15, blue = 0.15, alpha = 1.0 }
-    overlay[EL.timer].textColor = { red = 1, green = 0.4, blue = 0.4, alpha = 1.0 }
+    overlay[EL.dot].fillColor = { red = 0.85, green = 0.1, blue = 0.1, alpha = 1.0 }
+    overlay[EL.timer].textColor = { red = 0.75, green = 0.15, blue = 0.15, alpha = 1.0 }
 
     -- Show progress bar track
     overlay[EL.bar_bg].fillColor  = { red = 0.3, green = 0.3, blue = 0.3, alpha = 0.6 }
@@ -1042,7 +1046,7 @@ local function startRecordingIndicator()
             pulseAlpha = pulseAlpha + 0.03
             if pulseAlpha >= 1.0 then pulseFading = true end
         end
-        overlay[EL.dot].fillColor = { red = 1, green = 0.15, blue = 0.15, alpha = pulseAlpha }
+        overlay[EL.dot].fillColor = { red = 0.85, green = 0.1, blue = 0.1, alpha = pulseAlpha }
     end)
 
     -- Update elapsed time and recording progress every second
@@ -1060,8 +1064,8 @@ local function stopRecordingIndicator()
     if pulseTimer then pulseTimer:stop(); pulseTimer = nil end
     if clockTimer then clockTimer:stop(); clockTimer = nil end
     if overlay then
-        overlay[EL.dot].fillColor = { red = 1, green = 0.15, blue = 0.15, alpha = 0.0 }
-        overlay[EL.timer].textColor = { red = 1, green = 0.4, blue = 0.4, alpha = 0.0 }
+        overlay[EL.dot].fillColor = { red = 0.85, green = 0.1, blue = 0.1, alpha = 0.0 }
+        overlay[EL.timer].textColor = { red = 0.75, green = 0.15, blue = 0.15, alpha = 0.0 }
         overlay[EL.timer].text = ""
     end
 end
