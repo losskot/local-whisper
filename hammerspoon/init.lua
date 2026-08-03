@@ -28,9 +28,12 @@ local MODELS_DIR = HOME .. "/whisper.cpp/models"
 local MODEL_FILE = CONFIG_DIR .. "/model"
 
 -- Remote OpenAI-compatible transcription API (alternative to local whisper-cli)
-local API_MODEL_NAME = "API"  -- sentinel value stored in MODEL_FILE when API mode is selected
-local API_URL = "http://192.168.0.13:13305/v1/audio/transcriptions"
-local CURL_BIN = "/usr/bin/curl"
+local API = {
+    MODEL_NAME = "API",  -- sentinel value stored in MODEL_FILE when API mode is selected
+    URL = "http://192.168.0.13:13305/v1/audio/transcriptions",
+    MODEL_ID = "Whisper-Large-v3",  -- must match the model id the server has loaded (GET /v1/models)
+    CURL_BIN = "/usr/bin/curl",
+}
 
 -- Scan available models
 local function getAvailableModels()
@@ -50,7 +53,7 @@ local function getModelName()
     local saved = ""
     local f = io.open(MODEL_FILE, "r")
     if f then saved = f:read("*a"):gsub("%s+", ""); f:close() end
-    if saved == API_MODEL_NAME then return API_MODEL_NAME end
+    if saved == API.MODEL_NAME then return API.MODEL_NAME end
     if saved ~= "" then
         -- Verify model file exists
         local path = MODELS_DIR .. "/ggml-" .. saved .. ".bin"
@@ -61,7 +64,7 @@ local function getModelName()
 end
 
 local function isApiMode()
-    return getModelName() == API_MODEL_NAME
+    return getModelName() == API.MODEL_NAME
 end
 
 local function getModelPath()
@@ -375,7 +378,7 @@ end
 
 local function cycleModel()
     local models = getAvailableModels()
-    table.insert(models, API_MODEL_NAME)  -- remote API is the last stop in the cycle
+    table.insert(models, API.MODEL_NAME)  -- remote API is the last stop in the cycle
     if #models == 0 then return getModelName() end
     local current = getModelName()
     local next = models[1]
@@ -428,6 +431,37 @@ local function curlErrorMessage(code, err)
     return msg
 end
 
+-- Full language name -> ISO-639-1 code, matching whisper.cpp's g_lang table (src/whisper.cpp).
+-- The remote API returns names like "english"/"russian" in verbose_json; the rest of this
+-- app (getLang/getPreferredLangs/action hooks) works in short codes like "en"/"ru".
+local function normalizeApiLang(lang)
+    if not lang then return nil end
+    local nameToCode = {
+        english = "en", chinese = "zh", german = "de", spanish = "es", russian = "ru",
+        korean = "ko", french = "fr", japanese = "ja", portuguese = "pt", turkish = "tr",
+        polish = "pl", catalan = "ca", dutch = "nl", arabic = "ar", swedish = "sv",
+        italian = "it", indonesian = "id", hindi = "hi", finnish = "fi", vietnamese = "vi",
+        hebrew = "he", ukrainian = "uk", greek = "el", malay = "ms", czech = "cs",
+        romanian = "ro", danish = "da", hungarian = "hu", tamil = "ta", norwegian = "no",
+        thai = "th", urdu = "ur", croatian = "hr", bulgarian = "bg", lithuanian = "lt",
+        latin = "la", maori = "mi", malayalam = "ml", welsh = "cy", slovak = "sk",
+        telugu = "te", persian = "fa", latvian = "lv", bengali = "bn", serbian = "sr",
+        azerbaijani = "az", slovenian = "sl", kannada = "kn", estonian = "et", macedonian = "mk",
+        breton = "br", basque = "eu", icelandic = "is", armenian = "hy", nepali = "ne",
+        mongolian = "mn", bosnian = "bs", kazakh = "kk", albanian = "sq", swahili = "sw",
+        galician = "gl", marathi = "mr", punjabi = "pa", sinhala = "si", khmer = "km",
+        shona = "sn", yoruba = "yo", somali = "so", afrikaans = "af", occitan = "oc",
+        georgian = "ka", belarusian = "be", tajik = "tg", sindhi = "sd", gujarati = "gu",
+        amharic = "am", yiddish = "yi", lao = "lo", uzbek = "uz", faroese = "fo",
+        ["haitian creole"] = "ht", pashto = "ps", turkmen = "tk", nynorsk = "nn", maltese = "mt",
+        sanskrit = "sa", luxembourgish = "lb", myanmar = "my", tibetan = "bo", tagalog = "tl",
+        malagasy = "mg", assamese = "as", tatar = "tt", hawaiian = "haw", lingala = "ln",
+        hausa = "ha", bashkir = "ba", javanese = "jw", sundanese = "su", cantonese = "yue",
+    }
+    lang = lang:lower()
+    return nameToCode[lang] or lang
+end
+
 -- Transcribe a WAV file via the remote OpenAI-compatible API instead of local whisper-cli.
 -- Returns the hs.task so callers can terminate it on timeout if needed.
 -- callback(text, detectedLang, errMsg) — errMsg is set (and text empty) on failure.
@@ -435,16 +469,16 @@ local function transcribeViaAPI(wavPath, lang, timeoutSecs, callback)
     local args = {
         "-s", "-S", "-f", "-m", tostring(timeoutSecs or 30),
         "-F", "file=@" .. wavPath,
-        "-F", "model=whisper-1",
+        "-F", "model=" .. API.MODEL_ID,
         "-F", "response_format=verbose_json",
     }
     if lang and lang ~= "auto" then
         table.insert(args, "-F")
         table.insert(args, "language=" .. lang)
     end
-    table.insert(args, API_URL)
+    table.insert(args, API.URL)
 
-    local task = hs.task.new(CURL_BIN, function(code, out, err)
+    local task = hs.task.new(API.CURL_BIN, function(code, out, err)
         if code ~= 0 then
             local errMsg = curlErrorMessage(code, err)
             log("api: curl failed code=" .. tostring(code) .. " err=" .. tostring(err))
@@ -457,7 +491,7 @@ local function transcribeViaAPI(wavPath, lang, timeoutSecs, callback)
             callback("", nil, "unexpected server response")
             return
         end
-        callback(decoded.text, decoded.language, nil)
+        callback(decoded.text, normalizeApiLang(decoded.language), nil)
     end, args)
     task:start()
     return task
