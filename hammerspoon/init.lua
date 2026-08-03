@@ -79,10 +79,15 @@ local LOG_FILE = WHISPER_TMP .. "/whisper-dictate.log"
 local ACTIONS_FILE = HOME .. "/.hammerspoon/local_whisper_actions.lua"
 
 -- Auto-stop on silence
+local AUTO_STOP_SILENCE_SECONDS = 3
+local AUTO_STOP_THRESHOLD_DB = -40
 
+-- LLM refinement (requires Ollama)
 local REFINE_FILE = CONFIG_DIR .. "/refine"
 local REFINE_PROMPT_FILE = CONFIG_DIR .. "/refine_prompt"
 local REFINE_MODEL_FILE = CONFIG_DIR .. "/refine_model"
+local REFINE_DEFAULT_MODEL = "gemma3:4b"
+local REFINE_MIN_CHARS = 50  -- skip refinement for short text
 local REFINE_DEFAULT_PROMPT = "You are a text cleanup tool. Output ONLY the cleaned text, nothing else. Fix punctuation and capitalization. Remove ONLY filler words like um, uh, you know, I mean. Do NOT remove sentences or meaningful content. When the text lists sequential items using first/second/third or one/two/three, convert them into a numbered list with each item on a new line. NEVER add commentary or preamble. Just output the cleaned text."
 
 local function getRefineModel()
@@ -91,7 +96,7 @@ local function getRefineModel()
         local val = f:read("*a"):gsub("%s+", ""); f:close()
         if val ~= "" then return val end
     end
-    return "gemma3:4b"
+    return REFINE_DEFAULT_MODEL
 end
 
 local function getRefinePrompt()
@@ -130,6 +135,8 @@ local function cycleRefine()
 end
 
 -- Timing
+local PARTIAL_INTERVAL = 2.0   -- seconds between partial transcriptions
+local OVERLAY_LINGER = 0.5     -- seconds to show final text before closing
 
 -- Known whisper hallucinations on silence/short audio
 local HALLUCINATIONS = {
@@ -272,7 +279,7 @@ local function postProcess(text, appBundleID)
 end
 
 local function refineWithOllama(text, callback)
-    if not getRefineMode() or not hasOllama() or #text < 50 then
+    if not getRefineMode() or not hasOllama() or #text < REFINE_MIN_CHARS then
         callback(text)
         return
     end
@@ -339,77 +346,8 @@ local function getChunkFiles()
             table.insert(chunks, CHUNK_DIR .. "/" .. file)
         end
     end
-    -- Numeric sort (not lexicographic): ffmpeg's segment muxer pads to a
-    -- minimum of 3 digits but does NOT truncate past 999, so any recording
-    -- longer than ~16.6 minutes (chunk_1000.wav onward) produces filenames
-    -- whose string order no longer matches recording order ("chunk_1000.wav"
-    -- sorts before "chunk_999.wav"). A plain table.sort(chunks) would then
-    -- silently scramble/drop audio order for the rest of the session.
-    table.sort(chunks, function(a, b)
-        local na = tonumber(a:match("chunk_(%d+)%.wav$")) or 0
-        local nb = tonumber(b:match("chunk_(%d+)%.wav$")) or 0
-        return na < nb
-    end)
+    table.sort(chunks)
     return chunks
-end
-
--- Read a 16-bit mono WAV file and return its RMS amplitude (0..32768 range).
--- Pure Lua — no subprocess. Fast enough for 1-second chunks (~32KB each).
-local function getWavRMS(wavPath)
-    local f = io.open(wavPath, "rb")
-    if not f then return math.huge end
-    f:seek("set", 44)  -- skip standard WAV header
-    local data = f:read("*all")
-    f:close()
-    if not data or #data < 2 then return math.huge end
-    local sum = 0
-    local n = math.floor(#data / 2)
-    for i = 1, n * 2 - 1, 2 do
-        local lo = data:byte(i)
-        local hi = data:byte(i + 1)
-        local s = hi * 256 + lo
-        if s >= 32768 then s = s - 65536 end
-        sum = sum + s * s
-    end
-    return n > 0 and math.sqrt(sum / n) or math.huge
-end
-
--- Split chunk list into groups no longer than maxSecs, but breaking at the
--- quietest 1-second chunk found within the last lookbackSecs of each window.
--- This prevents cuts mid-word or mid-sentence.
-local function splitAtSilence(chunks, maxSecs, lookbackSecs)
-    lookbackSecs = lookbackSecs or 8
-    local groups = {}
-    local i = 1
-    while i <= #chunks do
-        if #chunks - i + 1 <= maxSecs then
-            -- Last group: take everything remaining
-            local group = {}
-            for j = i, #chunks do table.insert(group, chunks[j]) end
-            table.insert(groups, group)
-            break
-        end
-        -- Scan backwards from the hard boundary to find the quietest chunk.
-        -- Never push the boundary earlier than halfway through the window.
-        local hardEnd    = i + maxSecs - 1
-        local scanStart  = math.max(i + math.floor(maxSecs / 2), hardEnd - lookbackSecs + 1)
-        local bestIdx    = hardEnd
-        local bestRMS    = math.huge
-        for j = hardEnd, scanStart, -1 do
-            local rms = getWavRMS(chunks[j])
-            if rms < bestRMS then
-                bestRMS = rms
-                bestIdx = j
-                if rms < 300 then break end  -- near-silence found, stop scanning
-            end
-        end
-        local group = {}
-        for j = i, bestIdx do table.insert(group, chunks[j]) end
-        table.insert(groups, group)
-        log("split: seg ends at chunk " .. bestIdx .. " (RMS=" .. math.floor(bestRMS) .. ", hard=" .. hardEnd .. ")")
-        i = bestIdx + 1
-    end
-    return groups
 end
 
 -- Cycle helpers
@@ -677,42 +615,30 @@ local overlay = nil
 local btnColor = { red = 0.5, green = 0.8, blue = 1.0, alpha = 1.0 }
 local btnHover = { red = 0.7, green = 0.9, blue = 1.0, alpha = 1.0 }
 
--- Forward declaration: the streaming/finalization pipeline state table is
--- populated in the State section below, but hideOverlay()/forceHideOverlay()
--- (defined just after this) need to disarm PL.watchdog, so PL must be in scope
--- here. Same forward-declare pattern as `overlay` above.
-local PL
+-- Element indices: 1=bg, 2=lang, 3=sep1, 4=output, 5=sep2, 6=enter, 7=sep3, 8=model, 9=sep4, 10=refine, 11=text, 12=dot, 13=timer, 14=close
+local EL = { lang = 2, output = 4, enter = 6, model = 8, refine = 10, text = 11, dot = 12, timer = 13, close = 14 }
 
--- Forward declarations so createOverlay's mouse callback can reference these
--- before their definitions (local functions are only visible after definition).
-local hideOverlay, forceHideOverlay
-
--- Element indices: 1=bg, 2=lang, 3=sep1, 4=output, 5=sep2, 6=enter, 7=sep3, 8=model, 9=sep4, 10=refine, 11=text, 12=dot, 13=timer, 14=close, 15=bar_bg, 16=bar_rec, 17=bar_txn
-local EL = { lang = 2, output = 4, enter = 6, model = 8, refine = 10, text = 11, dot = 12, timer = 13, close = 14, bar_bg = 15, bar_rec = 16, bar_txn = 17 }
-
-local CLR = {
-    enterOn  = { red = 0.3, green = 1.0, blue = 0.3, alpha = 1.0 },
-    enterOff = { red = 0.5, green = 0.5, blue = 0.5, alpha = 0.5 },
-    refineOn = { red = 0.4, green = 0.8, blue = 1.0, alpha = 1.0 },
-    refineOff = { red = 0.5, green = 0.5, blue = 0.5, alpha = 0.5 },
-}
+local enterOnColor = { red = 0.3, green = 1.0, blue = 0.3, alpha = 1.0 }
+local enterOffColor = { red = 0.5, green = 0.5, blue = 0.5, alpha = 0.5 }
+local refineOnColor = { red = 0.4, green = 0.8, blue = 1.0, alpha = 1.0 }
+local refineOffColor = { red = 0.5, green = 0.5, blue = 0.5, alpha = 0.5 }
 
 local function refreshOverlayLabels()
     if not overlay then return end
     overlay[EL.lang].text = getLang():upper()
     overlay[EL.output].text = getOutputMode():upper()
     overlay[EL.enter].text = "⏎"
-    overlay[EL.enter].textColor = getEnterMode() and CLR.enterOn or CLR.enterOff
+    overlay[EL.enter].textColor = getEnterMode() and enterOnColor or enterOffColor
     overlay[EL.model].text = getModelName()
     local refineOn = getRefineMode() and hasOllama()
     overlay[EL.refine].text = refineOn and "refine ✓" or "refine ✗"
-    overlay[EL.refine].textColor = refineOn and CLR.refineOn or CLR.refineOff
+    overlay[EL.refine].textColor = refineOn and refineOnColor or refineOffColor
 end
 
 local function createOverlay()
     local screen = hs.screen.mainScreen()
     local frame = screen:frame()
-    local width, height = 420, 118
+    local width, height = 420, 100
     local padding = 20
     local x = frame.x + frame.w - width - padding
     local y = frame.y + frame.h - height - padding - 50
@@ -760,7 +686,7 @@ local function createOverlay()
     -- 6: Enter mode (⏎ green=on, gray=off)
     overlay:appendElements({
         id = "enter", type = "text", text = "⏎",
-        textColor = getEnterMode() and CLR.enterOn or CLR.enterOff, textSize = 11,
+        textColor = getEnterMode() and enterOnColor or enterOffColor, textSize = 11,
         frame = { x = "29%", y = "6%", w = "5%", h = "25%" },
         trackMouseUp = true, trackMouseEnterExit = true,
     })
@@ -773,23 +699,23 @@ local function createOverlay()
     -- 8: Model
     overlay:appendElements({
         id = "model", type = "text", text = getModelName(),
-        textColor = btnColor, textSize = 10,
-        frame = { x = "36%", y = "6%", w = "33%", h = "25%" },
+        textColor = btnColor, textSize = 11,
+        frame = { x = "36%", y = "6%", w = "20%", h = "25%" },
         trackMouseUp = true, trackMouseEnterExit = true,
     })
     -- 9: Separator
     overlay:appendElements({
         id = "sep4", type = "text", text = "|",
         textColor = sepColor, textSize = 11,
-        frame = { x = "70%", y = "6%", w = "2%", h = "25%" },
+        frame = { x = "54%", y = "6%", w = "2%", h = "25%" },
     })
     -- 10: LLM refine toggle
     overlay:appendElements({
         id = "refine", type = "text",
         text = (getRefineMode() and hasOllama()) and "refine ✓" or "refine ✗",
-        textColor = (getRefineMode() and hasOllama()) and CLR.refineOn or CLR.refineOff,
+        textColor = (getRefineMode() and hasOllama()) and refineOnColor or refineOffColor,
         textSize = 11,
-        frame = { x = "73%", y = "6%", w = "15%", h = "25%" },
+        frame = { x = "57%", y = "6%", w = "18%", h = "25%" },
         trackMouseUp = true, trackMouseEnterExit = true,
     })
     -- 11: Transcript text
@@ -797,7 +723,7 @@ local function createOverlay()
         id = "text", type = "text", text = "Listening...",
         textColor = { red = 1, green = 1, blue = 1, alpha = 1.0 },
         textSize = 14,
-        frame = { x = "5%", y = "35%", w = "90%", h = "48%" },
+        frame = { x = "5%", y = "35%", w = "90%", h = "60%" },
     })
     -- 12: Recording indicator (pulsing red dot)
     overlay:appendElements({
@@ -820,27 +746,6 @@ local function createOverlay()
         textSize = 16, textAlignment = "center",
         frame = { x = "90%", y = "10%", w = "8%", h = "20%" },
         trackMouseDown = true, trackMouseUp = true, trackMouseEnterExit = true,
-    })
-    -- 15: Progress bar background (gray track) — absolute px: x=17,y=103,w=386,h=9
-    overlay:appendElements({
-        id = "bar_bg", type = "rectangle", action = "fill",
-        roundedRectRadii = { xRadius = 3, yRadius = 3 },
-        fillColor = { red = 0.3, green = 0.3, blue = 0.3, alpha = 0.0 },
-        frame = { x = 17, y = 103, w = 386, h = 9 },
-    })
-    -- 16: Recording progress (red/orange)
-    overlay:appendElements({
-        id = "bar_rec", type = "rectangle", action = "fill",
-        roundedRectRadii = { xRadius = 3, yRadius = 3 },
-        fillColor = { red = 1.0, green = 0.35, blue = 0.15, alpha = 0.0 },
-        frame = { x = 17, y = 103, w = 1, h = 9 },
-    })
-    -- 17: Transcription progress (blue/green)
-    overlay:appendElements({
-        id = "bar_txn", type = "rectangle", action = "fill",
-        roundedRectRadii = { xRadius = 3, yRadius = 3 },
-        fillColor = { red = 0.2, green = 0.75, blue = 1.0, alpha = 0.0 },
-        frame = { x = 17, y = 103, w = 1, h = 9 },
     })
 
     overlay:level(hs.canvas.windowLevels.floating)
@@ -897,9 +802,9 @@ local function createOverlay()
             if id == "close" then
                 canvas[idx].textColor = { red = 1, green = 0.3, blue = 0.3, alpha = 1 }
             elseif id == "enter" then
-                canvas[idx].textColor = CLR.enterOn
+                canvas[idx].textColor = enterOnColor
             elseif id == "refine" then
-                canvas[idx].textColor = CLR.refineOn
+                canvas[idx].textColor = refineOnColor
             else
                 canvas[idx].textColor = btnHover
             end
@@ -910,9 +815,9 @@ local function createOverlay()
             if id == "close" then
                 canvas[idx].textColor = { red = 1, green = 1, blue = 1, alpha = 0.5 }
             elseif id == "enter" then
-                canvas[idx].textColor = getEnterMode() and CLR.enterOn or CLR.enterOff
+                canvas[idx].textColor = getEnterMode() and enterOnColor or enterOffColor
             elseif id == "refine" then
-                canvas[idx].textColor = (getRefineMode() and hasOllama()) and CLR.refineOn or CLR.refineOff
+                canvas[idx].textColor = (getRefineMode() and hasOllama()) and refineOnColor or refineOffColor
             else
                 canvas[idx].textColor = btnColor
             end
@@ -927,38 +832,14 @@ local function showOverlay()
     overlay:show()
 end
 
--- Disarm the finalize/refine watchdog (item #3). Called whenever the overlay is
--- taken down so a stale timer can't fire after we've already finished.
-local function cancelWatchdog()
-    if PL and PL.watchdog then PL.watchdog:stop(); PL.watchdog = nil end
-end
-
-hideOverlay = function()
+local function hideOverlay()
     if overlayPinned then return end  -- pinned overlay stays open
-    cancelWatchdog()
     if overlay then overlay:delete(); overlay = nil end
 end
 
-forceHideOverlay = function()
+local function forceHideOverlay()
     overlayPinned = false
-    cancelWatchdog()
     if overlay then overlay:delete(); overlay = nil end
-end
-
--- Finalize/refine watchdog (code-review item #3). Once recording stops the
--- overlay shows "Transcribing…" / "Refining…"; if the final transcription, an
--- Ollama refine, or the text insertion wedges, nothing would ever take the
--- overlay down and it hangs forever. armWatchdog() arms a no-progress timeout;
--- it is re-armed on every completed segment (see onPipelineDone) so a genuinely
--- long transcription is not cut off, and only fires when things truly stall.
-local WATCHDOG_SECS = 45
-local function armWatchdog()
-    cancelWatchdog()
-    PL.watchdog = hs.timer.doAfter(WATCHDOG_SECS, function()
-        PL.watchdog = nil
-        log("watchdog: finalize/refine stalled for " .. WATCHDOG_SECS .. "s — force-hiding overlay")
-        forceHideOverlay()
-    end)
 end
 
 local function setOverlayText(text)
@@ -980,28 +861,6 @@ local partialTimer = nil
 local partialBusy = false
 local lastChunkCount = 0
 
--- Streaming transcription pipeline state (reset each recording session).
--- Grouped into one table to conserve main-chunk local slots (Lua caps a function
--- at 200 locals and this chunk sits right at the ceiling). Fields formerly named
--- pipelineResults, pipelineLang, ... streamTimer now live here as PL.results, etc.
--- (PL itself is forward-declared up in the Overlay UI section.)
-PL = {
-    results     = {},     -- [seg_n] = text, filled as each segment completes
-    lang        = nil,    -- first detected language across all segments
-    nextChunk   = 1,      -- 1-based index of next chunk not yet claimed by pipeline
-    nextSeg     = 1,      -- next segment number to assign (1-indexed)
-    total       = 0,      -- total segments expected (fixed when recording stops)
-    done        = 0,      -- segments completed so far
-    finalizing  = false,  -- true once we know the final total (recording stopped)
-    streamTimer = nil,    -- fires every 3s during recording to dispatch ready segments
-    ffmpegStallTicks = 0,  -- # of consecutive 3s ticks with no new chunks (stall detector)
-    lastChunkSeen   = 0,   -- chunk count on last streamCheck tick
-    -- Concurrency + reliability state (added in the code-review pass):
-    whisperActive = 0,    -- # of whisper-cli hs.tasks running now (semaphore, item #1)
-    whisperQueue  = {},   -- FIFO of queued {bin,args,cb} awaiting a free whisper slot
-    watchdog      = nil,  -- timer that force-hides the overlay if finalize/refine hangs (#3)
-}
-
 -- Menu bar
 local menuBar = nil
 
@@ -1009,9 +868,6 @@ local menuBar = nil
 local pulseTimer = nil
 local clockTimer = nil
 local recordingStartTime = 0
-
--- Progress bar state (grouped to save local variable slots)
-local barState = { txnSecs = 0, maxSecs = 180, segChunks = {} }
 local pulseAlpha = 1.0
 local pulseFading = true
 
@@ -1019,6 +875,7 @@ local pulseFading = true
 local lastInsertedText = nil
 
 -- Recent dictations (newest first, max 10)
+local MAX_RECENT = 10
 
 local recentDictations = {}
 
@@ -1042,82 +899,6 @@ local function saveRecentDictations()
 end
 
 loadRecentDictations()
-
---------------------------------------------------------------------------------
--- Sound feedback + crash recovery
---
--- Bundled into a single table to keep the main chunk under Lua's 200-local cap.
---
--- .play(): hs.sound.getByFile() can return nil (or :play() can throw) if the
---   audio subsystem is busy/contested. Feedback sounds must NEVER abort their
---   caller — an unguarded play() inside stopRecording() used to throw and
---   prevent doFinalTranscription() from being scheduled, hanging the overlay
---   and losing the whole dictation.
---
--- .snapshot()/.clear()/.salvage(): accepted segment text lives only in memory
---   (PL.results) until pipelineFinalize() inserts it. If finalization never
---   runs (stop path aborts, insert throws, or Hammerspoon reloads mid-run) that
---   text would be lost. So we snapshot accepted segments to disk as they
---   complete, clear the snapshot once text is safely inserted, and salvage any
---   orphaned snapshot (on next recording start or on reload) into recent
---   dictations so it can be retrieved from the menu bar.
---------------------------------------------------------------------------------
-_whisperRecovery = { file = WHISPER_TMP .. "/last-session-recovery.txt" }
-
-function _whisperRecovery.play(path, vol)
-    local ok, err = pcall(function()
-        local snd = hs.sound.getByFile(path)
-        if not snd then
-            log("sound: getByFile returned nil for " .. path)
-            return
-        end
-        snd:volume(vol or 1.0)
-        if snd:play() == false then
-            log("sound: play() returned false for " .. path)
-        end
-    end)
-    if not ok then
-        log("sound: play() threw for " .. path .. " -- " .. tostring(err))
-    end
-end
-
-function _whisperRecovery.snapshot()
-    local parts = {}
-    for n = 1, (PL.nextSeg - 1) do
-        local t = PL.results[n]
-        if t and t ~= "" then table.insert(parts, t) end
-    end
-    if #parts == 0 then return end
-    local text = table.concat(parts, " "):gsub("%s+", " ")
-    local f = io.open(_whisperRecovery.file, "w")
-    if f then f:write(text); f:close() end
-end
-
-function _whisperRecovery.clear()
-    os.remove(_whisperRecovery.file)
-end
-
-function _whisperRecovery.salvage()
-    local f = io.open(_whisperRecovery.file, "r")
-    if not f then return end
-    local text = f:read("*a"); f:close()
-    text = (text or ""):gsub("^%s+", ""):gsub("%s+$", "")
-    if text ~= "" then
-        log("recovery: salvaged orphaned session text (" .. #text .. " chars) → recent dictations")
-        table.insert(recentDictations, 1, {
-            text = text,
-            time = os.time(),
-            inserted = false,
-            app = "[recovered]",
-        })
-        while #recentDictations > 10 do table.remove(recentDictations) end
-        saveRecentDictations()
-    end
-    os.remove(_whisperRecovery.file)
-end
-
--- On load: recover any text stranded by a previous crash/freeze/reload.
-_whisperRecovery.salvage()
 
 -- Auto-stop state
 local silentChunkCount = 0
@@ -1312,43 +1093,15 @@ end
 -- Recording indicator (pulsing dot + timer)
 --------------------------------------------------------------------------------
 
-local BAR = { x = 17, y = 103, h = 9, max = 386 }  -- absolute px in 420x118 canvas
-
-local function updateProgressBar()
-    if not overlay then return end
-    local elapsed = hs.timer.secondsSinceEpoch() - recordingStartTime
-    -- Auto-expand: when recording reaches 90% of max, extend by another 3 min
-    if elapsed >= barState.maxSecs * 0.9 then
-        barState.maxSecs = barState.maxSecs + 180
-        log("progress bar: expanded to " .. barState.maxSecs .. "s")
-    end
-    local recFrac = math.min(elapsed / barState.maxSecs, 1.0)
-    local txnFrac = math.min(barState.txnSecs / barState.maxSecs, 1.0)
-    if not barState.frozen then
-        overlay[EL.bar_rec].frame = { x = BAR.x, y = BAR.y, w = math.max(1, math.floor(recFrac * BAR.max)), h = BAR.h }
-    end
-    overlay[EL.bar_txn].frame = { x = BAR.x, y = BAR.y, w = math.max(1, math.floor(txnFrac * BAR.max)), h = BAR.h }
-end
-
 local function startRecordingIndicator()
     if not overlay then return end
     recordingStartTime = hs.timer.secondsSinceEpoch()
-    barState.txnSecs = 0
-    barState.maxSecs = 180
-    barState.frozen  = false
     pulseAlpha = 1.0
     pulseFading = true
-    log("startRecordingIndicator: overlay element count = " .. tostring(#overlay))
 
     -- Show dot and timer
     overlay[EL.dot].fillColor = { red = 1, green = 0.15, blue = 0.15, alpha = 1.0 }
     overlay[EL.timer].textColor = { red = 1, green = 0.4, blue = 0.4, alpha = 1.0 }
-
-    -- Show progress bar track
-    overlay[EL.bar_bg].fillColor  = { red = 0.3, green = 0.3, blue = 0.3,  alpha = 0.6 }
-    overlay[EL.bar_rec].fillColor = { red = 1.0, green = 0.35, blue = 0.15, alpha = 0.85 }
-    overlay[EL.bar_txn].fillColor = { red = 0.2, green = 0.75, blue = 1.0,  alpha = 0.9 }
-    log("startRecordingIndicator: bar_bg idx=" .. EL.bar_bg .. " bar_rec idx=" .. EL.bar_rec)
 
     -- Pulse the red dot
     pulseTimer = hs.timer.doEvery(0.05, function()
@@ -1363,14 +1116,13 @@ local function startRecordingIndicator()
         overlay[EL.dot].fillColor = { red = 1, green = 0.15, blue = 0.15, alpha = pulseAlpha }
     end)
 
-    -- Update elapsed time and progress bar every second
+    -- Update elapsed time every second
     clockTimer = hs.timer.doEvery(1, function()
         if not overlay then return end
         local elapsed = math.floor(hs.timer.secondsSinceEpoch() - recordingStartTime)
         local min = math.floor(elapsed / 60)
         local sec = elapsed % 60
         overlay[EL.timer].text = string.format("%d:%02d", min, sec)
-        updateProgressBar()
     end)
 end
 
@@ -1378,12 +1130,9 @@ local function stopRecordingIndicator()
     if pulseTimer then pulseTimer:stop(); pulseTimer = nil end
     if clockTimer then clockTimer:stop(); clockTimer = nil end
     if overlay then
-        overlay[EL.dot].fillColor   = { red = 1, green = 0.15, blue = 0.15, alpha = 0.0 }
-        overlay[EL.timer].textColor = { red = 1, green = 0.4,  blue = 0.4,  alpha = 0.0 }
-        overlay[EL.timer].text      = ""
-        -- Freeze orange bar at current position; keep bars visible for
-        -- transcription progress (bars hidden when overlay is deleted)
-        barState.frozen = true
+        overlay[EL.dot].fillColor = { red = 1, green = 0.15, blue = 0.15, alpha = 0.0 }
+        overlay[EL.timer].textColor = { red = 1, green = 0.4, blue = 0.4, alpha = 0.0 }
+        overlay[EL.timer].text = ""
     end
 end
 
@@ -1396,61 +1145,16 @@ function emergencyStop()
     isRecording = false
     if partialTimer then partialTimer:stop(); partialTimer = nil end
     if silenceTimer then silenceTimer:stop(); silenceTimer = nil end
-    if PL.streamTimer  then PL.streamTimer:stop();  PL.streamTimer  = nil end
     stopRecordingIndicator()
     if ffmpegTask and ffmpegTask:isRunning() then ffmpegTask:interrupt() end
     ffmpegTask = nil
     partialBusy = false
     silentChunkCount = 0
     lastCheckedChunk = 0
-    pipelineReset()
     forceHideOverlay()
     updateMenuBar()
     os.execute("killall whisper-cli 2>/dev/null")
     hs.notify.new({ title = "local-whisper", informativeText = "Stopped" }):send()
-end
-
---------------------------------------------------------------------------------
--- Whisper concurrency semaphore (code-review item #1)
---------------------------------------------------------------------------------
--- Root cause of the "whole system froze" hang: up to 5 whisper-cli processes
--- (large-v3-turbo streaming segments + the final ones) ran at once, pegging the
--- CPU hard enough to starve the audio subsystem — which is what made
--- hs.sound.getByFile() return nil and left the overlay wedged. Capping how many
--- whisper-cli processes run concurrently throttles the trigger, not just the
--- symptom. All three whisper spawn sites go through startWhisper() below.
-
-local MAX_WHISPER = 2  -- max concurrent whisper-cli processes (reviewer suggested 2–3)
-
--- Start queued jobs while a slot is free. Single-threaded (hs callbacks run on
--- the main thread), so no locking needed.
-local function pumpWhisperQueue()
-    while PL.whisperActive < MAX_WHISPER and #PL.whisperQueue > 0 do
-        local job = table.remove(PL.whisperQueue, 1)
-        PL.whisperActive = PL.whisperActive + 1
-        local t = hs.task.new(WHISPER_BIN, function(code, out, err)
-            PL.whisperActive = math.max(0, PL.whisperActive - 1)  -- clamp: killall can fire late callbacks
-            local ok, e = pcall(job.cb, code, out, err)
-            if not ok then log("whisper: callback error: " .. tostring(e)) end
-            pumpWhisperQueue()
-        end, job.args)
-        if t then
-            t:start()
-        else
-            -- hs.task.new can return nil under resource pressure; free the slot
-            -- and let the caller's callback run so the pipeline doesn't stall.
-            PL.whisperActive = math.max(0, PL.whisperActive - 1)
-            log("whisper: hs.task.new returned nil, running callback with error code")
-            pcall(job.cb, -1, "", "")
-        end
-    end
-end
-
--- Enqueue a whisper-cli run. cb receives (exitCode, stdout, stderr), same as a
--- raw hs.task callback, so existing callbacks work unchanged.
-local function startWhisper(args, cb)
-    table.insert(PL.whisperQueue, { args = args, cb = cb })
-    pumpWhisperQueue()
 end
 
 --------------------------------------------------------------------------------
@@ -1490,7 +1194,7 @@ local function doPartialTranscribe()
         local whisperArgs = { "-m", getPartialModelPath(), "-f", batchWav, "-l", lang, "-nt", "--no-prints" }
         local promptArgs = getPromptArgs()
         for _, a in ipairs(promptArgs) do table.insert(whisperArgs, a) end
-        startWhisper(whisperArgs, function(code2, out2)
+        local whisperTask = hs.task.new(WHISPER_BIN, function(code2, out2)
             partialBusy = false
             lastChunkCount = completed
             if code2 ~= 0 or not isRecording then return end
@@ -1501,7 +1205,8 @@ local function doPartialTranscribe()
                 setOverlayText(display)
                 log("partial: " .. text)
             end
-        end)
+        end, whisperArgs)
+        whisperTask:start()
     end, { "-y", "-f", "concat", "-safe", "0", "-i", batchList, "-c", "copy", batchWav })
     concatTask:start()
 end
@@ -1561,17 +1266,16 @@ local function finishInsertion(text, detectedLang)
         inserted = ctx.inserted,
         app = capturedAppName or "?",
     })
-    while #recentDictations > 10 do
+    while #recentDictations > MAX_RECENT do
         table.remove(recentDictations)
     end
     saveRecentDictations()
-    _whisperRecovery.clear()  -- text is safely persisted; drop the crash-recovery snapshot
 
     local display = finalText
     if detectedLang then display = display .. " [" .. detectedLang:upper() .. "]" end
     setOverlayText(display)
-    _whisperRecovery.play("/System/Library/Sounds/Glass.aiff")
-    hs.timer.doAfter(0.5, hideOverlay)
+    hs.sound.getByFile("/System/Library/Sounds/Glass.aiff"):play()
+    hs.timer.doAfter(OVERLAY_LINGER, hideOverlay)
 end
 
 -- Insert transcribed text at cursor, with post-processing, optional LLM refinement, and action hooks
@@ -1589,8 +1293,7 @@ local function insertTranscribedText(text, detectedLang)
     local isVoiceCommand = text:lower():match("voice%s+command")
 
     -- Optional LLM refinement (async, skips short text and voice commands)
-    if not isVoiceCommand and getRefineMode() and #text >= 50 then
-        armWatchdog()  -- Ollama refine can hang; keep the stall timer covering it
+    if not isVoiceCommand and getRefineMode() and #text >= REFINE_MIN_CHARS then
         setOverlayText("Refining...")
         refineWithOllama(text, function(refined)
             finishInsertion(refined, detectedLang)
@@ -1600,323 +1303,167 @@ local function insertTranscribedText(text, detectedLang)
     end
 end
 
--- Max seconds per whisper call — must stay BELOW whisper's 30s internal window.
--- Exceeding 30s forces a window boundary crossing where the model reliably drops
--- 5-10s of content at the seam. 25s gives a safe margin inside one window.
-
-
---------------------------------------------------------------------------------
--- Transcription pipeline (streaming during recording + finalization at stop)
---------------------------------------------------------------------------------
-
-local function pipelineReset()
-    _whisperRecovery.salvage()  -- rescue text from a prior session that never finalized
-    PL.results    = {}
-    PL.lang       = nil
-    PL.nextChunk  = 1
-    PL.nextSeg    = 1
-    PL.total      = 0
-    PL.done       = 0
-    PL.finalizing = false
-    barState.segChunks = {}
-    barState.txnSecs   = 0
-    barState.frozen    = false
-    -- Drop any queued whisper jobs from the prior session and clear the
-    -- semaphore. whisperActive is zeroed here (any in-flight tasks were just
-    -- killed via `killall whisper-cli`); the clamp in pumpWhisperQueue keeps
-    -- late-firing kill callbacks from driving the count negative.
-    PL.whisperQueue     = {}
-    PL.whisperActive    = 0
-    PL.ffmpegStallTicks = 0
-    PL.lastChunkSeen    = 0
-end
-
-local function pipelineFinalize()
-    local parts = {}
-    for n = 1, PL.total do
-        local t = PL.results[n] or ""
-        if t ~= "" then table.insert(parts, t) end
-    end
-    local finalText = table.concat(parts, " "):gsub("^%s+", ""):gsub("%s+$", ""):gsub("%s+", " ")
-    log("pipeline: finalized " .. PL.total .. " seg(s): '" .. finalText:sub(1, 120) .. "'")
-    if finalText == "" then
-        if overlay then overlay[EL.bar_bg].fillColor={red=0.3,green=0.3,blue=0.3,alpha=0}; overlay[EL.bar_rec].fillColor={red=1,green=0.35,blue=0.15,alpha=0}; overlay[EL.bar_txn].fillColor={red=0.2,green=0.75,blue=1,alpha=0} end
-        hideOverlay(); return
-    end
-    -- Show blue bar at 100% briefly before inserting
-    barState.txnSecs = barState.maxSecs
-    if overlay then updateProgressBar() end
-    hs.timer.doAfter(0.4, function()
-        if overlay then overlay[EL.bar_bg].fillColor={red=0.3,green=0.3,blue=0.3,alpha=0}; overlay[EL.bar_rec].fillColor={red=1,green=0.35,blue=0.15,alpha=0}; overlay[EL.bar_txn].fillColor={red=0.2,green=0.75,blue=1,alpha=0} end
-    end)
-    insertTranscribedText(finalText, PL.lang)
-end
-
-local function onPipelineDone(n, text, detected)
-    PL.results[n] = text
-    _whisperRecovery.snapshot()  -- persist accepted segments so a finalize failure can't lose them
-    if detected and not PL.lang then PL.lang = detected end
-    PL.done = PL.done + 1
-    -- Advance transcription progress bar
-    barState.txnSecs = barState.txnSecs + (barState.segChunks[n] or 0)
-    log("pipeline: seg " .. n .. " complete (done=" .. PL.done .. "/" .. PL.total .. ", txnSecs=" .. barState.txnSecs .. ")")
-    if overlay then updateProgressBar() end
-    if PL.finalizing then
-        local left = PL.total - PL.done
-        if left > 0 then
-            armWatchdog()  -- progress made; reset the no-progress stall timer
-            setOverlayText(string.format("Transcribing... (%d left)", left))
-        else
-            pipelineFinalize()
-        end
-    end
-end
-
--- Concat chunkGroup → WAV → whisper, then call onPipelineDone(segN, text, lang).
--- Fully async; multiple segments can run concurrently.
--- Automatically passes previous segment text as --prompt for semantic continuity.
-local function dispatchSegment(segN, chunkGroup)
-    barState.segChunks[segN] = #chunkGroup  -- remember size for progress bar
-    local lang = getLang()
-
-    -- Build --prompt: combine user's custom prompt + previous segment text.
-    -- Previous segment text gives Whisper decoder context so it doesn't lose
-    -- meaning or mis-capitalize at segment boundaries.
-    local userPrompt = readFile(PROMPT_FILE):gsub("%s+$", "")
-    local prevText   = (PL.results[segN - 1] or ""):sub(-300)  -- last ~300 chars fits ~60 tokens
-    local combined   = ""
-    if userPrompt ~= "" and prevText ~= "" then
-        combined = userPrompt .. " " .. prevText
-    elseif userPrompt ~= "" then
-        combined = userPrompt
-    elseif prevText ~= "" then
-        combined = prevText
-    end
-    local promptArgs = combined ~= "" and { "--prompt", combined } or {}
-    if combined ~= "" then
-        log("pipeline: seg " .. segN .. " prompt context: '" .. combined:sub(1, 80) .. "'")
-    end
-
-    local concatFile  = WHISPER_TMP .. "/pipe_concat_" .. segN .. ".txt"
-    local segWav      = WHISPER_TMP .. "/pipe_seg_"    .. segN .. ".wav"
-
-    local f, ferr = io.open(concatFile, "w")
-    if not f then
-        log("pipeline: seg " .. segN .. " ERROR opening concat file: " .. tostring(ferr))
-        onPipelineDone(segN, "", nil)
-        return
-    end
-    for _, chunk in ipairs(chunkGroup) do f:write("file '" .. chunk .. "'\n") end
-    f:close()
-
-    log("pipeline: seg " .. segN .. " concat → " .. segWav .. " (" .. #chunkGroup .. " chunks)")
-    local concatTask = hs.task.new(FFMPEG, function(code)
-        if code ~= 0 then
-            log("pipeline: seg " .. segN .. " concat FAILED (code=" .. tostring(code) .. ")")
-            onPipelineDone(segN, "", nil); return
-        end
-        log("pipeline: seg " .. segN .. " concat OK (" .. ((hs.fs.attributes(segWav) or {}).size or -1) .. " bytes), starting whisper lang=" .. lang)
-
-        local function onWhisperDone(rawOut, detected)
-            local clean = rawOut:gsub("^%s+", ""):gsub("%s+$", ""):gsub("%s+", " ")
-            if isHallucination(clean) then
-                log("pipeline: seg " .. segN .. " REJECTED (hallucination)")
-                clean = ""
-            else
-                log("pipeline: seg " .. segN .. " accepted text (" .. #clean .. " chars): '" .. clean:sub(1, 80) .. "'")
-            end
-            onPipelineDone(segN, clean, detected)
-        end
-
-        if lang == "auto" then
-            local args = { "-m", getModelPath(), "-f", segWav, "-l", "auto", "-nt" }
-            for _, a in ipairs(promptArgs) do table.insert(args, a) end
-            startWhisper(args, function(code2, out2, err2)
-                log("pipeline: seg " .. segN .. " whisper(auto) exit=" .. tostring(code2))
-                if code2 ~= 0 then onPipelineDone(segN, "", nil); return end
-                local detected = (err2 or ""):match("auto%-detected language:%s*(%w+)")
-                log("pipeline: seg " .. segN .. " auto-detected: " .. tostring(detected))
-                onWhisperDone(out2 or "", detected)
-            end)
-        else
-            local args = { "-m", getModelPath(), "-f", segWav, "-l", lang, "-nt", "--no-prints" }
-            for _, a in ipairs(promptArgs) do table.insert(args, a) end
-            startWhisper(args, function(code2, out2)
-                log("pipeline: seg " .. segN .. " whisper(" .. lang .. ") exit=" .. tostring(code2))
-                if code2 ~= 0 then onPipelineDone(segN, "", nil); return end
-                onWhisperDone(out2 or "", lang)
-            end)
-        end
-    end, { "-y", "-f", "concat", "-safe", "0", "-i", concatFile, "-c", "copy", segWav })
-    concatTask:start()
-end
-
--- Fired every 3s during recording. Dispatches a segment when enough chunks
--- have accumulated and the silence-aware split gives a meaningful group.
-local function doRestartFfmpegFromChunk(startN)
-    if not isRecording then return end
-    ffmpegTask = hs.task.new(FFMPEG, function(code, out, err)
-        log("recording: ffmpeg exited " .. tostring(code) .. " (restarted instance)")
-    end, {
-        "-f", "avfoundation", "-i", AUDIO_DEVICE,
-        "-ac", "1", "-ar", "16000",
-        "-f", "segment", "-segment_time", "1", "-segment_format", "wav",
-        "-segment_start_number", tostring(startN),
-        CHUNK_DIR .. "/chunk_%03d.wav"
-    })
-    ffmpegTask:setEnvironment({ HOME = os.getenv("HOME"), PATH = os.getenv("PATH") or "/usr/bin:/bin" })
-    ffmpegTask:start()
-    PL.ffmpegStallTicks = 0
-    PL.lastChunkSeen    = startN
-end
-
-local function restartFfmpegFromChunk(startN)
-    if not isRecording then return end
-    log("ffmpeg-stall: restarting ffmpeg from chunk " .. startN)
-    -- Kill current (stalled) ffmpeg first
-    if ffmpegTask and ffmpegTask:isRunning() then ffmpegTask:interrupt() end
-    ffmpegTask = nil
-
-    -- Play back the last 2 recorded chunks so user knows where to continue
-    local allChunks = getChunkFiles()
-    local nChunks   = #allChunks
-    local replayList = WHISPER_TMP .. "/stall_replay.txt"
-    local replayWav  = WHISPER_TMP .. "/stall_replay.wav"
-    local startIdx = math.max(1, nChunks - 1)
-    local f = io.open(replayList, "w")
-    if f then
-        for i = startIdx, nChunks do
-            f:write("file '" .. allChunks[i] .. "'\n")
-        end
-        f:close()
-        local concatTask = hs.task.new(FFMPEG, function(code)
-            if code == 0 and isRecording then
-                local snd = hs.sound.getByFile(replayWav)
-                if snd then
-                    snd:volume(1.0)
-                    snd:play()
-                    -- Give ~2.5s for playback then restart recording
-                    hs.timer.doAfter(2.5, function() doRestartFfmpegFromChunk(startN) end)
-                else
-                    doRestartFfmpegFromChunk(startN)
-                end
-            else
-                doRestartFfmpegFromChunk(startN)
-            end
-        end, { "-y", "-f", "concat", "-safe", "0", "-i", replayList, "-c", "copy", replayWav })
-        concatTask:start()
-    else
-        doRestartFfmpegFromChunk(startN)
-    end
-end
-
-local function streamCheckAndDispatch()
-    if not isRecording then return end
-    local allChunks = getChunkFiles()
-    -- Stall detector: if chunk count hasn't grown in 2 consecutive ticks (6s), restart ffmpeg
-    local currentCount = #allChunks
-    if currentCount <= PL.lastChunkSeen then
-        PL.ffmpegStallTicks = PL.ffmpegStallTicks + 1
-        if PL.ffmpegStallTicks >= 2 then
-            log("ffmpeg-stall: no new chunks for " .. (PL.ffmpegStallTicks * 3) .. "s (stuck at " .. currentCount .. ") — restarting")
-            _whisperRecovery.play("/System/Library/Sounds/Basso.aiff")
-            restartFfmpegFromChunk(currentCount)
-            return
-        end
-    else
-        PL.ffmpegStallTicks = 0
-        PL.lastChunkSeen    = currentCount
-    end
-    local safeCount = #allChunks - 2  -- leave last 2 chunks (still being written)
-    if safeCount < PL.nextChunk + 25 - 2 then return end
-
-    local candidates = {}
-    for j = PL.nextChunk, safeCount do
-        table.insert(candidates, allChunks[j])
-    end
-    if #candidates < 25 then return end
-
-    local groups     = splitAtSilence(candidates, 25)
-    local firstGroup = groups[1]
-    if not firstGroup or #firstGroup < 15 then return end  -- too short to bother
-
-    local segN = PL.nextSeg
-    PL.nextSeg    = PL.nextSeg    + 1
-    PL.nextChunk  = PL.nextChunk  + #firstGroup
-    log("stream: dispatching seg " .. segN .. " (" .. #firstGroup .. " chunks, live during recording)")
-    dispatchSegment(segN, firstGroup)
-end
+-- Max seconds per whisper call — keeps each segment within whisper's sweet spot
+-- and prevents the model from losing the beginning of long recordings.
+local FINAL_SEGMENT_SECS = 55
 
 local function doFinalTranscription()
-    if PL.streamTimer then PL.streamTimer:stop(); PL.streamTimer = nil end
+    local chunks = getChunkFiles()
 
-    -- Arm the stall watchdog for the whole finalize→refine→insert path (item #3).
-    armWatchdog()
+    -- ДИАГНОСТИКА: логируем все чанки и состояние
+    log("final: START — total chunks=" .. #chunks .. ", partialBusy=" .. tostring(partialBusy))
+    if #chunks > 0 then
+        local first = chunks[1]:match("([^/]+)$") or chunks[1]
+        local last  = chunks[#chunks]:match("([^/]+)$") or chunks[#chunks]
+        log("final: first=" .. first .. "  last=" .. last .. "  duration≈" .. #chunks .. "s")
+    end
 
-    -- Body wrapped in pcall (item #2): if getChunkFiles()/splitAtSilence()/etc.
-    -- throws, the overlay would otherwise be stranded on "Transcribing…" forever.
-    -- On error we log and force the overlay down. Accepted segment text is already
-    -- persisted by _whisperRecovery.snapshot(), so a throw here doesn't lose text.
-    local ok, err = pcall(function()
-        local allChunks = getChunkFiles()
-        log("final: START — total chunks=" .. #allChunks
-            .. ", streamed=" .. (PL.nextSeg - 1) .. " segs"
-            .. " (next unclaimed chunk idx=" .. PL.nextChunk .. ")")
+    if #chunks < 2 then
+        log("final: not enough chunks, skipping")
+        hideOverlay()
+        return
+    end
 
-        -- Build remaining chunks not yet claimed by the streaming pipeline
-        local remaining = {}
-        for j = PL.nextChunk, #allChunks do
-            table.insert(remaining, allChunks[j])
+    setOverlayText("Transcribing...")
+
+    local lang = getLang()
+    local preferred = getPreferredLangs()
+    local promptArgs = getPromptArgs()
+
+    -- Split 1-second chunks into groups of FINAL_SEGMENT_SECS
+    local segmentGroups = {}
+    local i = 1
+    while i <= #chunks do
+        local group = {}
+        for j = i, math.min(i + FINAL_SEGMENT_SECS - 1, #chunks) do
+            table.insert(group, chunks[j])
         end
+        table.insert(segmentGroups, group)
+        i = i + FINAL_SEGMENT_SECS
+    end
 
-        if PL.nextSeg == 1 and #remaining < 2 then
-            log("final: not enough chunks, skipping")
+    local totalSegs = #segmentGroups
+    log("final: segments=" .. totalSegs .. " (FINAL_SEGMENT_SECS=" .. FINAL_SEGMENT_SECS .. ")")
+    for si, grp in ipairs(segmentGroups) do
+        local gfirst = grp[1]:match("([^/]+)$") or grp[1]
+        local glast  = grp[#grp]:match("([^/]+)$") or grp[#grp]
+        log("final: seg " .. si .. " → " .. #grp .. " chunks (" .. gfirst .. " … " .. glast .. ")")
+    end
+
+    local allTexts = {}
+    local detectedLangOverall = nil
+    local segIdx = 0
+
+    local function finishAll()
+        log("final: finishAll — collected " .. #allTexts .. " text segment(s)")
+        local finalText = table.concat(allTexts, " "):gsub("^%s+", ""):gsub("%s+$", ""):gsub("%s+", " ")
+        log("final combined (" .. totalSegs .. " seg(s)): '" .. finalText .. "'")
+        if finalText == "" then
             hideOverlay()
             return
         end
-
-        setOverlayText("Transcribing...")
-
-        -- Dispatch remaining chunks as final pipeline segments
-        if #remaining >= 2 then
-            local finalGroups = splitAtSilence(remaining, 25)
-            for _, grp in ipairs(finalGroups) do
-                local gfirst = grp[1]:match("([^/]+)$") or grp[1]
-                local glast  = grp[#grp]:match("([^/]+)$") or grp[#grp]
-                local segN = PL.nextSeg
-                PL.nextSeg   = PL.nextSeg   + 1
-                PL.nextChunk = PL.nextChunk + #grp
-                log("final: dispatching seg " .. segN .. " → " .. #grp .. " chunks (" .. gfirst .. " … " .. glast .. ")")
-                dispatchSegment(segN, grp)
-            end
-        end
-
-        -- Fix the total and start finalization mode
-        PL.total      = PL.nextSeg - 1
-        PL.finalizing = true
-        log("final: PL.total=" .. PL.total .. ", PL.done=" .. PL.done)
-
-        if PL.total == 0 then
-            log("final: no segments at all, skipping")
-            hideOverlay(); return
-        end
-
-        -- Update overlay with pending count (stream segs may still be running)
-        local left = PL.total - PL.done
-        if left > 1 then
-            setOverlayText(string.format("Transcribing... (%d left)", left))
-        end
-
-        -- Edge case: all streaming segs completed before recording stopped
-        if PL.done >= PL.total then
-            pipelineFinalize()
-        end
-    end)
-
-    if not ok then
-        log("final: ERROR in doFinalTranscription — " .. tostring(err))
-        hideOverlay()
+        insertTranscribedText(finalText, detectedLangOverall)
     end
+
+    local function transcribeNextSegment()
+        segIdx = segIdx + 1
+        if segIdx > totalSegs then
+            finishAll()
+            return
+        end
+
+        local group = segmentGroups[segIdx]
+        local n = segIdx
+
+        if totalSegs > 1 then
+            setOverlayText(string.format("Transcribing %d/%d...", n, totalSegs))
+        end
+
+        local concatFile = WHISPER_TMP .. "/seg_concat_" .. n .. ".txt"
+        local segWav    = WHISPER_TMP .. "/seg_" .. n .. ".wav"
+
+        log("final: seg " .. n .. " writing concat list (" .. #group .. " files) → " .. concatFile)
+        local f, ferr = io.open(concatFile, "w")
+        if not f then
+            log("final: seg " .. n .. " ERROR opening concat file: " .. tostring(ferr))
+            transcribeNextSegment()
+            return
+        end
+        for _, chunk in ipairs(group) do
+            f:write("file '" .. chunk .. "'\n")
+        end
+        f:close()
+
+        log("final: seg " .. n .. " starting ffmpeg concat → " .. segWav)
+        local concatTask = hs.task.new(FFMPEG, function(code)
+            if code ~= 0 then
+                log("final: seg " .. n .. " concat FAILED (code=" .. tostring(code) .. ")")
+                transcribeNextSegment()  -- skip bad segment, keep going
+                return
+            end
+            local wavSize = (hs.fs.attributes(segWav) or {}).size or -1
+            log("final: seg " .. n .. " concat OK — wav size=" .. wavSize .. " bytes")
+
+            local function onSegmentText(text, detected)
+                log("final: seg " .. n .. " onSegmentText hallucination=" .. tostring(isHallucination(text)) .. " len=" .. #text)
+                if text ~= "" and not isHallucination(text) then
+                    table.insert(allTexts, text)
+                    log("final: seg " .. n .. " accepted text: '" .. text:sub(1, 120) .. "'")
+                else
+                    log("final: seg " .. n .. " REJECTED (empty or hallucination): '" .. text:sub(1, 80) .. "'")
+                end
+                if detected and not detectedLangOverall then
+                    detectedLangOverall = detected
+                end
+                transcribeNextSegment()
+            end
+
+            -- Always use auto-detect per segment for code-switching (surzhyk/mixed language)
+            -- Never reuse a previously detected language — each segment may have different dominant language
+            local effectiveLang = lang
+
+            log("final: seg " .. n .. " starting whisper lang=" .. effectiveLang .. " model=" .. getModelPath():match("([^/]+)$"))
+
+            if effectiveLang == "auto" then
+                local autoArgs = { "-m", getModelPath(), "-f", segWav, "-l", "auto", "-nt" }
+                for _, a in ipairs(promptArgs) do table.insert(autoArgs, a) end
+                local wTask = hs.task.new(WHISPER_BIN, function(code2, out2, err2)
+                    log("final: seg " .. n .. " whisper(auto) exit=" .. tostring(code2) .. " outlen=" .. #(out2 or "") .. " errlen=" .. #(err2 or ""))
+                    if code2 ~= 0 then
+                        log("final: seg " .. n .. " whisper FAILED (auto)")
+                        transcribeNextSegment()
+                        return
+                    end
+                    local detected = (err2 or ""):match("auto%-detected language:%s*(%w+)")
+                    log("seg " .. n .. " auto-detected: " .. tostring(detected))
+
+                    -- Accept whatever language auto-detected — forcing a retry with preferred[1]
+                    -- would cause "translation" of mixed-language content (surzhyk, English terms, etc.)
+                    local text = (out2 or ""):gsub("^%s+", ""):gsub("%s+$", ""):gsub("%s+", " ")
+                    onSegmentText(text, detected)
+                end, autoArgs)
+                wTask:start()
+            else
+                local langArgs = { "-m", getModelPath(), "-f", segWav, "-l", effectiveLang, "-nt", "--no-prints" }
+                for _, a in ipairs(promptArgs) do table.insert(langArgs, a) end
+                local wTask = hs.task.new(WHISPER_BIN, function(code2, out2)
+                    log("final: seg " .. n .. " whisper(" .. effectiveLang .. ") exit=" .. tostring(code2) .. " outlen=" .. #(out2 or ""))
+                    if code2 ~= 0 then
+                        log("final: seg " .. n .. " whisper FAILED")
+                        transcribeNextSegment()
+                        return
+                    end
+                    local text = (out2 or ""):gsub("^%s+", ""):gsub("%s+$", ""):gsub("%s+", " ")
+                    log("final seg " .. n .. "/" .. totalSegs .. ": '" .. text .. "'")
+                    onSegmentText(text, effectiveLang)
+                end, langArgs)
+                wTask:start()
+            end
+        end, { "-y", "-f", "concat", "-safe", "0", "-i", concatFile, "-c", "copy", segWav })
+        concatTask:start()
+    end
+
+    transcribeNextSegment()
 end
 
 --------------------------------------------------------------------------------
@@ -1942,11 +1489,11 @@ local function checkSilence()
         local maxVol = (err or ""):match("max_volume:%s*([-%.%d]+)")
         if maxVol then
             maxVol = tonumber(maxVol)
-            if maxVol and maxVol < -40 then
+            if maxVol and maxVol < AUTO_STOP_THRESHOLD_DB then
                 silentChunkCount = silentChunkCount + 1
                 log("silence: chunk " .. completed .. " vol=" .. maxVol .. "dB (count=" .. silentChunkCount .. ")")
-                if silentChunkCount >= 3 then
-                    log("auto-stop: " .. 3 .. "s of silence")
+                if silentChunkCount >= AUTO_STOP_SILENCE_SECONDS then
+                    log("auto-stop: " .. AUTO_STOP_SILENCE_SECONDS .. "s of silence")
                     stopRecording()
                 end
             else
@@ -1966,6 +1513,8 @@ local warmupTask = nil
 local warmupTimer = nil
 local isWarmingUp = false
 local warmupAttempt = 0
+local WARMUP_ATTEMPT_SECS = 1.0   -- timeout per attempt
+local WARMUP_MAX_ATTEMPTS = 10    -- give up after this many retries
 
 local function startActualRecording()
     isWarmingUp = false
@@ -1973,18 +1522,7 @@ local function startActualRecording()
     isRecording = true
     log("recording: start")
 
-    -- Preserve the previous session's raw chunks instead of deleting them
-    -- outright (code-review item #5). A prior incident: a session froze before
-    -- finalizing, and the very next recording's blind `rm -rf` wiped its
-    -- unprocessed chunks before anyone noticed — losing audio that was still
-    -- fully recoverable on disk. Rotating into one generation of backup means a
-    -- session that fails to finalize survives through the *next* recording too,
-    -- giving a window to notice and recover before it's finally purged.
-    local prevChunkDir = CHUNK_DIR .. "_prev"
-    os.execute("rm -rf '" .. prevChunkDir .. "'")  -- drop the backup from 2 sessions ago
-    if hs.fs.attributes(CHUNK_DIR) then
-        os.execute("mv '" .. CHUNK_DIR .. "' '" .. prevChunkDir .. "'")
-    end
+    os.execute("rm -rf '" .. CHUNK_DIR .. "'")
     os.execute("mkdir -p '" .. CHUNK_DIR .. "'")
 
     captureActiveApp()
@@ -2012,11 +1550,8 @@ local function startActualRecording()
     partialBusy = false
     silentChunkCount = 0
     lastCheckedChunk = 0
-
-    -- Reset streaming pipeline state for this recording session
-    pipelineReset()
-    if PL.streamTimer then PL.streamTimer:stop(); PL.streamTimer = nil end
-    PL.streamTimer = hs.timer.doEvery(3, streamCheckAndDispatch)
+    -- Partial transcription disabled: low quality, not useful
+    -- partialTimer = hs.timer.doEvery(PARTIAL_INTERVAL, doPartialTranscribe)
 
     -- Poll until first chunk exists on disk → audio is truly flowing → play Pop
     -- Uses recursive doAfter (not doEvery) to avoid stop-within-callback issues.
@@ -2024,20 +1559,13 @@ local function startActualRecording()
         if not isRecording then return end  -- recording already stopped, don't play Pop
         local firstChunk = CHUNK_DIR .. "/chunk_000.wav"
         local attr = hs.fs.attributes(firstChunk)
-        if (attr and attr.size and attr.size > 200) then
-            log("recording: first chunk ready after " .. (attempt * 0.05) .. "s — audio flowing")
-            _whisperRecovery.play("/System/Library/Sounds/Pop.aiff")
-        elseif attempt >= 200 then
-            -- 10 seconds elapsed and still no audio data — abort with error
-            log("recording: first chunk timeout — aborting, device not producing audio")
-            _whisperRecovery.play("/System/Library/Sounds/Basso.aiff")
-            setOverlayText("Нет аудио")
-            isRecording = false
-            if ffmpegTask and ffmpegTask:isRunning() then ffmpegTask:interrupt() end
-            ffmpegTask = nil
-            stopRecordingIndicator()
-            updateMenuBar()
-            hs.timer.doAfter(2.0, hideOverlay)
+        if (attr and attr.size and attr.size > 200) or attempt >= 60 then
+            if attr then
+                log("recording: first chunk ready after " .. (attempt * 0.05) .. "s — audio flowing")
+            else
+                log("recording: first chunk timeout, playing Pop anyway")
+            end
+            hs.sound.getByFile("/System/Library/Sounds/Pop.aiff"):play()
         else
             hs.timer.doAfter(0.05, function() pollForFirstChunk(attempt + 1) end)
         end
@@ -2054,19 +1582,18 @@ end
 
 local tryWarmup  -- forward declaration for recursion
 
+local warmupTick = hs.sound.getByFile("/System/Library/Sounds/Tink.aiff")
+if warmupTick then warmupTick:volume(0.15) end
+
 tryWarmup = function()
     if not isWarmingUp then return end
 
     warmupAttempt = warmupAttempt + 1
-    log("warmup: attempt " .. warmupAttempt .. "/" .. 10)
+    log("warmup: attempt " .. warmupAttempt .. "/" .. WARMUP_MAX_ATTEMPTS)
 
-    -- Subtle tick before each attempt. Recreated fresh every call (via
-    -- _whisperRecovery.play) rather than reusing one hs.sound object created
-    -- once at file-load time -- a cached object can go silently dead after a
-    -- CoreAudio device change (e.g. Bluetooth mic connect/disconnect) and
-    -- then never play again for the rest of the Hammerspoon session.
-    _whisperRecovery.play("/System/Library/Sounds/Tink.aiff", 0.15)
-    setOverlayText("... " .. warmupAttempt .. "/" .. 10)
+    -- Subtle tick before each attempt
+    if warmupTick then warmupTick:play() end
+    setOverlayText("... " .. warmupAttempt .. "/" .. WARMUP_MAX_ATTEMPTS)
 
     warmupTask = hs.task.new(FFMPEG,
         function(code)  -- termination callback
@@ -2088,22 +1615,22 @@ tryWarmup = function()
     warmupTask:start()
 
     -- If no response within 1s, kill and retry (up to max)
-    warmupTimer = hs.timer.doAfter(1.0, function()
+    warmupTimer = hs.timer.doAfter(WARMUP_ATTEMPT_SECS, function()
         warmupTimer = nil
         if not isWarmingUp then return end
         if warmupTask and warmupTask:isRunning() then
             warmupTask:interrupt(); warmupTask = nil
         end
-        if warmupAttempt < 10 then
+        if warmupAttempt < WARMUP_MAX_ATTEMPTS then
             log("warmup: no response, retrying...")
             tryWarmup()
         else
             -- All attempts exhausted — signal error, do NOT record
             isWarmingUp = false
             warmupAttempt = 0
-            log("warmup: FAILED after " .. 10 .. " attempts — audio device unresponsive")
+            log("warmup: FAILED after " .. WARMUP_MAX_ATTEMPTS .. " attempts — audio device unresponsive")
             setOverlayText("Микрофон недоступен")
-            _whisperRecovery.play("/System/Library/Sounds/Basso.aiff")
+            hs.sound.getByFile("/System/Library/Sounds/Basso.aiff"):play()
             hs.timer.doAfter(2.5, hideOverlay)
         end
     end)
@@ -2138,7 +1665,6 @@ stopRecording = function()
 
     if partialTimer then partialTimer:stop(); partialTimer = nil end
     if silenceTimer then silenceTimer:stop(); silenceTimer = nil end
-    if PL.streamTimer then PL.streamTimer:stop(); PL.streamTimer = nil end
     partialBusy = false
     silentChunkCount = 0
     lastCheckedChunk = 0
@@ -2151,13 +1677,10 @@ stopRecording = function()
     end
     ffmpegTask = nil
 
-    -- Schedule finalization FIRST so nothing below can prevent it (the brief delay
-    -- lets ffmpeg flush its last chunk). This ordering is load-bearing: an unguarded
-    -- sound:play() here used to be able to throw and abort stopRecording before this
-    -- line ever ran, hanging the overlay and losing the whole dictation.
-    hs.timer.doAfter(0.3, doFinalTranscription)
+    hs.sound.getByFile("/System/Library/Sounds/Tink.aiff"):play()
 
-    _whisperRecovery.play("/System/Library/Sounds/Tink.aiff")
+    -- Brief delay for ffmpeg to finalize last chunk
+    hs.timer.doAfter(0.3, doFinalTranscription)
 end
 
 --------------------------------------------------------------------------------
@@ -2165,7 +1688,8 @@ end
 --------------------------------------------------------------------------------
 
 -- Map trigger key to generic modifier name for polling
-local genericMod = ({ rightAlt = "alt", rightCmd = "cmd", rightCtrl = "ctrl" })[TRIGGER_KEY]
+local GENERIC_MOD = { rightAlt = "alt", rightCmd = "cmd", rightCtrl = "ctrl" }
+local genericMod = GENERIC_MOD[TRIGGER_KEY]
 
 local releasePoller = nil
 
@@ -2214,19 +1738,14 @@ end)
 -- Meeting mode
 --------------------------------------------------------------------------------
 
--- Meeting-mode constants, grouped into one table to conserve main-chunk local
--- slots (Lua's 200-per-function cap). Formerly MC.dir, MC.chunkSecs,
--- ... MC.helperBin; now MC.dir, MC.chunkSecs, ... MC.helperBin.
-local MC = {
-    dir             = CONFIG_DIR .. "/meetings",
-    chunkSecs       = 8,                    -- step between window starts
-    overlapSecs     = 4,                    -- audio reused at the head of each window for context
-    transcribePoll  = 2,
-    windowTimeout   = 60,                   -- watchdog: kill task if it runs longer than this
-    pcmBytesPerSec  = 16000 * 2,            -- 16 kHz, mono, 16-bit
-    aggregateName   = "local-whisper Output",
-    helperBin       = CONFIG_DIR .. "/bin/aggregate-audio",
-}
+local MEETINGS_DIR = CONFIG_DIR .. "/meetings"
+local MEETING_CHUNK_SECONDS = 8                       -- step between window starts
+local MEETING_OVERLAP_SECONDS = 4                     -- audio reused at the head of each window for context
+local MEETING_TRANSCRIBE_POLL_SECONDS = 2
+local MEETING_WINDOW_TIMEOUT_SECONDS = 60             -- watchdog: kill task if it runs longer than this
+local MEETING_PCM_BYTES_PER_SEC = 16000 * 2           -- 16 kHz, mono, 16-bit
+local MEETING_AGGREGATE_NAME = "local-whisper Output"
+local MEETING_HELPER_BIN = CONFIG_DIR .. "/bin/aggregate-audio"
 -- meetingRecording and meetingStartTime are forward-declared before buildMenuBarMenu
 local meetingFfmpegTask = nil
 local meetingChunkDir = WHISPER_TMP .. "/meeting_chunks"
@@ -2255,11 +1774,11 @@ local saveMeetingOutput
 
 -- Run the aggregate-audio helper synchronously; returns (stdout, exitCode).
 local function runAudioHelper(...)
-    if not hs.fs.attributes(MC.helperBin) then return nil, -1 end
+    if not hs.fs.attributes(MEETING_HELPER_BIN) then return nil, -1 end
     local args = { ... }
     local quoted = {}
     for _, a in ipairs(args) do table.insert(quoted, "'" .. tostring(a):gsub("'", "'\\''") .. "'") end
-    local cmd = "'" .. MC.helperBin .. "' " .. table.concat(quoted, " ")
+    local cmd = "'" .. MEETING_HELPER_BIN .. "' " .. table.concat(quoted, " ")
     local out, ok, _, code = hs.execute(cmd)
     if out then out = out:gsub("%s+$", "") end
     if ok then return out, 0 end
@@ -2269,7 +1788,7 @@ end
 -- Check that everything meeting mode needs is in place.
 local function hasBlackHole()
     if not hs.audiodevice.findInputByName("BlackHole 2ch") then return false end
-    if not hs.fs.attributes(MC.helperBin) then return false end
+    if not hs.fs.attributes(MEETING_HELPER_BIN) then return false end
     return true
 end
 
@@ -2363,7 +1882,7 @@ end
 -- aggregate, a previous meeting got stuck and never restored. Drop us
 -- onto a sensible fallback so the user has audible sound at startup.
 local function recoverIfStrandedOnAggregate()
-    if not hs.fs.attributes(MC.helperBin) then return end
+    if not hs.fs.attributes(MEETING_HELPER_BIN) then return end
     local prior = runAudioHelper("default-uid")
     if prior ~= "com.local-whisper.aggregate-output" then return end
     local fallback = pickFallbackOutput()
@@ -2537,7 +2056,7 @@ local function meetingNotepadHTML(meetingTitle)
         <textarea id="notes" placeholder="Type your meeting notes here...&#10;&#10;Tips:&#10;- Key decisions&#10;- Action items&#10;- Questions to follow up"></textarea>
     </div>
     <div class="panel" id="panel-transcript">
-        <div class="transcript-empty" id="transcript-empty">Listening... first transcript chunk should appear in about ]] .. tostring(MC.chunkSecs) .. [[ seconds.</div>
+        <div class="transcript-empty" id="transcript-empty">Listening... first transcript chunk should appear in about ]] .. tostring(MEETING_CHUNK_SECONDS) .. [[ seconds.</div>
         <div id="transcript"></div>
     </div>
     <div class="status" id="status">Recording from BlackHole 2ch... waiting for first transcript chunk.</div>
@@ -2699,12 +2218,12 @@ local function maybeFinalizeMeetingSave()
 end
 
 -- Bounds (in seconds) of the Nth transcription window. Windows after the
--- first start MC.overlapSecs earlier than the previous one ended,
+-- first start MEETING_OVERLAP_SECONDS earlier than the previous one ended,
 -- giving whisper context across word boundaries.
 local function meetingWindowBounds(idx)
-    if idx == 1 then return 0, MC.chunkSecs end
-    local startSec = MC.chunkSecs * (idx - 1) - MC.overlapSecs
-    local endSec   = MC.chunkSecs * idx
+    if idx == 1 then return 0, MEETING_CHUNK_SECONDS end
+    local startSec = MEETING_CHUNK_SECONDS * (idx - 1) - MEETING_OVERLAP_SECONDS
+    local endSec   = MEETING_CHUNK_SECONDS * idx
     return startSec, endSec
 end
 
@@ -2767,7 +2286,7 @@ sliceAndTranscribeWindow = function(idx, startSec, endSec)
     local windowPath = string.format("%s/window_%04d.wav", meetingChunkDir, idx)
     local outPrefix  = string.format("%s/window_%04d", meetingChunkDir, idx)
     local outTxtPath = outPrefix .. ".txt"
-    local startLabelSec = MC.chunkSecs * (idx - 1)
+    local startLabelSec = MEETING_CHUNK_SECONDS * (idx - 1)
     local timeStr = string.format("%d:%02d",
         math.floor(startLabelSec / 60), startLabelSec % 60)
 
@@ -2844,9 +2363,9 @@ sliceAndTranscribeWindow = function(idx, startSec, endSec)
     -- Watchdog: if a window's pipeline runs longer than the timeout (whisper
     -- hangs, OS-level pipe stuck, whatever), kill it and release the lock so
     -- subsequent windows aren't blocked forever.
-    watchdog = hs.timer.doAfter(MC.windowTimeout, function()
+    watchdog = hs.timer.doAfter(MEETING_WINDOW_TIMEOUT_SECONDS, function()
         if released then return end
-        log("meeting: window " .. idx .. " timed out after " .. MC.windowTimeout .. "s, killing")
+        log("meeting: window " .. idx .. " timed out after " .. MEETING_WINDOW_TIMEOUT_SECONDS .. "s, killing")
         if task and task:isRunning() then task:terminate() end
         release("watchdog timeout")
     end)
@@ -2869,7 +2388,7 @@ local function emitReadyWindows()
     if not meetingRecording and not meetingStopping then return end
     local attr = hs.fs.attributes(meetingPcmPath)
     if not attr or attr.size <= 0 then return end
-    local recordedSec = attr.size / MC.pcmBytesPerSec
+    local recordedSec = attr.size / MEETING_PCM_BYTES_PER_SEC
     local startSec, endSec = meetingWindowBounds(meetingNextWindowIdx)
     while recordedSec >= endSec do
         log(string.format("meeting: enqueue window %d [%.1f, %.1f] (recorded %.1fs, queue=%d, processing=%s)",
@@ -2888,7 +2407,7 @@ local function emitFinalPartialWindow()
     meetingStopFlushed = true
     local attr = hs.fs.attributes(meetingPcmPath)
     if not attr or attr.size <= 0 then return end
-    local recordedSec = attr.size / MC.pcmBytesPerSec
+    local recordedSec = attr.size / MEETING_PCM_BYTES_PER_SEC
     local startSec, _ = meetingWindowBounds(meetingNextWindowIdx)
     if recordedSec - startSec < 1.0 then return end  -- skip tail under 1s
     enqueueWindow(meetingNextWindowIdx, startSec, recordedSec)
@@ -2898,9 +2417,9 @@ end
 
 -- Save meeting output as markdown
 saveMeetingOutput = function(notes, callback)
-    os.execute("mkdir -p '" .. MC.dir .. "'")
+    os.execute("mkdir -p '" .. MEETINGS_DIR .. "'")
     local filename = os.date("%Y-%m-%d-%H%M") .. ".md"
-    local filepath = MC.dir .. "/" .. filename
+    local filepath = MEETINGS_DIR .. "/" .. filename
 
     -- Build transcript text
     local transcriptText = ""
@@ -3036,7 +2555,7 @@ startMeeting = function()
     meetingFfmpegTask:start()
 
     -- Periodically slice ready overlapping windows out of the growing PCM
-    meetingTranscribeTimer = hs.timer.doEvery(MC.transcribePoll, emitReadyWindows)
+    meetingTranscribeTimer = hs.timer.doEvery(MEETING_TRANSCRIBE_POLL_SECONDS, emitReadyWindows)
     if meetingControlTimer then meetingControlTimer:stop(); meetingControlTimer = nil end
     meetingControlTimer = hs.timer.doEvery(0.5, pollMeetingControls)
 
@@ -3075,58 +2594,6 @@ end
 --------------------------------------------------------------------------------
 -- Startup
 --------------------------------------------------------------------------------
-
--- Resolve the real repo folder behind ~/.hammerspoon/init.lua. debug.getinfo()
--- reports the *symlink* path, not the repo path it points at, so this reads
--- the symlink target with readlink first (falling back to debug.getinfo for
--- the rare case init.lua isn't a symlink at all, e.g. a manual copy).
-local function resolveRepoHammerspoonDir()
-    local cfgPath = (hs.configdir or (HOME .. "/.hammerspoon")) .. "/init.lua"
-    local p = io.popen("readlink '" .. cfgPath .. "' 2>/dev/null")
-    local target = p and p:read("*l")
-    if p then p:close() end
-    local realPath = (target and target ~= "") and target or debug.getinfo(1, "S").source:gsub("^@", "")
-    return realPath:match("(.*/hammerspoon)/init%.lua$")
-end
-
--- Log which commit is actually executing. init.lua is edited in place (the
--- ~/.hammerspoon/init.lua symlink points straight at the repo file) but
--- Hammerspoon only picks up changes on reload/relaunch -- a long-running
--- Hammerspoon process keeps executing whatever was loaded at its last
--- reload, even after the file on disk has since moved many commits ahead.
--- If behavior feels stale/outdated, check this line in the log and compare
--- against `git log -1` -- if it doesn't match, run hs.reload() (or restart
--- Hammerspoon) to pick up the latest fixes.
-local repoHammerspoonDir = resolveRepoHammerspoonDir()
-if repoHammerspoonDir then
-    local gp = io.popen("git -C '" .. repoHammerspoonDir .. "' log -1 --format='%h %ci' 2>/dev/null")
-    local rev = gp and gp:read("*l")
-    if gp then gp:close() end
-    log("version: running from commit " .. (rev and rev ~= "" and rev or "unknown (not a git checkout?)"))
-else
-    log("version: could not resolve repo path (init.lua not a symlink into the repo?)")
-end
-
--- Auto-reload the moment init.lua (or any file it needs) changes on disk, so
--- there's never a gap between editing the repo file and Hammerspoon actually
--- running it -- the exact "feels like an old version" confusion this is
--- meant to close. Only meaningful because ~/.hammerspoon/init.lua is a
--- symlink into the repo (see install.sh); watching the repo folder directly
--- means it fires on git pulls/checkouts too, not just local edits.
-local configWatcher = nil
-if repoHammerspoonDir then
-    configWatcher = hs.pathwatcher.new(repoHammerspoonDir .. "/", function(paths)
-        for _, changed in ipairs(paths) do
-            if changed:match("init%.lua$") then
-                log("config: " .. changed .. " changed on disk -- reloading")
-                hs.reload()
-                return
-            end
-        end
-    end)
-    configWatcher:start()
-end
-
 
 -- Request mic permission (child processes via hs.task inherit it)
 if type(hs.microphoneState) == "function" and not hs.microphoneState() then
@@ -3167,7 +2634,7 @@ function _G.meetingDoctor()
     local attr = hs.fs.attributes(meetingPcmPath)
     add("recordingPcmBytes", attr and attr.size or 0)
     if attr and attr.size > 0 then
-        add("recordingPcmSeconds", string.format("%.1f", attr.size / MC.pcmBytesPerSec))
+        add("recordingPcmSeconds", string.format("%.1f", attr.size / MEETING_PCM_BYTES_PER_SEC))
     end
     return table.concat(lines, "\n")
 end
