@@ -27,6 +27,11 @@ local WHISPER_BIN = HOME .. "/whisper.cpp/build/bin/whisper-cli"
 local MODELS_DIR = HOME .. "/whisper.cpp/models"
 local MODEL_FILE = CONFIG_DIR .. "/model"
 
+-- Remote OpenAI-compatible transcription API (alternative to local whisper-cli)
+local API_MODEL_NAME = "API"  -- sentinel value stored in MODEL_FILE when API mode is selected
+local API_URL = "http://192.168.0.13:13305/v1/audio/transcriptions"
+local CURL_BIN = "/usr/bin/curl"
+
 -- Scan available models
 local function getAvailableModels()
     local models = {}
@@ -45,6 +50,7 @@ local function getModelName()
     local saved = ""
     local f = io.open(MODEL_FILE, "r")
     if f then saved = f:read("*a"):gsub("%s+", ""); f:close() end
+    if saved == API_MODEL_NAME then return API_MODEL_NAME end
     if saved ~= "" then
         -- Verify model file exists
         local path = MODELS_DIR .. "/ggml-" .. saved .. ".bin"
@@ -52,6 +58,10 @@ local function getModelName()
         if attr then return saved end
     end
     return "medium"  -- default
+end
+
+local function isApiMode()
+    return getModelName() == API_MODEL_NAME
 end
 
 local function getModelPath()
@@ -365,6 +375,7 @@ end
 
 local function cycleModel()
     local models = getAvailableModels()
+    table.insert(models, API_MODEL_NAME)  -- remote API is the last stop in the cycle
     if #models == 0 then return getModelName() end
     local current = getModelName()
     local next = models[1]
@@ -400,6 +411,39 @@ local function getPartialModelPath()
         if hs.fs.attributes(path) then return path end
     end
     return getModelPath()  -- fall back to main model
+end
+
+-- Transcribe a WAV file via the remote OpenAI-compatible API instead of local whisper-cli.
+-- Returns the hs.task so callers can terminate it on timeout if needed.
+local function transcribeViaAPI(wavPath, lang, timeoutSecs, callback)
+    local args = {
+        "-s", "-m", tostring(timeoutSecs or 30),
+        "-F", "file=@" .. wavPath,
+        "-F", "model=whisper-1",
+        "-F", "response_format=verbose_json",
+    }
+    if lang and lang ~= "auto" then
+        table.insert(args, "-F")
+        table.insert(args, "language=" .. lang)
+    end
+    table.insert(args, API_URL)
+
+    local task = hs.task.new(CURL_BIN, function(code, out, err)
+        if code ~= 0 then
+            log("api: curl failed code=" .. tostring(code) .. " err=" .. tostring(err))
+            callback("", nil)
+            return
+        end
+        local ok, decoded = pcall(hs.json.decode, out or "")
+        if not ok or type(decoded) ~= "table" or not decoded.text then
+            log("api: unexpected response: " .. tostring(out))
+            callback("", nil)
+            return
+        end
+        callback(decoded.text, decoded.language)
+    end, args)
+    task:start()
+    return task
 end
 
 -- Read custom vocabulary prompt for whisper
@@ -874,7 +918,7 @@ local function buildMenuBarMenu()
 
     -- Model
     table.insert(items, {
-        title = "Model: " .. getModelName(),
+        title = "Model: " .. (isApiMode() and "API (remote)" or getModelName()),
         fn = function() cycleModel(); updateMenuBar() end,
     })
 
@@ -1125,22 +1169,36 @@ local function doPartialTranscribe()
         local lang = getLang()
         -- In auto mode, use first preferred lang for speed during partial transcription
         if lang == "auto" then lang = getPreferredLangs()[1] end
-        local whisperArgs = { "-m", getPartialModelPath(), "-f", batchWav, "-l", lang, "-nt", "--no-prints" }
-        local promptArgs = getPromptArgs()
-        for _, a in ipairs(promptArgs) do table.insert(whisperArgs, a) end
-        local whisperTask = hs.task.new(WHISPER_BIN, function(code2, out2)
+
+        local function onPartialText(text)
             partialBusy = false
             lastChunkCount = completed
-            if code2 ~= 0 or not isRecording then return end
-            local text = (out2 or ""):gsub("^%s+", ""):gsub("%s+$", ""):gsub("%s+", " ")
+            if not isRecording then return end
+            text = (text or ""):gsub("^%s+", ""):gsub("%s+$", ""):gsub("%s+", " ")
             if text ~= "" and not isHallucination(text) then
                 local display = text
                 if #display > 200 then display = "..." .. display:sub(-197) end
                 setOverlayText(display)
                 log("partial: " .. text)
             end
-        end, whisperArgs)
-        whisperTask:start()
+        end
+
+        if isApiMode() then
+            transcribeViaAPI(batchWav, lang, 10, function(text) onPartialText(text) end)
+        else
+            local whisperArgs = { "-m", getPartialModelPath(), "-f", batchWav, "-l", lang, "-nt", "--no-prints" }
+            local promptArgs = getPromptArgs()
+            for _, a in ipairs(promptArgs) do table.insert(whisperArgs, a) end
+            local whisperTask = hs.task.new(WHISPER_BIN, function(code2, out2)
+                if code2 ~= 0 then
+                    partialBusy = false
+                    lastChunkCount = completed
+                    return
+                end
+                onPartialText(out2)
+            end, whisperArgs)
+            whisperTask:start()
+        end
     end, { "-y", "-f", "concat", "-safe", "0", "-i", batchList, "-c", "copy", batchWav })
     concatTask:start()
 end
@@ -1368,6 +1426,16 @@ local function doFinalTranscription()
             -- Always use auto-detect per segment for code-switching (surzhyk/mixed language)
             -- Never reuse a previously detected language — each segment may have different dominant language
             local effectiveLang = lang
+
+            if isApiMode() then
+                log("final: seg " .. n .. " starting API transcription lang=" .. effectiveLang)
+                transcribeViaAPI(segWav, effectiveLang, 60, function(text, detected)
+                    log("final: seg " .. n .. " API response len=" .. #(text or ""))
+                    text = (text or ""):gsub("^%s+", ""):gsub("%s+$", ""):gsub("%s+", " ")
+                    onSegmentText(text, effectiveLang == "auto" and detected or effectiveLang)
+                end)
+                return
+            end
 
             log("final: seg " .. n .. " starting whisper lang=" .. effectiveLang .. " model=" .. getModelPath():match("([^/]+)$"))
 
@@ -2265,26 +2333,66 @@ sliceAndTranscribeWindow = function(idx, startSec, endSec)
     -- which was hanging on the second window — whisper exited cleanly but the
     -- inner hs.task callback never fired. With one task we get one reliable
     -- exit callback; whisper output is read from the file, not piped stdout.
+    -- In API mode the shell pipeline only slices the audio; transcription is
+    -- done afterwards via transcribeViaAPI (remote OpenAI-compatible endpoint).
+    local apiMode = isApiMode()
     local model = getModelPath()
     local function shquote(s) return "'" .. s:gsub("'", "'\\''") .. "'" end
-    local cmd = string.format(
-        "set -e\n" ..
-        "%s -y -hide_banner -loglevel error -f s16le -ar 16000 -ac 1 -ss %.3f -i %s -t %.3f %s\n" ..
-        "%s -m %s -f %s -otxt -of %s --no-prints -t 4 -l auto >/dev/null 2>&1\n",
-        shquote(FFMPEG), startSec, shquote(meetingPcmPath), endSec - startSec, shquote(windowPath),
-        shquote(WHISPER_BIN), shquote(model), shquote(windowPath), shquote(outPrefix)
-    )
+    local cmd
+    if apiMode then
+        cmd = string.format(
+            "set -e\n" ..
+            "%s -y -hide_banner -loglevel error -f s16le -ar 16000 -ac 1 -ss %.3f -i %s -t %.3f %s\n",
+            shquote(FFMPEG), startSec, shquote(meetingPcmPath), endSec - startSec, shquote(windowPath)
+        )
+    else
+        cmd = string.format(
+            "set -e\n" ..
+            "%s -y -hide_banner -loglevel error -f s16le -ar 16000 -ac 1 -ss %.3f -i %s -t %.3f %s\n" ..
+            "%s -m %s -f %s -otxt -of %s --no-prints -t 4 -l auto >/dev/null 2>&1\n",
+            shquote(FFMPEG), startSec, shquote(meetingPcmPath), endSec - startSec, shquote(windowPath),
+            shquote(WHISPER_BIN), shquote(model), shquote(windowPath), shquote(outPrefix)
+        )
+    end
 
     meetingActiveTasksSeq = meetingActiveTasksSeq + 1
     taskToken = "win_" .. idx .. "_" .. meetingActiveTasksSeq
 
-    local task = hs.task.new("/bin/sh", function(code, _stdout, _stderr)
+    local function emitText(raw)
+        local text = raw:gsub("%[.*%]", ""):gsub("^%s+", ""):gsub("%s+$", "")
+        if text == "" or isHallucination(text) then return end
+        local emit = stripOverlap(meetingLastEmittedText, text)
+        meetingLastEmittedText = text
+        if emit ~= "" then
+            table.insert(meetingTranscript, { time = timeStr, text = emit })
+            appendTranscriptToNotepad(timeStr, emit)
+            log("meeting: window " .. idx .. " → " .. #emit .. " chars (raw " .. #text .. ")")
+        end
+    end
+
+    local task  -- forward-declared: the callback below reassigns it in API mode
+    task = hs.task.new("/bin/sh", function(code, _stdout, _stderr)
         if released then return end  -- watchdog already handled this
         if code ~= 0 then
             log("meeting: window " .. idx .. " pipeline exited " .. tostring(code))
             release(nil)
             return
         end
+
+        if apiMode then
+            -- ffmpeg slice succeeded — hand the window off to the remote API.
+            task = transcribeViaAPI(windowPath, "auto", MEETING_WINDOW_TIMEOUT_SECONDS - 2, function(text)
+                if released then return end
+                local ok, err = pcall(emitText, text or "")
+                if not ok then
+                    log("meeting: window " .. idx .. " emit error: " .. tostring(err))
+                end
+                release(nil)
+            end)
+            meetingActiveTasks[taskToken] = task
+            return
+        end
+
         local ok, err = pcall(function()
             local f = io.open(outTxtPath, "r")
             if not f then
@@ -2293,15 +2401,7 @@ sliceAndTranscribeWindow = function(idx, startSec, endSec)
             end
             local raw = f:read("*all") or ""
             f:close()
-            local text = raw:gsub("%[.*%]", ""):gsub("^%s+", ""):gsub("%s+$", "")
-            if text == "" or isHallucination(text) then return end
-            local emit = stripOverlap(meetingLastEmittedText, text)
-            meetingLastEmittedText = text
-            if emit ~= "" then
-                table.insert(meetingTranscript, { time = timeStr, text = emit })
-                appendTranscriptToNotepad(timeStr, emit)
-                log("meeting: window " .. idx .. " → " .. #emit .. " chars (raw " .. #text .. ")")
-            end
+            emitText(raw)
         end)
         if not ok then
             log("meeting: window " .. idx .. " emit error: " .. tostring(err))
