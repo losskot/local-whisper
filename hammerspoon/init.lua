@@ -202,6 +202,7 @@ end
 local function getOutputMode()
     local mode = readFile(OUTPUT_FILE):gsub("%s+", "")
     if mode == "type" then return "type" end
+    if mode == "copy" then return "copy" end
     return "paste"
 end
 
@@ -375,7 +376,8 @@ local function cycleModel()
 end
 
 local function cycleOutput()
-    local next = (getOutputMode() == "paste") and "type" or "paste"
+    local cur = getOutputMode()
+    local next = (cur == "paste") and "type" or (cur == "type") and "copy" or "paste"
     writeFile(OUTPUT_FILE, next)
     return next
 end
@@ -612,34 +614,16 @@ end
 --------------------------------------------------------------------------------
 
 local overlay = nil
-local btnColor = { red = 0.5, green = 0.8, blue = 1.0, alpha = 1.0 }
 
--- Element indices: 1=bg, 2=lang, 3=sep1, 4=output, 5=sep2, 6=enter, 7=sep3, 8=model, 9=sep4, 10=refine, 11=text, 12=dot, 13=timer, 14=close
-local EL = { lang = 2, output = 4, enter = 6, model = 8, refine = 10, text = 11, dot = 12, timer = 13, close = 14 }
-
-local enterOnColor = { red = 0.3, green = 1.0, blue = 0.3, alpha = 1.0 }
-local enterOffColor = { red = 0.5, green = 0.5, blue = 0.5, alpha = 0.5 }
-local refineOnColor = { red = 0.4, green = 0.8, blue = 1.0, alpha = 1.0 }
-local refineOffColor = { red = 0.5, green = 0.5, blue = 0.5, alpha = 0.5 }
-
-local function refreshOverlayLabels()
-    if not overlay then return end
-    overlay[EL.lang].text = getLang():upper()
-    overlay[EL.output].text = getOutputMode():upper()
-    overlay[EL.enter].text = "⏎"
-    overlay[EL.enter].textColor = getEnterMode() and enterOnColor or enterOffColor
-    overlay[EL.model].text = getModelName()
-    local refineOn = getRefineMode() and hasOllama()
-    overlay[EL.refine].text = refineOn and "refine ✓" or "refine ✗"
-    overlay[EL.refine].textColor = refineOn and refineOnColor or refineOffColor
-end
+-- Element indices: 1=bg, 2=text, 3=dot, 4=timer, 5=bar_bg, 6=bar_rec, 7=bar_txn, 8=close
+local EL = { text = 2, dot = 3, timer = 4, bar_bg = 5, bar_rec = 6, bar_txn = 7, close = 8 }
 
 local function createOverlay()
     local screen = hs.screen.mainScreen()
     local frame = screen:frame()  -- excludes menu bar, so y=frame.y sits right under it
-    local width, height = 420, 100
+    local width, height = 420, 112
     local padding = 20
-    local x = frame.x + frame.w - width - padding
+    local x = frame.x + (frame.w - width) / 2  -- centered under the menu bar
     local y = frame.y + padding
 
     overlay = hs.canvas.new({ x = x, y = y, w = width, h = height })
@@ -653,92 +637,54 @@ local function createOverlay()
         trackMouseUp = true,
     })
 
-    -- Informational status labels (not interactive — change settings via the menu bar)
-    local sepColor = { red = 0.4, green = 0.4, blue = 0.4, alpha = 1 }
-
-    -- 2: Language
-    overlay:appendElements({
-        id = "lang", type = "text", text = getLang():upper(),
-        textColor = btnColor, textSize = 11,
-        frame = { x = "4%", y = "6%", w = "10%", h = "25%" },
-    })
-    -- 3: Separator
-    overlay:appendElements({
-        id = "sep1", type = "text", text = "|",
-        textColor = sepColor, textSize = 11,
-        frame = { x = "13%", y = "6%", w = "2%", h = "25%" },
-    })
-    -- 4: Output mode
-    overlay:appendElements({
-        id = "output", type = "text", text = getOutputMode():upper(),
-        textColor = btnColor, textSize = 11,
-        frame = { x = "15%", y = "6%", w = "13%", h = "25%" },
-    })
-    -- 5: Separator
-    overlay:appendElements({
-        id = "sep2", type = "text", text = "|",
-        textColor = sepColor, textSize = 11,
-        frame = { x = "27%", y = "6%", w = "2%", h = "25%" },
-    })
-    -- 6: Enter mode (⏎ green=on, gray=off)
-    overlay:appendElements({
-        id = "enter", type = "text", text = "⏎",
-        textColor = getEnterMode() and enterOnColor or enterOffColor, textSize = 11,
-        frame = { x = "29%", y = "6%", w = "5%", h = "25%" },
-    })
-    -- 7: Separator
-    overlay:appendElements({
-        id = "sep3", type = "text", text = "|",
-        textColor = sepColor, textSize = 11,
-        frame = { x = "34%", y = "6%", w = "2%", h = "25%" },
-    })
-    -- 8: Model
-    overlay:appendElements({
-        id = "model", type = "text", text = getModelName(),
-        textColor = btnColor, textSize = 11,
-        frame = { x = "36%", y = "6%", w = "20%", h = "25%" },
-    })
-    -- 9: Separator
-    overlay:appendElements({
-        id = "sep4", type = "text", text = "|",
-        textColor = sepColor, textSize = 11,
-        frame = { x = "54%", y = "6%", w = "2%", h = "25%" },
-    })
-    -- 10: LLM refine status
-    overlay:appendElements({
-        id = "refine", type = "text",
-        text = (getRefineMode() and hasOllama()) and "refine ✓" or "refine ✗",
-        textColor = (getRefineMode() and hasOllama()) and refineOnColor or refineOffColor,
-        textSize = 11,
-        frame = { x = "57%", y = "6%", w = "18%", h = "25%" },
-    })
-    -- 11: Transcript text
+    -- 2: Transcript text
     overlay:appendElements({
         id = "text", type = "text", text = "Listening...",
         textColor = { red = 1, green = 1, blue = 1, alpha = 1.0 },
         textSize = 14,
-        frame = { x = "5%", y = "35%", w = "90%", h = "60%" },
+        frame = { x = "5%", y = "20%", w = "90%", h = "58%" },
     })
-    -- 12: Recording indicator (pulsing red dot)
+    -- 3: Recording indicator (pulsing red dot)
     overlay:appendElements({
         id = "dot", type = "oval", action = "fill",
         fillColor = { red = 1, green = 0.15, blue = 0.15, alpha = 0.0 },
         frame = { x = "89%", y = "8%", w = "3%", h = "12%" },
     })
-    -- 13: Elapsed time display
+    -- 4: Elapsed time display
     overlay:appendElements({
         id = "timer", type = "text", text = "",
         textColor = { red = 1, green = 0.4, blue = 0.4, alpha = 0.0 },
         textSize = 10,
-        frame = { x = "75%", y = "8%", w = "14%", h = "20%" },
+        frame = { x = "70%", y = "8%", w = "18%", h = "14%" },
         textAlignment = "right",
     })
-    -- 14: Close button (X) — last element so it's on top and clickable
+    -- 5: Progress bar background (gray track) — absolute px: x=17,y=96,w=386,h=9
+    overlay:appendElements({
+        id = "bar_bg", type = "rectangle", action = "fill",
+        roundedRectRadii = { xRadius = 3, yRadius = 3 },
+        fillColor = { red = 0.3, green = 0.3, blue = 0.3, alpha = 0.0 },
+        frame = { x = 17, y = 96, w = 386, h = 9 },
+    })
+    -- 6: Recording progress (red/orange) — total recorded duration
+    overlay:appendElements({
+        id = "bar_rec", type = "rectangle", action = "fill",
+        roundedRectRadii = { xRadius = 3, yRadius = 3 },
+        fillColor = { red = 1.0, green = 0.35, blue = 0.15, alpha = 0.0 },
+        frame = { x = 17, y = 96, w = 1, h = 9 },
+    })
+    -- 7: Transcription progress (blue) — chases the red bar as segments finish
+    overlay:appendElements({
+        id = "bar_txn", type = "rectangle", action = "fill",
+        roundedRectRadii = { xRadius = 3, yRadius = 3 },
+        fillColor = { red = 0.2, green = 0.75, blue = 1.0, alpha = 0.0 },
+        frame = { x = 17, y = 96, w = 1, h = 9 },
+    })
+    -- 8: Close button (X) — last element so it's on top and clickable
     overlay:appendElements({
         id = "close", type = "text", text = "✕",
         textColor = { red = 1, green = 0.4, blue = 0.4, alpha = 0.8 },
         textSize = 16, textAlignment = "center",
-        frame = { x = "90%", y = "10%", w = "8%", h = "20%" },
+        frame = { x = "90%", y = "6%", w = "8%", h = "16%" },
         trackMouseDown = true, trackMouseUp = true, trackMouseEnterExit = true,
     })
 
@@ -802,10 +748,6 @@ local function setOverlayText(text)
     if overlay then overlay[EL.text].text = text end
 end
 
-local function setOverlayStatus()
-    refreshOverlayLabels()
-end
-
 --------------------------------------------------------------------------------
 -- State
 --------------------------------------------------------------------------------
@@ -826,6 +768,10 @@ local clockTimer = nil
 local recordingStartTime = 0
 local pulseAlpha = 1.0
 local pulseFading = true
+
+-- Progress bar state
+local transcribedSecs = 0   -- seconds of audio fully transcribed so far
+local barMaxSecs = 180       -- current max duration displayed (expands at 90%)
 
 -- Undo state
 local lastInsertedText = nil
@@ -1046,18 +992,45 @@ local function createMenuBar()
 end
 
 --------------------------------------------------------------------------------
--- Recording indicator (pulsing dot + timer)
+-- Recording indicator (pulsing dot + timer + progress bar)
 --------------------------------------------------------------------------------
+
+local function updateProgressBar()
+    if not overlay then return end
+    local BAR_MAX = 386  -- px, matches bar_bg width in createOverlay
+    local elapsed = hs.timer.secondsSinceEpoch() - recordingStartTime
+    -- Auto-expand: when recording reaches 90% of max, extend by another 3 min
+    if elapsed >= barMaxSecs * 0.9 then barMaxSecs = barMaxSecs + 180 end
+    local recFrac = math.min(elapsed / barMaxSecs, 1.0)
+    local txnFrac = math.min(transcribedSecs / barMaxSecs, 1.0)
+    overlay[EL.bar_rec].frame = { x = 17, y = 96, w = math.max(1, math.floor(recFrac * BAR_MAX)), h = 9 }
+    overlay[EL.bar_txn].frame = { x = 17, y = 96, w = math.max(1, math.floor(txnFrac * BAR_MAX)), h = 9 }
+end
+
+local function hideProgressBar()
+    if not overlay then return end
+    overlay[EL.bar_bg].fillColor  = { red = 0.3, green = 0.3, blue = 0.3, alpha = 0.0 }
+    overlay[EL.bar_rec].fillColor = { red = 1.0, green = 0.35, blue = 0.15, alpha = 0.0 }
+    overlay[EL.bar_txn].fillColor = { red = 0.2, green = 0.75, blue = 1.0, alpha = 0.0 }
+end
 
 local function startRecordingIndicator()
     if not overlay then return end
     recordingStartTime = hs.timer.secondsSinceEpoch()
+    transcribedSecs = 0
+    barMaxSecs = 180
     pulseAlpha = 1.0
     pulseFading = true
 
     -- Show dot and timer
     overlay[EL.dot].fillColor = { red = 1, green = 0.15, blue = 0.15, alpha = 1.0 }
     overlay[EL.timer].textColor = { red = 1, green = 0.4, blue = 0.4, alpha = 1.0 }
+
+    -- Show progress bar track
+    overlay[EL.bar_bg].fillColor  = { red = 0.3, green = 0.3, blue = 0.3, alpha = 0.6 }
+    overlay[EL.bar_rec].fillColor = { red = 1.0, green = 0.35, blue = 0.15, alpha = 0.85 }
+    overlay[EL.bar_txn].fillColor = { red = 0.2, green = 0.75, blue = 1.0, alpha = 0.9 }
+    updateProgressBar()
 
     -- Pulse the red dot
     pulseTimer = hs.timer.doEvery(0.05, function()
@@ -1072,13 +1045,14 @@ local function startRecordingIndicator()
         overlay[EL.dot].fillColor = { red = 1, green = 0.15, blue = 0.15, alpha = pulseAlpha }
     end)
 
-    -- Update elapsed time every second
+    -- Update elapsed time and recording progress every second
     clockTimer = hs.timer.doEvery(1, function()
         if not overlay then return end
         local elapsed = math.floor(hs.timer.secondsSinceEpoch() - recordingStartTime)
         local min = math.floor(elapsed / 60)
         local sec = elapsed % 60
         overlay[EL.timer].text = string.format("%d:%02d", min, sec)
+        updateProgressBar()
     end)
 end
 
@@ -1178,6 +1152,9 @@ local function insertTextAtCursor(text, mode)
         -- for 60+ seconds if another app holds a large object on the clipboard.
         hs.pasteboard.setContents(text)
         hs.eventtap.keyStroke({"cmd"}, 9)  -- keycode 9 = V (ANSI), works regardless of keyboard layout
+    elseif mode == "copy" then
+        -- Clipboard only, no auto-paste — user pastes manually when ready.
+        hs.pasteboard.setContents(text)
     else
         hs.eventtap.keyStrokes(text)
     end
@@ -1202,8 +1179,8 @@ local function finishInsertion(text, detectedLang)
         insertTextAtCursor(finalText, ctx.outputMode)
         ctx.inserted = true
 
-        -- Press Enter after insertion if enter mode is on
-        if getEnterMode() then
+        -- Press Enter after insertion if enter mode is on (not applicable to copy-only mode)
+        if getEnterMode() and ctx.outputMode ~= "copy" then
             hs.timer.doAfter(0.15, function()
                 hs.eventtap.keyStroke({}, "return")
             end)
@@ -1276,6 +1253,7 @@ local function doFinalTranscription()
 
     if #chunks < 2 then
         log("final: not enough chunks, skipping")
+        hideProgressBar()
         hideOverlay()
         return
     end
@@ -1315,9 +1293,14 @@ local function doFinalTranscription()
         local finalText = table.concat(allTexts, " "):gsub("^%s+", ""):gsub("%s+$", ""):gsub("%s+", " ")
         log("final combined (" .. totalSegs .. " seg(s)): '" .. finalText .. "'")
         if finalText == "" then
+            hideProgressBar()
             hideOverlay()
             return
         end
+        -- Flash the blue bar to 100% to confirm all audio was transcribed, then fade it
+        transcribedSecs = barMaxSecs
+        if overlay then updateProgressBar() end
+        hs.timer.doAfter(0.4, hideProgressBar)
         insertTranscribedText(finalText, detectedLangOverall)
     end
 
@@ -1354,6 +1337,8 @@ local function doFinalTranscription()
         local concatTask = hs.task.new(FFMPEG, function(code)
             if code ~= 0 then
                 log("final: seg " .. n .. " concat FAILED (code=" .. tostring(code) .. ")")
+                transcribedSecs = transcribedSecs + #group
+                if overlay then updateProgressBar() end
                 transcribeNextSegment()  -- skip bad segment, keep going
                 return
             end
@@ -1371,6 +1356,8 @@ local function doFinalTranscription()
                 if detected and not detectedLangOverall then
                     detectedLangOverall = detected
                 end
+                transcribedSecs = transcribedSecs + #group
+                if overlay then updateProgressBar() end
                 transcribeNextSegment()
             end
 
@@ -1387,6 +1374,8 @@ local function doFinalTranscription()
                     log("final: seg " .. n .. " whisper(auto) exit=" .. tostring(code2) .. " outlen=" .. #(out2 or "") .. " errlen=" .. #(err2 or ""))
                     if code2 ~= 0 then
                         log("final: seg " .. n .. " whisper FAILED (auto)")
+                        transcribedSecs = transcribedSecs + #group
+                        if overlay then updateProgressBar() end
                         transcribeNextSegment()
                         return
                     end
@@ -1406,6 +1395,8 @@ local function doFinalTranscription()
                     log("final: seg " .. n .. " whisper(" .. effectiveLang .. ") exit=" .. tostring(code2) .. " outlen=" .. #(out2 or ""))
                     if code2 ~= 0 then
                         log("final: seg " .. n .. " whisper FAILED")
+                        transcribedSecs = transcribedSecs + #group
+                        if overlay then updateProgressBar() end
                         transcribeNextSegment()
                         return
                     end
