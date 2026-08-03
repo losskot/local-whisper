@@ -621,7 +621,7 @@ local EL = { text = 2, dot = 3, timer = 4, bar_bg = 5, bar_rec = 6, bar_txn = 7,
 local function createOverlay()
     local screen = hs.screen.mainScreen()
     local frame = screen:frame()  -- excludes menu bar, so y=frame.y sits right under it
-    local width, height = 420, 112
+    local width, height = 420, 56
     local padding = 20
     local x = frame.x + (frame.w - width) / 2  -- centered under the menu bar
     local y = frame.y + padding
@@ -637,54 +637,54 @@ local function createOverlay()
         trackMouseUp = true,
     })
 
-    -- 2: Transcript text
+    -- 2: Transcript text — left side of the single-line strip
     overlay:appendElements({
         id = "text", type = "text", text = "Listening...",
         textColor = { red = 1, green = 1, blue = 1, alpha = 1.0 },
         textSize = 14,
-        frame = { x = "5%", y = "20%", w = "90%", h = "58%" },
+        frame = { x = "4%", y = "16%", w = "58%", h = "55%" },
     })
-    -- 3: Recording indicator (pulsing red dot)
+    -- 3: Recording indicator (pulsing red dot) — right side
     overlay:appendElements({
         id = "dot", type = "oval", action = "fill",
         fillColor = { red = 1, green = 0.15, blue = 0.15, alpha = 0.0 },
-        frame = { x = "89%", y = "8%", w = "3%", h = "12%" },
+        frame = { x = "81%", y = "24%", w = "4%", h = "30%" },
     })
-    -- 4: Elapsed time display
+    -- 4: Elapsed time display — right side
     overlay:appendElements({
         id = "timer", type = "text", text = "",
         textColor = { red = 1, green = 0.4, blue = 0.4, alpha = 0.0 },
         textSize = 10,
-        frame = { x = "70%", y = "8%", w = "18%", h = "14%" },
+        frame = { x = "64%", y = "18%", w = "16%", h = "45%" },
         textAlignment = "right",
     })
-    -- 5: Progress bar background (gray track) — absolute px: x=17,y=96,w=386,h=9
+    -- 5: Progress bar background (gray track) — thin strip along the bottom edge
     overlay:appendElements({
         id = "bar_bg", type = "rectangle", action = "fill",
-        roundedRectRadii = { xRadius = 3, yRadius = 3 },
+        roundedRectRadii = { xRadius = 2, yRadius = 2 },
         fillColor = { red = 0.3, green = 0.3, blue = 0.3, alpha = 0.0 },
-        frame = { x = 17, y = 96, w = 386, h = 9 },
+        frame = { x = 17, y = 48, w = 386, h = 4 },
     })
     -- 6: Recording progress (red/orange) — total recorded duration
     overlay:appendElements({
         id = "bar_rec", type = "rectangle", action = "fill",
-        roundedRectRadii = { xRadius = 3, yRadius = 3 },
+        roundedRectRadii = { xRadius = 2, yRadius = 2 },
         fillColor = { red = 1.0, green = 0.35, blue = 0.15, alpha = 0.0 },
-        frame = { x = 17, y = 96, w = 1, h = 9 },
+        frame = { x = 17, y = 48, w = 1, h = 4 },
     })
     -- 7: Transcription progress (blue) — chases the red bar as segments finish
     overlay:appendElements({
         id = "bar_txn", type = "rectangle", action = "fill",
-        roundedRectRadii = { xRadius = 3, yRadius = 3 },
+        roundedRectRadii = { xRadius = 2, yRadius = 2 },
         fillColor = { red = 0.2, green = 0.75, blue = 1.0, alpha = 0.0 },
-        frame = { x = 17, y = 96, w = 1, h = 9 },
+        frame = { x = 17, y = 48, w = 1, h = 4 },
     })
-    -- 8: Close button (X) — last element so it's on top and clickable
+    -- 8: Close button (X) — right edge, last element so it's on top and clickable
     overlay:appendElements({
         id = "close", type = "text", text = "✕",
         textColor = { red = 1, green = 0.4, blue = 0.4, alpha = 0.8 },
         textSize = 16, textAlignment = "center",
-        frame = { x = "90%", y = "6%", w = "8%", h = "16%" },
+        frame = { x = "87%", y = "12%", w = "10%", h = "45%" },
         trackMouseDown = true, trackMouseUp = true, trackMouseEnterExit = true,
     })
 
@@ -1003,8 +1003,8 @@ local function updateProgressBar()
     if elapsed >= barMaxSecs * 0.9 then barMaxSecs = barMaxSecs + 180 end
     local recFrac = math.min(elapsed / barMaxSecs, 1.0)
     local txnFrac = math.min(transcribedSecs / barMaxSecs, 1.0)
-    overlay[EL.bar_rec].frame = { x = 17, y = 96, w = math.max(1, math.floor(recFrac * BAR_MAX)), h = 9 }
-    overlay[EL.bar_txn].frame = { x = 17, y = 96, w = math.max(1, math.floor(txnFrac * BAR_MAX)), h = 9 }
+    overlay[EL.bar_rec].frame = { x = 17, y = 48, w = math.max(1, math.floor(recFrac * BAR_MAX)), h = 4 }
+    overlay[EL.bar_txn].frame = { x = 17, y = 48, w = math.max(1, math.floor(txnFrac * BAR_MAX)), h = 4 }
 end
 
 local function hideProgressBar()
