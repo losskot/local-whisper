@@ -1,0 +1,74 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_011oQGQ9fKgy5aYGRUfRCRwQ",
+        "input": {
+          "file_path": "/Users/vitaliy/Documents/GitHub/local-whisper/AGENTS.md",
+          "new_string": "| `trigger` | a combo trigger matched with `\u003e 0` so half of it fires; a release poller polling bits the poll API never reports |\n| `lifetime` | an eventtap, watcher or repeating timer left unrooted, which the GC silently unregisters mid-session |",
+          "old_string": "| `trigger` | a combo trigger matched with `\u003e 0` so half of it fires; a release poller that cannot tell left Control from right Control |",
+          "replace_all": false
+        },
+        "name": "Edit",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce7ALNRcANQCoUJ4HiDAc",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 1001,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 1001,
+      "cache_read_input_tokens": 233062,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1001,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 1001,
+          "cache_read_input_tokens": 233062,
+          "input_tokens": 2,
+          "output_tokens": 283,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 283,
+      "output_tokens_details": {
+        "thinking_tokens": 0
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "651664f2-50cc-44d7-a828-5b43f9620f51",
+  "requestId": "req_011Ce7ALK1DwhXy3niYC5Gjh",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "timestamp": "2026-08-16T21:47:00.165Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "264a02b5-010d-427e-ac63-5cf517e7c107",
+  "version": "2.1.233"
+}

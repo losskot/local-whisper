@@ -1,0 +1,63 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_016EQTh1AykfadNo5LfwqTRp",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "ff8ca1a8-b036-4fe0-940c-9293c30d5202",
+  "promptId": "f827976e-140e-4169-af22-bb5944b08f41",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "ff8ca1a8-b036-4fe0-940c-9293c30d5202",
+  "timestamp": "2026-08-16T21:44:28.789Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+    "newString": "modTap:start()\n\n-- Root the tap in a global. Hammerspoon garbage-collects eventtaps, repeating timers\n-- and watchers that nothing in Lua still references, and collecting one unregisters it\n-- from the system: the tap keeps reporting isEnabled() right up until it is collected,\n-- then simply stops receiving events, with nothing logged. The chunk's own locals do not\n-- count — once init.lua finishes, a local survives only while some live closure captures\n-- it, and the only closure holding modTap was the watchdog timer below, which is itself\n-- collectible. This is why the trigger worked for a few minutes after every reload and\n-- then went dead.\nLocalWhisper = LocalWhisper or {}\nLocalWhisper.modTap = modTap\n\n-- Re-enable eventtap if it gets disabled (e.g. by secure input)\nLocalWhisper.tapWatchdog = hs.timer.doEvery(5, function()\n    if not modTap:isEnabled() then\n        log(\"eventtap was disabled, re-enabling\")\n        modTap:start()\n    end\nend)",
+    "oldString": "modTap:start()\n\n-- Re-enable eventtap if it gets disabled (e.g. by secure input)\nhs.timer.doEvery(5, function()\n    if not modTap:isEnabled() then\n        log(\"eventtap was disabled, re-enabling\")\n        modTap:start()\n    end\nend)",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          " end)",
+          " modTap:start()",
+          " ",
+          "+-- Root the tap in a global. Hammerspoon garbage-collects eventtaps, repeating timers",
+          "+-- and watchers that nothing in Lua still references, and collecting one unregisters it",
+          "+-- from the system: the tap keeps reporting isEnabled() right up until it is collected,",
+          "+-- then simply stops receiving events, with nothing logged. The chunk's own locals do not",
+          "+-- count — once init.lua finishes, a local survives only while some live closure captures",
+          "+-- it, and the only closure holding modTap was the watchdog timer below, which is itself",
+          "+-- collectible. This is why the trigger worked for a few minutes after every reload and",
+          "+-- then went dead.",
+          "+LocalWhisper = LocalWhisper or {}",
+          "+LocalWhisper.modTap = modTap",
+          "+",
+          " -- Re-enable eventtap if it gets disabled (e.g. by secure input)",
+          "-hs.timer.doEvery(5, function()",
+          "+LocalWhisper.tapWatchdog = hs.timer.doEvery(5, function()",
+          "     if not modTap:isEnabled() then",
+          "         log(\"eventtap was disabled, re-enabling\")",
+          "         modTap:start()"
+        ],
+        "newLines": 19,
+        "newStart": 1567,
+        "oldLines": 8,
+        "oldStart": 1567
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "935b52a6-bc3b-4f2d-990c-694d485d0f30",
+  "version": "2.1.233"
+}

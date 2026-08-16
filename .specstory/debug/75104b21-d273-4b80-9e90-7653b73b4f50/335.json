@@ -1,0 +1,74 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_016EQTh1AykfadNo5LfwqTRp",
+        "input": {
+          "file_path": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+          "new_string": "modTap:start()\n\n-- Root the tap in a global. Hammerspoon garbage-collects eventtaps, repeating timers\n-- and watchers that nothing in Lua still references, and collecting one unregisters it\n-- from the system: the tap keeps reporting isEnabled() right up until it is collected,\n-- then simply stops receiving events, with nothing logged. The chunk's own locals do not\n-- count — once init.lua finishes, a local survives only while some live closure captures\n-- it, and the only closure holding modTap was the watchdog timer below, which is itself\n-- collectible. This is why the trigger worked for a few minutes after every reload and\n-- then went dead.\nLocalWhisper = LocalWhisper or {}\nLocalWhisper.modTap = modTap\n\n-- Re-enable eventtap if it gets disabled (e.g. by secure input)\nLocalWhisper.tapWatchdog = hs.timer.doEvery(5, function()\n    if not modTap:isEnabled() then\n        log(\"eventtap was disabled, re-enabling\")\n        modTap:start()\n    end\nend)",
+          "old_string": "modTap:start()\n\n-- Re-enable eventtap if it gets disabled (e.g. by secure input)\nhs.timer.doEvery(5, function()\n    if not modTap:isEnabled() then\n        log(\"eventtap was disabled, re-enabling\")\n        modTap:start()\n    end\nend)",
+          "replace_all": false
+        },
+        "name": "Edit",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce7A8mvdzFDjL6Y8woWDy",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 4597,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 4597,
+      "cache_read_input_tokens": 222879,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 4597,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 4597,
+          "cache_read_input_tokens": 222879,
+          "input_tokens": 2,
+          "output_tokens": 615,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 615,
+      "output_tokens_details": {
+        "thinking_tokens": 0
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "bb09cf45-d58b-4fd1-8afa-b5cc2d0c5708",
+  "requestId": "req_011Ce7A8jrNEc8wwiQusq4cQ",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "timestamp": "2026-08-16T21:44:27.230Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "ff8ca1a8-b036-4fe0-940c-9293c30d5202",
+  "version": "2.1.233"
+}

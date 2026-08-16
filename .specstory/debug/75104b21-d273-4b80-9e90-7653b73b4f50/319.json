@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "[23:37:28] recording: start\n[23:37:28] recording: app=Claude (com.anthropic.claudefordesktop)\n[23:37:31] recording: first chunk ready after 3.0s — audio flowing\n[23:38:18] recording: stop\n[23:38:19] recording: ffmpeg exited 255\n[23:38:19] final: START — total chunks=49\n[23:38:19] final: first=chunk_000.wav  last=chunk_048.wav  duration≈49s\n[23:38:19] final: segments=1 (FINAL_SEGMENT_SECS=55)\n[23:38:19] final: seg 1 → 49 chunks (chunk_000.wav … chunk_048.wav)\n[23:38:19] final: seg 1 writing concat list (49 files) → /var/folders/ph/3yv4hw8567g12wy09lntpvt40000gp/T//whisper-dictate/seg_concat_1.txt\n[23:38:19] final: seg 1 starting ffmpeg concat → /var/folders/ph/3yv4hw8567g12wy09lntpvt40000gp/T//whisper-dictate/seg_1.wav\n[23:38:19] final: seg 1 concat OK — wav size=1373944 bytes\n[23:38:19] final: seg 1 starting whisper lang=auto model=ggml-large-v3-turbo-q5_0.bin\n[23:38:29] final: seg 1 whisper(auto) exit=0 outlen=728 errlen=4054\n[23:38:29] seg 1 auto-detected: ru\n[23:38:29] final: seg 1 onSegmentText hallucination=false len=726\n[23:38:29] final: seg 1 accepted text: 'Так, добавь в память, что если я говорю о том, что я испытываю какую'\n[23:38:29] final: finishAll — collected 1 text segment(s)\n[23:38:29] final combined (1 seg(s)): 'Так, добавь в память, что если я говорю о том, что я испытываю какую-то проблему и что-то не работает, или что-то надо выяснить, то всегда, всегда ищи комьюнити человеческие истории, потому что в моей системе ценностей это знание гораздо важнее, чем официальная информация. Пользователь не уважает, не любит корпоративную информацию и считает, что там вата, фуфло и обман. Корпорации тупые куски говна.'\n[23:38:29] action: inserted [Claude]: Так, добавь в память, что если я говорю о том, что я испытываю какую-то проблему и что-то не работает, или что-то надо выяснить, то всегда, всегда ищи комьюнити человеческие истории, потому что в моей системе ценностей это знание гораздо важнее, чем официальная информация. Пользователь не уважает, не любит корпоративную информацию и считает, что там вата, фуфло и обман. Корпорации тупые куски говна.\n=== HS:\nrunning\n=== git состояние init.lua:\n120:--   heldMask — matched against hs.eventtap.checkKeyboardModifiers(true)._raw, which comes\n123:--              bit is gone. A device bit in heldMask can therefore never match, and the\n126:    rightAlt   = { mask = RAWFLAGS.deviceRightAlternate, heldMask = RAWFLAGS.alternate, label = \"right Option\" },\n127:    rightCmd   = { mask = RAWFLAGS.deviceRightCommand,   heldMask = RAWFLAGS.command,   label = \"right Command\" },\n128:    rightCtrl  = { mask = RAWFLAGS.deviceRightControl,   heldMask = RAWFLAGS.control,   label = \"right Control\" },",
+        "is_error": false,
+        "tool_use_id": "toolu_01BBQEXi6Ce2fU3oPtQB9WMK",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "ea8fae28-c747-49e1-b280-e59d36d414a6",
+  "promptId": "f827976e-140e-4169-af22-bb5944b08f41",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "ea8fae28-c747-49e1-b280-e59d36d414a6",
+  "timestamp": "2026-08-16T21:41:57.022Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "[23:37:28] recording: start\n[23:37:28] recording: app=Claude (com.anthropic.claudefordesktop)\n[23:37:31] recording: first chunk ready after 3.0s — audio flowing\n[23:38:18] recording: stop\n[23:38:19] recording: ffmpeg exited 255\n[23:38:19] final: START — total chunks=49\n[23:38:19] final: first=chunk_000.wav  last=chunk_048.wav  duration≈49s\n[23:38:19] final: segments=1 (FINAL_SEGMENT_SECS=55)\n[23:38:19] final: seg 1 → 49 chunks (chunk_000.wav … chunk_048.wav)\n[23:38:19] final: seg 1 writing concat list (49 files) → /var/folders/ph/3yv4hw8567g12wy09lntpvt40000gp/T//whisper-dictate/seg_concat_1.txt\n[23:38:19] final: seg 1 starting ffmpeg concat → /var/folders/ph/3yv4hw8567g12wy09lntpvt40000gp/T//whisper-dictate/seg_1.wav\n[23:38:19] final: seg 1 concat OK — wav size=1373944 bytes\n[23:38:19] final: seg 1 starting whisper lang=auto model=ggml-large-v3-turbo-q5_0.bin\n[23:38:29] final: seg 1 whisper(auto) exit=0 outlen=728 errlen=4054\n[23:38:29] seg 1 auto-detected: ru\n[23:38:29] final: seg 1 onSegmentText hallucination=false len=726\n[23:38:29] final: seg 1 accepted text: 'Так, добавь в память, что если я говорю о том, что я испытываю какую'\n[23:38:29] final: finishAll — collected 1 text segment(s)\n[23:38:29] final combined (1 seg(s)): 'Так, добавь в память, что если я говорю о том, что я испытываю какую-то проблему и что-то не работает, или что-то надо выяснить, то всегда, всегда ищи комьюнити человеческие истории, потому что в моей системе ценностей это знание гораздо важнее, чем официальная информация. Пользователь не уважает, не любит корпоративную информацию и считает, что там вата, фуфло и обман. Корпорации тупые куски говна.'\n[23:38:29] action: inserted [Claude]: Так, добавь в память, что если я говорю о том, что я испытываю какую-то проблему и что-то не работает, или что-то надо выяснить, то всегда, всегда ищи комьюнити человеческие истории, потому что в моей системе ценностей это знание гораздо важнее, чем официальная информация. Пользователь не уважает, не любит корпоративную информацию и считает, что там вата, фуфло и обман. Корпорации тупые куски говна.\n=== HS:\nrunning\n=== git состояние init.lua:\n120:--   heldMask — matched against hs.eventtap.checkKeyboardModifiers(true)._raw, which comes\n123:--              bit is gone. A device bit in heldMask can therefore never match, and the\n126:    rightAlt   = { mask = RAWFLAGS.deviceRightAlternate, heldMask = RAWFLAGS.alternate, label = \"right Option\" },\n127:    rightCmd   = { mask = RAWFLAGS.deviceRightCommand,   heldMask = RAWFLAGS.command,   label = \"right Command\" },\n128:    rightCtrl  = { mask = RAWFLAGS.deviceRightControl,   heldMask = RAWFLAGS.control,   label = \"right Control\" },"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "86849132-844f-4703-be7b-37521bc692ff",
+  "version": "2.1.233"
+}

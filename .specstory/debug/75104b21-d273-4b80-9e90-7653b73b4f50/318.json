@@ -1,0 +1,72 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01BBQEXi6Ce2fU3oPtQB9WMK",
+        "input": {
+          "command": "TMPDIR_REAL=$(getconf DARWIN_USER_TEMP_DIR); tail -20 \"${TMPDIR_REAL}whisper-dictate/whisper-dictate.log\"; echo \"=== HS:\"; pgrep -x Hammerspoon \u003e/dev/null \u0026\u0026 echo running || echo NOT running; echo \"=== git состояние init.lua:\"; git status --porcelain hammerspoon/init.lua; grep -n \"heldMask\" hammerspoon/init.lua | head -5",
+          "description": "Check log, HS state, and that the fix is on disk"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce79vyGRtyW82TqucfaMc",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 1237,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 1237,
+      "cache_read_input_tokens": 215268,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1237,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 1237,
+          "cache_read_input_tokens": 215268,
+          "input_tokens": 2,
+          "output_tokens": 1131,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 1131,
+      "output_tokens_details": {
+        "thinking_tokens": 875
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "5677275e-1104-45f8-a574-8d32168a9d6b",
+  "requestId": "req_011Ce79vx5zBNSEcFY5WvGag",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "timestamp": "2026-08-16T21:41:54.239Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "ea8fae28-c747-49e1-b280-e59d36d414a6",
+  "version": "2.1.233"
+}

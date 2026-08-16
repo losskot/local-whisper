@@ -91,6 +91,36 @@ A `local` is only in scope for code that appears *after* its declaration. A func
 
 `overlayPinned`, `isRecording`, and the `hideOverlay` forward declaration therefore sit **above** `createOverlay`, whose mouse callback closes over all three. When adding state that a callback touches, declare it above every function that references it.
 
+### Long-lived objects must be rooted in a global, or the GC unregisters them
+
+Hammerspoon collects eventtaps, repeating timers and watchers that nothing in Lua still
+references, and collecting one **unregisters it from the system**. There is no error, no log
+line, and `isEnabled()` keeps returning `true` right up to the collection — the object simply
+stops receiving events.
+
+init.lua's own top-level locals are **not** a root. Once the chunk returns, a local survives
+only while a reachable closure captures it, so a chain of collectible objects (a timer that
+was never stored holding the tap) collapses all at once. Everything that must outlive the
+chunk therefore goes into the `LocalWhisper` table:
+
+```lua
+LocalWhisper.modTap       = modTap        -- the trigger eventtap
+LocalWhisper.tapWatchdog  = hs.timer.doEvery(5, ...)
+LocalWhisper.sleepWatcher = sleepWatcher
+```
+
+This is the bug that made the trigger "work right after a reload and die a few minutes
+later". The `_whisper` global that was deleted as dead state was in fact the only strong
+reference to the eventtap. Verify a change here by forcing collection and then posting an
+event — the tap must still respond:
+
+```bash
+hs -c 'collectgarbage("collect"); collectgarbage("collect")
+       local e=hs.eventtap.event.newEvent(); e:setType(hs.eventtap.event.types.flagsChanged)
+       e:rawFlags(0x840001); e:post()'
+# → the log must show a new "warmup: probing audio device..." line
+```
+
 ### The trigger is a modifier combo
 
 `TRIGGER_KEY` selects an entry from the `TRIGGERS` table; the default `fnLeftCtrl` ORs
@@ -161,7 +191,8 @@ implementation:
 | `scope` | a top-level local referenced by an earlier-defined function (reads as a nil global at runtime, with no load-time error) |
 | `sound` | unguarded `hs.sound.getByFile(...):play()`, which throws and aborts its callback |
 | `meeting`, `refine`, `preferred`, `autostop`, `undo`, `whisperprobe` | a deleted subsystem creeping back in (meeting mode, LLM refine/Ollama, preferred languages, silence auto-stop, undo tracking, the `_whisper` global) |
-| `trigger` | a combo trigger matched with `> 0` so half of it fires; a release poller that cannot tell left Control from right Control |
+| `trigger` | a combo trigger matched with `> 0` so half of it fires; a release poller polling bits the poll API never reports |
+| `lifetime` | an eventtap, watcher or repeating timer left unrooted, which the GC silently unregisters mid-session |
 | `globals` | state leaked into Hammerspoon's shared `_ENV` |
 | `sort` | chunk files ordered as strings, which reorders audio past chunk 999 |
 | `emergencyStop` | emergency stop not cancelling a pending finalization |

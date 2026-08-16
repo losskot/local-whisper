@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "реакция на нажатие после GC: 3 строк\n[23:46:10] warmup: probing audio device...\n[23:46:10] warmup: attempt 1/10\n[23:46:11] warmup: cancelled (key released before device ready)",
+        "is_error": false,
+        "tool_use_id": "toolu_01196gExKFn6TgdYJW1MvAwq",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "7221e02a-c375-4d20-8422-4ce7d51116f8",
+  "promptId": "f827976e-140e-4169-af22-bb5944b08f41",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "7221e02a-c375-4d20-8422-4ce7d51116f8",
+  "timestamp": "2026-08-16T21:46:37.551Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "реакция на нажатие после GC: 3 строк\n[23:46:10] warmup: probing audio device...\n[23:46:10] warmup: attempt 1/10\n[23:46:11] warmup: cancelled (key released before device ready)"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "a39f1ae8-60c2-45f7-9b14-d35428ebc767",
+  "version": "2.1.233"
+}

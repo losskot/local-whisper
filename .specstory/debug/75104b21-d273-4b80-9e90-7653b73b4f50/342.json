@@ -1,0 +1,50 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/tests/test_init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01VMpYPVgVexnz8GecLFdyy8",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "c4a23e39-4406-42e0-8829-8f6f53caf451",
+  "promptId": "f827976e-140e-4169-af22-bb5944b08f41",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "c4a23e39-4406-42e0-8829-8f6f53caf451",
+  "timestamp": "2026-08-16T21:45:01.446Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/tests/test_init.lua",
+    "newString": "local allowedGlobals = {\n    LocalWhisper   = true,  -- GC root for the eventtap, its watchdog and the sleep watcher\n    WhisperActions = true,  -- user-facing action-hook API\n    emergencyStop  = true,  -- called from the overlay callback and the menu bar\n    updateMenuBar  = true,\n}",
+    "oldString": "local allowedGlobals = {\n    WhisperActions = true,  -- user-facing action-hook API\n    emergencyStop  = true,  -- called from the overlay callback and the menu bar\n    updateMenuBar  = true,\n}",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          " -- or Spoon can collide with it. A short allowlist covers the deliberate ones.",
+          " ",
+          " local allowedGlobals = {",
+          "+    LocalWhisper   = true,  -- GC root for the eventtap, its watchdog and the sleep watcher",
+          "     WhisperActions = true,  -- user-facing action-hook API",
+          "     emergencyStop  = true,  -- called from the overlay callback and the menu bar",
+          "     updateMenuBar  = true,"
+        ],
+        "newLines": 7,
+        "newStart": 270,
+        "oldLines": 6,
+        "oldStart": 270
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "dbadc85c-a61d-4bc4-8915-c617a6625f3d",
+  "version": "2.1.233"
+}

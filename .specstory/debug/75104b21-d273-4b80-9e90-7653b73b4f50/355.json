@@ -1,0 +1,52 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/AGENTS.md has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_011oQGQ9fKgy5aYGRUfRCRwQ",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "264a02b5-010d-427e-ac63-5cf517e7c107",
+  "promptId": "f827976e-140e-4169-af22-bb5944b08f41",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "264a02b5-010d-427e-ac63-5cf517e7c107",
+  "timestamp": "2026-08-16T21:47:01.256Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/AGENTS.md",
+    "newString": "| `trigger` | a combo trigger matched with `\u003e 0` so half of it fires; a release poller polling bits the poll API never reports |\n| `lifetime` | an eventtap, watcher or repeating timer left unrooted, which the GC silently unregisters mid-session |",
+    "oldString": "| `trigger` | a combo trigger matched with `\u003e 0` so half of it fires; a release poller that cannot tell left Control from right Control |",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          " | `scope` | a top-level local referenced by an earlier-defined function (reads as a nil global at runtime, with no load-time error) |",
+          " | `sound` | unguarded `hs.sound.getByFile(...):play()`, which throws and aborts its callback |",
+          " | `meeting`, `refine`, `preferred`, `autostop`, `undo`, `whisperprobe` | a deleted subsystem creeping back in (meeting mode, LLM refine/Ollama, preferred languages, silence auto-stop, undo tracking, the `_whisper` global) |",
+          "-| `trigger` | a combo trigger matched with `\u003e 0` so half of it fires; a release poller that cannot tell left Control from right Control |",
+          "+| `trigger` | a combo trigger matched with `\u003e 0` so half of it fires; a release poller polling bits the poll API never reports |",
+          "+| `lifetime` | an eventtap, watcher or repeating timer left unrooted, which the GC silently unregisters mid-session |",
+          " | `globals` | state leaked into Hammerspoon's shared `_ENV` |",
+          " | `sort` | chunk files ordered as strings, which reorders audio past chunk 999 |",
+          " | `emergencyStop` | emergency stop not cancelling a pending finalization |"
+        ],
+        "newLines": 8,
+        "newStart": 191,
+        "oldLines": 7,
+        "oldStart": 191
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "79838aab-98d9-4555-b209-11eb88c22fc6",
+  "version": "2.1.233"
+}

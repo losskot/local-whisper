@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "  \u001b[0;32mPASS\u001b[0m  lifetime: no long-lived object is created and discarded at top level\n  \u001b[0;32mPASS\u001b[0m  lifetime: every top-level eventtap/watcher/repeating timer is stored in LocalWhisper\n  \u001b[0;32mPASS\u001b[0m  lifetime: the trigger eventtap itself is rooted\n\u001b[0;32m\u001b[1mAll 75 checks passed.\u001b[0m\n=== мутация: снять корень у tap (ровно тот баг) ===\n  \u001b[0;31mFAIL\u001b[0m  lifetime: no long-lived object is created and discarded at top level\n  \u001b[0;31mFAIL\u001b[0m  lifetime: every top-level eventtap/watcher/repeating timer is stored in LocalWhisper\n  \u001b[0;31mFAIL\u001b[0m  lifetime: the trigger eventtap itself is rooted\n\u001b[0;31m\u001b[1m3 of 75 checks failed.\u001b[0m",
+        "is_error": false,
+        "tool_use_id": "toolu_01XCYDzyTLn3UKAY2tzx3LVU",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "f14cc4ec-9728-4f65-ac38-82484d1f7a5b",
+  "promptId": "f827976e-140e-4169-af22-bb5944b08f41",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "f14cc4ec-9728-4f65-ac38-82484d1f7a5b",
+  "timestamp": "2026-08-16T21:45:34.240Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "  \u001b[0;32mPASS\u001b[0m  lifetime: no long-lived object is created and discarded at top level\n  \u001b[0;32mPASS\u001b[0m  lifetime: every top-level eventtap/watcher/repeating timer is stored in LocalWhisper\n  \u001b[0;32mPASS\u001b[0m  lifetime: the trigger eventtap itself is rooted\n\u001b[0;32m\u001b[1mAll 75 checks passed.\u001b[0m\n=== мутация: снять корень у tap (ровно тот баг) ===\n  \u001b[0;31mFAIL\u001b[0m  lifetime: no long-lived object is created and discarded at top level\n  \u001b[0;31mFAIL\u001b[0m  lifetime: every top-level eventtap/watcher/repeating timer is stored in LocalWhisper\n  \u001b[0;31mFAIL\u001b[0m  lifetime: the trigger eventtap itself is rooted\n\u001b[0;31m\u001b[1m3 of 75 checks failed.\u001b[0m"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "1f49e0e2-43b7-4903-ace3-e9bd0f809133",
+  "version": "2.1.233"
+}

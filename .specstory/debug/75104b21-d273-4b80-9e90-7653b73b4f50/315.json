@@ -1,0 +1,64 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "text": "Всё запушено, `main` в синхроне с origin.\n\n## Почему не работало\n\nНажатие и отпускание читаются **разными API, которые отдают разные биты**:\n\n| | Источник | Что содержит |\n|---|---|---|\n| Нажатие | `event:rawFlags()` в flagsChanged | device-биты есть: `deviceLeftControl` = `0x1` |\n| Отпускание | `checkKeyboardModifiers(true)._raw` (`CGEventSourceFlagsState`) | **только generic-биты**, device-битов нет |\n\nПроверил напрямую: посылаю событие с `0x800001`, читаю состояние обратно — приходит `0x800000`. `fn` выжил, `deviceLeftControl` исчез.\n\nТо есть `triggerHeld()` не мог вернуть true **никогда**. Нажатие детектилось, оверлей появлялся — и через 0.1 с поллер решал, что клавишу отпустили, и убивал запись. Снаружи это выглядело как «биндинг мёртвый, UI вообще нет».\n\nМой первый тест проходил на сломанном коде, потому что стаб подсовывал `triggerHeld` значение `_raw`, которого реальный API не выдаёт. Это моя ошибка в конструкции теста, а не просто невезение.\n\n**Фикс**: у каждого триггера теперь две маски — `mask` (device-биты, против события) и `heldMask` (generic-биты, против опроса). Тест переписан на реальную форму данных + новая проверка, которая падает, если в `heldMask` попадёт хоть один device-бит (проверил мутацией). 72 проверки зелёные.\n\n**Проверено вживую**: синтетическое удержание 6 с прошло весь путь — warmup → 3 чанка → concat → whisper (авто-детект ru) → хуки → вставка. Плюс ты сам продиктовал «Нажимается, работает» физической клавишей. На время теста я временно ставил `output=copy`, чтобы ничего не вставилось в чужое окно; вернул `paste`.\n\n## Что такое bd\n\n**Beads** — трекер задач, живущий прямо в репозитории ([github.com/steveyegge/beads](https://github.com/steveyegge/beads)): issue лежат в `.beads/issues.jsonl` (у тебя 8 штук) и коммитятся вместе с кодом, без веб-UI. AGENTS.md требует заводить issue перед любой работой, но **CLI `bd` на этой машине не установлен** — `command not found`, поэтому issue по этой чистке я завести не смог. В `.beads/metadata.json` бэкенд указан как Dolt в server-режиме, так что там не только JSONL. Поставить — по инструкции из репозитория проекта; я это делать не стал, не спросив.\n\nДобавил в AGENTS.md правило: если `bd` недоступен — сказать об этом и работать дальше, но не подменять его markdown-тудушками.\n\n## Правило про .specstory\n\nЗаписал в AGENTS.md отдельным разделом «`.specstory/` is code»: трекается, коммитится и пушится как исходники, не стэшить, не игнорить, не оставлять грязным в конце сессии, не выкидывать ради «чистого диффа». Всё накопленное закоммичено и запушено — включая то, что я раньше отложил в stash.\n\nЕщё в AGENTS.md теперь есть рецепт симуляции полной диктовки без клавиатуры (posted-события держат состояние флагов, поэтому поллер видит зажатую комбинацию) — им я и проверял пайплайн.",
+        "type": "text"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce79u9DutDUFj13v9UZBA",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "end_turn",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 472,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 472,
+      "cache_read_input_tokens": 214796,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 472,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 472,
+          "cache_read_input_tokens": 214796,
+          "input_tokens": 2,
+          "output_tokens": 1232,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 1232,
+      "output_tokens_details": {
+        "thinking_tokens": 0
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "2dbf91e0-ff3c-4b9b-bb9c-aa39f132e286",
+  "requestId": "req_011Ce79u8AAEgSe2jd7LtmmL",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "timestamp": "2026-08-16T21:41:37.314Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "183f1ef8-83c2-4768-aed5-5f66482edbe8",
+  "version": "2.1.233"
+}

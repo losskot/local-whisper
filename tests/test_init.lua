@@ -270,6 +270,7 @@ end
 -- or Spoon can collide with it. A short allowlist covers the deliberate ones.
 
 local allowedGlobals = {
+    LocalWhisper   = true,  -- GC root for the eventtap, its watchdog and the sleep watcher
     WhisperActions = true,  -- user-facing action-hook API
     emergencyStop  = true,  -- called from the overlay callback and the menu bar
     updateMenuBar  = true,
@@ -681,7 +682,50 @@ if type(EL) == "table" then
 end
 
 --------------------------------------------------------------------------------
--- 14. Trigger matching (behavioral -- runs the real triggerPressed/triggerHeld)
+-- 14. Long-lived system objects are rooted against the garbage collector
+--------------------------------------------------------------------------------
+-- Hammerspoon collects eventtaps, repeating timers and watchers that nothing in Lua
+-- references, and collecting one unregisters it from the system: no error, no log line,
+-- isEnabled() still true right up to the collection, then events silently stop arriving.
+-- init.lua's own top-level locals are NOT a root -- once the chunk returns, a local lives
+-- only as long as some reachable closure captures it. Removing the `_whisper` global once
+-- killed the trigger this way: it looked like dead state, but it was the only strong
+-- reference to the eventtap, which then died a few minutes after every reload.
+
+local GC_ROOT       = "LocalWhisper"
+local LONG_LIVED    = {
+    ["hs%.eventtap%.new"]           = "eventtap",
+    ["hs%.caffeinate%.watcher%.new"] = "watcher",
+    ["hs%.timer%.doEvery"]          = "repeating timer",
+}
+
+local discarded, unrooted = {}, {}
+for i, s in ipairs(stripped) do
+    for pat, kind in pairs(LONG_LIVED) do
+        -- Top level only: an indented call belongs to a function body, whose own
+        -- lifetime is decided by whatever roots that function.
+        if s:match("^" .. pat) then
+            discarded[#discarded + 1] = kind .. " at L" .. i
+        end
+        local name = s:match("^local%s+([%w_]+)%s*=%s*" .. pat)
+        if name and not src:find(GC_ROOT .. "%.[%w_]+%s*=%s*" .. name .. "%f[^%w_]") then
+            unrooted[#unrooted + 1] = name .. " (" .. kind .. ", L" .. i .. ")"
+        end
+    end
+end
+
+check("lifetime: no long-lived object is created and discarded at top level",
+      #discarded == 0,
+      "unreferenced: " .. table.concat(discarded, ", "))
+check("lifetime: every top-level eventtap/watcher/repeating timer is stored in " .. GC_ROOT,
+      #unrooted == 0,
+      "not rooted: " .. table.concat(unrooted, ", "))
+check("lifetime: the trigger eventtap itself is rooted",
+      src:find(GC_ROOT .. "%.modTap%s*=") ~= nil,
+      GC_ROOT .. ".modTap is never assigned — the tap will be collected mid-session")
+
+--------------------------------------------------------------------------------
+-- 15. Trigger matching (behavioral -- runs the real triggerPressed/triggerHeld)
 --------------------------------------------------------------------------------
 -- The trigger is a modifier COMBO (fn + left Control), which opens two failure modes
 -- a single-modifier trigger never had:

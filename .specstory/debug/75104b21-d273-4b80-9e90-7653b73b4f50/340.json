@@ -1,0 +1,64 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "text": "Добавляю тест на этот класс багов (объект-долгожитель без сильной ссылки):",
+        "type": "text"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce7AA3dE6M65LdWPdQPpC",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 296,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 296,
+      "cache_read_input_tokens": 228159,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 296,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 296,
+          "cache_read_input_tokens": 228159,
+          "input_tokens": 2,
+          "output_tokens": 1882,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 1882,
+      "output_tokens_details": {
+        "thinking_tokens": 1506
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "4fa3cfcb-7feb-4eab-8b74-7c9f96f90677",
+  "requestId": "req_011Ce7AA2QZD4jRiphdzGtex",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "timestamp": "2026-08-16T21:44:57.147Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "a04cdd49-78a3-4eff-bde7-24e92c7d0f83",
+  "version": "2.1.233"
+}

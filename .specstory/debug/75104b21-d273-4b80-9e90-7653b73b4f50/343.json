@@ -1,0 +1,74 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_012yxBs1UTCDquYa8XdRu4oH",
+        "input": {
+          "file_path": "/Users/vitaliy/Documents/GitHub/local-whisper/tests/test_init.lua",
+          "new_string": "--------------------------------------------------------------------------------\n-- 14. Long-lived system objects are rooted against the garbage collector\n--------------------------------------------------------------------------------\n-- Hammerspoon collects eventtaps, repeating timers and watchers that nothing in Lua\n-- references, and collecting one unregisters it from the system: no error, no log line,\n-- isEnabled() still true right up to the collection, then events silently stop arriving.\n-- init.lua's own top-level locals are NOT a root -- once the chunk returns, a local lives\n-- only as long as some reachable closure captures it. Removing the `_whisper` global once\n-- killed the trigger this way: it looked like dead state, but it was the only strong\n-- reference to the eventtap, which then died a few minutes after every reload.\n\nlocal GC_ROOT       = \"LocalWhisper\"\nlocal LONG_LIVED    = {\n    [\"hs%.eventtap%.new\"]           = \"eventtap\",\n    [\"hs%.caffeinate%.watcher%.new\"] = \"watcher\",\n    [\"hs%.timer%.doEvery\"]          = \"repeating timer\",\n}\n\nlocal discarded, unrooted = {}, {}\nfor i, s in ipairs(stripped) do\n    for pat, kind in pairs(LONG_LIVED) do\n        -- Top level only: an indented call belongs to a function body, whose own\n        -- lifetime is decided by whatever roots that function.\n        if s:match(\"^\" .. pat) then\n            discarded[#discarded + 1] = kind .. \" at L\" .. i\n        end\n        local name = s:match(\"^local%s+([%w_]+)%s*=%s*\" .. pat)\n        if name and not src:find(GC_ROOT .. \"%.[%w_]+%s*=%s*\" .. name .. \"%f[^%w_]\") then\n            unrooted[#unrooted + 1] = name .. \" (\" .. kind .. \", L\" .. i .. \")\"\n        end\n    end\nend\n\ncheck(\"lifetime: no long-lived object is created and discarded at top level\",\n      #discarded == 0,\n      \"unreferenced: \" .. table.concat(discarded, \", \"))\ncheck(\"lifetime: every top-level eventtap/watcher/repeating timer is stored in \" .. GC_ROOT,\n      #unrooted == 0,\n      \"not rooted: \" .. table.concat(unrooted, \", \"))\ncheck(\"lifetime: the trigger eventtap itself is rooted\",\n      src:find(GC_ROOT .. \"%.modTap%s*=\") ~= nil,\n      GC_ROOT .. \".modTap is never assigned — the tap will be collected mid-session\")\n\n--------------------------------------------------------------------------------\n-- 15. Trigger matching (behavioral -- runs the real triggerPressed/triggerHeld)\n--------------------------------------------------------------------------------",
+          "old_string": "--------------------------------------------------------------------------------\n-- 14. Trigger matching (behavioral -- runs the real triggerPressed/triggerHeld)\n--------------------------------------------------------------------------------",
+          "replace_all": false
+        },
+        "name": "Edit",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce7AC2Z3SXbB7aZr7xx46",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 1948,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 1948,
+      "cache_read_input_tokens": 228455,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1948,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 1948,
+          "cache_read_input_tokens": 228455,
+          "input_tokens": 2,
+          "output_tokens": 1160,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 1160,
+      "output_tokens_details": {
+        "thinking_tokens": 0
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "dbadc85c-a61d-4bc4-8915-c617a6625f3d",
+  "requestId": "req_011Ce7ABzZyxbkqrAo4bVP6T",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "timestamp": "2026-08-16T21:45:17.006Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "2510f40d-cd69-4207-855e-68da3311a875",
+  "version": "2.1.233"
+}

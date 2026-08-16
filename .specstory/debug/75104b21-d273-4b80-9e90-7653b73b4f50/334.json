@@ -1,0 +1,35 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "1543\tlocal modTap = hs.eventtap.new({ hs.eventtap.event.types.flagsChanged }, function(event)\n1544\t    -- Wrap in pcall so errors don't kill the eventtap\n1545\t    local ok, err = pcall(function()\n1546\t        local triggered = triggerPressed(event:rawFlags())\n1547\t\n1548\t        if triggered and not isRecording then\n1549\t            startRecording()\n1550\t            -- Poll for release since flagsChanged doesn't fire on key-up\n1551\t            if releasePoller then releasePoller:stop() end\n1552\t            releasePoller = hs.timer.doEvery(0.1, function()\n1553\t                if not triggerHeld() then\n1554\t                    releasePoller:stop()\n1555\t                    releasePoller = nil\n1556\t                    stopRecording()\n1557\t                end\n1558\t            end)\n1559\t        elseif not triggered and (isRecording or isWarmingUp) then\n1560\t            if releasePoller then releasePoller:stop(); releasePoller = nil end\n1561\t            stopRecording()\n1562\t        end\n1563\t    end)\n1564\t    if not ok then log(\"eventtap error: \" .. tostring(err)) end\n1565\t\n1566\t    return false\n1567\tend)\n1568\tmodTap:start()\n1569\t\n1570\t-- Re-enable eventtap if it gets disabled (e.g. by secure input)\n1571\ths.timer.doEvery(5, function()\n1572\t    if not modTap:isEnabled() then\n1573\t        log(\"eventtap was disabled, re-enabling\")\n1574\t        modTap:start()\n1575\t    end\n1576\tend)\n1577\t\n1578\t-- Recover from macOS suspending the process mid-dictation: a stalled recording (isRecording\n1579\t-- still true) or a lost finalization timer (see stopRecording) both look like the app just\n1580\t-- hung with no feedback, when actually the system was asleep the whole time.\n1581\tlocal sleepWatcher = hs.caffeinate.watcher.new(function(eventType)\n1582\t    if eventType ~= hs.caffeinate.watcher.systemDidWake then return end\n1583\t    log(\"system: woke from sleep\")\n1584\t    if finalizationPending then\n1585\t        finalizationPending = false\n1586\t        if finalizeTimers.timer then finalizeTimers.timer:stop(); finalizeTimers.timer = nil end\n1587\t        if finalizeTimers.watchdog then finalizeTimers.watchdog:stop(); finalizeTimers.watchdog = nil end\n1588\t        log(\"system: finalization timer was lost across sleep, resuming now\")\n1589\t        doFinalTranscription()\n1590\t    elseif isRecording then\n1591\t        log(\"system: recording was still active across sleep, forcing stop\")\n1592\t        stopRecording()\n1593\t    end\n1594\tend)\n1595\tsleepWatcher:start()\n1596\t\n1597\t--------------------------------------------------------------------------------",
+        "tool_use_id": "toolu_011nw1ThzB9xULSd7CBhAm9X",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "87a40c81-ed68-4588-981a-e765f2e13e69",
+  "promptId": "f827976e-140e-4169-af22-bb5944b08f41",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "87a40c81-ed68-4588-981a-e765f2e13e69",
+  "timestamp": "2026-08-16T21:44:16.289Z",
+  "toolUseResult": {
+    "file": {
+      "content": "local modTap = hs.eventtap.new({ hs.eventtap.event.types.flagsChanged }, function(event)\n    -- Wrap in pcall so errors don't kill the eventtap\n    local ok, err = pcall(function()\n        local triggered = triggerPressed(event:rawFlags())\n\n        if triggered and not isRecording then\n            startRecording()\n            -- Poll for release since flagsChanged doesn't fire on key-up\n            if releasePoller then releasePoller:stop() end\n            releasePoller = hs.timer.doEvery(0.1, function()\n                if not triggerHeld() then\n                    releasePoller:stop()\n                    releasePoller = nil\n                    stopRecording()\n                end\n            end)\n        elseif not triggered and (isRecording or isWarmingUp) then\n            if releasePoller then releasePoller:stop(); releasePoller = nil end\n            stopRecording()\n        end\n    end)\n    if not ok then log(\"eventtap error: \" .. tostring(err)) end\n\n    return false\nend)\nmodTap:start()\n\n-- Re-enable eventtap if it gets disabled (e.g. by secure input)\nhs.timer.doEvery(5, function()\n    if not modTap:isEnabled() then\n        log(\"eventtap was disabled, re-enabling\")\n        modTap:start()\n    end\nend)\n\n-- Recover from macOS suspending the process mid-dictation: a stalled recording (isRecording\n-- still true) or a lost finalization timer (see stopRecording) both look like the app just\n-- hung with no feedback, when actually the system was asleep the whole time.\nlocal sleepWatcher = hs.caffeinate.watcher.new(function(eventType)\n    if eventType ~= hs.caffeinate.watcher.systemDidWake then return end\n    log(\"system: woke from sleep\")\n    if finalizationPending then\n        finalizationPending = false\n        if finalizeTimers.timer then finalizeTimers.timer:stop(); finalizeTimers.timer = nil end\n        if finalizeTimers.watchdog then finalizeTimers.watchdog:stop(); finalizeTimers.watchdog = nil end\n        log(\"system: finalization timer was lost across sleep, resuming now\")\n        doFinalTranscription()\n    elseif isRecording then\n        log(\"system: recording was still active across sleep, forcing stop\")\n        stopRecording()\n    end\nend)\nsleepWatcher:start()\n\n--------------------------------------------------------------------------------",
+      "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+      "numLines": 55,
+      "startLine": 1543,
+      "totalLines": 1621
+    },
+    "type": "text"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "bb09cf45-d58b-4fd1-8afa-b5cc2d0c5708",
+  "version": "2.1.233"
+}

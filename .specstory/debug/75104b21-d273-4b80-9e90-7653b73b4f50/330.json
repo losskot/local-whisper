@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "diag tap started, accessibility=true\ndiag tap saw 2 events: 0x20840001,0x20000000 | tapEnabled=true",
+        "is_error": false,
+        "tool_use_id": "toolu_011GqfyJAStbrixqhAbayaDz",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "457fcaee-16ac-4c16-a21b-90087eb31996",
+  "promptId": "f827976e-140e-4169-af22-bb5944b08f41",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "457fcaee-16ac-4c16-a21b-90087eb31996",
+  "timestamp": "2026-08-16T21:43:25.375Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "diag tap started, accessibility=true\ndiag tap saw 2 events: 0x20840001,0x20000000 | tapEnabled=true"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "7cac88ab-a7a4-4e98-834f-55a24fdb0196",
+  "version": "2.1.233"
+}

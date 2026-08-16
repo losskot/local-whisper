@@ -1567,8 +1567,19 @@ local modTap = hs.eventtap.new({ hs.eventtap.event.types.flagsChanged }, functio
 end)
 modTap:start()
 
+-- Root the tap in a global. Hammerspoon garbage-collects eventtaps, repeating timers
+-- and watchers that nothing in Lua still references, and collecting one unregisters it
+-- from the system: the tap keeps reporting isEnabled() right up until it is collected,
+-- then simply stops receiving events, with nothing logged. The chunk's own locals do not
+-- count — once init.lua finishes, a local survives only while some live closure captures
+-- it, and the only closure holding modTap was the watchdog timer below, which is itself
+-- collectible. This is why the trigger worked for a few minutes after every reload and
+-- then went dead.
+LocalWhisper = LocalWhisper or {}
+LocalWhisper.modTap = modTap
+
 -- Re-enable eventtap if it gets disabled (e.g. by secure input)
-hs.timer.doEvery(5, function()
+LocalWhisper.tapWatchdog = hs.timer.doEvery(5, function()
     if not modTap:isEnabled() then
         log("eventtap was disabled, re-enabling")
         modTap:start()
@@ -1593,6 +1604,7 @@ local sleepWatcher = hs.caffeinate.watcher.new(function(eventType)
     end
 end)
 sleepWatcher:start()
+LocalWhisper.sleepWatcher = sleepWatcher  -- see LocalWhisper.modTap: unrooted watchers are collected
 
 --------------------------------------------------------------------------------
 -- Startup
