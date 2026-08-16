@@ -51,11 +51,13 @@ if [[ -f "$HAMMERSPOON_DIR/local_whisper_actions.lua" ]]; then
     ok "Removed ~/.hammerspoon/local_whisper_actions.lua"
 fi
 
-# ─── Aggregate audio device (meeting mode) ──────────────────────────────────
+# ─── Legacy: aggregate audio device from the removed meeting mode ───────────
+# Meeting mode no longer exists, but installs from before its removal may still
+# have the helper and its Multi-Output Device. Clean those up if present.
 HELPER_BIN="$CONFIG_DIR/bin/aggregate-audio"
 if [[ -x "$HELPER_BIN" ]]; then
     if "$HELPER_BIN" delete &>/dev/null; then
-        ok "Removed 'local-whisper Output' Multi-Output Device"
+        ok "Removed leftover 'local-whisper Output' Multi-Output Device"
     fi
 fi
 

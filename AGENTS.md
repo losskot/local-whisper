@@ -73,21 +73,19 @@ Expected output includes `"Message port invalidated."` — this is **normal**; t
 
 Lua 5.4 (Hammerspoon's runtime) enforces a **hard limit of 200 locals per function**. The top-level chunk of `init.lua` counts as one function. This limit is a compiler error — exceeding it prevents the file from loading at all.
 
-**Current count: ~199/200** — effectively no headroom left. Before adding any new top-level `local`, check the count:
+**Current count: ~144/200** — comfortable headroom since meeting mode was removed. Only *top-level* locals count against the limit; locals inside a function body belong to that function's own budget, so match the start of the line exactly:
 
 ```bash
-grep -c '^\s*local ' hammerspoon/init.lua
+grep -c '^local ' hammerspoon/init.lua
 ```
 
-**Mitigation already in place** — instead of adding bare top-level locals, group related state into existing tables:
+**Rule**: Never add a new top-level `local` without first verifying the count stays ≤ 200. If the count climbs back toward the ceiling, group related state into a single table rather than adding bare locals — `finalizeTimers` (`{ timer, watchdog }`) and `ollamaProbe` (`{ value, at }`) are the existing examples of that pattern.
 
-| Table | Contents |
-|-------|----------|
-| `PL`  | All pipeline/transcription state (`results`, `lang`, `nextChunk`, `nextSeg`, `total`, `done`, `finalizing`, `streamTimer`, `whisperActive`, `whisperQueue`, `watchdog`) |
-| `MC`  | Meeting-mode constants (`MEETING_PAUSE_SECS`, `MEETING_MAX_GAP`, etc.) |
-| `barState` | Menu bar animation state |
+### Declaration order matters as much as the count
 
-**Rule**: Never add a new top-level `local` without first verifying the count stays ≤ 200. If at or near 200, group into an existing table or create a new one.
+A `local` is only in scope for code that appears *after* its declaration. A function defined earlier in the file that references the name does **not** capture it — the reference silently compiles to a global lookup that reads `nil` at runtime, with no error at load time. This produced three separate live bugs in the overlay code (X button, unpin, pinning from the menu bar).
+
+`overlayPinned`, `isRecording`, and the `hideOverlay` forward declaration therefore sit **above** `createOverlay`, whose mouse callback closes over all three. When adding state that a callback touches, declare it above every function that references it.
 
 ## Testing & debugging
 
@@ -114,6 +112,38 @@ This lets you iterate on prompt wording without reloading Hammerspoon or dictati
 ./tests/test_refine.sh
 ```
 Tests filler removal, list formatting, preamble prevention, and content preservation.
+Requires Ollama running locally — it calls the HTTP API directly and bails out otherwise.
+
+### Running the init.lua test suite
+```bash
+./tests/test_init.sh                    # test the repo's init.lua
+./tests/test_init.sh path/to/init.lua   # test a specific file
+```
+Requires Hammerspoon to be running — there is no standalone Lua interpreter in this
+stack, so `tests/test_init.lua` is executed through the `hs` CLI.
+
+Guards the bug classes that have actually bitten this file, rather than restating the
+implementation:
+
+| Check | Catches |
+|-------|---------|
+| `syntax` | file no longer compiles |
+| `locals` | the Lua 200-per-function ceiling |
+| `scope` | a top-level local referenced by an earlier-defined function (reads as a nil global at runtime, with no load-time error) |
+| `sound` | unguarded `hs.sound.getByFile(...):play()`, which throws and aborts its callback |
+| `meeting` | meeting-mode code creeping back in |
+| `globals` | state leaked into Hammerspoon's shared `_ENV` |
+| `sort` | chunk files ordered as strings, which reorders audio past chunk 999 |
+| `emergencyStop` | emergency stop not cancelling a pending finalization |
+
+The `sort` checks extract the real comparator out of the source under test and execute
+it, so they track the implementation instead of a copy that can drift.
+
+Because the suite takes a path argument, you can point it at an older revision to
+confirm a check actually fails on the bug it claims to guard:
+```bash
+git show HEAD~1:hammerspoon/init.lua > /tmp/before.lua && ./tests/test_init.sh /tmp/before.lua
+```
 
 ### Common debug patterns
 - **Refine not working**: Check `refine: failed` in logs — common causes: Ollama not running, wrong model name, missing `$HOME` env
