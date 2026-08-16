@@ -1,0 +1,45 @@
+{
+  "agentId": "aee748f23fa3ec7c5",
+  "attributionSkill": "code-review",
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": true,
+  "message": {
+    "content": [
+      {
+        "text": "Upstream diff is empty and the working tree has no `hammerspoon/` changes — the target was passed as a file path, so I'll review `hammerspoon/init.lua` itself.",
+        "type": "text"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce6vevei8A94ce1ZiE8XM",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_5m_input_tokens": 3020
+      },
+      "cache_creation_input_tokens": 3020,
+      "cache_read_input_tokens": 25747,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "output_tokens": 2,
+      "service_tier": "standard"
+    }
+  },
+  "parentUuid": "565f586e-3c44-4042-94fb-18599c298ec1",
+  "requestId": "req_011Ce6veueSN4osVpVfFe42i",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "timestamp": "2026-08-16T18:47:36.724Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "14707ae2-4a0f-42f9-9e2a-81b180ce9f7d",
+  "version": "2.1.233"
+}

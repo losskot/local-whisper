@@ -1,0 +1,53 @@
+{
+  "agentId": "aee748f23fa3ec7c5",
+  "attributionSkill": "code-review",
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": true,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01CjaUDdCFkULiq1FvuGkVn2",
+        "input": {
+          "command": "grep -rn \"_whisper\\.recording\\|_whisper\\b\" --include=*.lua --include=*.sh --include=*.md . 2\u003e/dev/null | grep -v \".specstory\" | head -20",
+          "description": "Check readers of _whisper debug state"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce6w3iX6de6TxCxErQKJC",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_5m_input_tokens": 5758
+      },
+      "cache_creation_input_tokens": 5758,
+      "cache_read_input_tokens": 96233,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "output_tokens": 2,
+      "service_tier": "standard"
+    }
+  },
+  "parentUuid": "eaf6e0d3-6c4f-4f91-a80c-0ea80b366eca",
+  "requestId": "req_011Ce6w3hVLcVoRUDC567PvB",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "timestamp": "2026-08-16T18:53:38.100Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "62b5bff2-11b7-41a4-baf7-2a8248150f0a",
+  "version": "2.1.233"
+}

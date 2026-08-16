@@ -1,0 +1,18 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": "/code-review hammerspoon/init.lua high",
+    "role": "user"
+  },
+  "parentUuid": "2676fc84-c3a6-4947-a3df-aa3765279d2a",
+  "promptId": "2cad50e3-4e06-4aae-b8bf-d1b6ce1039a6",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "timestamp": "2026-08-16T18:47:24.677Z",
+  "type": "user",
+  "userType": "external",
+  "uuid": "2681e189-7b55-48ae-83b3-17e8792b3a46",
+  "version": "2.1.233"
+}

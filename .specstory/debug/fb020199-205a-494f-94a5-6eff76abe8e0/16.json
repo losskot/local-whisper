@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "Relevant pull requests in losskot/local-whisper\n\nCurrent branch\n  There is no pull request associated with [main]\n\nCreated by you\n  You have no open pull requests\n\nRequesting a code review from you\n  You have no pull requests to review\n\n---\n* main\n  remotes/origin/HEAD -\u003e origin/main\n  remotes/origin/main",
+        "is_error": false,
+        "tool_use_id": "toolu_01ErKC9hZ4svxt68PA53Q5x2",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "4cbe09ab-b7d5-4ee7-8de5-135a1612bd13",
+  "promptId": "621682f0-bd38-4e05-9987-5332ec6b9d4a",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "4cbe09ab-b7d5-4ee7-8de5-135a1612bd13",
+  "timestamp": "2026-08-16T18:24:51.910Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "Relevant pull requests in losskot/local-whisper\n\nCurrent branch\n  There is no pull request associated with [main]\n\nCreated by you\n  You have no open pull requests\n\nRequesting a code review from you\n  You have no pull requests to review\n\n---\n* main\n  remotes/origin/HEAD -\u003e origin/main\n  remotes/origin/main"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "0c7cc1da-b8e2-4d27-8a0f-6109ee4aeb6e",
+  "version": "2.1.233"
+}

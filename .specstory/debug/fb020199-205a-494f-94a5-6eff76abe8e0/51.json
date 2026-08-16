@@ -1,0 +1,27 @@
+{
+  "agentId": "aee748f23fa3ec7c5",
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": true,
+  "message": {
+    "content": [
+      {
+        "content": "803:                    overlayPinned = false\n804:                    if isRecording then\n805:                        emergencyStop()\n815:            overlayPinned = not overlayPinned\n816:            if overlayPinned then\n822:                if not isRecording then hideOverlay() end\n829:    overlayPinned = false\n835:local function hideOverlay()\n836:    if overlayPinned then return end  -- pinned overlay stays open\n841:    overlayPinned = false\n853:local isRecording = false\n854:local overlayPinned = false\n859:local finalizationPending = false  -- true between stopRecording() and doFinalTranscription() actually starting\n860:_whisperFinalize = { timer = nil, watchdog = nil }\n943:    if isRecording then\n961:    table.insert(items, { title = isRecording and \"● Recording...\" or \"Idle\", disabled = true })\n1035:                overlayPinned = true\n1079:        fn = function() emergencyStop() end,\n1117:local function startRecordingIndicator()\n1159:local function stopRecordingIndicator()\n1173:function emergencyStop()\n1175:    isRecording = false\n1178:    stopRecordingIndicator()\n1195:    if partialBusy or not isRecording then return end\n1228:            if not isRecording then return end\n1291:        hideOverlay()\n1330:    hs.timer.doAfter(OVERLAY_LINGER, hideOverlay)\n1336:        hideOverlay()\n1342:    if text == \"\" then hideOverlay(); return end\n1362:local function doFinalTranscription()\n1376:        hideOverlay()\n1420:                hs.timer.doAfter(2.5, hideOverlay)\n1422:                hideOverlay()\n1562:local stopRecording -- forward declaration (defined below in Start/stop section)\n1565:    if not isRecording then return end\n1577:        if code ~= 0 or not isRecording then return end\n1586:                    stopRecording()\n1611:    isRecording = true\n1621:    startRecordingIndicator()\n1648:        if not isRecording then return end  -- recording already stopped, don't play Pop\n1723:            hs.timer.doAfter(2.5, hideOverlay)\n1728:local function startRecording()\n1729:    if isRecording or isWarmingUp then return end\n1730:    if finalizationPending then\n1731:        finalizationPending = false\n1732:        if _whisperFinalize.timer then _whisperFinalize.timer:stop(); _whisperFinalize.timer = nil end\n1733:        if _whisperFinalize.watchdog then _whisperFinalize.watchdog:stop(); _whisperFinalize.watchdog = nil end\n1735:        doFinalTranscription()\n1748:stopRecording = function()\n1755:        hideOverlay()\n1759:    if not isRecording then return end\n1760:    isRecording = false\n1769:    stopRecordingIndicator()\n1780:    finalizationPending = true\n1781:    _whisperFinalize.timer = hs.timer.doAfter(0.3, function()\n1782:        _whisperFinalize.timer = nil\n1783:        if not finalizationPending then return end\n1784:        finalizationPending = false\n1785:        if _whisperFinalize.watchdog then _whisperFinalize.watchdog:stop(); _whisperFinalize.watchdog = nil end\n1786:        doFinalTranscription()\n1788:    _whisperFinalize.watchdog = hs.timer.doAfter(5, function()\n1789:        _whisperFinalize.watchdog = nil\n1790:        if not finalizationPending then return end\n1791:        finalizationPending = false\n1792:        if _whisperFinalize.timer then _whisperFinalize.timer:stop(); _whisperFinalize.timer = nil end\n1794:        doFinalTranscription()\n1822:        if triggered and not isRecording then\n1823:            startRecording()\n1831:                    stopRecording()\n1834:        elseif not triggered and (isRecording or isWarmingUp) then\n1836:            stopRecording()\n1854:-- Recover from macOS suspending the process mid-dictation: a stalled recording (isRecording\n1855:-- still true) or a lost finalization timer (see stopRecording) both look like the app just\n1860:    if finalizationPending then\n1861:        finalizationPending = false\n1862:        if _whisperFinalize.timer then _whisperFinalize.timer:stop(); _whisperFinalize.timer = nil end\n1863:        if _whisperFinalize.watchdog then _whisperFinalize.watchdog:stop(); _whisperFinalize.watchdog = nil end\n1865:        doFinalTranscription()\n1866:    elseif isRecording then\n1868:        stopRecording()",
+        "is_error": false,
+        "tool_use_id": "toolu_01RZ3UkjHG4DfY9z9Q9x19Lk",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "e565a81a-c120-4aeb-a935-6b545c783058",
+  "promptId": "2cad50e3-4e06-4aae-b8bf-d1b6ce1039a6",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "e565a81a-c120-4aeb-a935-6b545c783058",
+  "timestamp": "2026-08-16T18:48:08.003Z",
+  "type": "user",
+  "userType": "external",
+  "uuid": "a1510ea6-2d11-45e0-ab63-55e12277745c",
+  "version": "2.1.233"
+}

@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "    overlay:canvasMouseEvents(true, true, false, false)  -- mouseDown + mouseUp\n    overlay:mouseCallback(function(canvas, event, id, mx, my)\n        -- Close button — hide immediately, delete deferred\n        if id == \"close\" then\n            if event == \"mouseDown\" then\n                log(\"overlay: X close\")\n                canvas:hide()\n                hs.timer.doAfter(0.01, function()\n                    overlayPinned = false\n                    if isRecording then\n                        emergencyStop()\n                    else\n                        if overlay then overlay:delete(); overlay = nil end\n                    end\n                end)\n            end\n            return\n        end\n\n        if event == \"mouseUp\" and id == \"bg\" then\n            overlayPinned = not overlayPinned\n            if overlayPinned then\n                canvas[1].fillColor = { red = 0.85, green = 0.89, blue = 0.97, alpha = 0.95 }\n                log(\"overlay pinned\")\n            else\n                canvas[1].fillColor = { red = 0.93, green = 0.93, blue = 0.95, alpha = 0.92 }\n                log(\"overlay unpinned\")\n                if not isRecording then hideOverlay() end\n            end\n        end\n    end)\nend\n\nlocal function showOverlay()\n    overlayPinned = false\n    if overlay then overlay:delete() end",
+        "is_error": false,
+        "tool_use_id": "toolu_01EAL5QKHpktrYdBsNkKeTt6",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "cf6c07b6-ba9e-4c32-a203-0bf753a7903d",
+  "promptId": "ca89471e-07ec-45ec-ab20-ac1baa4e40b9",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "cf6c07b6-ba9e-4c32-a203-0bf753a7903d",
+  "timestamp": "2026-08-16T19:15:48.270Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "    overlay:canvasMouseEvents(true, true, false, false)  -- mouseDown + mouseUp\n    overlay:mouseCallback(function(canvas, event, id, mx, my)\n        -- Close button — hide immediately, delete deferred\n        if id == \"close\" then\n            if event == \"mouseDown\" then\n                log(\"overlay: X close\")\n                canvas:hide()\n                hs.timer.doAfter(0.01, function()\n                    overlayPinned = false\n                    if isRecording then\n                        emergencyStop()\n                    else\n                        if overlay then overlay:delete(); overlay = nil end\n                    end\n                end)\n            end\n            return\n        end\n\n        if event == \"mouseUp\" and id == \"bg\" then\n            overlayPinned = not overlayPinned\n            if overlayPinned then\n                canvas[1].fillColor = { red = 0.85, green = 0.89, blue = 0.97, alpha = 0.95 }\n                log(\"overlay pinned\")\n            else\n                canvas[1].fillColor = { red = 0.93, green = 0.93, blue = 0.95, alpha = 0.92 }\n                log(\"overlay unpinned\")\n                if not isRecording then hideOverlay() end\n            end\n        end\n    end)\nend\n\nlocal function showOverlay()\n    overlayPinned = false\n    if overlay then overlay:delete() end"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "5e77cc0c-fbf1-4d7d-ad47-808103523129",
+  "version": "2.1.233"
+}

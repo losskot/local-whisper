@@ -1,0 +1,53 @@
+{
+  "agentId": "aee748f23fa3ec7c5",
+  "attributionSkill": "code-review",
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": true,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01Uask1kgeLbAyJcXrmyu2fz",
+        "input": {
+          "command": "git status --short | head -30 \u0026\u0026 echo \"---BRANCH---\" \u0026\u0026 git rev-parse --abbrev-ref HEAD \u0026\u0026 echo \"---UPSTREAM---\" \u0026\u0026 git rev-parse --abbrev-ref @{upstream} 2\u003e\u00261 | head -3",
+          "description": "Check git status and upstream"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce6veS225Y1ym1zKyUypd",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_5m_input_tokens": 25747
+      },
+      "cache_creation_input_tokens": 25747,
+      "cache_read_input_tokens": 0,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "output_tokens": 1,
+      "service_tier": "standard"
+    }
+  },
+  "parentUuid": "3af0e8f0-95c4-43a4-839b-e12dd345c411",
+  "requestId": "req_011Ce6veR6hyAnqQwXoLSjm5",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "timestamp": "2026-08-16T18:47:28.170Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "97265775-363d-4c0a-a8aa-d6ee712d00ba",
+  "version": "2.1.233"
+}

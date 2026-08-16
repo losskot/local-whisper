@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "origin\thttps://github.com/losskot/local-whisper.git (fetch)\norigin\thttps://github.com/losskot/local-whisper.git (push)\n{\"nameWithOwner\":\"losskot/local-whisper\"}",
+        "is_error": false,
+        "tool_use_id": "toolu_01W3BwChkSG4euYTtc2mU85J",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "2f3f7173-26ab-42e5-a89c-5124d5c690e8",
+  "promptId": "621682f0-bd38-4e05-9987-5332ec6b9d4a",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "2f3f7173-26ab-42e5-a89c-5124d5c690e8",
+  "timestamp": "2026-08-16T18:24:42.895Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "origin\thttps://github.com/losskot/local-whisper.git (fetch)\norigin\thttps://github.com/losskot/local-whisper.git (push)\n{\"nameWithOwner\":\"losskot/local-whisper\"}"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "660ea912-1904-4652-ac91-85721c3591c2",
+  "version": "2.1.233"
+}

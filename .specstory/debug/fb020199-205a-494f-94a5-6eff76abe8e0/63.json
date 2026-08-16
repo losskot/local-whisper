@@ -1,0 +1,27 @@
+{
+  "agentId": "aee748f23fa3ec7c5",
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": true,
+  "message": {
+    "content": [
+      {
+        "content": "54:    local f = io.open(MODEL_FILE, \"r\")\n111:    local f = io.open(REFINE_MODEL_FILE, \"r\")\n120:    local f = io.open(REFINE_PROMPT_FILE, \"r\")\n138:    local f = io.open(REFINE_FILE, \"r\")\n145:    local f = io.open(REFINE_FILE, \"w\")\n191:    local f = io.open(LOG_FILE, \"a\")\n199:    local f = io.open(path, \"r\")\n207:    local f = io.open(path, \"w\")\n314:    local f = io.open(tmpPayload, \"w\")\n619:        local f = io.open(resolved, \"a\")\n885:    local f = io.open(RECENT_FILE, \"r\")\n899:    local f = io.open(RECENT_FILE, \"w\")\n1209:    local f = io.open(batchList, \"w\")\n1329:    hs.sound.getByFile(\"/System/Library/Sounds/Glass.aiff\"):play()\n1451:        local f, ferr = io.open(concatFile, \"w\")\n1657:            hs.sound.getByFile(\"/System/Library/Sounds/Pop.aiff\"):play()\n1674:local warmupTick = hs.sound.getByFile(\"/System/Library/Sounds/Tink.aiff\")\n1722:            hs.sound.getByFile(\"/System/Library/Sounds/Basso.aiff\"):play()\n1798:        local snd = hs.sound.getByFile(\"/System/Library/Sounds/Tink.aiff\")\n2514:            local f = io.open(outTxtPath, \"r\")\n2619:        local f = io.open(tmpPayload, \"w\")\n2638:            local fout = io.open(filepath, \"w\")\n2653:        local fout = io.open(filepath, \"w\")",
+        "is_error": false,
+        "tool_use_id": "toolu_01DxiwTm4k1rHjGe7XThoPu3",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "22e88427-3ca8-4bc4-8db2-5b06a86aacc1",
+  "promptId": "2cad50e3-4e06-4aae-b8bf-d1b6ce1039a6",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "22e88427-3ca8-4bc4-8db2-5b06a86aacc1",
+  "timestamp": "2026-08-16T18:48:51.591Z",
+  "type": "user",
+  "userType": "external",
+  "uuid": "b5c7ac6e-d0af-447a-9718-cf71877950fe",
+  "version": "2.1.233"
+}

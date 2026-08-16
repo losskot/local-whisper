@@ -1,0 +1,27 @@
+{
+  "agentId": "aee748f23fa3ec7c5",
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": true,
+  "message": {
+    "content": [
+      {
+        "content": "install.sh:177:if [[ ! -f \"$HAMMERSPOON_DIR/local_whisper_actions.lua\" ]]; then\ninstall.sh:178:    if [[ -f \"$SCRIPT_DIR/hammerspoon/local_whisper_actions.example.lua\" ]]; then\ninstall.sh:179:        cp \"$SCRIPT_DIR/hammerspoon/local_whisper_actions.example.lua\" \"$HAMMERSPOON_DIR/local_whisper_actions.lua\"\ninstall.sh:180:        ok \"Voice commands config installed (edit ~/.hammerspoon/local_whisper_actions.lua to customize)\"\ndocs/VOICE_COMMANDS.md:12:cp hammerspoon/local_whisper_actions.example.lua ~/.hammerspoon/local_whisper_actions.lua\ndocs/VOICE_COMMANDS.md:15:2. Edit `~/.hammerspoon/local_whisper_actions.lua` with your rules\ndocs/VOICE_COMMANDS.md:60:Open `~/.hammerspoon/local_whisper_actions.lua`. The file returns a table with three optional hooks:\nAGENTS.md:24:- `~/.hammerspoon/local_whisper_actions.lua` — user voice commands (optional, auto-reloads)\nuninstall.sh:49:if [[ -f \"$HAMMERSPOON_DIR/local_whisper_actions.lua\" ]]; then\nuninstall.sh:50:    rm \"$HAMMERSPOON_DIR/local_whisper_actions.lua\"\nuninstall.sh:51:    ok \"Removed ~/.hammerspoon/local_whisper_actions.lua\"\nCONTRIBUTING.md:30:- Voice commands go in `local_whisper_actions.lua`, not in `init.lua`\nCONTRIBUTING.md:37:hammerspoon/local_whisper_actions.example.lua  # Example voice commands\nhammerspoon/local_whisper_actions.example.lua:1:-- Copy to: ~/.hammerspoon/local_whisper_actions.lua\nREADME.md:41:Voice commands are fully customizable — edit `~/.hammerspoon/local_whisper_actions.lua` to add your own. The config auto-reloads when you save.\nREADME.md:203:Edit `~/.hammerspoon/local_whisper_actions.lua` to add your own commands. The file returns a table with hooks that run on each dictation:\nhammerspoon/init.lua:96:local ACTIONS_FILE = HOME .. \"/.hammerspoon/local_whisper_actions.lua\"\nhammerspoon/init.lua:860:_whisperFinalize = { timer = nil, watchdog = nil }\nhammerspoon/init.lua:1732:        if _whisperFinalize.timer then _whisperFinalize.timer:stop(); _whisperFinalize.timer = nil end\nhammerspoon/init.lua:1733:        if _whisperFinalize.watchdog then _whisperFinalize.watchdog:stop(); _whisperFinalize.watchdog = nil end\n---\naggregate-audio.swift\nmeeting-doctor.sh\ntranscribe.sh",
+        "is_error": false,
+        "tool_use_id": "toolu_01A2CTFckxwe9a3JZ5z9j6Bb",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "0a4a5b53-88ae-4d28-8a58-d24247c813e3",
+  "promptId": "2cad50e3-4e06-4aae-b8bf-d1b6ce1039a6",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "0a4a5b53-88ae-4d28-8a58-d24247c813e3",
+  "timestamp": "2026-08-16T18:53:43.612Z",
+  "type": "user",
+  "userType": "external",
+  "uuid": "7739c092-47b1-406c-8034-ddd0dff0080c",
+  "version": "2.1.233"
+}

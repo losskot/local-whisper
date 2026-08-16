@@ -1,0 +1,54 @@
+{
+  "agentId": "aee748f23fa3ec7c5",
+  "attributionSkill": "code-review",
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": true,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01K7HBsWgMu8Kymt56pGasRe",
+        "input": {
+          "file_path": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+          "limit": 400,
+          "offset": 2247
+        },
+        "name": "Read",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce6vnH5izxjD8pwjb3Bs1",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_5m_input_tokens": 9307
+      },
+      "cache_creation_input_tokens": 9307,
+      "cache_read_input_tokens": 73563,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "output_tokens": 3,
+      "service_tier": "standard"
+    }
+  },
+  "parentUuid": "ba5cd297-cb43-4fc8-b48f-558ca28c35bd",
+  "requestId": "req_011Ce6vnG2jJoa7bZkPyLKbW",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "timestamp": "2026-08-16T18:49:17.747Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "1d376365-0efb-4512-93e9-863dc44af469",
+  "version": "2.1.233"
+}

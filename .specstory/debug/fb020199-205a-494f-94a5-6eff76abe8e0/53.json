@@ -1,0 +1,45 @@
+{
+  "agentId": "aee748f23fa3ec7c5",
+  "attributionSkill": "code-review",
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": true,
+  "message": {
+    "content": [
+      {
+        "text": "Confirmed scoping issues. Let me continue reading the rest of the file.",
+        "type": "text"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce6vhd3PHcH9TAiZGPHkH",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_5m_input_tokens": 2494
+      },
+      "cache_creation_input_tokens": 2494,
+      "cache_read_input_tokens": 50478,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "output_tokens": 3,
+      "service_tier": "standard"
+    }
+  },
+  "parentUuid": "0553558d-db7b-4931-adf0-c5d9bfca5724",
+  "requestId": "req_011Ce6vhc27z67aJHfmoHTnz",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "timestamp": "2026-08-16T18:48:33.093Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "39c63ae2-f93e-4203-92dd-1f6c98228714",
+  "version": "2.1.233"
+}

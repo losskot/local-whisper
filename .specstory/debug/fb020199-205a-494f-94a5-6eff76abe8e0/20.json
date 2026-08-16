@@ -1,0 +1,72 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01BmA9vUXfneDJgoEU28HxUK",
+        "input": {
+          "command": "for p in ~/.claude/skills ~/.claude/plugins /Users/vitaliy/Documents/GitHub/local-whisper/.claude; do echo \"== $p\"; find \"$p\" -name SKILL.md -path '*code-review*' 2\u003e/dev/null; done",
+          "description": "Locate code-review skill files"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce6vT3zQ7ah26haeNbyqV",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 340,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 340,
+      "cache_read_input_tokens": 41810,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 340,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 340,
+          "cache_read_input_tokens": 41810,
+          "input_tokens": 2,
+          "output_tokens": 381,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 381,
+      "output_tokens_details": {
+        "thinking_tokens": 213
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "24365bc3-35ca-426c-bff3-67bc98f5c134",
+  "requestId": "req_011Ce6vT2DF4A8uWL5nYjDnw",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "timestamp": "2026-08-16T18:44:56.619Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "2ee1147e-d64f-4422-b664-998aa12cf40f",
+  "version": "2.1.233"
+}

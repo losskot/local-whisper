@@ -1,0 +1,27 @@
+{
+  "agentId": "aee748f23fa3ec7c5",
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": true,
+  "message": {
+    "content": [
+      {
+        "content": "    2841 /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua\n---\ntotal 232\ndrwxr-xr-x   4 vitaliy  staff     128 Jul  3 20:12 .\ndrwxr-xr-x@ 24 vitaliy  staff     768 Jul  6 04:29 ..\n-rw-r--r--   1 vitaliy  staff  108764 Aug 16 20:20 init.lua\n-rw-r--r--   1 vitaliy  staff    4868 May 28 01:26 local_whisper_actions.example.lua\n---RECENT COMMIT TOUCHING FILE---\n30a76bf fixes fixes\nd8825e2 fix: API mode was translating to English instead of transcribing\n5b637ff fix: recover from lost finalization timer / stuck recording across system sleep\nb7091f9 fix: correct API-mode model id and normalize language response\n435ffae fix: surface API-mode transcription errors instead of silently hiding overlay",
+        "is_error": false,
+        "tool_use_id": "toolu_01KQ6XHPdbiAn39KMBn2HSDi",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "97c2a131-e394-4185-9c12-92c1bb0b782a",
+  "promptId": "2cad50e3-4e06-4aae-b8bf-d1b6ce1039a6",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "97c2a131-e394-4185-9c12-92c1bb0b782a",
+  "timestamp": "2026-08-16T18:47:41.572Z",
+  "type": "user",
+  "userType": "external",
+  "uuid": "391fcd5e-5b54-4770-8cb5-842bbff4f67e",
+  "version": "2.1.233"
+}

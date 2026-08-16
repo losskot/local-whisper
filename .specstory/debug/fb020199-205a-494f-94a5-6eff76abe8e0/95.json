@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "719:local function createOverlay()\n835:local function hideOverlay()\n853:local isRecording = false\n854:local overlayPinned = false\n859:local finalizationPending = false  -- true between stopRecording() and doFinalTranscription() actually starting\n860:_whisperFinalize = { timer = nil, watchdog = nil }\n1732:        if _whisperFinalize.timer then _whisperFinalize.timer:stop(); _whisperFinalize.timer = nil end\n1733:        if _whisperFinalize.watchdog then _whisperFinalize.watchdog:stop(); _whisperFinalize.watchdog = nil end\n1781:    _whisperFinalize.timer = hs.timer.doAfter(0.3, function()\n1782:        _whisperFinalize.timer = nil\n1785:        if _whisperFinalize.watchdog then _whisperFinalize.watchdog:stop(); _whisperFinalize.watchdog = nil end\n1788:    _whisperFinalize.watchdog = hs.timer.doAfter(5, function()\n1789:        _whisperFinalize.watchdog = nil\n1792:        if _whisperFinalize.timer then _whisperFinalize.timer:stop(); _whisperFinalize.timer = nil end\n1862:        if _whisperFinalize.timer then _whisperFinalize.timer:stop(); _whisperFinalize.timer = nil end\n1863:        if _whisperFinalize.watchdog then _whisperFinalize.watchdog:stop(); _whisperFinalize.watchdog = nil end",
+        "is_error": false,
+        "tool_use_id": "toolu_01BWBKmDTWavxg3SKsscF2mN",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "25b7828a-ce25-44dd-9792-d956c8f4047b",
+  "promptId": "ca89471e-07ec-45ec-ab20-ac1baa4e40b9",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "25b7828a-ce25-44dd-9792-d956c8f4047b",
+  "timestamp": "2026-08-16T19:15:48.276Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "719:local function createOverlay()\n835:local function hideOverlay()\n853:local isRecording = false\n854:local overlayPinned = false\n859:local finalizationPending = false  -- true between stopRecording() and doFinalTranscription() actually starting\n860:_whisperFinalize = { timer = nil, watchdog = nil }\n1732:        if _whisperFinalize.timer then _whisperFinalize.timer:stop(); _whisperFinalize.timer = nil end\n1733:        if _whisperFinalize.watchdog then _whisperFinalize.watchdog:stop(); _whisperFinalize.watchdog = nil end\n1781:    _whisperFinalize.timer = hs.timer.doAfter(0.3, function()\n1782:        _whisperFinalize.timer = nil\n1785:        if _whisperFinalize.watchdog then _whisperFinalize.watchdog:stop(); _whisperFinalize.watchdog = nil end\n1788:    _whisperFinalize.watchdog = hs.timer.doAfter(5, function()\n1789:        _whisperFinalize.watchdog = nil\n1792:        if _whisperFinalize.timer then _whisperFinalize.timer:stop(); _whisperFinalize.timer = nil end\n1862:        if _whisperFinalize.timer then _whisperFinalize.timer:stop(); _whisperFinalize.timer = nil end\n1863:        if _whisperFinalize.watchdog then _whisperFinalize.watchdog:stop(); _whisperFinalize.watchdog = nil end"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "72ed1df3-0e67-4cba-87bc-d7840256dfe4",
+  "version": "2.1.233"
+}

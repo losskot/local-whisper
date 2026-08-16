@@ -1,0 +1,27 @@
+{
+  "agentId": "aee748f23fa3ec7c5",
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": true,
+  "message": {
+    "content": [
+      {
+        "content": "=== doPartialTranscribe refs ===\n856:local partialTimer = nil\n1176:    if partialTimer then partialTimer:stop(); partialTimer = nil end\n1194:local function doPartialTranscribe()\n1643:    -- partialTimer = hs.timer.doEvery(PARTIAL_INTERVAL, doPartialTranscribe)\n1763:    if partialTimer then partialTimer:stop(); partialTimer = nil end\n=== switchToAggregateOutput refs ===\n1978:local function switchToAggregateOutput()\n2031:-- Restore the system default output saved by switchToAggregateOutput.\n2687:    switchToAggregateOutput()\n=== restorePriorOutput refs ===\n2032:local function restorePriorOutput()\n2345:            restorePriorOutput()",
+        "is_error": false,
+        "tool_use_id": "toolu_015f2wsxRUC1RLY5jQcwGnFh",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "75e29882-5691-41c1-81df-da04fbd80e7f",
+  "promptId": "2cad50e3-4e06-4aae-b8bf-d1b6ce1039a6",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "75e29882-5691-41c1-81df-da04fbd80e7f",
+  "timestamp": "2026-08-16T18:50:32.452Z",
+  "type": "user",
+  "userType": "external",
+  "uuid": "a1ccd4a3-585c-46c0-98be-62e48b8384af",
+  "version": "2.1.233"
+}

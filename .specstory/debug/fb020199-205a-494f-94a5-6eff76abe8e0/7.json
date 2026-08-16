@@ -1,0 +1,25 @@
+{
+  "attachment": {
+    "allowedTools": [
+      "Bash(gh issue view:*)",
+      "Bash(gh search:*)",
+      "Bash(gh issue list:*)",
+      "Bash(gh pr comment:*)",
+      "Bash(gh pr diff:*)",
+      "Bash(gh pr view:*)",
+      "Bash(gh pr list:*)"
+    ],
+    "type": "command_permissions"
+  },
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "parentUuid": "4cc0e966-32c6-43ba-8bbd-e7a029ebf3ea",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "timestamp": "2026-08-16T18:24:33.269Z",
+  "type": "attachment",
+  "userType": "external",
+  "uuid": "c9edac37-7bd0-46f6-a9ee-3f5b8b726343",
+  "version": "2.1.233"
+}

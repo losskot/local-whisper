@@ -1,0 +1,27 @@
+{
+  "agentId": "aee748f23fa3ec7c5",
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": true,
+  "message": {
+    "content": [
+      {
+        "content": " M .specstory/debug/2d125efe-df0d-4cfa-9dc2-b86ee9ffa227/session-data.json\n M .specstory/debug/2fbcc84e-8925-4665-874c-85b561e28b33/session-data.json\n M .specstory/debug/3d001364-d99b-4082-a436-cfbaad7d8be1/session-data.json\n M .specstory/debug/3e65aa28-ec73-40d3-a498-b67b9423b32b/session-data.json\n M .specstory/debug/422f2647-f198-45c4-98cd-bd3911e47bca/session-data.json\n M .specstory/debug/5187de41-3626-433e-9335-cd3038d059bb/session-data.json\n M .specstory/debug/6883966c-d000-4ef2-b40f-993d636fcc13/session-data.json\n M .specstory/debug/96570100-fe94-4ca5-a91e-14e8d276b9f1/session-data.json\n M .specstory/debug/97f91794-2ebd-47c9-a722-6e292825facd/session-data.json\n M .specstory/debug/af5517ca-1862-4afa-8d7a-78e3cafc6bc2/session-data.json\n M .specstory/debug/b25985c4-4b72-48b0-acc2-51407f184c10/session-data.json\n M .specstory/debug/b85f47f6-597f-45c7-85d3-149b8ed494c6/session-data.json\n M .specstory/debug/c5260017-7bfb-422f-aba7-acd4635f8bbc/session-data.json\n M .specstory/debug/cdf885f3-d842-49ca-bc3f-cb917b70dc49/session-data.json\n M .specstory/debug/dbc2a28a-d616-4a3d-95a1-6e4d6ca672b6/session-data.json\n M .specstory/debug/f4e130f1-3b99-4df0-ae8c-dbf65786d066/session-data.json\n M .specstory/debug/f7396d07-0b0c-43e9-acfe-c7ff0fe121b8/session-data.json\n M .specstory/debug/f9a33d6c-550e-4722-988b-e45f649c8d1b/session-data.json\n M .specstory/statistics.json\n?? .specstory/debug/fb020199-205a-494f-94a5-6eff76abe8e0/\n?? .specstory/history/2026-08-16_18-24-33Z-which-command-reviews-all.md\n?? .specstory/history/2026-08-16_18-24-33Z.md\n---BRANCH---\nmain\n---UPSTREAM---\norigin/main",
+        "is_error": false,
+        "tool_use_id": "toolu_01Uask1kgeLbAyJcXrmyu2fz",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "97265775-363d-4c0a-a8aa-d6ee712d00ba",
+  "promptId": "2cad50e3-4e06-4aae-b8bf-d1b6ce1039a6",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "97265775-363d-4c0a-a8aa-d6ee712d00ba",
+  "timestamp": "2026-08-16T18:47:28.386Z",
+  "type": "user",
+  "userType": "external",
+  "uuid": "2d08f047-1948-4bc6-9feb-0cdbd296d5a5",
+  "version": "2.1.233"
+}

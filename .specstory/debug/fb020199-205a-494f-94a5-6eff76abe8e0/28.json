@@ -1,0 +1,45 @@
+{
+  "agentId": "aee748f23fa3ec7c5",
+  "attributionSkill": "code-review",
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": true,
+  "message": {
+    "content": [
+      {
+        "text": "I'll start by gathering the diff under review.",
+        "type": "text"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce6veS225Y1ym1zKyUypd",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_5m_input_tokens": 25747
+      },
+      "cache_creation_input_tokens": 25747,
+      "cache_read_input_tokens": 0,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "output_tokens": 1,
+      "service_tier": "standard"
+    }
+  },
+  "parentUuid": "03e7dd68-5f3c-4711-aa66-f2160bec74b3",
+  "requestId": "req_011Ce6veR6hyAnqQwXoLSjm5",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "timestamp": "2026-08-16T18:47:26.852Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "3af0e8f0-95c4-43a4-839b-e12dd345c411",
+  "version": "2.1.233"
+}

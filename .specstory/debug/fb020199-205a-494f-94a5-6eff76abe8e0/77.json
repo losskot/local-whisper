@@ -1,0 +1,27 @@
+{
+  "agentId": "aee748f23fa3ec7c5",
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": true,
+  "message": {
+    "content": [
+      {
+        "content": "Command did not complete within its 120s timeout and was moved to the background (ID: bv3gnyogu). Output is being written to: /private/tmp/claude-502/-Users-vitaliy-Documents-GitHub-local-whisper/fb020199-205a-494f-94a5-6eff76abe8e0/tasks/bv3gnyogu.output. You will be notified when it completes. To check interim output, use Read on that file path.",
+        "is_error": false,
+        "tool_use_id": "toolu_0158zrCTkzi2DbAedH3Qxjc3",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "cb44c2c2-0514-4ea1-80a2-d9bc8ef56953",
+  "promptId": "2cad50e3-4e06-4aae-b8bf-d1b6ce1039a6",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "cb44c2c2-0514-4ea1-80a2-d9bc8ef56953",
+  "timestamp": "2026-08-16T18:52:40.425Z",
+  "type": "user",
+  "userType": "external",
+  "uuid": "431b8b83-5f58-46d9-a859-52ff82141eb7",
+  "version": "2.1.233"
+}

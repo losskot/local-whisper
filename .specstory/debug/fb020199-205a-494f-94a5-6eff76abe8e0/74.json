@@ -1,0 +1,53 @@
+{
+  "agentId": "aee748f23fa3ec7c5",
+  "attributionSkill": "code-review",
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": true,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_015f2wsxRUC1RLY5jQcwGnFh",
+        "input": {
+          "command": "echo \"=== doPartialTranscribe refs ===\" \u0026\u0026 grep -n \"doPartialTranscribe\\|partialTimer\" hammerspoon/init.lua \u0026\u0026 echo \"=== switchToAggregateOutput refs ===\" \u0026\u0026 grep -n \"switchToAggregateOutput\" hammerspoon/init.lua \u0026\u0026 echo \"=== restorePriorOutput refs ===\" \u0026\u0026 grep -n \"restorePriorOutput\" hammerspoon/init.lua",
+          "description": "Check dead code and call sites"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce6voo6HkMWajAay98TFf",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": null,
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_5m_input_tokens": 4920
+      },
+      "cache_creation_input_tokens": 4920,
+      "cache_read_input_tokens": 91313,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "output_tokens": 3,
+      "service_tier": "standard"
+    }
+  },
+  "parentUuid": "020240dc-328d-4c08-bdea-57e2e4681edf",
+  "requestId": "req_011Ce6von8FLhC2hqHfTKCYg",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "timestamp": "2026-08-16T18:50:32.401Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "75e29882-5691-41c1-81df-da04fbd80e7f",
+  "version": "2.1.233"
+}
