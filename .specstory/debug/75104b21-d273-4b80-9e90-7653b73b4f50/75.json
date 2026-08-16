@@ -1,0 +1,51 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01K64wmndvSHYCwAkzUiCaS3",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "db0b36c7-b0d6-48f7-8f9b-fa1d5b3cff88",
+  "promptId": "1ddcf7b5-201e-4a14-85c8-a5f41880b7e0",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "db0b36c7-b0d6-48f7-8f9b-fa1d5b3cff88",
+  "timestamp": "2026-08-16T20:43:59.832Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+    "newString": "-- app (getLang/action hooks) works in short codes like \"en\"/\"ru\".",
+    "oldString": "-- app (getLang/getPreferredLangs/action hooks) works in short codes like \"en\"/\"ru\".",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          " ",
+          " -- Full language name -\u003e ISO-639-1 code, matching whisper.cpp's g_lang table (src/whisper.cpp).",
+          " -- The remote API returns names like \"english\"/\"russian\" in verbose_json; the rest of this",
+          "--- app (getLang/getPreferredLangs/action hooks) works in short codes like \"en\"/\"ru\".",
+          "+-- app (getLang/action hooks) works in short codes like \"en\"/\"ru\".",
+          " local function normalizeApiLang(lang)",
+          "     if not lang then return nil end",
+          "     local nameToCode = {"
+        ],
+        "newLines": 7,
+        "newStart": 348,
+        "oldLines": 7,
+        "oldStart": 348
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "0121cc5b-1774-4e80-bc5f-f3070616b78e",
+  "version": "2.1.233"
+}

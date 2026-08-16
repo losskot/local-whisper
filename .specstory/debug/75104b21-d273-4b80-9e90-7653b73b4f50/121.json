@@ -1,0 +1,35 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "1521\t        log(\"recovery: finalization timer delayed, starting directly\")\n1522\t        doFinalTranscription()\n1523\t    end)\n1524\t\n1525\t    playSound(\"Tink\")\n1526\tend\n1527\t\n1528\t--------------------------------------------------------------------------------\n1529\t-- Key detection (replaces Karabiner)\n1530\t--------------------------------------------------------------------------------\n1531\t\n1532\t-- Map trigger key to generic modifier name for polling\n1533\tlocal GENERIC_MOD = { rightAlt = \"alt\", rightCmd = \"cmd\", rightCtrl = \"ctrl\" }\n1534\tlocal genericMod = GENERIC_MOD[TRIGGER_KEY]\n1535\t\n1536\tlocal releasePoller = nil\n1537\t\n1538\t-- Global so we can inspect state via hs -c\n1539\t_whisper = { modTap = nil, recording = false }\n1540\t\n1541\tlocal modTap = hs.eventtap.new({ hs.eventtap.event.types.flagsChanged }, function(event)\n1542\t    -- Wrap in pcall so errors don't kill the eventtap\n1543\t    local ok, err = pcall(function()\n1544\t        local rawFlags = event:rawFlags()\n1545\t        local triggered = (rawFlags \u0026 triggerMask) \u003e 0\n1546\t\n1547\t        if triggered and not isRecording then\n1548\t            startRecording()\n1549\t            -- Poll for release since flagsChanged doesn't fire on key-up\n1550\t            if releasePoller then releasePoller:stop() end\n1551\t            releasePoller = hs.timer.doEvery(0.1, function()\n1552\t                local mods = hs.eventtap.checkKeyboardModifiers()\n1553\t                if not mods[genericMod] then\n1554\t                    releasePoller:stop()\n1555\t                    releasePoller = nil\n1556\t                    stopRecording()\n1557\t                end\n1558\t            end)\n1559\t        elseif not triggered and (isRecording or isWarmingUp) then\n1560\t            if releasePoller then releasePoller:stop(); releasePoller = nil end\n1561\t            stopRecording()\n1562\t        end\n1563\t    end)\n1564\t    if not ok then log(\"eventtap error: \" .. tostring(err)) end\n1565\t\n1566\t    return false\n1567\tend)\n1568\tmodTap:start()\n1569\t_whisper.modTap = modTap\n1570\t\n1571\t-- Re-enable eventtap if it gets disabled (e.g. by secure input)\n1572\ths.timer.doEvery(5, function()\n1573\t    if not modTap:isEnabled() then\n1574\t        log(\"eventtap was disabled, re-enabling\")\n1575\t        modTap:start()\n1576\t    end\n1577\tend)\n1578\t\n1579\t-- Recover from macOS suspending the process mid-dictation: a stalled recording (isRecording\n1580\t-- still true) or a lost finalization timer (see stopRecording) both look like the app just",
+        "tool_use_id": "toolu_01WWaedGFigYxPFXcFk4L8CK",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "0bb6a3d6-62e0-4fd1-982b-0614403d1a50",
+  "promptId": "1ddcf7b5-201e-4a14-85c8-a5f41880b7e0",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "0bb6a3d6-62e0-4fd1-982b-0614403d1a50",
+  "timestamp": "2026-08-16T20:45:48.672Z",
+  "toolUseResult": {
+    "file": {
+      "content": "        log(\"recovery: finalization timer delayed, starting directly\")\n        doFinalTranscription()\n    end)\n\n    playSound(\"Tink\")\nend\n\n--------------------------------------------------------------------------------\n-- Key detection (replaces Karabiner)\n--------------------------------------------------------------------------------\n\n-- Map trigger key to generic modifier name for polling\nlocal GENERIC_MOD = { rightAlt = \"alt\", rightCmd = \"cmd\", rightCtrl = \"ctrl\" }\nlocal genericMod = GENERIC_MOD[TRIGGER_KEY]\n\nlocal releasePoller = nil\n\n-- Global so we can inspect state via hs -c\n_whisper = { modTap = nil, recording = false }\n\nlocal modTap = hs.eventtap.new({ hs.eventtap.event.types.flagsChanged }, function(event)\n    -- Wrap in pcall so errors don't kill the eventtap\n    local ok, err = pcall(function()\n        local rawFlags = event:rawFlags()\n        local triggered = (rawFlags \u0026 triggerMask) \u003e 0\n\n        if triggered and not isRecording then\n            startRecording()\n            -- Poll for release since flagsChanged doesn't fire on key-up\n            if releasePoller then releasePoller:stop() end\n            releasePoller = hs.timer.doEvery(0.1, function()\n                local mods = hs.eventtap.checkKeyboardModifiers()\n                if not mods[genericMod] then\n                    releasePoller:stop()\n                    releasePoller = nil\n                    stopRecording()\n                end\n            end)\n        elseif not triggered and (isRecording or isWarmingUp) then\n            if releasePoller then releasePoller:stop(); releasePoller = nil end\n            stopRecording()\n        end\n    end)\n    if not ok then log(\"eventtap error: \" .. tostring(err)) end\n\n    return false\nend)\nmodTap:start()\n_whisper.modTap = modTap\n\n-- Re-enable eventtap if it gets disabled (e.g. by secure input)\nhs.timer.doEvery(5, function()\n    if not modTap:isEnabled() then\n        log(\"eventtap was disabled, re-enabling\")\n        modTap:start()\n    end\nend)\n\n-- Recover from macOS suspending the process mid-dictation: a stalled recording (isRecording\n-- still true) or a lost finalization timer (see stopRecording) both look like the app just",
+      "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+      "numLines": 60,
+      "startLine": 1521,
+      "totalLines": 1627
+    },
+    "type": "text"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "dc9e10d5-bcd5-45b0-95b8-adb403d0e5ee",
+  "version": "2.1.233"
+}

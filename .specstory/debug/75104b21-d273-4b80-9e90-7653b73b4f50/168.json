@@ -1,0 +1,72 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_011j3B5hS7aZTf3husZQ5sTP",
+        "input": {
+          "command": "SP=/private/tmp/claude-502/-Users-vitaliy-Documents-GitHub-local-whisper/75104b21-d273-4b80-9e90-7653b73b4f50/scratchpad\nmkdir -p $SP/deleted-backup\ncp RECOVERED_18-54_dictation.txt $SP/deleted-backup/ 2\u003e/dev/null\ncp ~/.local-whisper/recovery/*/recovered.txt $SP/deleted-backup/recovery-recovered.txt 2\u003e/dev/null\ncp ~/.local-whisper/recovery/*/seg_*.txt $SP/deleted-backup/ 2\u003e/dev/null\ngit rm -q --cached RECOVERED_18-54_dictation.txt 2\u003e/dev/null; rm -f RECOVERED_18-54_dictation.txt\ngit rm -q tests/test_refine.sh 2\u003e/dev/null || rm -f tests/test_refine.sh\nrm -rf ~/.local-whisper/recovery\nrm -f ~/.local-whisper/refine ~/.local-whisper/preferred_langs\nls ~/.local-whisper/; echo \"--- repo:\"; ls; echo \"--- backup:\"; ls $SP/deleted-backup/",
+          "description": "Delete dead files, back up recovered dictations"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce767QEB4PSN2mxoLBWQP",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 1154,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 1154,
+      "cache_read_input_tokens": 154972,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1154,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 1154,
+          "cache_read_input_tokens": 154972,
+          "input_tokens": 2,
+          "output_tokens": 856,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 856,
+      "output_tokens_details": {
+        "thinking_tokens": 323
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "cea6f108-683e-4504-921c-4c96905d5d9a",
+  "requestId": "req_011Ce767P4UZp4D6mzwQG8YE",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "timestamp": "2026-08-16T20:51:42.903Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "9808b2eb-75a7-4008-a71a-cc22300dbbc6",
+  "version": "2.1.233"
+}

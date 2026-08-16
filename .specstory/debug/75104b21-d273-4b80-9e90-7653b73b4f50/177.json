@@ -1,0 +1,74 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01Vh9G4q7vd7wZU8TZbge96D",
+        "input": {
+          "file_path": "/Users/vitaliy/Documents/GitHub/local-whisper/README.md",
+          "new_string": "Hold **fn + left Control**, speak, release — text appears at your cursor.\n\n## Features\n\n- **Hold-to-dictate**: Hold the trigger combo to record, release to transcribe and insert\n- **Segmented transcription**: Recordings are cut into 55-second segments and transcribed one after another, keeping each whisper call inside the model's sweet spot no matter how long you talk\n- **Progress bar**: A two-colour strip shows recorded audio (red) against transcribed audio (blue), so long dictations report real progress\n- **Voice commands**: Say \"voice command note buy coffee\" to save a note, \"voice command open app Safari\" to launch apps, and more — fully customizable\n- **Recording indicator**: Pulsing red dot and elapsed timer in the overlay\n- **Multi-language**: English, Russian, Ukrainian, and auto-detect (per segment, so mixed-language speech is not \"translated\")\n- **App-aware processing**: Auto-capitalizes in most apps, skips in terminals and code editors\n- **Text post-processing**: Remove filler words (um, uh, hmm), clean whitespace\n- **Custom vocabulary**: Provide a prompt file to improve recognition of domain-specific terms\n- **Warmup probe**: Before every recording, a short ffmpeg probe warms up the audio device; if the device never produces audio within 10 seconds, recording aborts with an error sound\n- **Sleep recovery**: A dictation interrupted by system sleep is finalized on wake instead of being silently lost\n- **Menu bar**: Waveform icon shows recording status (turns red), click for settings and recent dictations\n- **Recent dictations**: View and re-paste your last 10 dictations from the menu bar\n- **Fully local**: All processing on-device via whisper.cpp — nothing leaves your machine",
+          "old_string": "Hold **Right Cmd**, speak, release — text appears at your cursor.\n\n## Features\n\n- **Hold-to-dictate**: Hold a modifier key to record, release to transcribe and insert\n- **Streaming transcription pipeline**: Long recordings are split into segments and transcribed live *during* recording — when you release the key, only the short tail segment remains, dramatically reducing post-stop latency\n- **Silence-aware splitting**: Segments are cut at natural pauses (lowest-RMS 1s chunk near each boundary) so words and sentences are never split mid-way\n- **Semantic continuity**: Each segment receives the previous segment's transcribed text as `--prompt` context so Whisper's decoder doesn't lose meaning, capitalization, or word choice at boundaries\n- **Voice commands**: Say \"voice command note buy coffee\" to save a note, \"voice command open app Safari\" to launch apps, and more — fully customizable\n- **Recording indicator**: Pulsing red dot and elapsed timer in the overlay\n- **Multi-language**: English, Russian, Ukrainian, and auto-detect\n- **App-aware processing**: Auto-capitalizes in most apps, skips in terminals and code editors\n- **LLM refinement** (optional): Clean up dictated text with a local LLM via [Ollama](https://ollama.com) — fixes punctuation, removes filler words, formats numbered lists\n- **Text post-processing**: Remove filler words (um, uh, hmm), clean whitespace\n- **Custom vocabulary**: Provide a prompt file to improve recognition of domain-specific terms\n- **Auto-stop on silence**: Automatically stops recording after 3 seconds of silence\n- **Warmup probe**: Before every recording, a short ffmpeg probe warms up the audio device; if the device never produces audio within 10 seconds, recording aborts with an error sound\n- **Menu bar**: Waveform icon shows recording status (turns red), click for settings and recent dictations\n- **Recent dictations**: View and re-paste your last 10 dictations from the menu bar\n- **Fully local**: All processing on-device via whisper.cpp — nothing leaves your machine",
+          "replace_all": false
+        },
+        "name": "Edit",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce769bAnqBJwKrEUab7gA",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 2268,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 2268,
+      "cache_read_input_tokens": 161162,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 2268,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 2268,
+          "cache_read_input_tokens": 161162,
+          "input_tokens": 2,
+          "output_tokens": 1492,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 1492,
+      "output_tokens_details": {
+        "thinking_tokens": 0
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "afb79c3d-a8b6-491c-adf1-793b434af91d",
+  "requestId": "req_011Ce769aEje7ugxZTYnsTsR",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "timestamp": "2026-08-16T20:52:17.466Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "7a94fe8a-6e06-44ba-a006-3ee8c5d44a60",
+  "version": "2.1.233"
+}

@@ -1,0 +1,35 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "1\t#!/usr/bin/env bash\n2\t# test_init.sh — structural and behavioral tests for hammerspoon/init.lua\n3\t#\n4\t# Runs tests/test_init.lua through the Hammerspoon `hs` CLI, since this stack has\n5\t# no standalone Lua interpreter. Requires Hammerspoon to be running.\n6\t#\n7\t# Usage:\n8\t#   ./tests/test_init.sh                 # test the repo's init.lua\n9\t#   ./tests/test_init.sh path/to/init.lua  # test a specific file\n10\tset -euo pipefail\n11\t\n12\tRED='\\033[0;31m'\n13\tGREEN='\\033[0;32m'\n14\tYELLOW='\\033[1;33m'\n15\tBOLD='\\033[1m'\n16\tNC='\\033[0m'\n17\t\n18\tSCRIPT_DIR=\"$(cd \"$(dirname \"${BASH_SOURCE[0]}\")\" \u0026\u0026 pwd)\"\n19\tREPO_DIR=\"$(dirname \"$SCRIPT_DIR\")\"\n20\t\n21\tTARGET=\"${1:-$REPO_DIR/hammerspoon/init.lua}\"\n22\t# hs runs as the Hammerspoon process, so paths must be absolute.\n23\tTARGET=\"$(cd \"$(dirname \"$TARGET\")\" \u0026\u0026 pwd)/$(basename \"$TARGET\")\"\n24\t\n25\tHS_BIN=\"$(command -v hs || echo /Applications/Hammerspoon.app/Contents/Frameworks/hs/hs)\"\n26\tif [[ ! -x \"$HS_BIN\" ]]; then\n27\t    echo -e \"${RED}Error: the 'hs' CLI was not found.${NC}\"\n28\t    echo \"Enable it from the Hammerspoon console: hs.ipc.cliInstall()\"\n29\t    exit 1\n30\tfi\n31\t\n32\tif ! pgrep -x Hammerspoon \u003e/dev/null 2\u003e\u00261; then\n33\t    echo -e \"${RED}Error: Hammerspoon is not running.${NC}\"\n34\t    echo \"These tests execute Lua through Hammerspoon's runtime. Start Hammerspoon and retry.\"\n35\t    exit 1\n36\tfi\n37\t\n38\tOUT=\"$(mktemp -t lw_test_init)\"\n39\ttrap 'rm -f \"$OUT\"' EXIT\n40\t\n41\techo -e \"${BOLD}local-whisper init.lua test suite${NC}\"\n42\techo -e \"Target: ${BOLD}${TARGET#\"$REPO_DIR\"/}${NC}\"\n43\techo \"\"\n44\t\n45\t# hs evaluates in the running Hammerspoon process and does not inherit this shell's\n46\t# environment, so pass the paths as globals rather than env vars.\n47\t\"$HS_BIN\" -c \"_G.LW_TARGET='$TARGET'; _G.LW_OUT='$OUT'; dofile('$SCRIPT_DIR/test_init.lua')\" \u003e/dev/null 2\u003e\u00261\n48\t\n49\tif [[ ! -s \"$OUT\" ]]; then\n50\t    echo -e \"${RED}Error: the test suite produced no output.${NC}\"\n51\t    echo \"Check that $SCRIPT_DIR/test_init.lua loads cleanly.\"\n52\t    exit 1\n53\tfi\n54\t\n55\tPASS=0\n56\tFAIL=0\n57\twhile IFS=$'\\t' read -r status name detail; do\n58\t    [[ -z \"$status\" ]] \u0026\u0026 continue\n59\t    if [[ \"$status\" == \"PASS\" ]]; then\n60\t        PASS=$((PASS + 1))\n61\t        echo -e \"  ${GREEN}PASS${NC}  $name\"\n62\t    else\n63\t        FAIL=$((FAIL + 1))\n64\t        echo -e \"  ${RED}FAIL${NC}  $name\"\n65\t        [[ -n \"$detail\" ]] \u0026\u0026 echo -e \"        ${YELLOW}$detail${NC}\"\n66\t    fi\n67\tdone \u003c \"$OUT\"\n68\t\n69\tTOTAL=$((PASS + FAIL))\n70\techo \"\"\n71\tif [[ $FAIL -eq 0 ]]; then\n72\t    echo -e \"${GREEN}${BOLD}All $TOTAL checks passed.${NC}\"\n73\t    exit 0\n74\telse\n75\t    echo -e \"${RED}${BOLD}$FAIL of $TOTAL checks failed.${NC}\"\n76\t    exit 1\n77\tfi\n78\t",
+        "tool_use_id": "toolu_01RLPVqfeF2nzSiJ4tKUQiTn",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "8d614575-06ad-4663-96bf-c426f94c405b",
+  "promptId": "1ddcf7b5-201e-4a14-85c8-a5f41880b7e0",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "8d614575-06ad-4663-96bf-c426f94c405b",
+  "timestamp": "2026-08-16T20:41:05.637Z",
+  "toolUseResult": {
+    "file": {
+      "content": "#!/usr/bin/env bash\n# test_init.sh — structural and behavioral tests for hammerspoon/init.lua\n#\n# Runs tests/test_init.lua through the Hammerspoon `hs` CLI, since this stack has\n# no standalone Lua interpreter. Requires Hammerspoon to be running.\n#\n# Usage:\n#   ./tests/test_init.sh                 # test the repo's init.lua\n#   ./tests/test_init.sh path/to/init.lua  # test a specific file\nset -euo pipefail\n\nRED='\\033[0;31m'\nGREEN='\\033[0;32m'\nYELLOW='\\033[1;33m'\nBOLD='\\033[1m'\nNC='\\033[0m'\n\nSCRIPT_DIR=\"$(cd \"$(dirname \"${BASH_SOURCE[0]}\")\" \u0026\u0026 pwd)\"\nREPO_DIR=\"$(dirname \"$SCRIPT_DIR\")\"\n\nTARGET=\"${1:-$REPO_DIR/hammerspoon/init.lua}\"\n# hs runs as the Hammerspoon process, so paths must be absolute.\nTARGET=\"$(cd \"$(dirname \"$TARGET\")\" \u0026\u0026 pwd)/$(basename \"$TARGET\")\"\n\nHS_BIN=\"$(command -v hs || echo /Applications/Hammerspoon.app/Contents/Frameworks/hs/hs)\"\nif [[ ! -x \"$HS_BIN\" ]]; then\n    echo -e \"${RED}Error: the 'hs' CLI was not found.${NC}\"\n    echo \"Enable it from the Hammerspoon console: hs.ipc.cliInstall()\"\n    exit 1\nfi\n\nif ! pgrep -x Hammerspoon \u003e/dev/null 2\u003e\u00261; then\n    echo -e \"${RED}Error: Hammerspoon is not running.${NC}\"\n    echo \"These tests execute Lua through Hammerspoon's runtime. Start Hammerspoon and retry.\"\n    exit 1\nfi\n\nOUT=\"$(mktemp -t lw_test_init)\"\ntrap 'rm -f \"$OUT\"' EXIT\n\necho -e \"${BOLD}local-whisper init.lua test suite${NC}\"\necho -e \"Target: ${BOLD}${TARGET#\"$REPO_DIR\"/}${NC}\"\necho \"\"\n\n# hs evaluates in the running Hammerspoon process and does not inherit this shell's\n# environment, so pass the paths as globals rather than env vars.\n\"$HS_BIN\" -c \"_G.LW_TARGET='$TARGET'; _G.LW_OUT='$OUT'; dofile('$SCRIPT_DIR/test_init.lua')\" \u003e/dev/null 2\u003e\u00261\n\nif [[ ! -s \"$OUT\" ]]; then\n    echo -e \"${RED}Error: the test suite produced no output.${NC}\"\n    echo \"Check that $SCRIPT_DIR/test_init.lua loads cleanly.\"\n    exit 1\nfi\n\nPASS=0\nFAIL=0\nwhile IFS=$'\\t' read -r status name detail; do\n    [[ -z \"$status\" ]] \u0026\u0026 continue\n    if [[ \"$status\" == \"PASS\" ]]; then\n        PASS=$((PASS + 1))\n        echo -e \"  ${GREEN}PASS${NC}  $name\"\n    else\n        FAIL=$((FAIL + 1))\n        echo -e \"  ${RED}FAIL${NC}  $name\"\n        [[ -n \"$detail\" ]] \u0026\u0026 echo -e \"        ${YELLOW}$detail${NC}\"\n    fi\ndone \u003c \"$OUT\"\n\nTOTAL=$((PASS + FAIL))\necho \"\"\nif [[ $FAIL -eq 0 ]]; then\n    echo -e \"${GREEN}${BOLD}All $TOTAL checks passed.${NC}\"\n    exit 0\nelse\n    echo -e \"${RED}${BOLD}$FAIL of $TOTAL checks failed.${NC}\"\n    exit 1\nfi\n",
+      "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/tests/test_init.sh",
+      "numLines": 78,
+      "startLine": 1,
+      "totalLines": 78
+    },
+    "type": "text"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "1920feb9-82cf-4222-bb0a-9fbc8a5d447e",
+  "version": "2.1.233"
+}

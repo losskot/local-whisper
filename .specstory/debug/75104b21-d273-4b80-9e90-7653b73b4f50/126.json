@@ -1,0 +1,35 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "1583\t        stopRecording()\n1584\t    end\n1585\tend)\n1586\tsleepWatcher:start()\n1587\t\n1588\t--------------------------------------------------------------------------------\n1589\t-- Startup\n1590\t--------------------------------------------------------------------------------\n1591\t\n1592\t-- Request mic permission (child processes via hs.task inherit it)\n1593\tif type(hs.microphoneState) == \"function\" and not hs.microphoneState() then\n1594\t    log(\"requesting microphone permission\")\n1595\t    hs.microphoneState(true)\n1596\tend\n1597\t\n1598\t-- Create default preferred langs file if it doesn't exist\n1599\tif readFile(PREFERRED_LANGS_FILE) == \"\" then\n1600\t    writeFile(PREFERRED_LANGS_FILE, \"en,pt\")\n1601\tend\n1602\t\n1603\t-- Create menu bar icon\n1604\tcreateMenuBar()\n1605\t\n1606\t-- Load action hooks\n1607\tlocal actionsEnabled = loadActionConfig() ~= nil\n1608\tlog(\"actions: \" .. (actionsEnabled and \"enabled\" or \"disabled\"))\n1609\t\n1610\tlocal enterStatus = getEnterMode() and \"⏎\" or \"\"\n1611\tlocal actionsFlag = actionsEnabled and \" +actions\" or \"\"\n1612\tlog(\"loaded (trigger=\" .. TRIGGER_KEY .. \", lang=\" .. getLang() .. \", output=\" .. getOutputMode() .. \", model=\" .. getModelName() .. \", preferred=\" .. table.concat(getPreferredLangs(), \",\") .. \")\")\n1613\ths.notify.new({\n1614\t    title = \"local-whisper\",\n1615\t    informativeText = \"Loaded (\" .. getLang():upper() .. \" / \" .. getOutputMode():upper() .. enterStatus .. \" / \" .. getModelName() .. actionsFlag .. \") — hold \" .. TRIGGER_KEY\n1616\t}):send()\n1617\t",
+        "tool_use_id": "toolu_01SyWBw5qB5c99Wi1tFDsutp",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "7fb17c1a-56e3-4d05-9245-0b736bbc8426",
+  "promptId": "1ddcf7b5-201e-4a14-85c8-a5f41880b7e0",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "7fb17c1a-56e3-4d05-9245-0b736bbc8426",
+  "timestamp": "2026-08-16T20:46:03.732Z",
+  "toolUseResult": {
+    "file": {
+      "content": "        stopRecording()\n    end\nend)\nsleepWatcher:start()\n\n--------------------------------------------------------------------------------\n-- Startup\n--------------------------------------------------------------------------------\n\n-- Request mic permission (child processes via hs.task inherit it)\nif type(hs.microphoneState) == \"function\" and not hs.microphoneState() then\n    log(\"requesting microphone permission\")\n    hs.microphoneState(true)\nend\n\n-- Create default preferred langs file if it doesn't exist\nif readFile(PREFERRED_LANGS_FILE) == \"\" then\n    writeFile(PREFERRED_LANGS_FILE, \"en,pt\")\nend\n\n-- Create menu bar icon\ncreateMenuBar()\n\n-- Load action hooks\nlocal actionsEnabled = loadActionConfig() ~= nil\nlog(\"actions: \" .. (actionsEnabled and \"enabled\" or \"disabled\"))\n\nlocal enterStatus = getEnterMode() and \"⏎\" or \"\"\nlocal actionsFlag = actionsEnabled and \" +actions\" or \"\"\nlog(\"loaded (trigger=\" .. TRIGGER_KEY .. \", lang=\" .. getLang() .. \", output=\" .. getOutputMode() .. \", model=\" .. getModelName() .. \", preferred=\" .. table.concat(getPreferredLangs(), \",\") .. \")\")\nhs.notify.new({\n    title = \"local-whisper\",\n    informativeText = \"Loaded (\" .. getLang():upper() .. \" / \" .. getOutputMode():upper() .. enterStatus .. \" / \" .. getModelName() .. actionsFlag .. \") — hold \" .. TRIGGER_KEY\n}):send()\n",
+      "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+      "numLines": 35,
+      "startLine": 1583,
+      "totalLines": 1617
+    },
+    "type": "text"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "79d531aa-632f-49a7-9ca2-33f0a5354adb",
+  "version": "2.1.233"
+}

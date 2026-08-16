@@ -1,0 +1,35 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "790\tlocal recordingStartTime = 0\n791\tlocal recordedSecs = nil    -- frozen recording duration once stopped; nil while recording\n792\tlocal pulseAlpha = 1.0\n793\tlocal pulseFading = true\n794\t\n795\t-- Progress bar state\n796\tlocal transcribedSecs = 0   -- seconds of audio fully transcribed so far\n797\tlocal barMaxSecs = 180       -- current max duration displayed (expands at 90%)\n798\t\n799\t-- Undo state\n800\tlocal lastInsertedText = nil\n801\t\n802\t-- Recent dictations (newest first, max 10)\n803\tlocal MAX_RECENT = 10\n804\t\n805\tlocal recentDictations = {}\n806\t\n807\tlocal function loadRecentDictations()\n808\t    local f = io.open(RECENT_FILE, \"r\")\n809\t    if not f then return end\n810\t    local data = f:read(\"*a\"); f:close()\n811\t    local ok, result = pcall(hs.json.decode, data)\n812\t    if ok and type(result) == \"table\" then\n813\t        -- Clear and populate in-place (preserve table reference)\n814\t        for i = #recentDictations, 1, -1 do recentDictations[i] = nil end\n815\t        for i, entry in ipairs(result) do recentDictations[i] = entry end\n816\t    end\n817\tend\n818\t\n819\tlocal function saveRecentDictations()\n820\t    local ok, json = pcall(hs.json.encode, recentDictations)\n821\t    if not ok then return end\n822\t    local f = io.open(RECENT_FILE, \"w\")\n823\t    if f then f:write(json); f:close() end\n824\tend\n825\t\n826\tloadRecentDictations()\n827\t\n828\t-- Auto-stop state\n829\tlocal silentChunkCount = 0\n830\tlocal silenceTimer = nil\n831\tlocal lastCheckedChunk = 0\n832\t\n833\t--------------------------------------------------------------------------------\n834\t-- Menu bar status icon",
+        "tool_use_id": "toolu_018XT692ddDBgv3CL5or8FQx",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "13664c46-554b-4211-9f42-2e148cde567b",
+  "promptId": "1ddcf7b5-201e-4a14-85c8-a5f41880b7e0",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "13664c46-554b-4211-9f42-2e148cde567b",
+  "timestamp": "2026-08-16T20:44:03.187Z",
+  "toolUseResult": {
+    "file": {
+      "content": "local recordingStartTime = 0\nlocal recordedSecs = nil    -- frozen recording duration once stopped; nil while recording\nlocal pulseAlpha = 1.0\nlocal pulseFading = true\n\n-- Progress bar state\nlocal transcribedSecs = 0   -- seconds of audio fully transcribed so far\nlocal barMaxSecs = 180       -- current max duration displayed (expands at 90%)\n\n-- Undo state\nlocal lastInsertedText = nil\n\n-- Recent dictations (newest first, max 10)\nlocal MAX_RECENT = 10\n\nlocal recentDictations = {}\n\nlocal function loadRecentDictations()\n    local f = io.open(RECENT_FILE, \"r\")\n    if not f then return end\n    local data = f:read(\"*a\"); f:close()\n    local ok, result = pcall(hs.json.decode, data)\n    if ok and type(result) == \"table\" then\n        -- Clear and populate in-place (preserve table reference)\n        for i = #recentDictations, 1, -1 do recentDictations[i] = nil end\n        for i, entry in ipairs(result) do recentDictations[i] = entry end\n    end\nend\n\nlocal function saveRecentDictations()\n    local ok, json = pcall(hs.json.encode, recentDictations)\n    if not ok then return end\n    local f = io.open(RECENT_FILE, \"w\")\n    if f then f:write(json); f:close() end\nend\n\nloadRecentDictations()\n\n-- Auto-stop state\nlocal silentChunkCount = 0\nlocal silenceTimer = nil\nlocal lastCheckedChunk = 0\n\n--------------------------------------------------------------------------------\n-- Menu bar status icon",
+      "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+      "numLines": 45,
+      "startLine": 790,
+      "totalLines": 1732
+    },
+    "type": "text"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "c40b650c-dedf-4955-b83d-910a624555a4",
+  "version": "2.1.233"
+}

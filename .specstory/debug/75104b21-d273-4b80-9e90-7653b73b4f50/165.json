@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "=== mut_gt0 ===\n  \u001b[0;31mFAIL\u001b[0m  trigger: no single half of the combo fires on its own\n  \u001b[0;31mFAIL\u001b[0m  trigger: the right-hand twin of the modifier does not fire\n  \u001b[0;31mFAIL\u001b[0m  trigger: releasing either modifier reads as released\n\u001b[0;31m\u001b[1m3 of 69 checks failed.\u001b[0m\n=== mut_generic ===\n  \u001b[0;31mFAIL\u001b[0m  trigger: triggerHeld is true while the whole combo is down\n  \u001b[0;31mFAIL\u001b[0m  trigger: triggerHeld asks for raw device flags\n\u001b[0;31m\u001b[1m2 of 69 checks failed.\u001b[0m\n=== mut_refine ===\n  \u001b[0;31mFAIL\u001b[0m  refine: no LLM refinement / Ollama code remains\n\u001b[0;31m\u001b[1m1 of 69 checks failed.\u001b[0m",
+        "is_error": false,
+        "tool_use_id": "toolu_01RsjXEAHUM2KYSLBDgwMWCg",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "22f3ad80-146a-4021-b3ec-4f504c6d96f2",
+  "promptId": "1ddcf7b5-201e-4a14-85c8-a5f41880b7e0",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "22f3ad80-146a-4021-b3ec-4f504c6d96f2",
+  "timestamp": "2026-08-16T20:51:31.664Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "=== mut_gt0 ===\n  \u001b[0;31mFAIL\u001b[0m  trigger: no single half of the combo fires on its own\n  \u001b[0;31mFAIL\u001b[0m  trigger: the right-hand twin of the modifier does not fire\n  \u001b[0;31mFAIL\u001b[0m  trigger: releasing either modifier reads as released\n\u001b[0;31m\u001b[1m3 of 69 checks failed.\u001b[0m\n=== mut_generic ===\n  \u001b[0;31mFAIL\u001b[0m  trigger: triggerHeld is true while the whole combo is down\n  \u001b[0;31mFAIL\u001b[0m  trigger: triggerHeld asks for raw device flags\n\u001b[0;31m\u001b[1m2 of 69 checks failed.\u001b[0m\n=== mut_refine ===\n  \u001b[0;31mFAIL\u001b[0m  refine: no LLM refinement / Ollama code remains\n\u001b[0;31m\u001b[1m1 of 69 checks failed.\u001b[0m"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "111ece04-6444-423f-82e6-ed478141dee4",
+  "version": "2.1.233"
+}

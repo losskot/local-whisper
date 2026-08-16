@@ -1,0 +1,66 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/install.sh has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_012zgVUzi1CnaBcrBmuuzki9",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "84aa4fe4-da81-4ced-ad4c-a588af715f9a",
+  "promptId": "1ddcf7b5-201e-4a14-85c8-a5f41880b7e0",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "84aa4fe4-da81-4ced-ad4c-a588af715f9a",
+  "timestamp": "2026-08-16T20:53:26.512Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/install.sh",
+    "newString": "",
+    "oldString": "# Also download tiny model for faster live preview (~75 MB)\nTINY_MODEL=\"$WHISPER_CPP_DIR/models/ggml-tiny.bin\"\nif [[ -f \"$TINY_MODEL\" ]]; then\n    ok \"Tiny model already downloaded (used for fast live preview)\"\nelse\n    info \"Downloading ggml-tiny.bin for faster live preview (~75 MB)...\"\n    cd \"$WHISPER_CPP_DIR\"\n    bash ./models/download-ggml-model.sh tiny\n    cd \"$SCRIPT_DIR\"\n\n    if [[ -f \"$TINY_MODEL\" ]]; then\n        ok \"Tiny model downloaded\"\n    else\n        warn \"Tiny model download failed — live preview will use main model (slower but works)\"\n    fi\nfi\n\n",
+    "originalFile": "#!/usr/bin/env bash\n# install.sh — local-whisper installer\n# Sets up everything needed for hold-to-dictate on macOS with whisper.cpp\n# Architecture: Hammerspoon-only (no Karabiner, no bash scripts at runtime)\nset -euo pipefail\n\n# ─── Colors ──────────────────────────────────────────────────────────────────\nRED='\\033[0;31m'\nGREEN='\\033[0;32m'\nYELLOW='\\033[1;33m'\nBLUE='\\033[0;34m'\nBOLD='\\033[1m'\nNC='\\033[0m'\n\ninfo()  { echo -e \"${BLUE}[*]${NC} $*\"; }\nok()    { echo -e \"${GREEN}[+]${NC} $*\"; }\nwarn()  { echo -e \"${YELLOW}[!]${NC} $*\"; }\nerror() { echo -e \"${RED}[x]${NC} $*\"; }\n\n# ─── Detect script location (repo root) ─────────────────────────────────────\nSCRIPT_DIR=\"$(cd \"$(dirname \"$0\")\" \u0026\u0026 pwd)\"\n\n# ─── Configurable paths ─────────────────────────────────────────────────────\nWHISPER_CPP_DIR=\"$HOME/whisper.cpp\"\nWHISPER_MODEL=\"medium\"\nHAMMERSPOON_DIR=\"$HOME/.hammerspoon\"\n\n# ─── Preflight ───────────────────────────────────────────────────────────────\necho \"\"\necho -e \"${BOLD}local-whisper installer${NC}\"\necho -e \"Hold a key → speak → release → text at cursor\"\necho \"\"\n\n# Check macOS\nif [[ \"$(uname)\" != \"Darwin\" ]]; then\n    error \"This tool is macOS-only.\"\n    exit 1\nfi\n\n# Check Apple Silicon\nARCH=$(uname -m)\nif [[ \"$ARCH\" == \"arm64\" ]]; then\n    ok \"Apple Silicon detected ($ARCH)\"\nelse\n    warn \"Intel Mac detected ($ARCH) — will work but transcription will be slower\"\nfi\n\n# Check Homebrew\nif ! command -v brew \u0026\u003e/dev/null; then\n    error \"Homebrew not found. Install it first: https://brew.sh\"\n    exit 1\nfi\nok \"Homebrew found\"\n\n# ─── Step 1: Brew dependencies ──────────────────────────────────────────────\necho \"\"\ninfo \"Step 1/5: Installing dependencies via Homebrew...\"\n\nBREW_FORMULAE=(ffmpeg cmake git)\nfor formula in \"${BREW_FORMULAE[@]}\"; do\n    if brew list \"$formula\" \u0026\u003e/dev/null; then\n        ok \"$formula already installed\"\n    else\n        info \"Installing $formula...\"\n        brew install \"$formula\"\n        ok \"$formula installed\"\n    fi\ndone\n\nif brew list --cask hammerspoon \u0026\u003e/dev/null; then\n    ok \"hammerspoon already installed\"\nelse\n    info \"Installing hammerspoon...\"\n    brew install --cask hammerspoon\n    ok \"hammerspoon installed\"\nfi\n\n# ─── Step 2: Build whisper.cpp ───────────────────────────────────────────────\necho \"\"\ninfo \"Step 2/5: Building whisper.cpp...\"\n\nif [[ -x \"$WHISPER_CPP_DIR/build/bin/whisper-cli\" ]]; then\n    ok \"whisper-cli already built at $WHISPER_CPP_DIR/build/bin/whisper-cli\"\nelse\n    if [[ ! -d \"$WHISPER_CPP_DIR\" ]]; then\n        info \"Cloning whisper.cpp...\"\n        git clone https://github.com/ggml-org/whisper.cpp \"$WHISPER_CPP_DIR\"\n    else\n        ok \"whisper.cpp repo already at $WHISPER_CPP_DIR\"\n    fi\n\n    info \"Building with cmake (this may take a few minutes)...\"\n    cd \"$WHISPER_CPP_DIR\"\n    cmake -B build\n    cmake --build build -j --config Release\n    cd \"$SCRIPT_DIR\"\n\n    if [[ -x \"$WHISPER_CPP_DIR/build/bin/whisper-cli\" ]]; then\n        ok \"whisper-cli built successfully\"\n    else\n        error \"Build failed — check output above\"\n        exit 1\n    fi\nfi\n\n# ─── Step 3: Download models ────────────────────────────────────────────────\necho \"\"\ninfo \"Step 3/5: Downloading whisper models...\"\n\nMODEL_FILE=\"$WHISPER_CPP_DIR/models/ggml-${WHISPER_MODEL}.bin\"\nif [[ -f \"$MODEL_FILE\" ]]; then\n    ok \"Model already downloaded: ggml-${WHISPER_MODEL}.bin\"\nelse\n    info \"Downloading ggml-${WHISPER_MODEL}.bin (~1.5 GB)...\"\n    cd \"$WHISPER_CPP_DIR\"\n    bash ./models/download-ggml-model.sh \"$WHISPER_MODEL\"\n    cd \"$SCRIPT_DIR\"\n\n    if [[ -f \"$MODEL_FILE\" ]]; then\n        ok \"Model downloaded\"\n    else\n        error \"Model download failed\"\n        exit 1\n    fi\nfi\n\n# Also download tiny model for faster live preview (~75 MB)\nTINY_MODEL=\"$WHISPER_CPP_DIR/models/ggml-tiny.bin\"\nif [[ -f \"$TINY_MODEL\" ]]; then\n    ok \"Tiny model already downloaded (used for fast live preview)\"\nelse\n    info \"Downloading ggml-tiny.bin for faster live preview (~75 MB)...\"\n    cd \"$WHISPER_CPP_DIR\"\n    bash ./models/download-ggml-model.sh tiny\n    cd \"$SCRIPT_DIR\"\n\n    if [[ -f \"$TINY_MODEL\" ]]; then\n        ok \"Tiny model downloaded\"\n    else\n        warn \"Tiny model download failed — live preview will use main model (slower but works)\"\n    fi\nfi\n\n# ─── Step 4: Install Hammerspoon config ─────────────────────────────────────\necho \"\"\ninfo \"Step 4/5: Setting up Hammerspoon...\"\n\nmkdir -p \"$HAMMERSPOON_DIR\"\n\n# Create config directory for user settings\nCONFIG_DIR=\"$HOME/.local-whisper\"\nmkdir -p \"$CONFIG_DIR\"\nok \"Config directory: $CONFIG_DIR\"\n\n# Use a symlink so changes in the repo are reflected immediately without re-running install\nif [[ -L \"$HAMMERSPOON_DIR/init.lua\" ]]; then\n    ln -sf \"$SCRIPT_DIR/hammerspoon/init.lua\" \"$HAMMERSPOON_DIR/init.lua\"\n    ok \"Hammerspoon config symlink updated\"\nelif [[ -f \"$HAMMERSPOON_DIR/init.lua\" ]]; then\n    if grep -q \"local-whisper\" \"$HAMMERSPOON_DIR/init.lua\"; then\n        rm \"$HAMMERSPOON_DIR/init.lua\"\n        ln -sf \"$SCRIPT_DIR/hammerspoon/init.lua\" \"$HAMMERSPOON_DIR/init.lua\"\n        ok \"Hammerspoon config replaced with symlink\"\n    else\n        warn \"Existing init.lua found — backing up to init.lua.backup\"\n        cp \"$HAMMERSPOON_DIR/init.lua\" \"$HAMMERSPOON_DIR/init.lua.backup\"\n        rm \"$HAMMERSPOON_DIR/init.lua\"\n        ln -sf \"$SCRIPT_DIR/hammerspoon/init.lua\" \"$HAMMERSPOON_DIR/init.lua\"\n        ok \"Hammerspoon config installed as symlink (backup saved)\"\n    fi\nelse\n    ln -sf \"$SCRIPT_DIR/hammerspoon/init.lua\" \"$HAMMERSPOON_DIR/init.lua\"\n    ok \"Hammerspoon config installed as symlink\"\nfi\n\n# Install example voice commands if user doesn't have a config yet\nif [[ ! -f \"$HAMMERSPOON_DIR/local_whisper_actions.lua\" ]]; then\n    if [[ -f \"$SCRIPT_DIR/hammerspoon/local_whisper_actions.example.lua\" ]]; then\n        cp \"$SCRIPT_DIR/hammerspoon/local_whisper_actions.example.lua\" \"$HAMMERSPOON_DIR/local_whisper_actions.lua\"\n        ok \"Voice commands config installed (edit ~/.hammerspoon/local_whisper_actions.lua to customize)\"\n    fi\nfi\n\n# ─── Step 5: Setup (permissions, trigger key, audio device, HS CLI) ─────────\necho \"\"\ninfo \"Step 5/5: Running setup (permissions, trigger key, audio device)...\"\necho \"\"\nbash \"$SCRIPT_DIR/setup.sh\"\n\n",
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          "     fi",
+          " fi",
+          " ",
+          "-# Also download tiny model for faster live preview (~75 MB)",
+          "-TINY_MODEL=\"$WHISPER_CPP_DIR/models/ggml-tiny.bin\"",
+          "-if [[ -f \"$TINY_MODEL\" ]]; then",
+          "-    ok \"Tiny model already downloaded (used for fast live preview)\"",
+          "-else",
+          "-    info \"Downloading ggml-tiny.bin for faster live preview (~75 MB)...\"",
+          "-    cd \"$WHISPER_CPP_DIR\"",
+          "-    bash ./models/download-ggml-model.sh tiny",
+          "-    cd \"$SCRIPT_DIR\"",
+          "-",
+          "-    if [[ -f \"$TINY_MODEL\" ]]; then",
+          "-        ok \"Tiny model downloaded\"",
+          "-    else",
+          "-        warn \"Tiny model download failed — live preview will use main model (slower but works)\"",
+          "-    fi",
+          "-fi",
+          "-",
+          " # ─── Step 4: Install Hammerspoon config ─────────────────────────────────────",
+          " echo \"\"",
+          " info \"Step 4/5: Setting up Hammerspoon...\""
+        ],
+        "newLines": 6,
+        "newStart": 124,
+        "oldLines": 23,
+        "oldStart": 124
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "75b68cf7-d917-40e9-bdaf-c4b2d199fc2b",
+  "version": "2.1.233"
+}

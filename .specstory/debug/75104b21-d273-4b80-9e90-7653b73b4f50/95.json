@@ -1,0 +1,50 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01Dw7P3JGv39vacgrutstacM",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "7c13a4fa-2080-4cf6-86a3-e00f539b8557",
+  "promptId": "1ddcf7b5-201e-4a14-85c8-a5f41880b7e0",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "7c13a4fa-2080-4cf6-86a3-e00f539b8557",
+  "timestamp": "2026-08-16T20:44:50.092Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+    "newString": "    local lang = getLang()\n    local promptArgs = getPromptArgs()",
+    "oldString": "    local lang = getLang()\n    local preferred = getPreferredLangs()\n    local promptArgs = getPromptArgs()",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          "     setOverlayText(\"Transcribing...\")",
+          " ",
+          "     local lang = getLang()",
+          "-    local preferred = getPreferredLangs()",
+          "     local promptArgs = getPromptArgs()",
+          " ",
+          "     -- Split 1-second chunks into groups of FINAL_SEGMENT_SECS"
+        ],
+        "newLines": 6,
+        "newStart": 1160,
+        "oldLines": 7,
+        "oldStart": 1160
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "bc5e7c6e-a0e4-4b38-bc30-6d5c9631a3e7",
+  "version": "2.1.233"
+}

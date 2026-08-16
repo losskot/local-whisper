@@ -1,0 +1,54 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/README.md has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_011JBLmVaKadSKiNixkztKWo",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "80e6eda4-340f-4dc4-a440-eb8e701bfecf",
+  "promptId": "1ddcf7b5-201e-4a14-85c8-a5f41880b7e0",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "80e6eda4-340f-4dc4-a440-eb8e701bfecf",
+  "timestamp": "2026-08-16T20:52:29.759Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/README.md",
+    "newString": "- See current language, model, output mode, and enter mode\n- Click any setting to cycle it\n- View and re-paste recent dictations\n- Reload voice commands\n- Emergency stop",
+    "oldString": "- See current language, model, output mode, enter mode, and LLM refine status\n- Click any setting to cycle it\n- View and re-paste recent dictations\n- Open the settings overlay\n- Reload voice commands\n- Emergency stop",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          " ",
+          " A waveform icon in the menu bar shows recording status (turns red when recording). Click it to:",
+          " ",
+          "-- See current language, model, output mode, enter mode, and LLM refine status",
+          "+- See current language, model, output mode, and enter mode",
+          " - Click any setting to cycle it",
+          " - View and re-paste recent dictations",
+          "-- Open the settings overlay",
+          " - Reload voice commands",
+          " - Emergency stop",
+          " "
+        ],
+        "newLines": 9,
+        "newStart": 124,
+        "oldLines": 10,
+        "oldStart": 124
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "42dc266a-4679-409d-8b5b-0c5728d4267b",
+  "version": "2.1.233"
+}

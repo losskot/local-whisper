@@ -1,0 +1,65 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "signature": "CAISowMKhwEIEBgCKkCa851fZjXXI6mnwPcdP7HkvoxPKv0Sneb8TtaoeCPjslHC/Squ5P2pzAVxsH1WC7ScgBkCOPR3Caio0FbOQH6jMg1jbGF1ZGUtb3B1cy01OAFCCHRoaW5raW5nWiQ4MmY1MDliMS03NDFhLTQ1MzgtYjcyNS1lNWU1ZmVjZjY1NzgSDAtFzfIupQyYFzQRtRoM43ZDtnNzECqzrnb5IjB7rN6obJuOXyNkLbm92yJ1HU8B8Zf3Tb8+0Qh+ccJEAr8jXTL3f0rpHpeH6eSHCfEqyAGkC2b8x4oWCWXsSt+UZWvv90mpEy8h5iEZYU2YpaCi+EReAbzFvjFMDe1UM8XB6a+AtR/W7ZB16yOkku9d4wpu1xSXx/G5JiRof2SzlXBiZq23twcEIqDY1oO0aflO30h1SFzYlfvkGy0ChuhjpOGc0fRUeeWYjo849tX+/qtV9rOPST4qQATimQwAoHPTiyV3vRpxRr3wGSebgAWj3xd3LScu6shl2eOfHrWlnRis5/vmH9w1gVrsLb/CLy2BgXDw9sBt/hsIMBgB",
+        "thinking": "",
+        "type": "thinking"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce75XKfdZgexompWiWw5c",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 1101,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 1101,
+      "cache_read_input_tokens": 122353,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1101,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 1101,
+          "cache_read_input_tokens": 122353,
+          "input_tokens": 2,
+          "output_tokens": 260,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 260,
+      "output_tokens_details": {
+        "thinking_tokens": 64
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "c187e7a3-86b2-4f51-a017-c43a4a5de88c",
+  "requestId": "req_011Ce75XJiatRRDAk31BbxWz",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "timestamp": "2026-08-16T20:43:52.406Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "645c5708-e9ce-4b61-91a8-f42572b060a2",
+  "version": "2.1.233"
+}

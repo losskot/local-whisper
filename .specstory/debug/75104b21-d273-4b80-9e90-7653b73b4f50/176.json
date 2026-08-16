@@ -1,0 +1,64 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "text": "Правлю README:",
+        "type": "text"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce769bAnqBJwKrEUab7gA",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 2268,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 2268,
+      "cache_read_input_tokens": 161162,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 2268,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 2268,
+          "cache_read_input_tokens": 161162,
+          "input_tokens": 2,
+          "output_tokens": 1492,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 1492,
+      "output_tokens_details": {
+        "thinking_tokens": 0
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "60a4bb96-d7df-47be-a81f-c696fc31caea",
+  "requestId": "req_011Ce769aEje7ugxZTYnsTsR",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "timestamp": "2026-08-16T20:52:04.116Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "afb79c3d-a8b6-491c-adf1-793b434af91d",
+  "version": "2.1.233"
+}

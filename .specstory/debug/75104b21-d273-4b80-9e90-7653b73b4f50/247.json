@@ -1,0 +1,72 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01G4mRbuiYuqE9BPYt6jSVpK",
+        "input": {
+          "command": "git add hammerspoon/init.lua tests/test_init.lua README.md AGENTS.md CONTRIBUTING.md install.sh setup.sh \u0026\u0026 git commit -q -F - \u003c\u003c'EOF'\nRemove dead features; switch the trigger to fn + left Control\n\nDeletes subsystems that were either never reachable or no longer wanted:\n\n- silence auto-stop: checkSilence() was never called and silenceTimer never\n  created, so the constants and the per-chunk bookkeeping were pure ballast\n- LLM refinement via Ollama, along with the cached reachability probe, the\n  menu-bar toggle and tests/test_refine.sh\n- preferred languages: read, defaulted and displayed, but the retry logic that\n  consumed them was removed long ago, so it could not affect transcription\n- undo tracking: lastInsertedText was written and never read; there is no hotkey\n- the \"Preferred\" and \"Settings...\" menu items (one inert, one only able to open\n  an overlay that says to use the menu bar)\n- the _whisper global, whose `recording` field never left its initial value\n\nThe trigger moves from right Command to fn + left Control, which makes it a\nmodifier *combo* and adds two failure modes worth pinning down:\n\n- matching with `flags \u0026 mask \u003e 0` would fire on either half, so plain Control\n  would start a recording on every Ctrl-C. triggerPressed() requires every bit.\n- the release poller compared generic modifier names (\"ctrl\"), which cannot tell\n  left Control from right Control. triggerHeld() re-reads the raw device flags\n  through the same mask, so both halves are checked the same way in both paths.\n\nTests: the meeting-mode guard generalises into a table of deleted subsystems, and\na new `trigger` group lifts triggerPressed/triggerHeld out of the source and runs\nthem against the configured mask — full combo fires, neither half does, the\nright-hand twin does not, releasing either half reads as released. Verified each\nnew guard fails on a one-line mutation of the current file. 69 checks pass.\n\nDocs: README described a streaming pipeline (streamCheckAndDispatch,\nsplitAtSilence, pipelineFinalize, tiny-model partials) that does not exist in\ninit.lua; that section, the auto-stop section and the refinement section are gone.\ninstall.sh no longer downloads the tiny model for the preview that never shipped.\n\nCo-Authored-By: Claude Opus 5 \u003cnoreply@anthropic.com\u003e\nEOF\ngit log --oneline -1",
+          "description": "Commit the cleanup"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce76cCEuU8axgUz2HoQds",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 819,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 819,
+      "cache_read_input_tokens": 189171,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 819,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 819,
+          "cache_read_input_tokens": 189171,
+          "input_tokens": 2,
+          "output_tokens": 1884,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 1884,
+      "output_tokens_details": {
+        "thinking_tokens": 970
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "2af178bf-d88f-45c7-aa41-5748105603c2",
+  "requestId": "req_011Ce76cBCuCXbBWksPxaHKR",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "timestamp": "2026-08-16T20:58:30.740Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "8c262e6f-d1f3-4844-84ec-b5ccc951f1dd",
+  "version": "2.1.233"
+}

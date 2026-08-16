@@ -1,0 +1,54 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01JSH2pMSfvaAxxbkQaRzGFt",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "aff5bc9e-0e49-4162-8d55-1c768a4e20ef",
+  "promptId": "1ddcf7b5-201e-4a14-85c8-a5f41880b7e0",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "aff5bc9e-0e49-4162-8d55-1c768a4e20ef",
+  "timestamp": "2026-08-16T20:44:13.216Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+    "newString": "loadRecentDictations()\n\n---",
+    "oldString": "loadRecentDictations()\n\n-- Auto-stop state\nlocal silentChunkCount = 0\nlocal silenceTimer = nil\nlocal lastCheckedChunk = 0\n\n---",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          " ",
+          " loadRecentDictations()",
+          " ",
+          "--- Auto-stop state",
+          "-local silentChunkCount = 0",
+          "-local silenceTimer = nil",
+          "-local lastCheckedChunk = 0",
+          "-",
+          " --------------------------------------------------------------------------------",
+          " -- Menu bar status icon",
+          " --------------------------------------------------------------------------------"
+        ],
+        "newLines": 6,
+        "newStart": 822,
+        "oldLines": 11,
+        "oldStart": 822
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "48f756ff-0627-455c-b042-a50ab0eba71f",
+  "version": "2.1.233"
+}

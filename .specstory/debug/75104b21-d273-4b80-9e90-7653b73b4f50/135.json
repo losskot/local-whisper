@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "95:local ACTIONS_FILE = HOME .. \"/.hammerspoon/local_whisper_actions.lua\"\n100:-- Known whisper hallucinations on silence/short audio\n105:    \"(applause)\", \"(keyboard clicking)\", \"(typing)\", \"(silence)\",\n107:    \"[BLANK_AUDIO]\", \"[silence]\",\n633:-- earlier — the reference would silently compile to a nil global instead.\n1073:-- Finish insertion after all processing (post-process, refine, hooks)\n1465:        -- through — returning here would silently swallow the keypress the user just made.\n1506:    -- system suspends can be silently dropped across sleep (see sleepWatcher below), so track\n1507:    -- pending state and recover on wake instead of just losing the recording silently.\n=== локалов: 121 ===\n=== строк:     1611 ===",
+        "is_error": false,
+        "tool_use_id": "toolu_017MmCTdi1Pbe5GzAGxuWGHT",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "51b91a7b-f195-4175-a956-5854d48b9f76",
+  "promptId": "1ddcf7b5-201e-4a14-85c8-a5f41880b7e0",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "51b91a7b-f195-4175-a956-5854d48b9f76",
+  "timestamp": "2026-08-16T20:48:28.179Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "95:local ACTIONS_FILE = HOME .. \"/.hammerspoon/local_whisper_actions.lua\"\n100:-- Known whisper hallucinations on silence/short audio\n105:    \"(applause)\", \"(keyboard clicking)\", \"(typing)\", \"(silence)\",\n107:    \"[BLANK_AUDIO]\", \"[silence]\",\n633:-- earlier — the reference would silently compile to a nil global instead.\n1073:-- Finish insertion after all processing (post-process, refine, hooks)\n1465:        -- through — returning here would silently swallow the keypress the user just made.\n1506:    -- system suspends can be silently dropped across sleep (see sleepWatcher below), so track\n1507:    -- pending state and recover on wake instead of just losing the recording silently.\n=== локалов: 121 ===\n=== строк:     1611 ==="
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "3d79e8fa-bfb7-47ce-813f-4a4e5f455d85",
+  "version": "2.1.233"
+}

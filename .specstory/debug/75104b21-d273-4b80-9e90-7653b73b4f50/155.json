@@ -1,0 +1,74 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_013SwbYkbc9vsNfVoh9cXUWY",
+        "input": {
+          "file_path": "/Users/vitaliy/Documents/GitHub/local-whisper/tests/test_init.lua",
+          "new_string": "local allowedGlobals = {\n    WhisperActions = true,  -- user-facing action-hook API\n    emergencyStop  = true,  -- called from the overlay callback and the menu bar\n    updateMenuBar  = true,\n}",
+          "old_string": "local allowedGlobals = {\n    _whisper       = true,  -- state probe for `hs -c`\n    WhisperActions = true,  -- user-facing action-hook API\n    emergencyStop  = true,  -- called from the overlay callback and the menu bar\n    updateMenuBar  = true,\n    stopRecording  = true,\n}",
+          "replace_all": false
+        },
+        "name": "Edit",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce762aZ8ttp3z8W2KFbGd",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 1004,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 1004,
+      "cache_read_input_tokens": 148799,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1004,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 1004,
+          "cache_read_input_tokens": 148799,
+          "input_tokens": 2,
+          "output_tokens": 338,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 338,
+      "output_tokens_details": {
+        "thinking_tokens": 0
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "a581957f-0112-4e79-bcaf-cf96af59ec66",
+  "requestId": "req_011Ce762ZKiuoPNAk4Vcg2io",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "timestamp": "2026-08-16T20:50:31.203Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "6fcc3b0b-4ebd-4fc8-a8d9-813b0611b231",
+  "version": "2.1.233"
+}

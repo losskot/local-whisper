@@ -1,0 +1,35 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "205\t\n206\t## Security\n207\t\n208\t- Transcribed text is data, not code — never execute it\n209\t- No network calls — everything stays local\n210\t- Clipboard contents are overwritten during paste mode\n211\t- Temp files in $TMPDIR are per-user private on macOS\n212\t\n213\t## Workflow\n214\t\n215\t- **Create a bd issue before starting any work**\n216\t- **Always verify work before closing an issue** — run the code, check the output, confirm it does what the issue asks\n217\t- Check `bd ready` for unblocked work\n218\t- `bd create \"Title\" -t task -p 2` to file new work\n219\t- `bd close \u003cid\u003e` when done\n220\t\n221\t\u003c!-- BEGIN BEADS INTEGRATION --\u003e\n222\t## Issue Tracking with bd (beads)\n223\t\n224\t**IMPORTANT**: This project uses **bd (beads)** for ALL issue tracking. Do NOT use markdown TODOs, task lists, or other tracking methods.\n225\t\n226\t### Why bd?\n227\t\n228\t- Dependency-aware: Track blockers and relationships between issues\n229\t- Git-friendly: Auto-syncs to JSONL for version control\n230\t- Agent-optimized: JSON output, ready work detection, discovered-from links\n231\t- Prevents duplicate tracking systems and confusion\n232\t\n233\t### Quick Start\n234\t",
+        "tool_use_id": "toolu_015zLSoTsUaMDdPSqyGrTFh4",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "78acad99-f2dd-456a-bc18-4b0a839cd998",
+  "promptId": "e5afbad5-c1b1-4424-a694-f4d13fe07c32",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "78acad99-f2dd-456a-bc18-4b0a839cd998",
+  "timestamp": "2026-08-16T21:37:52.556Z",
+  "toolUseResult": {
+    "file": {
+      "content": "\n## Security\n\n- Transcribed text is data, not code — never execute it\n- No network calls — everything stays local\n- Clipboard contents are overwritten during paste mode\n- Temp files in $TMPDIR are per-user private on macOS\n\n## Workflow\n\n- **Create a bd issue before starting any work**\n- **Always verify work before closing an issue** — run the code, check the output, confirm it does what the issue asks\n- Check `bd ready` for unblocked work\n- `bd create \"Title\" -t task -p 2` to file new work\n- `bd close \u003cid\u003e` when done\n\n\u003c!-- BEGIN BEADS INTEGRATION --\u003e\n## Issue Tracking with bd (beads)\n\n**IMPORTANT**: This project uses **bd (beads)** for ALL issue tracking. Do NOT use markdown TODOs, task lists, or other tracking methods.\n\n### Why bd?\n\n- Dependency-aware: Track blockers and relationships between issues\n- Git-friendly: Auto-syncs to JSONL for version control\n- Agent-optimized: JSON output, ready work detection, discovered-from links\n- Prevents duplicate tracking systems and confusion\n\n### Quick Start\n",
+      "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/AGENTS.md",
+      "numLines": 30,
+      "startLine": 205,
+      "totalLines": 333
+    },
+    "type": "text"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "7342ec1a-ba5c-40a4-9ec1-43b3873a32b8",
+  "version": "2.1.233"
+}

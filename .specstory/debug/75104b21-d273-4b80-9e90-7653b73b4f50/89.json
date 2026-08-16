@@ -1,0 +1,55 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_014J6PGQCeug6U8g7hvtkYBT",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "bb3ab193-2df7-4967-9530-70a5cf6e3f72",
+  "promptId": "1ddcf7b5-201e-4a14-85c8-a5f41880b7e0",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "bb3ab193-2df7-4967-9530-70a5cf6e3f72",
+  "timestamp": "2026-08-16T20:44:33.955Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+    "newString": "    if finalizeTimers.watchdog then finalizeTimers.watchdog:stop(); finalizeTimers.watchdog = nil end\n    stopRecordingIndicator()\n    if ffmpegTask and ffmpegTask:isRunning() then ffmpegTask:interrupt() end\n    ffmpegTask = nil\n    forceHideOverlay()",
+    "oldString": "    if finalizeTimers.watchdog then finalizeTimers.watchdog:stop(); finalizeTimers.watchdog = nil end\n    if silenceTimer then silenceTimer:stop(); silenceTimer = nil end\n    stopRecordingIndicator()\n    if ffmpegTask and ffmpegTask:isRunning() then ffmpegTask:interrupt() end\n    ffmpegTask = nil\n    silentChunkCount = 0\n    lastCheckedChunk = 0\n    forceHideOverlay()",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          "     finalizationPending = false",
+          "     if finalizeTimers.timer then finalizeTimers.timer:stop(); finalizeTimers.timer = nil end",
+          "     if finalizeTimers.watchdog then finalizeTimers.watchdog:stop(); finalizeTimers.watchdog = nil end",
+          "-    if silenceTimer then silenceTimer:stop(); silenceTimer = nil end",
+          "     stopRecordingIndicator()",
+          "     if ffmpegTask and ffmpegTask:isRunning() then ffmpegTask:interrupt() end",
+          "     ffmpegTask = nil",
+          "-    silentChunkCount = 0",
+          "-    lastCheckedChunk = 0",
+          "     forceHideOverlay()",
+          "     updateMenuBar()",
+          "     os.execute(\"killall whisper-cli 2\u003e/dev/null\")"
+        ],
+        "newLines": 9,
+        "newStart": 1042,
+        "oldLines": 12,
+        "oldStart": 1042
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "8a5c840c-dcc0-4655-9f0e-1c43ce1db2ff",
+  "version": "2.1.233"
+}

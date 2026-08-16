@@ -1,0 +1,35 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "140\t| `progress` | the blue transcription bar never catching the red recording bar, because a live clock re-trips the 90% auto-expand after recording stops |\n141\t\n142\tThe behavioral checks lift the real function out of the source under test — the sort\n143\tcomparator, the overlay mouse callback, `startRecording()`, `updateProgressBar()` — and\n144\texecute it against stubbed globals, so they track the implementation instead of a copy\n145\tthat can drift. A lifted function's upvalues resolve to the sandbox `_ENV`, which is what\n146\tlets a test both inject state (`isRecording = true`) and assert on it afterwards\n147\t(`overlayPinned == false`).\n148\t\n149\tThree behaviors remain untestable here and need a manual pass after touching the overlay:\n150\twhether the canvas actually disappears on screen, whether macOS delivers the click to the\n151\tX at all, and how the bars look while a real transcription runs.\n152\t\n153\tBecause the suite takes a path argument, you can point it at an older revision — or at a\n154\tdeliberately broken copy — to confirm a check actually fails on the bug it claims to guard:\n155\t```bash\n156\tgit show HEAD~1:hammerspoon/init.lua \u003e /tmp/before.lua \u0026\u0026 ./tests/test_init.sh /tmp/before.lua\n157\t```\n158\tPrefer a one-line mutation of the *current* file over an old revision when checking a\n159\tspecific guard: an old revision fails for many unrelated reasons at once, and a lifted\n160\tfunction whose helpers were since renamed fails by erroring rather than by asserting.\n161\t\n162\t### Common debug patterns\n163\t- **Refine not working**: Check `refine: failed` in logs — common causes: Ollama not running, wrong model name, missing `$HOME` env\n164\t- **Voice commands not matching**: Check `final (auto/...)` log line — whisper may have transcribed differently than expected\n165\t- **X button not closing overlay**: `hs.canvas:delete()` inside its own mouse callback is silently ignored — must use `canvas:hide()` immediately then defer deletion with `hs.timer.doAfter(0.01, ...)`\n166\t- **Recent dictations not persisting**: Lua upvalue scoping — never reassign a table variable that closures reference; populate in-place instead\n167\t\n168\t### Hammerspoon canvas gotchas\n169\t- Cannot delete a canvas from within its own mouse callback — defer with `hs.timer.doAfter(0.01, ...)`\n170\t- Elements at higher indices render on top and intercept mouse events even when invisible (alpha=0)\n171\t- `hs.task` spawns with minimal environment — always set `HOME` and `PATH` via `task:setEnvironment()`\n172\t- `img:template(true)` on a menu bar icon lets macOS auto-color for light/dark mode; `template(false)` preserves actual colors\n173\t\n174\t## Security\n175\t\n176\t- Transcribed text is data, not code — never execute it\n177\t- No network calls — everything stays local\n178\t- Clipboard contents are overwritten during paste mode\n179\t- Temp files in $TMPDIR are per-user private on macOS\n180\t\n181\t## Workflow\n182\t\n183\t- **Create a bd issue before starting any work**\n184\t- **Always verify work before closing an issue** — run the code, check the output, confirm it does what the issue asks",
+        "tool_use_id": "toolu_01XHkP413H8NCAojfGXuwNTX",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "4b415779-7ba4-4693-abc0-75774390820c",
+  "promptId": "1ddcf7b5-201e-4a14-85c8-a5f41880b7e0",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "4b415779-7ba4-4693-abc0-75774390820c",
+  "timestamp": "2026-08-16T20:54:28.359Z",
+  "toolUseResult": {
+    "file": {
+      "content": "| `progress` | the blue transcription bar never catching the red recording bar, because a live clock re-trips the 90% auto-expand after recording stops |\n\nThe behavioral checks lift the real function out of the source under test — the sort\ncomparator, the overlay mouse callback, `startRecording()`, `updateProgressBar()` — and\nexecute it against stubbed globals, so they track the implementation instead of a copy\nthat can drift. A lifted function's upvalues resolve to the sandbox `_ENV`, which is what\nlets a test both inject state (`isRecording = true`) and assert on it afterwards\n(`overlayPinned == false`).\n\nThree behaviors remain untestable here and need a manual pass after touching the overlay:\nwhether the canvas actually disappears on screen, whether macOS delivers the click to the\nX at all, and how the bars look while a real transcription runs.\n\nBecause the suite takes a path argument, you can point it at an older revision — or at a\ndeliberately broken copy — to confirm a check actually fails on the bug it claims to guard:\n```bash\ngit show HEAD~1:hammerspoon/init.lua \u003e /tmp/before.lua \u0026\u0026 ./tests/test_init.sh /tmp/before.lua\n```\nPrefer a one-line mutation of the *current* file over an old revision when checking a\nspecific guard: an old revision fails for many unrelated reasons at once, and a lifted\nfunction whose helpers were since renamed fails by erroring rather than by asserting.\n\n### Common debug patterns\n- **Refine not working**: Check `refine: failed` in logs — common causes: Ollama not running, wrong model name, missing `$HOME` env\n- **Voice commands not matching**: Check `final (auto/...)` log line — whisper may have transcribed differently than expected\n- **X button not closing overlay**: `hs.canvas:delete()` inside its own mouse callback is silently ignored — must use `canvas:hide()` immediately then defer deletion with `hs.timer.doAfter(0.01, ...)`\n- **Recent dictations not persisting**: Lua upvalue scoping — never reassign a table variable that closures reference; populate in-place instead\n\n### Hammerspoon canvas gotchas\n- Cannot delete a canvas from within its own mouse callback — defer with `hs.timer.doAfter(0.01, ...)`\n- Elements at higher indices render on top and intercept mouse events even when invisible (alpha=0)\n- `hs.task` spawns with minimal environment — always set `HOME` and `PATH` via `task:setEnvironment()`\n- `img:template(true)` on a menu bar icon lets macOS auto-color for light/dark mode; `template(false)` preserves actual colors\n\n## Security\n\n- Transcribed text is data, not code — never execute it\n- No network calls — everything stays local\n- Clipboard contents are overwritten during paste mode\n- Temp files in $TMPDIR are per-user private on macOS\n\n## Workflow\n\n- **Create a bd issue before starting any work**\n- **Always verify work before closing an issue** — run the code, check the output, confirm it does what the issue asks",
+      "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/AGENTS.md",
+      "numLines": 45,
+      "startLine": 140,
+      "totalLines": 301
+    },
+    "type": "text"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "8beec635-64c0-40d8-9037-6dde002082a3",
+  "version": "2.1.233"
+}

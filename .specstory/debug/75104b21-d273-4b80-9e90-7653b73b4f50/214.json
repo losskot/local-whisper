@@ -1,0 +1,52 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/AGENTS.md has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01FNMfk76C1rPJMFRYgsbTp7",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "259134fe-e386-4011-b50d-339415d62e13",
+  "promptId": "1ddcf7b5-201e-4a14-85c8-a5f41880b7e0",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "259134fe-e386-4011-b50d-339415d62e13",
+  "timestamp": "2026-08-16T20:54:34.314Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/AGENTS.md",
+    "newString": "The behavioral checks lift the real function out of the source under test — the sort\ncomparator, the overlay mouse callback, `startRecording()`, `updateProgressBar()`,\n`triggerPressed()`/`triggerHeld()` — and",
+    "oldString": "The behavioral checks lift the real function out of the source under test — the sort\ncomparator, the overlay mouse callback, `startRecording()`, `updateProgressBar()` — and",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          " | `progress` | the blue transcription bar never catching the red recording bar, because a live clock re-trips the 90% auto-expand after recording stops |",
+          " ",
+          " The behavioral checks lift the real function out of the source under test — the sort",
+          "-comparator, the overlay mouse callback, `startRecording()`, `updateProgressBar()` — and",
+          "+comparator, the overlay mouse callback, `startRecording()`, `updateProgressBar()`,",
+          "+`triggerPressed()`/`triggerHeld()` — and",
+          " execute it against stubbed globals, so they track the implementation instead of a copy",
+          " that can drift. A lifted function's upvalues resolve to the sandbox `_ENV`, which is what",
+          " lets a test both inject state (`isRecording = true`) and assert on it afterwards"
+        ],
+        "newLines": 8,
+        "newStart": 140,
+        "oldLines": 7,
+        "oldStart": 140
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "2ac7887f-72c0-4bad-ab93-e88ed3e464b6",
+  "version": "2.1.233"
+}

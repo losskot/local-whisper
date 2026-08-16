@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "  \u001b[0;32mPASS\u001b[0m  trigger: TRIGGER_KEY and the TRIGGERS table are extractable\n  \u001b[0;32mPASS\u001b[0m  trigger: TRIGGER_KEY names a defined trigger with a mask and a label\n  \u001b[0;32mPASS\u001b[0m  trigger: the configured trigger is fn + left Control\n  \u001b[0;32mPASS\u001b[0m  trigger: triggerPressed is liftable and compiles\n  \u001b[0;32mPASS\u001b[0m  trigger: the full combo fires\n  \u001b[0;32mPASS\u001b[0m  trigger: no modifiers at all does not fire\n  \u001b[0;32mPASS\u001b[0m  trigger: no single half of the combo fires on its own\n  \u001b[0;32mPASS\u001b[0m  trigger: the trigger is an actual combo (more than one modifier bit)\n  \u001b[0;32mPASS\u001b[0m  trigger: unrelated modifiers held at the same time do not block it\n  \u001b[0;32mPASS\u001b[0m  trigger: the right-hand twin of the modifier does not fire\n  \u001b[0;32mPASS\u001b[0m  trigger: the trigger defines a separate heldMask for polling\n  \u001b[0;32mPASS\u001b[0m  trigger: heldMask contains no device-specific bit (the poll API drops them)\n  \u001b[0;32mPASS\u001b[0m  trigger: heldMask describes the same combo as mask\n  \u001b[0;32mPASS\u001b[0m  trigger: triggerHeld is liftable and compiles\n  \u001b[0;32mPASS\u001b[0m  trigger: triggerHeld is true for the flags the poll API really returns\n  \u001b[0;32mPASS\u001b[0m  trigger: triggerHeld asks for the raw flag word\n  \u001b[0;32mPASS\u001b[0m  trigger: releasing either modifier reads as released\n  \u001b[0;32mPASS\u001b[0m  trigger: nothing held reads as released\n  \u001b[0;32mPASS\u001b[0m  trigger: the eventtap matches through triggerPressed(event:rawFlags())\n  \u001b[0;32mPASS\u001b[0m  trigger: the release poller re-checks the trigger through triggerHeld()\n\u001b[0;32m\u001b[1mAll 72 checks passed.\u001b[0m\n=== мутация: heldMask с device-битом (тот самый баг) ===\n  \u001b[0;31mFAIL\u001b[0m  trigger: heldMask contains no device-specific bit (the poll API drops them)\n\u001b[0;31m\u001b[1m1 of 72 checks failed.\u001b[0m",
+        "is_error": false,
+        "tool_use_id": "toolu_01M6GBwXd5s1GtZYSj6vmff2",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "5a1b92e9-1401-4eba-a6c4-b4d14fb7c5d3",
+  "promptId": "e5afbad5-c1b1-4424-a694-f4d13fe07c32",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "5a1b92e9-1401-4eba-a6c4-b4d14fb7c5d3",
+  "timestamp": "2026-08-16T21:36:14.593Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "  \u001b[0;32mPASS\u001b[0m  trigger: TRIGGER_KEY and the TRIGGERS table are extractable\n  \u001b[0;32mPASS\u001b[0m  trigger: TRIGGER_KEY names a defined trigger with a mask and a label\n  \u001b[0;32mPASS\u001b[0m  trigger: the configured trigger is fn + left Control\n  \u001b[0;32mPASS\u001b[0m  trigger: triggerPressed is liftable and compiles\n  \u001b[0;32mPASS\u001b[0m  trigger: the full combo fires\n  \u001b[0;32mPASS\u001b[0m  trigger: no modifiers at all does not fire\n  \u001b[0;32mPASS\u001b[0m  trigger: no single half of the combo fires on its own\n  \u001b[0;32mPASS\u001b[0m  trigger: the trigger is an actual combo (more than one modifier bit)\n  \u001b[0;32mPASS\u001b[0m  trigger: unrelated modifiers held at the same time do not block it\n  \u001b[0;32mPASS\u001b[0m  trigger: the right-hand twin of the modifier does not fire\n  \u001b[0;32mPASS\u001b[0m  trigger: the trigger defines a separate heldMask for polling\n  \u001b[0;32mPASS\u001b[0m  trigger: heldMask contains no device-specific bit (the poll API drops them)\n  \u001b[0;32mPASS\u001b[0m  trigger: heldMask describes the same combo as mask\n  \u001b[0;32mPASS\u001b[0m  trigger: triggerHeld is liftable and compiles\n  \u001b[0;32mPASS\u001b[0m  trigger: triggerHeld is true for the flags the poll API really returns\n  \u001b[0;32mPASS\u001b[0m  trigger: triggerHeld asks for the raw flag word\n  \u001b[0;32mPASS\u001b[0m  trigger: releasing either modifier reads as released\n  \u001b[0;32mPASS\u001b[0m  trigger: nothing held reads as released\n  \u001b[0;32mPASS\u001b[0m  trigger: the eventtap matches through triggerPressed(event:rawFlags())\n  \u001b[0;32mPASS\u001b[0m  trigger: the release poller re-checks the trigger through triggerHeld()\n\u001b[0;32m\u001b[1mAll 72 checks passed.\u001b[0m\n=== мутация: heldMask с device-битом (тот самый баг) ===\n  \u001b[0;31mFAIL\u001b[0m  trigger: heldMask contains no device-specific bit (the poll API drops them)\n\u001b[0;31m\u001b[1m1 of 72 checks failed.\u001b[0m"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "f35921f9-3826-441d-a435-9a69cded5f84",
+  "version": "2.1.233"
+}

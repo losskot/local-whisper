@@ -1,0 +1,91 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/tests/test_init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01DUGfoV1N55WFEsuXdvyjzZ",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "476e40f7-3cbb-42c3-a32e-b285a262bf77",
+  "promptId": "1ddcf7b5-201e-4a14-85c8-a5f41880b7e0",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "476e40f7-3cbb-42c3-a32e-b285a262bf77",
+  "timestamp": "2026-08-16T20:50:25.863Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/tests/test_init.lua",
+    "newString": "--------------------------------------------------------------------------------\n-- 5. Deleted subsystems stay deleted\n--------------------------------------------------------------------------------\n-- Each of these was removed deliberately. Patterns run against the stripped source,\n-- so a mention in a comment or a string literal does not trip them -- only real code.\n\nlocal REMOVED = {\n    { name = \"meeting\",     what = \"meeting-mode\",\n      patterns = { \"%f[%w]meeting\", \"blackhole\", \"aggregate\" } },\n    { name = \"refine\",      what = \"LLM refinement / Ollama\",\n      patterns = { \"%f[%w]refine\", \"ollama\" } },\n    { name = \"preferred\",   what = \"preferred-languages\",\n      patterns = { \"preferred\" } },\n    { name = \"autostop\",    what = \"silence auto-stop\",\n      patterns = { \"checksilence\", \"silentchunk\", \"silencetimer\",\n                   \"lastcheckedchunk\", \"auto_stop\", \"volumedetect\" } },\n    { name = \"undo\",        what = \"undo tracking\",\n      patterns = { \"lastinsertedtext\" } },\n    { name = \"whisperprobe\", what = \"_whisper state-probe global\",\n      patterns = { \"%f[%w_]_whisper%f[^%w_]\" } },\n}\n\nfor _, sub in ipairs(REMOVED) do\n    local hits = {}\n    for i, s in ipairs(stripped) do\n        local low = s:lower()\n        for _, pat in ipairs(sub.patterns) do\n            if low:find(pat) then hits[#hits + 1] = \"L\" .. i break end\n        end\n    end\n    check(sub.name .. \": no \" .. sub.what .. \" code remains\",\n          #hits == 0,\n          \"found at \" .. table.concat(hits, \", \"))\nend",
+    "oldString": "--------------------------------------------------------------------------------\n-- 5. Meeting mode stays removed\n--------------------------------------------------------------------------------\n\nlocal meetingHits = {}\nfor i, s in ipairs(stripped) do\n    local low = s:lower()\n    if low:find(\"meeting\") or low:find(\"blackhole\") or low:find(\"aggregate\") then\n        meetingHits[#meetingHits + 1] = \"L\" .. i\n    end\nend\ncheck(\"meeting: no meeting-mode code remains\",\n      #meetingHits == 0,\n      \"found at \" .. table.concat(meetingHits, \", \"))",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          "       \"unguarded playback at \" .. table.concat(unguarded, \", \"))",
+          " ",
+          " --------------------------------------------------------------------------------",
+          "--- 5. Meeting mode stays removed",
+          "+-- 5. Deleted subsystems stay deleted",
+          " --------------------------------------------------------------------------------",
+          "+-- Each of these was removed deliberately. Patterns run against the stripped source,",
+          "+-- so a mention in a comment or a string literal does not trip them -- only real code.",
+          " ",
+          "-local meetingHits = {}",
+          "-for i, s in ipairs(stripped) do",
+          "-    local low = s:lower()",
+          "-    if low:find(\"meeting\") or low:find(\"blackhole\") or low:find(\"aggregate\") then",
+          "-        meetingHits[#meetingHits + 1] = \"L\" .. i",
+          "+local REMOVED = {",
+          "+    { name = \"meeting\",     what = \"meeting-mode\",",
+          "+      patterns = { \"%f[%w]meeting\", \"blackhole\", \"aggregate\" } },",
+          "+    { name = \"refine\",      what = \"LLM refinement / Ollama\",",
+          "+      patterns = { \"%f[%w]refine\", \"ollama\" } },",
+          "+    { name = \"preferred\",   what = \"preferred-languages\",",
+          "+      patterns = { \"preferred\" } },",
+          "+    { name = \"autostop\",    what = \"silence auto-stop\",",
+          "+      patterns = { \"checksilence\", \"silentchunk\", \"silencetimer\",",
+          "+                   \"lastcheckedchunk\", \"auto_stop\", \"volumedetect\" } },",
+          "+    { name = \"undo\",        what = \"undo tracking\",",
+          "+      patterns = { \"lastinsertedtext\" } },",
+          "+    { name = \"whisperprobe\", what = \"_whisper state-probe global\",",
+          "+      patterns = { \"%f[%w_]_whisper%f[^%w_]\" } },",
+          "+}",
+          "+",
+          "+for _, sub in ipairs(REMOVED) do",
+          "+    local hits = {}",
+          "+    for i, s in ipairs(stripped) do",
+          "+        local low = s:lower()",
+          "+        for _, pat in ipairs(sub.patterns) do",
+          "+            if low:find(pat) then hits[#hits + 1] = \"L\" .. i break end",
+          "+        end",
+          "     end",
+          "+    check(sub.name .. \": no \" .. sub.what .. \" code remains\",",
+          "+          #hits == 0,",
+          "+          \"found at \" .. table.concat(hits, \", \"))",
+          " end",
+          "-check(\"meeting: no meeting-mode code remains\",",
+          "-      #meetingHits == 0,",
+          "-      \"found at \" .. table.concat(meetingHits, \", \"))",
+          " ",
+          " --------------------------------------------------------------------------------",
+          " -- 6. No unintended top-level globals"
+        ],
+        "newLines": 39,
+        "newStart": 229,
+        "oldLines": 19,
+        "oldStart": 229
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "a581957f-0112-4e79-bcaf-cf96af59ec66",
+  "version": "2.1.233"
+}

@@ -1,0 +1,78 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01VKpmLgRrEcnTEVnH9o4PwQ",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "7b9faf55-a842-4232-aa15-ed65ca605710",
+  "promptId": "1ddcf7b5-201e-4a14-85c8-a5f41880b7e0",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "7b9faf55-a842-4232-aa15-ed65ca605710",
+  "timestamp": "2026-08-16T20:44:45.208Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+    "newString": "-- Insert transcribed text at cursor, with post-processing and action hooks\nlocal function insertTranscribedText(text, detectedLang)\n    if text == \"\" or isHallucination(text) then\n        hideOverlay()\n        return\n    end\n\n    -- Apply app-aware post-processing\n    text = postProcess(text, capturedAppBundleID)\n    if text == \"\" then hideOverlay(); return end\n\n    finishInsertion(text, detectedLang)\nend",
+    "oldString": "-- Insert transcribed text at cursor, with post-processing, optional LLM refinement, and action hooks\nlocal function insertTranscribedText(text, detectedLang)\n    if text == \"\" or isHallucination(text) then\n        hideOverlay()\n        return\n    end\n\n    -- Apply app-aware post-processing\n    text = postProcess(text, capturedAppBundleID)\n    if text == \"\" then hideOverlay(); return end\n\n    -- Skip LLM refinement for voice commands (refine would strip the prefix)\n    local isVoiceCommand = text:lower():match(\"voice%s+command\")\n\n    -- Optional LLM refinement (async, skips short text and voice commands)\n    if not isVoiceCommand and getRefineMode() and #text \u003e= REFINE_MIN_CHARS then\n        setOverlayText(\"Refining...\")\n        refineWithOllama(text, function(refined)\n            finishInsertion(refined, detectedLang)\n        end)\n    else\n        finishInsertion(text, detectedLang)\n    end\nend",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          "     hs.timer.doAfter(OVERLAY_LINGER, hideOverlay)",
+          " end",
+          " ",
+          "--- Insert transcribed text at cursor, with post-processing, optional LLM refinement, and action hooks",
+          "+-- Insert transcribed text at cursor, with post-processing and action hooks",
+          " local function insertTranscribedText(text, detectedLang)",
+          "     if text == \"\" or isHallucination(text) then",
+          "         hideOverlay()"
+        ],
+        "newLines": 7,
+        "newStart": 1121,
+        "oldLines": 7,
+        "oldStart": 1121
+      },
+      {
+        "lines": [
+          "     text = postProcess(text, capturedAppBundleID)",
+          "     if text == \"\" then hideOverlay(); return end",
+          " ",
+          "-    -- Skip LLM refinement for voice commands (refine would strip the prefix)",
+          "-    local isVoiceCommand = text:lower():match(\"voice%s+command\")",
+          "-",
+          "-    -- Optional LLM refinement (async, skips short text and voice commands)",
+          "-    if not isVoiceCommand and getRefineMode() and #text \u003e= REFINE_MIN_CHARS then",
+          "-        setOverlayText(\"Refining...\")",
+          "-        refineWithOllama(text, function(refined)",
+          "-            finishInsertion(refined, detectedLang)",
+          "-        end)",
+          "-    else",
+          "-        finishInsertion(text, detectedLang)",
+          "-    end",
+          "+    finishInsertion(text, detectedLang)",
+          " end",
+          " ",
+          " -- Max seconds per whisper call — keeps each segment within whisper's sweet spot"
+        ],
+        "newLines": 7,
+        "newStart": 1132,
+        "oldLines": 18,
+        "oldStart": 1132
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "18c083c4-10ad-4a78-b439-415412efea5a",
+  "version": "2.1.233"
+}

@@ -1,0 +1,35 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "Command did not complete within its 120s timeout and was moved to the background (ID: b0ut69thx). Output is being written to: /private/tmp/claude-502/-Users-vitaliy-Documents-GitHub-local-whisper/75104b21-d273-4b80-9e90-7653b73b4f50/tasks/b0ut69thx.output. You will be notified when it completes. To check interim output, use Read on that file path.",
+        "is_error": false,
+        "tool_use_id": "toolu_016Ui9Lb3QhukcteKX27aVEW",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "a7195ae1-2ef9-4804-ab43-011696459483",
+  "promptId": "1ddcf7b5-201e-4a14-85c8-a5f41880b7e0",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "a7195ae1-2ef9-4804-ab43-011696459483",
+  "timestamp": "2026-08-16T20:48:24.343Z",
+  "toolUseResult": {
+    "backgroundTaskId": "b0ut69thx",
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "",
+    "timedOutAfterMs": 120000
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "d22e5d3a-9f90-4e2c-9ed0-a8a91c46712c",
+  "version": "2.1.233"
+}

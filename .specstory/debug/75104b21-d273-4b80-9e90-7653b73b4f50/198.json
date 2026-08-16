@@ -1,0 +1,35 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "1\t# local-whisper — Agent Guidelines\n2\t\n3\t## Project overview\n4\t\n5\tlocal-whisper is a fully-local macOS dictation tool. Hold a modifier key to record, release to transcribe and insert text at cursor. Powered by whisper.cpp (C/C++, no Python) and Hammerspoon.\n6\t\n7\t## Architecture\n8\t\n9\t```\n10\tHammerspoon eventtap (modifier key hold/release)\n11\t  → ffmpeg (chunked WAV recording, 1s segments)\n12\t  → whisper-cli (transcription — tiny model for partials, chosen model for final)\n13\t  → Post-processing (filler removal, app-aware capitalize)\n14\t  → Action hooks (voice commands, note-taking, app launching)\n15\t  → Text insertion at cursor (paste or keystroke)\n16\t  → Overlay + menu bar updates\n17\t```\n18\t\n19\tEverything runs inside `~/.hammerspoon/init.lua` — no external bash scripts at runtime.\n20\t\n21\t## Key paths\n22\t\n23\t- `~/.hammerspoon/init.lua` — main config (overlay, recording, insertion, hotkeys, menu bar)\n24\t- `~/.hammerspoon/local_whisper_actions.lua` — user voice commands (optional, auto-reloads)\n25\t- `~/.local-whisper/` — all user settings (lang, model, output, prompt, recent dictations)\n26\t- `~/whisper.cpp/build/bin/whisper-cli` — transcription binary\n27\t- `~/whisper.cpp/models/` — whisper models (medium, tiny, etc.)\n28\t- `$TMPDIR/whisper-dictate/` — all temp state (per-user private dir on macOS)\n29\t- `$TMPDIR/whisper-dictate/chunks/` — recording segments (ephemeral)\n30\t- `$TMPDIR/whisper-dictate/whisper-dictate.log` — debug log\n31\t\n32\t## Conventions\n33\t\n34\t- Single-file architecture: all runtime logic in init.lua\n35\t- Hammerspoon API: `hs.canvas` for overlay, `hs.eventtap` for key detection and typing, `hs.pasteboard` for paste mode, `hs.task` for async processes, `hs.menubar` for status icon\n36\t- whisper.cpp binary is `whisper-cli`, NOT `main`\n37\t- No Python anywhere — this is a pure C/Lua stack\n38\t- Log to `$TMPDIR/whisper-dictate/whisper-dictate.log` for debugging\n39\t\n40\t## Development \u0026 Deployment\n41\t\n42\t### Deployment model (symlink — no copy needed)\n43\t\n44\t`~/.hammerspoon/init.lua` is a symlink pointing to `hammerspoon/init.lua` in this repo.\n45\t**Editing the repo file IS deployment.** There is no copy or install step.\n46\t\n47\t```bash\n48\tls -la ~/.hammerspoon/init.lua\n49\t# → … -\u003e /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua\n50\t```",
+        "tool_use_id": "toolu_01MZDbS5X1vD1t1xchimmBpS",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "8c6996f5-23be-40c0-863a-e2a1e532cba3",
+  "promptId": "1ddcf7b5-201e-4a14-85c8-a5f41880b7e0",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "8c6996f5-23be-40c0-863a-e2a1e532cba3",
+  "timestamp": "2026-08-16T20:53:34.666Z",
+  "toolUseResult": {
+    "file": {
+      "content": "# local-whisper — Agent Guidelines\n\n## Project overview\n\nlocal-whisper is a fully-local macOS dictation tool. Hold a modifier key to record, release to transcribe and insert text at cursor. Powered by whisper.cpp (C/C++, no Python) and Hammerspoon.\n\n## Architecture\n\n```\nHammerspoon eventtap (modifier key hold/release)\n  → ffmpeg (chunked WAV recording, 1s segments)\n  → whisper-cli (transcription — tiny model for partials, chosen model for final)\n  → Post-processing (filler removal, app-aware capitalize)\n  → Action hooks (voice commands, note-taking, app launching)\n  → Text insertion at cursor (paste or keystroke)\n  → Overlay + menu bar updates\n```\n\nEverything runs inside `~/.hammerspoon/init.lua` — no external bash scripts at runtime.\n\n## Key paths\n\n- `~/.hammerspoon/init.lua` — main config (overlay, recording, insertion, hotkeys, menu bar)\n- `~/.hammerspoon/local_whisper_actions.lua` — user voice commands (optional, auto-reloads)\n- `~/.local-whisper/` — all user settings (lang, model, output, prompt, recent dictations)\n- `~/whisper.cpp/build/bin/whisper-cli` — transcription binary\n- `~/whisper.cpp/models/` — whisper models (medium, tiny, etc.)\n- `$TMPDIR/whisper-dictate/` — all temp state (per-user private dir on macOS)\n- `$TMPDIR/whisper-dictate/chunks/` — recording segments (ephemeral)\n- `$TMPDIR/whisper-dictate/whisper-dictate.log` — debug log\n\n## Conventions\n\n- Single-file architecture: all runtime logic in init.lua\n- Hammerspoon API: `hs.canvas` for overlay, `hs.eventtap` for key detection and typing, `hs.pasteboard` for paste mode, `hs.task` for async processes, `hs.menubar` for status icon\n- whisper.cpp binary is `whisper-cli`, NOT `main`\n- No Python anywhere — this is a pure C/Lua stack\n- Log to `$TMPDIR/whisper-dictate/whisper-dictate.log` for debugging\n\n## Development \u0026 Deployment\n\n### Deployment model (symlink — no copy needed)\n\n`~/.hammerspoon/init.lua` is a symlink pointing to `hammerspoon/init.lua` in this repo.\n**Editing the repo file IS deployment.** There is no copy or install step.\n\n```bash\nls -la ~/.hammerspoon/init.lua\n# → … -\u003e /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua\n```",
+      "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/AGENTS.md",
+      "numLines": 50,
+      "startLine": 1,
+      "totalLines": 301
+    },
+    "type": "text"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "7144433b-cd8e-4199-997a-d372b0ec6ab6",
+  "version": "2.1.233"
+}

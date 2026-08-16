@@ -113,14 +113,22 @@ local HALLUCINATIONS = {
 
 local RAWFLAGS = hs.eventtap.event.rawFlagMasks
 
--- Device-specific bits (deviceLeftControl, not the generic control bit), so the left and
--- right halves of the same modifier stay distinguishable — both when the flagsChanged
--- event arrives and when the release poller re-reads the keyboard.
+-- Two masks per trigger, because the press and the release are read through different
+-- APIs that do not report the same bits:
+--   mask     — matched against a flagsChanged event's rawFlags, which carry the
+--              device-specific bits (deviceLeftControl), so left and right stay distinct.
+--   heldMask — matched against hs.eventtap.checkKeyboardModifiers(true)._raw, which comes
+--              from CGEventSourceFlagsState and reports ONLY the generic bits. Posting
+--              rawFlags 0x800001 (fn|deviceLeftControl) reads back as 0x800000: the device
+--              bit is gone. A device bit in heldMask can therefore never match, and the
+--              release poller would stop the recording 0.1s after it started.
 local TRIGGERS = {
-    rightAlt   = { mask = RAWFLAGS.deviceRightAlternate, label = "right Option" },
-    rightCmd   = { mask = RAWFLAGS.deviceRightCommand,   label = "right Command" },
-    rightCtrl  = { mask = RAWFLAGS.deviceRightControl,   label = "right Control" },
-    fnLeftCtrl = { mask = RAWFLAGS.secondaryFn | RAWFLAGS.deviceLeftControl, label = "fn + left Control" },
+    rightAlt   = { mask = RAWFLAGS.deviceRightAlternate, heldMask = RAWFLAGS.alternate, label = "right Option" },
+    rightCmd   = { mask = RAWFLAGS.deviceRightCommand,   heldMask = RAWFLAGS.command,   label = "right Command" },
+    rightCtrl  = { mask = RAWFLAGS.deviceRightControl,   heldMask = RAWFLAGS.control,   label = "right Control" },
+    fnLeftCtrl = { mask     = RAWFLAGS.secondaryFn | RAWFLAGS.deviceLeftControl,
+                   heldMask = RAWFLAGS.secondaryFn | RAWFLAGS.control,
+                   label    = "fn + left Control" },
 }
 
 local trigger = TRIGGERS[TRIGGER_KEY]
@@ -137,10 +145,11 @@ local function triggerPressed(rawFlags)
 end
 
 -- flagsChanged does not fire on key-up for every modifier, so the release is polled by
--- re-reading the live keyboard state through the same mask.
+-- re-reading the live keyboard state — through heldMask, since this API drops the
+-- device-specific bits (see TRIGGERS above).
 local function triggerHeld()
-    local mods = hs.eventtap.checkKeyboardModifiers(true)
-    return triggerPressed(mods._raw or 0)
+    local raw = hs.eventtap.checkKeyboardModifiers(true)._raw or 0
+    return (raw & trigger.heldMask) == trigger.heldMask
 end
 
 --------------------------------------------------------------------------------

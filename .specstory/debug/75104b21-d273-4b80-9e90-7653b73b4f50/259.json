@@ -1,0 +1,64 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "text": "Готово, запушено (`ac4c275`, origin/main в синхроне).\n\n## Что удалено\n\n**Из [init.lua](hammerspoon/init.lua)** — 1841 → **1611 строк**, локалов 144 → **121/200**:\n- авто-стоп по тишине целиком (`checkSilence`, таймер, счётчики, два порога)\n- LLM-refine + пробинг Ollama + пункт меню + `tests/test_refine.sh` (199 строк)\n- preferred languages (файл, геттер, пункт меню, запись дефолта при старте, упоминание в логе)\n- `lastInsertedText` (undo-переменная)\n- пункты меню «Preferred» и «Settings…»\n- глобал `_whisper`\n\n**Файлы**: `RECOVERED_18-54_dictation.txt`, `~/.local-whisper/recovery/` (7.6 МБ), `~/.local-whisper/refine`, `~/.local-whisper/preferred_langs`. Оба recovered-текста были реальными надиктовками от сегодня — копии лежат в `…/scratchpad/deleted-backup/`, если вдруг понадобятся.\n\n**Побочно**: `stopRecording` был форвард-объявлен только ради `checkSilence` — после удаления стал бы глобалом, переделал в `local function`.\n\n## Триггер → fn + левый Control\n\nПонял «fn+l control» как **fn + left Control** (одиночная буква L для hold-триггера не годится — она бы печаталась). `TRIGGER_KEY = \"fnLeftCtrl\"`, таблица `TRIGGERS` с масками; `rightCmd/rightAlt/rightCtrl` остались как варианты.\n\nКомбо вскрыло два класса багов, которых у одиночного модификатора не было:\n- `flags \u0026 mask \u003e 0` срабатывал бы на **любой половине** — то есть запись стартовала бы на каждом Ctrl+C. Теперь `== mask`.\n- поллер отпускания сравнивал generic-имена (`mods.ctrl`) и не отличал левый Control от правого. Теперь `triggerHeld()` перечитывает сырые device-флаги той же маской.\n\n## Тесты\n\n69 проверок, все зелёные. Проверка `meeting` обобщена в таблицу удалённых подсистем (`meeting`/`refine`/`preferred`/`autostop`/`undo`/`whisperprobe`), добавлена группа `trigger`, которая поднимает настоящие `triggerPressed`/`triggerHeld` из исходника. **Проверил мутациями текущего файла**, что новые гварды реально падают: возврат `\u003e 0` → 3 FAIL, generic-поллинг → 2 FAIL, возвращённый `refineWithOllama` → 1 FAIL.\n\nЖивьём: Hammerspoon перезагружен, лог показывает `trigger=fnLeftCtrl`. Синтетическим flagsChanged-событием проверил, что fn+leftCtrl запускает warmup, а **Ctrl отдельно, fn отдельно и правый Ctrl — не запускают** (0 строк в логе).\n\n## Что осталось на тебе\n\n1. **Один физический тест**: зажми fn + левый Control и продиктуй фразу. Поллер отпускания читает реальную клавиатуру, поэтому полный цикл запись→вставку синтетикой не проверить — если macOS вдруг не отдаёт бит `fn` в `checkKeyboardModifiers`, запись оборвётся через 0.1 с (симптом: в логе `warmup` сразу за ним `recording: stop`). Тогда правка на одну строку.\n2. **README врал шире, чем мы думали** — там был описан streaming-пайплайн (`streamCheckAndDispatch`, `splitAtSilence`, `pipelineFinalize`, партиалы на tiny) целиком отсутствующий в коде. Переписал Features, «How it works», убрал разделы про refine/auto-stop/live preview; `install.sh` больше не качает tiny-модель на 75 МБ.\n3. **bd не поставлен** (`command not found`) — issue завести не смог, хотя `.beads/` в репо есть.\n4. `.specstory/` остался грязным (сотни автогенерируемых JSON) — не трогал.\n\nИз того списка нетронутыми остались: удалённое API (~110 строк), `tools/transcribe.sh`, custom vocabulary prompt.",
+        "type": "text"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce76hKg2f3rrGzd6fvEtj",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "end_turn",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 626,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 626,
+      "cache_read_input_tokens": 192726,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 626,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 626,
+          "cache_read_input_tokens": 192726,
+          "input_tokens": 2,
+          "output_tokens": 1525,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 1525,
+      "output_tokens_details": {
+        "thinking_tokens": 0
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "dd68f5fa-c838-475a-a163-bfcb2153a935",
+  "requestId": "req_011Ce76hJU6bixADJFpRecAG",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "timestamp": "2026-08-16T20:59:39.096Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "f9bc10ae-ad7b-4ae6-8791-0159812b61cb",
+  "version": "2.1.233"
+}

@@ -1,0 +1,64 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "text": "Понял. Начинаю. Сначала соберу контекст по тестам и докам.",
+        "type": "text"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce75G3Z6n8FmAtuagCjKm",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 4603,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 4603,
+      "cache_read_input_tokens": 83831,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 4603,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 4603,
+          "cache_read_input_tokens": 83831,
+          "input_tokens": 2,
+          "output_tokens": 3127,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 3127,
+      "output_tokens_details": {
+        "thinking_tokens": 2836
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "fcb37173-9570-468e-b91e-199381355082",
+  "requestId": "req_011Ce75G2SsVSprTaL5Sv2nH",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "timestamp": "2026-08-16T20:40:59.567Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "a0b7a261-0c18-4933-94f7-b6c4bcea01bd",
+  "version": "2.1.233"
+}

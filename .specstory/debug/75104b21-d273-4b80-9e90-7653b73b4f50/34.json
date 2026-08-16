@@ -1,0 +1,28 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "text": "❌ Авто-стоп по тишине — checkSilence() init.lua:1511 определён, но не вызывается ни разу; silenceTimer только останавливается, никогда не создаётся. Вместе с ним мертвы AUTO_STOP_SILENCE_SECONDS, AUTO_STOP_THRESHOLD_DB, silentChunkCount, lastCheckedChunk (~45 строк) -delete\n⚠️ Настройка TRIGGER_KEY / AUDIO_DEVICE — три варианта клавиши и автопочинка префикса :, но правится только в исходнике\ntrigger key replace to fn+l control\n\n❌ Preferred languages — читается, пишется дефолт en,pt при старте, показывается в меню отключённым пунктом, но на транскрипцию не влияет: local preferred в init.lua:1330 нигде не используется (логика ретрая удалена, см. комментарий на init.lua:1474)\n❌ Партиалы на tiny-модели — описаны в AGENTS.md, в коде отсутствуют (документация врёт)\ndelete\n\nLLM-refine через Ollama — свой промпт и модель, порог 50 символов, срезание преамбул («Here is the cleaned text:» и т.п.), init.lua:326\n✅ Кешированный пробинг Ollama (TTL 30 с, чтобы не вешать eventtap)\n⚠️ Refine выключен в конфиге (refine=off) — если не планируешь включать, это ~90 строк + пункт меню + eval-набор tests/test_refine.sh\ndelete\n\n❌ Undo — lastInsertedText присваивается в init.lua:1244 и больше нигде не читается; хоткея на откат нет (во всём файле нет ни одного hs.hotkey)\ndelete\n\n❌ Пункт «Preferred: …» — disabled, чисто декоративный (см. п.2)\n⚠️ «Settings…» — открывает запиненный оверлей с текстом «use the menu bar to change settings», то есть ничего не настраивает, init.lua:1039\ndelete\n\n❌ Глобал _whisper — поле recording инициализируется false и никогда не обновляется, init.lua:1754\n❌ Каталог ~/.local-whisper/recovery/ — сирота от удалённого meeting mode, в коде не упоминается\n❌ RECOVERED_18-54_dictation.txt в корне репо — мусор\ndelete\nну удаляй сразу и юнит тесты перепишешь и протестируешь все",
+        "type": "text"
+      }
+    ],
+    "role": "user"
+  },
+  "origin": {
+    "kind": "human"
+  },
+  "parentUuid": "7a74abb7-6a51-44a7-acda-84b4364066fb",
+  "permissionMode": "auto",
+  "promptId": "1ddcf7b5-201e-4a14-85c8-a5f41880b7e0",
+  "promptSource": "sdk",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "timestamp": "2026-08-16T20:40:21.632Z",
+  "type": "user",
+  "userType": "external",
+  "uuid": "2f8b40fb-fd4f-4833-a418-4e965bebf53a",
+  "version": "2.1.233"
+}

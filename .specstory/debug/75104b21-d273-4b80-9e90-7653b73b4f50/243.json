@@ -1,0 +1,72 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01GYFKR4rbBNpjcap6RUTeWi",
+        "input": {
+          "command": "git diff -- hammerspoon/init.lua | grep -E \"^[+-]\" | grep -vE \"^[+-][+-]\" | grep \"^+\" | head -60",
+          "description": "Review added lines in init.lua"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce76by4uAYFscedaZHutY",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 738,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 738,
+      "cache_read_input_tokens": 188433,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 738,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 738,
+          "cache_read_input_tokens": 188433,
+          "input_tokens": 2,
+          "output_tokens": 131,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 131,
+      "output_tokens_details": {
+        "thinking_tokens": 0
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "44287907-68f0-46d5-a0d9-0f0b1cbba91c",
+  "requestId": "req_011Ce76bwjHJPPxzEjSMNDyZ",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "timestamp": "2026-08-16T20:58:02.295Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "df4a7e23-a289-42ce-8ad6-da2b6975bbbd",
+  "version": "2.1.233"
+}

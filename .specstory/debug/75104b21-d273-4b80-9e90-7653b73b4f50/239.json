@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "9:   - What you did (e.g., \"held fn+left Ctrl, said X\")\n\u001b[0;32m\u001b[1mAll 69 checks passed.\u001b[0m",
+        "is_error": false,
+        "tool_use_id": "toolu_01TpEEyj9vxpoTEZBcxbx1wX",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "fff6311a-8d27-4ad5-b799-bececf7408c5",
+  "promptId": "1ddcf7b5-201e-4a14-85c8-a5f41880b7e0",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "fff6311a-8d27-4ad5-b799-bececf7408c5",
+  "timestamp": "2026-08-16T20:57:45.504Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "9:   - What you did (e.g., \"held fn+left Ctrl, said X\")\n\u001b[0;32m\u001b[1mAll 69 checks passed.\u001b[0m"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "1799b25c-2a2a-4f6f-aff0-de078e0d656d",
+  "version": "2.1.233"
+}

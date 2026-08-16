@@ -1,0 +1,72 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01UHSihHZwLCJexiytFJ8sJG",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "a805297a-7e6b-46d7-9079-da4c816d073b",
+  "promptId": "e5afbad5-c1b1-4424-a694-f4d13fe07c32",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "a805297a-7e6b-46d7-9079-da4c816d073b",
+  "timestamp": "2026-08-16T21:35:11.320Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+    "newString": "-- Two masks per trigger, because the press and the release are read through different\n-- APIs that do not report the same bits:\n--   mask     — matched against a flagsChanged event's rawFlags, which carry the\n--              device-specific bits (deviceLeftControl), so left and right stay distinct.\n--   heldMask — matched against hs.eventtap.checkKeyboardModifiers(true)._raw, which comes\n--              from CGEventSourceFlagsState and reports ONLY the generic bits. Posting\n--              rawFlags 0x800001 (fn|deviceLeftControl) reads back as 0x800000: the device\n--              bit is gone. A device bit in heldMask can therefore never match, and the\n--              release poller would stop the recording 0.1s after it started.\nlocal TRIGGERS = {\n    rightAlt   = { mask = RAWFLAGS.deviceRightAlternate, heldMask = RAWFLAGS.alternate, label = \"right Option\" },\n    rightCmd   = { mask = RAWFLAGS.deviceRightCommand,   heldMask = RAWFLAGS.command,   label = \"right Command\" },\n    rightCtrl  = { mask = RAWFLAGS.deviceRightControl,   heldMask = RAWFLAGS.control,   label = \"right Control\" },\n    fnLeftCtrl = { mask     = RAWFLAGS.secondaryFn | RAWFLAGS.deviceLeftControl,\n                   heldMask = RAWFLAGS.secondaryFn | RAWFLAGS.control,\n                   label    = \"fn + left Control\" },\n}",
+    "oldString": "-- Device-specific bits (deviceLeftControl, not the generic control bit), so the left and\n-- right halves of the same modifier stay distinguishable — both when the flagsChanged\n-- event arrives and when the release poller re-reads the keyboard.\nlocal TRIGGERS = {\n    rightAlt   = { mask = RAWFLAGS.deviceRightAlternate, label = \"right Option\" },\n    rightCmd   = { mask = RAWFLAGS.deviceRightCommand,   label = \"right Command\" },\n    rightCtrl  = { mask = RAWFLAGS.deviceRightControl,   label = \"right Control\" },\n    fnLeftCtrl = { mask = RAWFLAGS.secondaryFn | RAWFLAGS.deviceLeftControl, label = \"fn + left Control\" },\n}",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          " ",
+          " local RAWFLAGS = hs.eventtap.event.rawFlagMasks",
+          " ",
+          "--- Device-specific bits (deviceLeftControl, not the generic control bit), so the left and",
+          "--- right halves of the same modifier stay distinguishable — both when the flagsChanged",
+          "--- event arrives and when the release poller re-reads the keyboard.",
+          "+-- Two masks per trigger, because the press and the release are read through different",
+          "+-- APIs that do not report the same bits:",
+          "+--   mask     — matched against a flagsChanged event's rawFlags, which carry the",
+          "+--              device-specific bits (deviceLeftControl), so left and right stay distinct.",
+          "+--   heldMask — matched against hs.eventtap.checkKeyboardModifiers(true)._raw, which comes",
+          "+--              from CGEventSourceFlagsState and reports ONLY the generic bits. Posting",
+          "+--              rawFlags 0x800001 (fn|deviceLeftControl) reads back as 0x800000: the device",
+          "+--              bit is gone. A device bit in heldMask can therefore never match, and the",
+          "+--              release poller would stop the recording 0.1s after it started.",
+          " local TRIGGERS = {",
+          "-    rightAlt   = { mask = RAWFLAGS.deviceRightAlternate, label = \"right Option\" },",
+          "-    rightCmd   = { mask = RAWFLAGS.deviceRightCommand,   label = \"right Command\" },",
+          "-    rightCtrl  = { mask = RAWFLAGS.deviceRightControl,   label = \"right Control\" },",
+          "-    fnLeftCtrl = { mask = RAWFLAGS.secondaryFn | RAWFLAGS.deviceLeftControl, label = \"fn + left Control\" },",
+          "+    rightAlt   = { mask = RAWFLAGS.deviceRightAlternate, heldMask = RAWFLAGS.alternate, label = \"right Option\" },",
+          "+    rightCmd   = { mask = RAWFLAGS.deviceRightCommand,   heldMask = RAWFLAGS.command,   label = \"right Command\" },",
+          "+    rightCtrl  = { mask = RAWFLAGS.deviceRightControl,   heldMask = RAWFLAGS.control,   label = \"right Control\" },",
+          "+    fnLeftCtrl = { mask     = RAWFLAGS.secondaryFn | RAWFLAGS.deviceLeftControl,",
+          "+                   heldMask = RAWFLAGS.secondaryFn | RAWFLAGS.control,",
+          "+                   label    = \"fn + left Control\" },",
+          " }",
+          " ",
+          " local trigger = TRIGGERS[TRIGGER_KEY]"
+        ],
+        "newLines": 22,
+        "newStart": 113,
+        "oldLines": 14,
+        "oldStart": 113
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "a055f527-fe36-47e2-b8dc-37bd70eb655f",
+  "version": "2.1.233"
+}

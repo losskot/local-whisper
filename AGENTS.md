@@ -99,11 +99,41 @@ than a single modifier:
 
 - Match with `(rawFlags & mask) == mask`, never `> 0` — the latter fires on either half,
   so plain Control would start a recording on every Ctrl-C.
-- Poll the release through `triggerHeld()`, which re-reads
-  `hs.eventtap.checkKeyboardModifiers(true)._raw` and applies the same mask. Generic
-  modifier names (`mods.ctrl`) cannot tell left Control from right Control.
+- Press and release are read through **different APIs that report different bits**, so each
+  trigger carries two masks. The flagsChanged event's `rawFlags` include the device-specific
+  bits (`deviceLeftControl` = 0x1) — that is `mask`. The release poller reads
+  `hs.eventtap.checkKeyboardModifiers(true)._raw`, which comes from `CGEventSourceFlagsState`
+  and reports **only the generic bits** — that is `heldMask`.
 
-Both rules are covered by the `trigger` checks in the test suite.
+Verify it yourself: post a synthetic event and read the state back.
+
+```bash
+hs -c 'local e=hs.eventtap.event.newEvent(); e:setType(hs.eventtap.event.types.flagsChanged)
+       e:rawFlags(0x800001); e:post()
+       return string.format("0x%x", hs.eventtap.checkKeyboardModifiers(true)._raw)'
+# → 0x800000   (fn survived, deviceLeftControl did not)
+```
+
+A device bit in `heldMask` can therefore never match: the overlay flashes for one poll tick
+and the recording dies 0.1s in, which reads to the user as "the key binding does nothing,
+I don't even see the UI". Both rules are covered by the `trigger` checks in the test suite —
+including one that fails if any device bit appears in a `heldMask`.
+
+### Simulating a whole dictation without touching the keyboard
+
+Posted flagsChanged events update the session flag state, so a synthetic press is held from
+the app's point of view until you post the release — the release poller sees the generic bits
+and keeps recording. This exercises the real pipeline end to end:
+
+```bash
+hs -c 'local function f(x) local e=hs.eventtap.event.newEvent()
+         e:setType(hs.eventtap.event.types.flagsChanged); e:rawFlags(x); return e end
+       f(0x840001):post()                                   -- fn + control + deviceLeftControl
+       hs.timer.doAfter(6, function() f(0):post() end)'
+```
+
+Set `~/.local-whisper/output` to `copy` first and restore it afterwards — otherwise the
+transcript is pasted into whatever window happens to be focused.
 
 ## Testing & debugging
 
@@ -167,6 +197,7 @@ function whose helpers were since renamed fails by erroring rather than by asser
 - **Recent dictations not persisting**: Lua upvalue scoping — never reassign a table variable that closures reference; populate in-place instead
 
 ### Hammerspoon canvas gotchas
+- `hs.eventtap.checkKeyboardModifiers(true)._raw` reports only generic modifier bits — every `deviceLeft*`/`deviceRight*` bit an event carries is missing there (see the trigger section)
 - Cannot delete a canvas from within its own mouse callback — defer with `hs.timer.doAfter(0.01, ...)`
 - Elements at higher indices render on top and intercept mouse events even when invisible (alpha=0)
 - `hs.task` spawns with minimal environment — always set `HOME` and `PATH` via `task:setEnvironment()`
@@ -186,6 +217,14 @@ function whose helpers were since renamed fails by erroring rather than by asser
 - Check `bd ready` for unblocked work
 - `bd create "Title" -t task -p 2` to file new work
 - `bd close <id>` when done
+- If `bd` is not on PATH, say so and keep going — do not silently switch to markdown TODOs
+
+### `.specstory/` is code
+
+`.specstory/` (session history, debug dumps, statistics) is **tracked, committed and pushed
+like any source file**. Do not stash it, do not `.gitignore` it, do not leave it dirty at the
+end of a session, and never exclude it to keep a diff "clean" — `git add -A` and push it with
+the rest of the work. It is the record of how the code got here.
 
 <!-- BEGIN BEADS INTEGRATION -->
 ## Issue Tracking with bd (beads)

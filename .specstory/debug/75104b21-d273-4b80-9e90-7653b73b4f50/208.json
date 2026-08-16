@@ -1,0 +1,90 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/AGENTS.md has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01Du1ZwLU4pwn7sd1nQdsG7A",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "68dc980b-aaa1-4067-a050-18a52474476e",
+  "promptId": "1ddcf7b5-201e-4a14-85c8-a5f41880b7e0",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "68dc980b-aaa1-4067-a050-18a52474476e",
+  "timestamp": "2026-08-16T20:54:17.685Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/AGENTS.md",
+    "newString": "`overlayPinned`, `isRecording`, and the `hideOverlay` forward declaration therefore sit **above** `createOverlay`, whose mouse callback closes over all three. When adding state that a callback touches, declare it above every function that references it.\n\n### The trigger is a modifier combo\n\n`TRIGGER_KEY` selects an entry from the `TRIGGERS` table; the default `fnLeftCtrl` ORs\n`secondaryFn` with `deviceLeftControl`. Two rules follow from it being a *combo* rather\nthan a single modifier:\n\n- Match with `(rawFlags \u0026 mask) == mask`, never `\u003e 0` — the latter fires on either half,\n  so plain Control would start a recording on every Ctrl-C.\n- Poll the release through `triggerHeld()`, which re-reads\n  `hs.eventtap.checkKeyboardModifiers(true)._raw` and applies the same mask. Generic\n  modifier names (`mods.ctrl`) cannot tell left Control from right Control.\n\nBoth rules are covered by the `trigger` checks in the test suite.\n\n## Testing \u0026 debugging\n\n### Reading logs\n```bash\nTMPDIR_REAL=$(getconf DARWIN_USER_TEMP_DIR) \u0026\u0026 tail -30 \"${TMPDIR_REAL}whisper-dictate/whisper-dictate.log\"\n```\nNote: `$TMPDIR` inside a sandbox may differ from the real user TMPDIR. Always use `getconf DARWIN_USER_TEMP_DIR` for reliable access.\n\n### Running the init.lua test suite",
+    "oldString": "`overlayPinned`, `isRecording`, and the `hideOverlay` forward declaration therefore sit **above** `createOverlay`, whose mouse callback closes over all three. When adding state that a callback touches, declare it above every function that references it.\n\n## Testing \u0026 debugging\n\n### Slash commands\n- `/debug` — check logs, config state, Ollama status, and recent errors\n- `/test-refine` — run the LLM refinement eval suite\n\n### Reading logs\n```bash\nTMPDIR_REAL=$(getconf DARWIN_USER_TEMP_DIR) \u0026\u0026 tail -30 \"${TMPDIR_REAL}whisper-dictate/whisper-dictate.log\"\n```\nNote: `$TMPDIR` inside a sandbox may differ from the real user TMPDIR. Always use `getconf DARWIN_USER_TEMP_DIR` for reliable access.\n\n### Testing Ollama refinement without dictating\n```bash\ncurl -s http://localhost:11434/api/generate \\\n  -d '{\"model\":\"gemma3:4b\",\"prompt\":\"\u003cprompt\u003e\\n\\n\u003ctest input\u003e\",\"stream\":false}' \\\n  | python3 -c \"import sys,json; print(json.load(sys.stdin)['response'])\"\n```\nThis lets you iterate on prompt wording without reloading Hammerspoon or dictating.\n\n### Running the refine eval suite\n```bash\n./tests/test_refine.sh\n```\nTests filler removal, list formatting, preamble prevention, and content preservation.\nRequires Ollama running locally — it calls the HTTP API directly and bails out otherwise.\n\n### Running the init.lua test suite",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          " ",
+          " `overlayPinned`, `isRecording`, and the `hideOverlay` forward declaration therefore sit **above** `createOverlay`, whose mouse callback closes over all three. When adding state that a callback touches, declare it above every function that references it.",
+          " ",
+          "-## Testing \u0026 debugging",
+          "+### The trigger is a modifier combo",
+          " ",
+          "-### Slash commands",
+          "-- `/debug` — check logs, config state, Ollama status, and recent errors",
+          "-- `/test-refine` — run the LLM refinement eval suite",
+          "+`TRIGGER_KEY` selects an entry from the `TRIGGERS` table; the default `fnLeftCtrl` ORs",
+          "+`secondaryFn` with `deviceLeftControl`. Two rules follow from it being a *combo* rather",
+          "+than a single modifier:",
+          " ",
+          "+- Match with `(rawFlags \u0026 mask) == mask`, never `\u003e 0` — the latter fires on either half,",
+          "+  so plain Control would start a recording on every Ctrl-C.",
+          "+- Poll the release through `triggerHeld()`, which re-reads",
+          "+  `hs.eventtap.checkKeyboardModifiers(true)._raw` and applies the same mask. Generic",
+          "+  modifier names (`mods.ctrl`) cannot tell left Control from right Control.",
+          "+",
+          "+Both rules are covered by the `trigger` checks in the test suite.",
+          "+",
+          "+## Testing \u0026 debugging",
+          "+",
+          " ### Reading logs",
+          " ```bash",
+          " TMPDIR_REAL=$(getconf DARWIN_USER_TEMP_DIR) \u0026\u0026 tail -30 \"${TMPDIR_REAL}whisper-dictate/whisper-dictate.log\"",
+          " ```",
+          " Note: `$TMPDIR` inside a sandbox may differ from the real user TMPDIR. Always use `getconf DARWIN_USER_TEMP_DIR` for reliable access.",
+          " ",
+          "-### Testing Ollama refinement without dictating",
+          "-```bash",
+          "-curl -s http://localhost:11434/api/generate \\",
+          "-  -d '{\"model\":\"gemma3:4b\",\"prompt\":\"\u003cprompt\u003e\\n\\n\u003ctest input\u003e\",\"stream\":false}' \\",
+          "-  | python3 -c \"import sys,json; print(json.load(sys.stdin)['response'])\"",
+          "-```",
+          "-This lets you iterate on prompt wording without reloading Hammerspoon or dictating.",
+          "-",
+          "-### Running the refine eval suite",
+          "-```bash",
+          "-./tests/test_refine.sh",
+          "-```",
+          "-Tests filler removal, list formatting, preamble prevention, and content preservation.",
+          "-Requires Ollama running locally — it calls the HTTP API directly and bails out otherwise.",
+          "-",
+          " ### Running the init.lua test suite",
+          " ```bash",
+          " ./tests/test_init.sh                    # test the repo's init.lua"
+        ],
+        "newLines": 28,
+        "newStart": 91,
+        "oldLines": 33,
+        "oldStart": 91
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "60c4826d-b5f4-49cd-981b-674041403bf3",
+  "version": "2.1.233"
+}

@@ -1,0 +1,74 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01EAXe5gKigxZchwoHKkBRwS",
+        "input": {
+          "file_path": "/Users/vitaliy/Documents/GitHub/local-whisper/README.md",
+          "new_string": "This text is passed as `--prompt` to whisper-cli for every segment of the recording. Adding your voice command trigger words here also improves recognition.\n\n## App-aware text processing",
+          "old_string": "This text is passed as `--prompt` to whisper-cli for the first segment of each recording. For subsequent segments the prompt is automatically chained: the previous segment's transcribed text is appended, giving the decoder full sentence context across boundaries. Adding your voice command trigger words here also improves recognition.\n\n## LLM refinement (optional)\n\nIf you have [Ollama](https://ollama.com) installed, you can enable LLM-powered text cleanup. After transcription, the text is sent to a local LLM that fixes punctuation, removes filler words, and formats numbered lists — all on-device.\n\n1. Install Ollama: `brew install ollama`\n2. Pull a model: `ollama pull gemma3:4b` (small, fast, good at text cleanup)\n3. Start Ollama: `ollama serve` (or `brew services start ollama`)\n4. Toggle in the menu bar or click **refine** in the overlay\n\nRefinement only runs on text longer than 50 characters. Short dictations are inserted as-is.\n\n### Customizing refinement\n\n| File | What it does |\n|------|-------------|\n| `~/.local-whisper/refine` | ON/OFF state (also togglable from menu bar / overlay) |\n| `~/.local-whisper/refine_model` | Ollama model to use (default: `gemma3:4b`) |\n| `~/.local-whisper/refine_prompt` | Custom instructions for the LLM |\n\n## Faster live preview\n\nBy default, partial transcription uses the same model as final transcription. For faster live preview, download a smaller model:\n\n```bash\ncd ~/whisper.cpp/models\n./download-ggml-model.sh tiny\n```\n\nThe system automatically picks the smallest available model (tiny \u003e base \u003e small) for partials while keeping your chosen model for the final transcription.\n\n## App-aware text processing",
+          "replace_all": false
+        },
+        "name": "Edit",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce76BiAXx8RsmyAFMmmk2",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 337,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 337,
+      "cache_read_input_tokens": 165319,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 337,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 337,
+          "cache_read_input_tokens": 165319,
+          "input_tokens": 2,
+          "output_tokens": 796,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 796,
+      "output_tokens_details": {
+        "thinking_tokens": 0
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "42dc266a-4679-409d-8b5b-0c5728d4267b",
+  "requestId": "req_011Ce76BgLttzcwhFQLexQY7",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "timestamp": "2026-08-16T20:52:38.770Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "6d73fae0-8dc3-4bf8-8dbb-72165abfb77a",
+  "version": "2.1.233"
+}

@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "2026-08-16 22:55:08.018 hs[53308:35768357] *** CFMessagePort: dropping corrupt reply Mach message (0b000100)\nerror communicating with Hammerspoon: message port was invalidated\n[22:42:31] final: START — total chunks=0\n[22:42:31] final: not enough chunks, skipping\n[22:55:08] actions: loaded /Users/vitaliy/.hammerspoon/local_whisper_actions.lua\n[22:55:08] actions: enabled\n[22:55:08] loaded (trigger=fnLeftCtrl, lang=auto, output=paste, model=large-v3-turbo-q5_0)",
+        "is_error": false,
+        "tool_use_id": "toolu_01Q8m9N1x34vhAgzcj7Vq7M8",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "35a205e9-3ef7-41d1-9dbd-01b48cb801b1",
+  "promptId": "1ddcf7b5-201e-4a14-85c8-a5f41880b7e0",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "35a205e9-3ef7-41d1-9dbd-01b48cb801b1",
+  "timestamp": "2026-08-16T20:55:11.078Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "2026-08-16 22:55:08.018 hs[53308:35768357] *** CFMessagePort: dropping corrupt reply Mach message (0b000100)\nerror communicating with Hammerspoon: message port was invalidated\n[22:42:31] final: START — total chunks=0\n[22:42:31] final: not enough chunks, skipping\n[22:55:08] actions: loaded /Users/vitaliy/.hammerspoon/local_whisper_actions.lua\n[22:55:08] actions: enabled\n[22:55:08] loaded (trigger=fnLeftCtrl, lang=auto, output=paste, model=large-v3-turbo-q5_0)"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "438f0df4-a562-441e-a6be-8d8245947898",
+  "version": "2.1.233"
+}

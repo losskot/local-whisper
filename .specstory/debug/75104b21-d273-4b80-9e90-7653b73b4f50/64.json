@@ -1,0 +1,87 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01Ch5E5VNFkHGxWQT3HSYjZw",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "ea07d7d7-d746-4a6b-be3b-4e1ba8e23355",
+  "promptId": "1ddcf7b5-201e-4a14-85c8-a5f41880b7e0",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "ea07d7d7-d746-4a6b-be3b-4e1ba8e23355",
+  "timestamp": "2026-08-16T20:43:31.181Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+    "newString": "local RAWFLAGS = hs.eventtap.event.rawFlagMasks\n\n-- Device-specific bits (deviceLeftControl, not the generic control bit), so the left and\n-- right halves of the same modifier stay distinguishable — both when the flagsChanged\n-- event arrives and when the release poller re-reads the keyboard.\nlocal TRIGGERS = {\n    rightAlt   = { mask = RAWFLAGS.deviceRightAlternate, label = \"right Option\" },\n    rightCmd   = { mask = RAWFLAGS.deviceRightCommand,   label = \"right Command\" },\n    rightCtrl  = { mask = RAWFLAGS.deviceRightControl,   label = \"right Control\" },\n    fnLeftCtrl = { mask = RAWFLAGS.secondaryFn | RAWFLAGS.deviceLeftControl, label = \"fn + left Control\" },\n}\n\nlocal trigger = TRIGGERS[TRIGGER_KEY]\nif not trigger then\n    hs.notify.new({ title = \"local-whisper\", informativeText = \"ERROR: Invalid TRIGGER_KEY: \" .. TRIGGER_KEY }):send()\n    return\nend\n\n-- Every bit of the mask must be set. A combo trigger (fn + left Control) must not fire on\n-- Control alone, which is exactly what a `\u003e 0` test would do — and it would then start a\n-- recording on every Ctrl-C the user types.\nlocal function triggerPressed(rawFlags)\n    return (rawFlags \u0026 trigger.mask) == trigger.mask\nend\n\n-- flagsChanged does not fire on key-up for every modifier, so the release is polled by\n-- re-reading the live keyboard state through the same mask.\nlocal function triggerHeld()\n    local mods = hs.eventtap.checkKeyboardModifiers(true)\n    return triggerPressed(mods._raw or 0)\nend",
+    "oldString": "local TRIGGER_MASKS = {\n    rightAlt  = hs.eventtap.event.rawFlagMasks[\"deviceRightAlternate\"],\n    rightCmd  = hs.eventtap.event.rawFlagMasks[\"deviceRightCommand\"],\n    rightCtrl = hs.eventtap.event.rawFlagMasks[\"deviceRightControl\"],\n}\n\nlocal triggerMask = TRIGGER_MASKS[TRIGGER_KEY]\nif not triggerMask then\n    hs.notify.new({ title = \"local-whisper\", informativeText = \"ERROR: Invalid TRIGGER_KEY: \" .. TRIGGER_KEY }):send()\n    return\nend",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          " -- Trigger key mapping",
+          " --------------------------------------------------------------------------------",
+          " ",
+          "-local TRIGGER_MASKS = {",
+          "-    rightAlt  = hs.eventtap.event.rawFlagMasks[\"deviceRightAlternate\"],",
+          "-    rightCmd  = hs.eventtap.event.rawFlagMasks[\"deviceRightCommand\"],",
+          "-    rightCtrl = hs.eventtap.event.rawFlagMasks[\"deviceRightControl\"],",
+          "+local RAWFLAGS = hs.eventtap.event.rawFlagMasks",
+          "+",
+          "+-- Device-specific bits (deviceLeftControl, not the generic control bit), so the left and",
+          "+-- right halves of the same modifier stay distinguishable — both when the flagsChanged",
+          "+-- event arrives and when the release poller re-reads the keyboard.",
+          "+local TRIGGERS = {",
+          "+    rightAlt   = { mask = RAWFLAGS.deviceRightAlternate, label = \"right Option\" },",
+          "+    rightCmd   = { mask = RAWFLAGS.deviceRightCommand,   label = \"right Command\" },",
+          "+    rightCtrl  = { mask = RAWFLAGS.deviceRightControl,   label = \"right Control\" },",
+          "+    fnLeftCtrl = { mask = RAWFLAGS.secondaryFn | RAWFLAGS.deviceLeftControl, label = \"fn + left Control\" },",
+          " }",
+          " ",
+          "-local triggerMask = TRIGGER_MASKS[TRIGGER_KEY]",
+          "-if not triggerMask then",
+          "+local trigger = TRIGGERS[TRIGGER_KEY]",
+          "+if not trigger then",
+          "     hs.notify.new({ title = \"local-whisper\", informativeText = \"ERROR: Invalid TRIGGER_KEY: \" .. TRIGGER_KEY }):send()",
+          "     return",
+          " end",
+          " ",
+          "+-- Every bit of the mask must be set. A combo trigger (fn + left Control) must not fire on",
+          "+-- Control alone, which is exactly what a `\u003e 0` test would do — and it would then start a",
+          "+-- recording on every Ctrl-C the user types.",
+          "+local function triggerPressed(rawFlags)",
+          "+    return (rawFlags \u0026 trigger.mask) == trigger.mask",
+          "+end",
+          "+",
+          "+-- flagsChanged does not fire on key-up for every modifier, so the release is polled by",
+          "+-- re-reading the live keyboard state through the same mask.",
+          "+local function triggerHeld()",
+          "+    local mods = hs.eventtap.checkKeyboardModifiers(true)",
+          "+    return triggerPressed(mods._raw or 0)",
+          "+end",
+          "+",
+          " --------------------------------------------------------------------------------",
+          " -- Utilities",
+          " --------------------------------------------------------------------------------"
+        ],
+        "newLines": 38,
+        "newStart": 111,
+        "oldLines": 18,
+        "oldStart": 111
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "6dd789d3-8e67-4830-a163-c66784a1a281",
+  "version": "2.1.233"
+}

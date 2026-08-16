@@ -1,0 +1,34 @@
+{
+  "classifierMetaLines": "{\"meta\":{\"repoVisibility\":{\"remote\":\"losskot/local-whisper\",\"branch\":\"main\",\"visibility\":\"public\"}}}\n",
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "Everything up-to-date\n## main...origin/main\n M .specstory/debug/75104b21-d273-4b80-9e90-7653b73b4f50/session-data.json\n M .specstory/history/2026-08-16_20-32-18Z.md",
+        "is_error": false,
+        "tool_use_id": "toolu_01Jk6NikFQ61ayPjYWqzpnLT",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "694efdcc-4c70-48c1-9244-c4e236c4e45f",
+  "promptId": "5f55d23e-946d-4281-988b-ba7ecf86aadc",
+  "sessionId": "7d3c92af-ac69-47c4-ad94-2c02c7d6e213",
+  "sourceToolAssistantUUID": "694efdcc-4c70-48c1-9244-c4e236c4e45f",
+  "timestamp": "2026-08-16T20:40:37.920Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "Everything up-to-date\n## main...origin/main\n M .specstory/debug/75104b21-d273-4b80-9e90-7653b73b4f50/session-data.json\n M .specstory/history/2026-08-16_20-32-18Z.md"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "d4836866-5934-459d-a135-3703008e1eb9",
+  "version": "2.1.233"
+}

@@ -1,0 +1,28 @@
+{
+  "attachment": {
+    "commandMode": "prompt",
+    "origin": {
+      "kind": "human"
+    },
+    "prompt": [
+      {
+        "text": "what is bd?\ntreat specstory as code - push it freely, add a rule about it",
+        "type": "text"
+      }
+    ],
+    "source_uuid": "c626291d-bf5f-4884-892e-c230c5caa990",
+    "timestamp": "2026-08-16T21:33:59.958Z",
+    "type": "queued_command"
+  },
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "parentUuid": "c9cd9452-d7db-41e1-bafe-4d58cc7415b1",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "timestamp": "2026-08-16T21:33:59.958Z",
+  "type": "attachment",
+  "userType": "external",
+  "uuid": "4dbd6f3b-c746-4567-8a68-d3451cebef78",
+  "version": "2.1.233"
+}

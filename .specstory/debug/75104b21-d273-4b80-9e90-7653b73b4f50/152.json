@@ -1,0 +1,52 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/tests/test_init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_016HLCrXF4BmfkQcppDLEhT7",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "771f33ed-2383-4809-a765-d97067f19a5c",
+  "promptId": "1ddcf7b5-201e-4a14-85c8-a5f41880b7e0",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "771f33ed-2383-4809-a765-d97067f19a5c",
+  "timestamp": "2026-08-16T20:50:14.082Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/tests/test_init.lua",
+    "newString": "-- These tests guard the bug classes that have actually bitten this file:\n--   * a top-level local referenced by an earlier-defined function, which silently\n--     compiles to a nil global instead of capturing the local\n--   * the Lua 200-local-per-function ceiling\n--   * unguarded hs.sound.getByFile(...):play(), which throws and aborts its callback\n--   * chunk filenames sorted as strings, which reorders audio past chunk 999\n--   * a modifier-combo trigger matched with `flags \u0026 mask \u003e 0`, which fires on half\n--     the combo -- every Ctrl-C would start a recording\n--   * removed subsystems (meeting mode, LLM refine, silence auto-stop, ...) creeping back",
+    "oldString": "-- These tests guard the bug classes that have actually bitten this file:\n--   * a top-level local referenced by an earlier-defined function, which silently\n--     compiles to a nil global instead of capturing the local\n--   * the Lua 200-local-per-function ceiling\n--   * unguarded hs.sound.getByFile(...):play(), which throws and aborts its callback\n--   * chunk filenames sorted as strings, which reorders audio past chunk 999",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          " --   * the Lua 200-local-per-function ceiling",
+          " --   * unguarded hs.sound.getByFile(...):play(), which throws and aborts its callback",
+          " --   * chunk filenames sorted as strings, which reorders audio past chunk 999",
+          "+--   * a modifier-combo trigger matched with `flags \u0026 mask \u003e 0`, which fires on half",
+          "+--     the combo -- every Ctrl-C would start a recording",
+          "+--   * removed subsystems (meeting mode, LLM refine, silence auto-stop, ...) creeping back",
+          " --",
+          " -- Config (set as globals by the runner; `hs` does not inherit the caller's environment):",
+          " --   LW_TARGET  path to the init.lua under test (default: repo copy)"
+        ],
+        "newLines": 9,
+        "newStart": 9,
+        "oldLines": 6,
+        "oldStart": 9
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "0dd651d3-edd8-49b9-a9bb-8805b0021009",
+  "version": "2.1.233"
+}

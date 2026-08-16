@@ -1,0 +1,51 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/README.md has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01PLmb4ynJaPL6nPDJWUQ5RZ",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "fdf9b034-84f1-4095-aa94-8fc27806bb8e",
+  "promptId": "1ddcf7b5-201e-4a14-85c8-a5f41880b7e0",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "fdf9b034-84f1-4095-aa94-8fc27806bb8e",
+  "timestamp": "2026-08-16T20:53:00.720Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/README.md",
+    "newString": "- **External keyboard mapping**: Some keyboards (e.g., Logitech MX Keys) send non-standard modifier flags, and most non-Apple keyboards have no `fn` key at all. Pick a different `TRIGGER_KEY` in init.lua — `fnLeftCtrl` (default), `rightCmd`, `rightAlt`, or `rightCtrl` — or add your own entry to the `TRIGGERS` table",
+    "oldString": "- **External keyboard mapping**: Some keyboards (e.g., Logitech MX Keys) send non-standard modifier flags. Try different `TRIGGER_KEY` values (`rightAlt`, `rightCmd`, `rightCtrl`) in init.lua",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          " - **ffmpeg exits immediately (code 251)**: `AUDIO_DEVICE` is missing the colon prefix — use `:0` not `0`. The `:` tells avfoundation it's an audio device.",
+          " - **Wrong microphone**: Run `ffmpeg -f avfoundation -list_devices true -i \"\"` and update `AUDIO_DEVICE` in init.lua (or use `:default`)",
+          " - **Trigger key does nothing**: Accessibility permission may need toggling. Go to System Settings \u003e Privacy \u0026 Security \u003e Accessibility, toggle Hammerspoon **OFF then ON**, then run `hs.reload()` in the Hammerspoon console",
+          "-- **External keyboard mapping**: Some keyboards (e.g., Logitech MX Keys) send non-standard modifier flags. Try different `TRIGGER_KEY` values (`rightAlt`, `rightCmd`, `rightCtrl`) in init.lua",
+          "+- **External keyboard mapping**: Some keyboards (e.g., Logitech MX Keys) send non-standard modifier flags, and most non-Apple keyboards have no `fn` key at all. Pick a different `TRIGGER_KEY` in init.lua — `fnLeftCtrl` (default), `rightCmd`, `rightAlt`, or `rightCtrl` — or add your own entry to the `TRIGGERS` table",
+          " - **`hs` command not found**: Run `hs.ipc.cliInstall()` in Hammerspoon console",
+          " - **Voice commands not triggering**: Check the log to see what whisper transcribed — add command words to `~/.local-whisper/prompt`",
+          " - **Overlay not appearing**: Hammerspoon may need Accessibility permission re-granted after updates"
+        ],
+        "newLines": 7,
+        "newStart": 220,
+        "oldLines": 7,
+        "oldStart": 220
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "0f12b941-cd2a-4d1b-8820-eaf9b2aae167",
+  "version": "2.1.233"
+}

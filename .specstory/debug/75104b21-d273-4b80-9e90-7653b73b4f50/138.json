@@ -1,0 +1,51 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01FLsqnwZ7riCCqJydp6BhJL",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "9121113d-17d1-4efd-9d49-7cc52955c989",
+  "promptId": "1ddcf7b5-201e-4a14-85c8-a5f41880b7e0",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "9121113d-17d1-4efd-9d49-7cc52955c989",
+  "timestamp": "2026-08-16T20:48:34.573Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+    "newString": "-- Finish insertion after all processing (post-process, hooks)",
+    "oldString": "-- Finish insertion after all processing (post-process, refine, hooks)",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          "     end",
+          " end",
+          " ",
+          "--- Finish insertion after all processing (post-process, refine, hooks)",
+          "+-- Finish insertion after all processing (post-process, hooks)",
+          " local function finishInsertion(text, detectedLang)",
+          "     -- Build action context and run pre-insert hooks",
+          "     local ctx = buildActionContext(normalizeText(text), detectedLang or getLang(), getOutputMode())"
+        ],
+        "newLines": 7,
+        "newStart": 1070,
+        "oldLines": 7,
+        "oldStart": 1070
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "0bcda309-130a-4aea-ae76-ba38ad322e24",
+  "version": "2.1.233"
+}

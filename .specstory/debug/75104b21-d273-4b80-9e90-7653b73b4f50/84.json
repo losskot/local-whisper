@@ -1,0 +1,84 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01Jyz91Gmyno2yVxVrffHUcE",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "6cc33370-0ee0-41e7-82eb-14215a84d67f",
+  "promptId": "1ddcf7b5-201e-4a14-85c8-a5f41880b7e0",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "6cc33370-0ee0-41e7-82eb-14215a84d67f",
+  "timestamp": "2026-08-16T20:44:21.342Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+    "newString": "    -- Recent dictations",
+    "oldString": "    -- LLM refinement\n    if hasOllama() then\n        local refineState = getRefineMode() and \"ON\" or \"OFF\"\n        table.insert(items, {\n            title = \"LLM Refine: \" .. refineState .. \" (\" .. getRefineModel() .. \")\",\n            fn = function() cycleRefine(); updateMenuBar() end,\n        })\n    else\n        table.insert(items, {\n            title = \"LLM Refine (install ollama.com)\",\n            disabled = true,\n        })\n    end\n\n    -- Preferred langs\n    local preferred = table.concat(getPreferredLangs(), \", \")\n    table.insert(items, { title = \"Preferred: \" .. preferred, disabled = true })\n\n    table.insert(items, { title = \"-\" })\n\n    -- Settings overlay\n    table.insert(items, {\n        title = \"Settings...\",\n        fn = function()\n            if overlay then\n                forceHideOverlay()\n            else\n                showOverlay()\n                overlayPinned = true\n                overlay[1].fillColor = { red = 0.85, green = 0.89, blue = 0.97, alpha = 0.95 }\n                setOverlayText(\"Status — use the menu bar to change settings\")\n            end\n        end,\n    })\n\n    -- Recent dictations",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          "         fn = function() cycleEnter(); updateMenuBar() end,",
+          "     })",
+          " ",
+          "-    -- LLM refinement",
+          "-    if hasOllama() then",
+          "-        local refineState = getRefineMode() and \"ON\" or \"OFF\"",
+          "-        table.insert(items, {",
+          "-            title = \"LLM Refine: \" .. refineState .. \" (\" .. getRefineModel() .. \")\",",
+          "-            fn = function() cycleRefine(); updateMenuBar() end,",
+          "-        })",
+          "-    else",
+          "-        table.insert(items, {",
+          "-            title = \"LLM Refine (install ollama.com)\",",
+          "-            disabled = true,",
+          "-        })",
+          "-    end",
+          "-",
+          "-    -- Preferred langs",
+          "-    local preferred = table.concat(getPreferredLangs(), \", \")",
+          "-    table.insert(items, { title = \"Preferred: \" .. preferred, disabled = true })",
+          "-",
+          "-    table.insert(items, { title = \"-\" })",
+          "-",
+          "-    -- Settings overlay",
+          "-    table.insert(items, {",
+          "-        title = \"Settings...\",",
+          "-        fn = function()",
+          "-            if overlay then",
+          "-                forceHideOverlay()",
+          "-            else",
+          "-                showOverlay()",
+          "-                overlayPinned = true",
+          "-                overlay[1].fillColor = { red = 0.85, green = 0.89, blue = 0.97, alpha = 0.95 }",
+          "-                setOverlayText(\"Status — use the menu bar to change settings\")",
+          "-            end",
+          "-        end,",
+          "-    })",
+          "-",
+          "     -- Recent dictations",
+          "     if #recentDictations \u003e 0 then",
+          "         table.insert(items, { title = \"-\" })"
+        ],
+        "newLines": 6,
+        "newStart": 897,
+        "oldLines": 41,
+        "oldStart": 897
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "45ffb382-b0f7-4c73-b654-b593ae14fe5d",
+  "version": "2.1.233"
+}

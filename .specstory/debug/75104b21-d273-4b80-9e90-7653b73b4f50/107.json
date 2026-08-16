@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "'--------------------------------------------------------------------------------' 'olumedetect\", \"-f\", \"null\", \"-\" })\\n    volTask:start()\\nend\\n\\n'\n781:local finalizationPending = false  -- true between stopRecording() and doFinalTranscription() actually starting\n1021:local function stopRecordingIndicator()\n1040:    -- Cancel any in-flight finalization, otherwise the timer armed by stopRecording()\n1045:    stopRecordingIndicator()\n1485:stopRecording = function()\n1504:    stopRecordingIndicator()\n1563:                    stopRecording()\n1568:            stopRecording()\n1587:-- still true) or a lost finalization timer (see stopRecording) both look like the app just\n1600:        stopRecording()",
+        "is_error": false,
+        "tool_use_id": "toolu_01ASddZLvBdwGNN2vGc6zxnx",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "114dee56-7133-4c38-b665-49b10f7f2cb0",
+  "promptId": "1ddcf7b5-201e-4a14-85c8-a5f41880b7e0",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "114dee56-7133-4c38-b665-49b10f7f2cb0",
+  "timestamp": "2026-08-16T20:45:18.259Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "'--------------------------------------------------------------------------------' 'olumedetect\", \"-f\", \"null\", \"-\" })\\n    volTask:start()\\nend\\n\\n'\n781:local finalizationPending = false  -- true between stopRecording() and doFinalTranscription() actually starting\n1021:local function stopRecordingIndicator()\n1040:    -- Cancel any in-flight finalization, otherwise the timer armed by stopRecording()\n1045:    stopRecordingIndicator()\n1485:stopRecording = function()\n1504:    stopRecordingIndicator()\n1563:                    stopRecording()\n1568:            stopRecording()\n1587:-- still true) or a lost finalization timer (see stopRecording) both look like the app just\n1600:        stopRecording()"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "7a019c5c-fbc4-4dd6-b23f-f89c8160ceed",
+  "version": "2.1.233"
+}

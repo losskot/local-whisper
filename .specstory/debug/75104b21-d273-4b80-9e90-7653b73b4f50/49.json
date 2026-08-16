@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "=== repo RECOVERED_18-54 (первые 300 симв) ===\n# Реконструкция надиктовок за последние ~30 минут\n\nХронологически, по сессиям распознавания. Приложение и время вставки — из логов/recent.json.\nИсточник: ✅ recent.json (вставле\n=== ~/.local-whisper/recovery/.../recovered.txt (первые 300) ===\nСмотри, после того, как Сонет изучил кучу документов, то есть опус изучил кучу документов в предпоследнем вопросе, у меня такое ощущение, что он потерял нить. А я сфо�\n7.6M\t/Users/vitaliy/.local-whisper/recovery/",
+        "is_error": false,
+        "tool_use_id": "toolu_01VHMrUjLZ11djU41R2iYnii",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "f5fe90cd-030e-478f-9875-29fa464e0cea",
+  "promptId": "1ddcf7b5-201e-4a14-85c8-a5f41880b7e0",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "f5fe90cd-030e-478f-9875-29fa464e0cea",
+  "timestamp": "2026-08-16T20:42:14.508Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "=== repo RECOVERED_18-54 (первые 300 симв) ===\n# Реконструкция надиктовок за последние ~30 минут\n\nХронологически, по сессиям распознавания. Приложение и время вставки — из логов/recent.json.\nИсточник: ✅ recent.json (вставле\n=== ~/.local-whisper/recovery/.../recovered.txt (первые 300) ===\nСмотри, после того, как Сонет изучил кучу документов, то есть опус изучил кучу документов в предпоследнем вопросе, у меня такое ощущение, что он потерял нить. А я сфо�\n7.6M\t/Users/vitaliy/.local-whisper/recovery/"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "2c748bc5-9baf-41f5-8b6a-c720dbbec33d",
+  "version": "2.1.233"
+}

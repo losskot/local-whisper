@@ -1,0 +1,74 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_011DzKP8ELWRyFkemmzhpqNr",
+        "input": {
+          "file_path": "/Users/vitaliy/Documents/GitHub/local-whisper/tests/test_init.lua",
+          "new_string": "        -- triggerHeld() drives the release poller, and it reads a DIFFERENT API than the\n        -- eventtap: hs.eventtap.checkKeyboardModifiers(true)._raw comes from\n        -- CGEventSourceFlagsState, which reports only the generic modifier bits. The\n        -- device-specific bits an event carries (deviceLeftControl = 0x1) are simply not\n        -- there. A trigger polled through its event mask therefore never reads as held,\n        -- and the poller stops the recording 0.1s after the key went down -- which is\n        -- exactly how the first fn+Control build shipped broken.\n        local DEVICE_BITS = RAWFLAGS.deviceLeftShift  | RAWFLAGS.deviceRightShift\n                          | RAWFLAGS.deviceLeftControl| RAWFLAGS.deviceRightControl\n                          | RAWFLAGS.deviceLeftAlternate | RAWFLAGS.deviceRightAlternate\n                          | RAWFLAGS.deviceLeftCommand   | RAWFLAGS.deviceRightCommand\n                          | RAWFLAGS.deviceAlphaShiftStateless\n\n        check(\"trigger: the trigger defines a separate heldMask for polling\",\n              type(trig.heldMask) == \"number\" and trig.heldMask ~= 0,\n              \"heldMask = \" .. tostring(trig.heldMask))\n\n        if type(trig.heldMask) == \"number\" then\n            check(\"trigger: heldMask contains no device-specific bit (the poll API drops them)\",\n                  (trig.heldMask \u0026 DEVICE_BITS) == 0,\n                  string.format(\"heldMask=0x%x carries device bits 0x%x, which CGEventSourceFlagsState never reports\",\n                                trig.heldMask, trig.heldMask \u0026 DEVICE_BITS))\n\n            -- The generic counterpart must describe the same physical combo: same number\n            -- of modifiers, and each device bit answered by its generic bit.\n            local function bits(mask)\n                local n, b = 0, 1\n                while b \u003c= mask do\n                    if (mask \u0026 b) ~= 0 then n = n + 1 end\n                    b = b \u003c\u003c 1\n                end\n                return n\n            end\n            check(\"trigger: heldMask describes the same combo as mask\",\n                  bits(trig.heldMask) == bits(trig.mask),\n                  string.format(\"mask=0x%x has %d modifier(s), heldMask=0x%x has %d\",\n                                trig.mask, bits(trig.mask), trig.heldMask, bits(trig.heldMask)))\n        end\n\n        local held, hErr = liftFunction(\"triggerHeld\", baseEnv())\n        check(\"trigger: triggerHeld is liftable and compiles\", held ~= nil, tostring(hErr))\n\n        if held and type(trig.heldMask) == \"number\" then\n            local liveFlags, rawArg = 0, nil\n            local hEnv = baseEnv()\n            hEnv.trigger        = trig\n            hEnv.triggerPressed = pressed\n            hEnv.hs = { eventtap = { checkKeyboardModifiers = function(raw)\n                rawArg = raw\n                return { _raw = liveFlags }\n            end } }\n            held = liftFunction(\"triggerHeld\", hEnv)\n\n            -- What the real API actually returns while the combo is down: generic bits only.\n            liveFlags = trig.heldMask\n            check(\"trigger: triggerHeld is true for the flags the poll API really returns\",\n                  held() == true,\n                  string.format(\"held() = false for _raw=0x%x — the poller would stop the recording immediately\",\n                                trig.heldMask))\n            check(\"trigger: triggerHeld asks for the raw flag word\",\n                  rawArg == true,\n                  \"checkKeyboardModifiers() called with \" .. tostring(rawArg) .. \", want true\")\n\n            -- Releasing either half must end the recording.\n            local released = {}\n            local bit = 1\n            while bit \u003c= trig.heldMask do\n                if (trig.heldMask \u0026 bit) ~= 0 and bit ~= trig.heldMask then\n                    liveFlags = trig.heldMask \u0026 ~bit\n                    if held() then released[#released + 1] = string.format(\"0x%x\", bit) end\n                end\n                bit = bit \u003c\u003c 1\n            end\n            check(\"trigger: releasing either modifier reads as released\",\n                  #released == 0,\n                  \"still held after releasing: \" .. table.concat(released, \", \"))\n\n            liveFlags = 0\n            check(\"trigger: nothing held reads as released\", held() == false, \"held() = true with no modifiers\")\n        end",
+          "old_string": "        -- triggerHeld() drives the release poller. It must read the raw device flags\n        -- through the same mask, not a generic modifier name.\n        local held, hErr = liftFunction(\"triggerHeld\", baseEnv())\n        check(\"trigger: triggerHeld is liftable and compiles\", held ~= nil, tostring(hErr))\n        if held and pressed then\n            local liveFlags, rawArg = 0, nil\n            local hEnv = baseEnv()\n            hEnv.trigger        = trig\n            hEnv.triggerPressed = pressed\n            hEnv.hs = { eventtap = { checkKeyboardModifiers = function(raw)\n                rawArg = raw\n                return { _raw = liveFlags }\n            end } }\n            held = liftFunction(\"triggerHeld\", hEnv)\n\n            liveFlags = trig.mask\n            check(\"trigger: triggerHeld is true while the whole combo is down\",\n                  held() == true, \"held() = false with the full mask down\")\n            check(\"trigger: triggerHeld asks for raw device flags\",\n                  rawArg == true,\n                  \"checkKeyboardModifiers() called with \" .. tostring(rawArg) ..\n                  \" — without raw flags it cannot tell left from right\")\n\n            -- Releasing either half must end the recording.\n            local released = {}\n            local bit = 1\n            while bit \u003c= trig.mask do\n                if (trig.mask \u0026 bit) ~= 0 and bit ~= trig.mask then\n                    liveFlags = trig.mask \u0026 ~bit\n                    if held() then released[#released + 1] = string.format(\"0x%x\", bit) end\n                end\n                bit = bit \u003c\u003c 1\n            end\n            check(\"trigger: releasing either modifier reads as released\",\n                  #released == 0,\n                  \"still held after releasing: \" .. table.concat(released, \", \"))\n\n            liveFlags = 0\n            check(\"trigger: nothing held reads as released\", held() == false, \"held() = true with no modifiers\")\n        end",
+          "replace_all": false
+        },
+        "name": "Edit",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce79TBHD1s8v9MTBAcrGc",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 475,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 475,
+      "cache_read_input_tokens": 201706,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 475,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 475,
+          "cache_read_input_tokens": 201706,
+          "input_tokens": 2,
+          "output_tokens": 2374,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 2374,
+      "output_tokens_details": {
+        "thinking_tokens": 0
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "5b38d8df-2bec-4a91-89ba-8c38ef1a668a",
+  "requestId": "req_011Ce79TAEx2LrSJgX7aSXZF",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "timestamp": "2026-08-16T21:35:46.079Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "72b8e4da-a5c2-4dbc-9f3c-a4224951e768",
+  "version": "2.1.233"
+}

@@ -1,0 +1,72 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01RXSfx3dhefST422Nc9XCxz",
+        "input": {
+          "command": "grep -rn \"refine\\|Refine\\|Ollama\\|ollama\\|preferred\\|Preferred\\|Right Cmd\\|rightCmd\\|auto-stop\\|Auto-stop\\|partial\\|live preview\\|tiny\" --include=\"*.md\" --include=\"*.sh\" --include=\"*.lua\" . 2\u003e/dev/null | grep -v \"^./.specstory\\|^./whisper.cpp\\|^./tests/test_init.lua\" | head -20",
+          "description": "Find remaining stale doc references"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce76XMnVjtfTbqSwuNySU",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 1203,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 1203,
+      "cache_read_input_tokens": 183317,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1203,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 1203,
+          "cache_read_input_tokens": 183317,
+          "input_tokens": 2,
+          "output_tokens": 2662,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 2662,
+      "output_tokens_details": {
+        "thinking_tokens": 2377
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "9f8a547a-4632-482e-8c41-83cfa852772d",
+  "requestId": "req_011Ce76XLNfcFFG7fRbziJCe",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "timestamp": "2026-08-16T20:57:37.054Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "c835a57b-109b-40b9-8aff-53548a52ea95",
+  "version": "2.1.233"
+}

@@ -1,0 +1,54 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/README.md has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01WntTvqCYiZibZFMFrxjfNj",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "c36635e8-a232-4dca-be24-fc84ab4012fd",
+  "promptId": "1ddcf7b5-201e-4a14-85c8-a5f41880b7e0",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "c36635e8-a232-4dca-be24-fc84ab4012fd",
+  "timestamp": "2026-08-16T20:52:24.281Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/README.md",
+    "newString": "# 3. Download model (~1.5 GB)\n./models/download-ggml-model.sh medium\n\n# 4. Copy Hammerspoon config",
+    "oldString": "# 3. Download model (~1.5 GB)\n./models/download-ggml-model.sh medium\n\n# 4. Optional: download tiny model for faster live preview\n./models/download-ggml-model.sh tiny\n\n# 5. Copy Hammerspoon config",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          " # 3. Download model (~1.5 GB)",
+          " ./models/download-ggml-model.sh medium",
+          " ",
+          "-# 4. Optional: download tiny model for faster live preview",
+          "-./models/download-ggml-model.sh tiny",
+          "-",
+          "-# 5. Copy Hammerspoon config",
+          "+# 4. Copy Hammerspoon config",
+          " cp hammerspoon/init.lua ~/.hammerspoon/init.lua",
+          " ```",
+          " "
+        ],
+        "newLines": 7,
+        "newStart": 77,
+        "oldLines": 10,
+        "oldStart": 77
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "afd59dd6-322e-4b7c-a894-74ddc65cb9ea",
+  "version": "2.1.233"
+}

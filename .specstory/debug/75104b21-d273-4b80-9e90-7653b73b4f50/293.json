@@ -1,0 +1,89 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/AGENTS.md has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01DFKCQeNkgq2yt5BgUweELA",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "c6920260-6349-4917-ae05-e713eba5fc4e",
+  "promptId": "e5afbad5-c1b1-4424-a694-f4d13fe07c32",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "c6920260-6349-4917-ae05-e713eba5fc4e",
+  "timestamp": "2026-08-16T21:37:40.192Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/AGENTS.md",
+    "newString": "- Match with `(rawFlags \u0026 mask) == mask`, never `\u003e 0` — the latter fires on either half,\n  so plain Control would start a recording on every Ctrl-C.\n- Press and release are read through **different APIs that report different bits**, so each\n  trigger carries two masks. The flagsChanged event's `rawFlags` include the device-specific\n  bits (`deviceLeftControl` = 0x1) — that is `mask`. The release poller reads\n  `hs.eventtap.checkKeyboardModifiers(true)._raw`, which comes from `CGEventSourceFlagsState`\n  and reports **only the generic bits** — that is `heldMask`.\n\nVerify it yourself: post a synthetic event and read the state back.\n\n```bash\nhs -c 'local e=hs.eventtap.event.newEvent(); e:setType(hs.eventtap.event.types.flagsChanged)\n       e:rawFlags(0x800001); e:post()\n       return string.format(\"0x%x\", hs.eventtap.checkKeyboardModifiers(true)._raw)'\n# → 0x800000   (fn survived, deviceLeftControl did not)\n```\n\nA device bit in `heldMask` can therefore never match: the overlay flashes for one poll tick\nand the recording dies 0.1s in, which reads to the user as \"the key binding does nothing,\nI don't even see the UI\". Both rules are covered by the `trigger` checks in the test suite —\nincluding one that fails if any device bit appears in a `heldMask`.\n\n### Simulating a whole dictation without touching the keyboard\n\nPosted flagsChanged events update the session flag state, so a synthetic press is held from\nthe app's point of view until you post the release — the release poller sees the generic bits\nand keeps recording. This exercises the real pipeline end to end:\n\n```bash\nhs -c 'local function f(x) local e=hs.eventtap.event.newEvent()\n         e:setType(hs.eventtap.event.types.flagsChanged); e:rawFlags(x); return e end\n       f(0x840001):post()                                   -- fn + control + deviceLeftControl\n       hs.timer.doAfter(6, function() f(0):post() end)'\n```\n\nSet `~/.local-whisper/output` to `copy` first and restore it afterwards — otherwise the\ntranscript is pasted into whatever window happens to be focused.",
+    "oldString": "- Match with `(rawFlags \u0026 mask) == mask`, never `\u003e 0` — the latter fires on either half,\n  so plain Control would start a recording on every Ctrl-C.\n- Poll the release through `triggerHeld()`, which re-reads\n  `hs.eventtap.checkKeyboardModifiers(true)._raw` and applies the same mask. Generic\n  modifier names (`mods.ctrl`) cannot tell left Control from right Control.\n\nBoth rules are covered by the `trigger` checks in the test suite.",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          " ",
+          " - Match with `(rawFlags \u0026 mask) == mask`, never `\u003e 0` — the latter fires on either half,",
+          "   so plain Control would start a recording on every Ctrl-C.",
+          "-- Poll the release through `triggerHeld()`, which re-reads",
+          "-  `hs.eventtap.checkKeyboardModifiers(true)._raw` and applies the same mask. Generic",
+          "-  modifier names (`mods.ctrl`) cannot tell left Control from right Control.",
+          "+- Press and release are read through **different APIs that report different bits**, so each",
+          "+  trigger carries two masks. The flagsChanged event's `rawFlags` include the device-specific",
+          "+  bits (`deviceLeftControl` = 0x1) — that is `mask`. The release poller reads",
+          "+  `hs.eventtap.checkKeyboardModifiers(true)._raw`, which comes from `CGEventSourceFlagsState`",
+          "+  and reports **only the generic bits** — that is `heldMask`.",
+          " ",
+          "-Both rules are covered by the `trigger` checks in the test suite.",
+          "+Verify it yourself: post a synthetic event and read the state back.",
+          " ",
+          "+```bash",
+          "+hs -c 'local e=hs.eventtap.event.newEvent(); e:setType(hs.eventtap.event.types.flagsChanged)",
+          "+       e:rawFlags(0x800001); e:post()",
+          "+       return string.format(\"0x%x\", hs.eventtap.checkKeyboardModifiers(true)._raw)'",
+          "+# → 0x800000   (fn survived, deviceLeftControl did not)",
+          "+```",
+          "+",
+          "+A device bit in `heldMask` can therefore never match: the overlay flashes for one poll tick",
+          "+and the recording dies 0.1s in, which reads to the user as \"the key binding does nothing,",
+          "+I don't even see the UI\". Both rules are covered by the `trigger` checks in the test suite —",
+          "+including one that fails if any device bit appears in a `heldMask`.",
+          "+",
+          "+### Simulating a whole dictation without touching the keyboard",
+          "+",
+          "+Posted flagsChanged events update the session flag state, so a synthetic press is held from",
+          "+the app's point of view until you post the release — the release poller sees the generic bits",
+          "+and keeps recording. This exercises the real pipeline end to end:",
+          "+",
+          "+```bash",
+          "+hs -c 'local function f(x) local e=hs.eventtap.event.newEvent()",
+          "+         e:setType(hs.eventtap.event.types.flagsChanged); e:rawFlags(x); return e end",
+          "+       f(0x840001):post()                                   -- fn + control + deviceLeftControl",
+          "+       hs.timer.doAfter(6, function() f(0):post() end)'",
+          "+```",
+          "+",
+          "+Set `~/.local-whisper/output` to `copy` first and restore it afterwards — otherwise the",
+          "+transcript is pasted into whatever window happens to be focused.",
+          "+",
+          " ## Testing \u0026 debugging",
+          " ",
+          " ### Reading logs"
+        ],
+        "newLines": 42,
+        "newStart": 99,
+        "oldLines": 12,
+        "oldStart": 99
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "8192352f-d3f4-4ab1-9612-a9c2549b173c",
+  "version": "2.1.233"
+}

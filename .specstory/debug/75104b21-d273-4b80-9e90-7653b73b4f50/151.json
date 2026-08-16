@@ -1,0 +1,74 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_016HLCrXF4BmfkQcppDLEhT7",
+        "input": {
+          "file_path": "/Users/vitaliy/Documents/GitHub/local-whisper/tests/test_init.lua",
+          "new_string": "-- These tests guard the bug classes that have actually bitten this file:\n--   * a top-level local referenced by an earlier-defined function, which silently\n--     compiles to a nil global instead of capturing the local\n--   * the Lua 200-local-per-function ceiling\n--   * unguarded hs.sound.getByFile(...):play(), which throws and aborts its callback\n--   * chunk filenames sorted as strings, which reorders audio past chunk 999\n--   * a modifier-combo trigger matched with `flags \u0026 mask \u003e 0`, which fires on half\n--     the combo -- every Ctrl-C would start a recording\n--   * removed subsystems (meeting mode, LLM refine, silence auto-stop, ...) creeping back",
+          "old_string": "-- These tests guard the bug classes that have actually bitten this file:\n--   * a top-level local referenced by an earlier-defined function, which silently\n--     compiles to a nil global instead of capturing the local\n--   * the Lua 200-local-per-function ceiling\n--   * unguarded hs.sound.getByFile(...):play(), which throws and aborts its callback\n--   * chunk filenames sorted as strings, which reorders audio past chunk 999",
+          "replace_all": false
+        },
+        "name": "Edit",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce75vopSLinX9VrZfovqJ",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 584,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 584,
+      "cache_read_input_tokens": 142724,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 584,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 584,
+          "cache_read_input_tokens": 142724,
+          "input_tokens": 2,
+          "output_tokens": 5425,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 5425,
+      "output_tokens_details": {
+        "thinking_tokens": 4851
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "d4f5845d-54f8-4897-b453-094daddc01dd",
+  "requestId": "req_011Ce75vnpuxFWxuN5tMbkDF",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "timestamp": "2026-08-16T20:50:13.020Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "771f33ed-2383-4809-a765-d97067f19a5c",
+  "version": "2.1.233"
+}

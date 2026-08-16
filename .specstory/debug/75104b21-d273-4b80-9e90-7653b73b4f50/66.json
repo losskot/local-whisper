@@ -1,0 +1,74 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_012BtYiwoUduXi3nM2ibJM2B",
+        "input": {
+          "file_path": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+          "new_string": "local function getEnterMode()",
+          "old_string": "local function getPreferredLangs()\n    local content = readFile(PREFERRED_LANGS_FILE):gsub(\"%s+$\", \"\")\n    if content == \"\" then return {\"en\"} end\n    local langs = {}\n    for lang in content:gmatch(\"[^,]+\") do\n        lang = lang:match(\"^%s*(.-)%s*$\")\n        if lang ~= \"\" then table.insert(langs, lang) end\n    end\n    return #langs \u003e 0 and langs or {\"en\"}\nend\n\nlocal function getEnterMode()",
+          "replace_all": false
+        },
+        "name": "Edit",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce75Vyhp2SgS5sy6TWyTv",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 1121,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 1121,
+      "cache_read_input_tokens": 120807,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1121,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 1121,
+          "cache_read_input_tokens": 120807,
+          "input_tokens": 2,
+          "output_tokens": 357,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 357,
+      "output_tokens_details": {
+        "thinking_tokens": 0
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "2b7a861a-9a91-44f1-b110-494dc52e2abb",
+  "requestId": "req_011Ce75VxLi28M3rSW7ouVSj",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "timestamp": "2026-08-16T20:43:35.988Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "32c51e9b-0e64-4d30-8454-feeb85b511ce",
+  "version": "2.1.233"
+}

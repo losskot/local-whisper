@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": " AGENTS.md            |  57 +++++-----\n CONTRIBUTING.md      |   2 +-\n README.md            |  88 +++------------\n hammerspoon/init.lua | 308 +++++++--------------------------------------------\n install.sh           |  17 ---\n setup.sh             |  14 ++-\n tests/test_init.lua  | 180 ++++++++++++++++++++++++++++--\n 7 files changed, 260 insertions(+), 406 deletions(-)\n=== deleted:\nD  RECOVERED_18-54_dictation.txt\nD  tests/test_refine.sh",
+        "is_error": false,
+        "tool_use_id": "toolu_012C97UXhKnNzT3Ya8XQoix2",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "4f1e7c5c-7a1a-4108-b70b-f2be5f26456a",
+  "promptId": "1ddcf7b5-201e-4a14-85c8-a5f41880b7e0",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "4f1e7c5c-7a1a-4108-b70b-f2be5f26456a",
+  "timestamp": "2026-08-16T20:57:59.328Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": " AGENTS.md            |  57 +++++-----\n CONTRIBUTING.md      |   2 +-\n README.md            |  88 +++------------\n hammerspoon/init.lua | 308 +++++++--------------------------------------------\n install.sh           |  17 ---\n setup.sh             |  14 ++-\n tests/test_init.lua  | 180 ++++++++++++++++++++++++++++--\n 7 files changed, 260 insertions(+), 406 deletions(-)\n=== deleted:\nD  RECOVERED_18-54_dictation.txt\nD  tests/test_refine.sh"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "44287907-68f0-46d5-a0d9-0f0b1cbba91c",
+  "version": "2.1.233"
+}

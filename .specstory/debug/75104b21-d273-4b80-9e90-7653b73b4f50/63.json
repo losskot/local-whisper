@@ -1,0 +1,74 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01Ch5E5VNFkHGxWQT3HSYjZw",
+        "input": {
+          "file_path": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+          "new_string": "local RAWFLAGS = hs.eventtap.event.rawFlagMasks\n\n-- Device-specific bits (deviceLeftControl, not the generic control bit), so the left and\n-- right halves of the same modifier stay distinguishable — both when the flagsChanged\n-- event arrives and when the release poller re-reads the keyboard.\nlocal TRIGGERS = {\n    rightAlt   = { mask = RAWFLAGS.deviceRightAlternate, label = \"right Option\" },\n    rightCmd   = { mask = RAWFLAGS.deviceRightCommand,   label = \"right Command\" },\n    rightCtrl  = { mask = RAWFLAGS.deviceRightControl,   label = \"right Control\" },\n    fnLeftCtrl = { mask = RAWFLAGS.secondaryFn | RAWFLAGS.deviceLeftControl, label = \"fn + left Control\" },\n}\n\nlocal trigger = TRIGGERS[TRIGGER_KEY]\nif not trigger then\n    hs.notify.new({ title = \"local-whisper\", informativeText = \"ERROR: Invalid TRIGGER_KEY: \" .. TRIGGER_KEY }):send()\n    return\nend\n\n-- Every bit of the mask must be set. A combo trigger (fn + left Control) must not fire on\n-- Control alone, which is exactly what a `\u003e 0` test would do — and it would then start a\n-- recording on every Ctrl-C the user types.\nlocal function triggerPressed(rawFlags)\n    return (rawFlags \u0026 trigger.mask) == trigger.mask\nend\n\n-- flagsChanged does not fire on key-up for every modifier, so the release is polled by\n-- re-reading the live keyboard state through the same mask.\nlocal function triggerHeld()\n    local mods = hs.eventtap.checkKeyboardModifiers(true)\n    return triggerPressed(mods._raw or 0)\nend",
+          "old_string": "local TRIGGER_MASKS = {\n    rightAlt  = hs.eventtap.event.rawFlagMasks[\"deviceRightAlternate\"],\n    rightCmd  = hs.eventtap.event.rawFlagMasks[\"deviceRightCommand\"],\n    rightCtrl = hs.eventtap.event.rawFlagMasks[\"deviceRightControl\"],\n}\n\nlocal triggerMask = TRIGGER_MASKS[TRIGGER_KEY]\nif not triggerMask then\n    hs.notify.new({ title = \"local-whisper\", informativeText = \"ERROR: Invalid TRIGGER_KEY: \" .. TRIGGER_KEY }):send()\n    return\nend",
+          "replace_all": false
+        },
+        "name": "Edit",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce75UyjXG1zHJSwSb6osy",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 2675,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 2675,
+      "cache_read_input_tokens": 118132,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 2675,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 2675,
+          "cache_read_input_tokens": 118132,
+          "input_tokens": 2,
+          "output_tokens": 1053,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 1053,
+      "output_tokens_details": {
+        "thinking_tokens": 0
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "843bbabb-3d45-43d5-8b4f-5a61399cc425",
+  "requestId": "req_011Ce75Uxi1Vw3GmGbtvAXHD",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "timestamp": "2026-08-16T20:43:30.134Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "ea07d7d7-d746-4a6b-be3b-4e1ba8e23355",
+  "version": "2.1.233"
+}

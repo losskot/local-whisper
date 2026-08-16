@@ -1,0 +1,74 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01TEE9pQRPCfrjePmYQzoevc",
+        "input": {
+          "file_path": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+          "new_string": "-- Trigger: which modifier(s) must be held down to record. See TRIGGERS below.\nlocal TRIGGER_KEY = \"fnLeftCtrl\"\n\n-- User preference files (all in CONFIG_DIR)\nlocal LANG_FILE = CONFIG_DIR .. \"/lang\"\nlocal OUTPUT_FILE = CONFIG_DIR .. \"/output\"\nlocal ENTER_FILE = CONFIG_DIR .. \"/enter\"\nlocal PROMPT_FILE = CONFIG_DIR .. \"/prompt\"\nlocal RECENT_FILE = CONFIG_DIR .. \"/recent.json\"\nlocal LOG_FILE = WHISPER_TMP .. \"/whisper-dictate.log\"\n\n-- Action hooks config\nlocal ACTIONS_FILE = HOME .. \"/.hammerspoon/local_whisper_actions.lua\"\n\n-- Timing",
+          "old_string": "-- Trigger key: \"rightAlt\", \"rightCmd\", \"rightCtrl\"\nlocal TRIGGER_KEY = \"rightCmd\"\n\n-- User preference files (all in CONFIG_DIR)\nlocal LANG_FILE = CONFIG_DIR .. \"/lang\"\nlocal OUTPUT_FILE = CONFIG_DIR .. \"/output\"\nlocal PREFERRED_LANGS_FILE = CONFIG_DIR .. \"/preferred_langs\"\nlocal ENTER_FILE = CONFIG_DIR .. \"/enter\"\nlocal PROMPT_FILE = CONFIG_DIR .. \"/prompt\"\nlocal RECENT_FILE = CONFIG_DIR .. \"/recent.json\"\nlocal LOG_FILE = WHISPER_TMP .. \"/whisper-dictate.log\"\n\n-- Action hooks config\nlocal ACTIONS_FILE = HOME .. \"/.hammerspoon/local_whisper_actions.lua\"\n\n-- Auto-stop on silence\nlocal AUTO_STOP_SILENCE_SECONDS = 3\nlocal AUTO_STOP_THRESHOLD_DB = -40\n\n-- LLM refinement (requires Ollama)\nlocal REFINE_FILE = CONFIG_DIR .. \"/refine\"\nlocal REFINE_PROMPT_FILE = CONFIG_DIR .. \"/refine_prompt\"\nlocal REFINE_MODEL_FILE = CONFIG_DIR .. \"/refine_model\"\nlocal REFINE_DEFAULT_MODEL = \"gemma3:4b\"\nlocal REFINE_MIN_CHARS = 50  -- skip refinement for short text\nlocal REFINE_DEFAULT_PROMPT = \"You are a text cleanup tool. Output ONLY the cleaned text, nothing else. Fix punctuation and capitalization. Remove ONLY filler words like um, uh, you know, I mean. Do NOT remove sentences or meaningful content. When the text lists sequential items using first/second/third or one/two/three, convert them into a numbered list with each item on a new line. NEVER add commentary or preamble. Just output the cleaned text.\"\n\nlocal function getRefineModel()\n    local f = io.open(REFINE_MODEL_FILE, \"r\")\n    if f then\n        local val = f:read(\"*a\"):gsub(\"%s+\", \"\"); f:close()\n        if val ~= \"\" then return val end\n    end\n    return REFINE_DEFAULT_MODEL\nend\n\nlocal function getRefinePrompt()\n    local f = io.open(REFINE_PROMPT_FILE, \"r\")\n    if f then\n        local content = f:read(\"*a\"); f:close()\n        content = content:gsub(\"^%s+\", \"\"):gsub(\"%s+$\", \"\")\n        if content ~= \"\" then return content end\n    end\n    return REFINE_DEFAULT_PROMPT\nend\n\n-- Cached so the menu bar doesn't reprobe on every open. Hammerspoon is single-threaded,\n-- so a synchronous curl here blocks the eventtap too — hence both --max-time and the cache.\nlocal ollamaProbe = { value = nil, at = 0 }\nlocal OLLAMA_PROBE_TTL = 30  -- seconds\n\nlocal function hasOllama()\n    local now = hs.timer.secondsSinceEpoch()\n    if ollamaProbe.value ~= nil and (now - ollamaProbe.at) \u003c OLLAMA_PROBE_TTL then\n        return ollamaProbe.value\n    end\n    -- Check if Ollama API is reachable. --max-time is mandatory: a wedged Ollama (loading a\n    -- large model, or a stopped process) would otherwise freeze the whole app, killing the\n    -- dictation trigger key until curl gave up on its own.\n    local ok = os.execute(\"curl -s --max-time 1 -o /dev/null -w '' http://localhost:11434/api/tags 2\u003e/dev/null\")\n    if not ok then\n        -- Fallback: check if binary exists\n        ok = os.execute(\"command -v ollama \u003e/dev/null 2\u003e\u00261\")\n    end\n    ollamaProbe.value = ok and true or false\n    ollamaProbe.at = now\n    return ollamaProbe.value\nend\n\nlocal function getRefineMode()\n    local f = io.open(REFINE_FILE, \"r\")\n    if not f then return false end\n    local val = f:read(\"*a\"):gsub(\"%s+\", \"\"); f:close()\n    return val == \"on\"\nend\n\nlocal function setRefineMode(on)\n    local f = io.open(REFINE_FILE, \"w\")\n    if f then f:write(on and \"on\" or \"off\"); f:close() end\nend\n\nlocal function cycleRefine()\n    local current = getRefineMode()\n    setRefineMode(not current)\nend\n\n-- Timing",
+          "replace_all": false
+        },
+        "name": "Edit",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce75T7mAT24cihMcnD9rN",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 882,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 882,
+      "cache_read_input_tokens": 117250,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 882,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 882,
+          "cache_read_input_tokens": 117250,
+          "input_tokens": 2,
+          "output_tokens": 2583,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 2583,
+      "output_tokens_details": {
+        "thinking_tokens": 534
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "f89afa66-98dc-4cf3-b82e-e6bce0bb5817",
+  "requestId": "req_011Ce75T6taTrTypRfgus2zF",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "timestamp": "2026-08-16T20:43:16.303Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "6755b3fc-15f4-4b8e-9a85-83ea6b29ec7e",
+  "version": "2.1.233"
+}

@@ -1,0 +1,35 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "1408\t\n1409\tlocal warmupTick = hs.sound.getByFile(\"/System/Library/Sounds/Tink.aiff\")\n1410\tif warmupTick then warmupTick:volume(0.15) end\n1411\t\n1412\ttryWarmup = function()\n1413\t    if not isWarmingUp then return end\n1414\t\n1415\t    warmupAttempt = warmupAttempt + 1\n1416\t    log(\"warmup: attempt \" .. warmupAttempt .. \"/\" .. WARMUP_MAX_ATTEMPTS)\n1417\t\n1418\t    -- Subtle tick before each attempt\n1419\t    if warmupTick then warmupTick:play() end\n1420\t    setOverlayText(\"... \" .. warmupAttempt .. \"/\" .. WARMUP_MAX_ATTEMPTS)\n1421\t\n1422\t    warmupTask = hs.task.new(FFMPEG,\n1423\t        function(code)  -- termination callback\n1424\t            warmupTask = nil\n1425\t        end,\n1426\t        function(task, stdout, stderr)  -- streaming callback: ffmpeg writes to stderr once device is open\n1427\t            if stderr and stderr ~= \"\" and isWarmingUp then\n1428\t                log(\"warmup: device ready on attempt \" .. warmupAttempt)\n1429\t                if warmupTimer then warmupTimer:stop(); warmupTimer = nil end\n1430\t                task:terminate()\n1431\t                startActualRecording()\n1432\t            end\n1433\t            return true\n1434\t        end,\n1435\t        { \"-f\", \"avfoundation\", \"-i\", AUDIO_DEVICE,\n1436\t          \"-ac\", \"1\", \"-ar\", \"16000\",\n1437\t          \"-f\", \"null\", \"-\" }",
+        "tool_use_id": "toolu_01ADLtpMU3H5RxL2LcJ6dozf",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "46dc7791-392d-4e8a-aca8-c05af6cb5b79",
+  "promptId": "1ddcf7b5-201e-4a14-85c8-a5f41880b7e0",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "46dc7791-392d-4e8a-aca8-c05af6cb5b79",
+  "timestamp": "2026-08-16T20:45:23.504Z",
+  "toolUseResult": {
+    "file": {
+      "content": "\nlocal warmupTick = hs.sound.getByFile(\"/System/Library/Sounds/Tink.aiff\")\nif warmupTick then warmupTick:volume(0.15) end\n\ntryWarmup = function()\n    if not isWarmingUp then return end\n\n    warmupAttempt = warmupAttempt + 1\n    log(\"warmup: attempt \" .. warmupAttempt .. \"/\" .. WARMUP_MAX_ATTEMPTS)\n\n    -- Subtle tick before each attempt\n    if warmupTick then warmupTick:play() end\n    setOverlayText(\"... \" .. warmupAttempt .. \"/\" .. WARMUP_MAX_ATTEMPTS)\n\n    warmupTask = hs.task.new(FFMPEG,\n        function(code)  -- termination callback\n            warmupTask = nil\n        end,\n        function(task, stdout, stderr)  -- streaming callback: ffmpeg writes to stderr once device is open\n            if stderr and stderr ~= \"\" and isWarmingUp then\n                log(\"warmup: device ready on attempt \" .. warmupAttempt)\n                if warmupTimer then warmupTimer:stop(); warmupTimer = nil end\n                task:terminate()\n                startActualRecording()\n            end\n            return true\n        end,\n        { \"-f\", \"avfoundation\", \"-i\", AUDIO_DEVICE,\n          \"-ac\", \"1\", \"-ar\", \"16000\",\n          \"-f\", \"null\", \"-\" }",
+      "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+      "numLines": 30,
+      "startLine": 1408,
+      "totalLines": 1634
+    },
+    "type": "text"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "238dce4b-af9d-482b-95b0-26973ea83023",
+  "version": "2.1.233"
+}

@@ -1,0 +1,74 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01DFKCQeNkgq2yt5BgUweELA",
+        "input": {
+          "file_path": "/Users/vitaliy/Documents/GitHub/local-whisper/AGENTS.md",
+          "new_string": "- Match with `(rawFlags \u0026 mask) == mask`, never `\u003e 0` — the latter fires on either half,\n  so plain Control would start a recording on every Ctrl-C.\n- Press and release are read through **different APIs that report different bits**, so each\n  trigger carries two masks. The flagsChanged event's `rawFlags` include the device-specific\n  bits (`deviceLeftControl` = 0x1) — that is `mask`. The release poller reads\n  `hs.eventtap.checkKeyboardModifiers(true)._raw`, which comes from `CGEventSourceFlagsState`\n  and reports **only the generic bits** — that is `heldMask`.\n\nVerify it yourself: post a synthetic event and read the state back.\n\n```bash\nhs -c 'local e=hs.eventtap.event.newEvent(); e:setType(hs.eventtap.event.types.flagsChanged)\n       e:rawFlags(0x800001); e:post()\n       return string.format(\"0x%x\", hs.eventtap.checkKeyboardModifiers(true)._raw)'\n# → 0x800000   (fn survived, deviceLeftControl did not)\n```\n\nA device bit in `heldMask` can therefore never match: the overlay flashes for one poll tick\nand the recording dies 0.1s in, which reads to the user as \"the key binding does nothing,\nI don't even see the UI\". Both rules are covered by the `trigger` checks in the test suite —\nincluding one that fails if any device bit appears in a `heldMask`.\n\n### Simulating a whole dictation without touching the keyboard\n\nPosted flagsChanged events update the session flag state, so a synthetic press is held from\nthe app's point of view until you post the release — the release poller sees the generic bits\nand keeps recording. This exercises the real pipeline end to end:\n\n```bash\nhs -c 'local function f(x) local e=hs.eventtap.event.newEvent()\n         e:setType(hs.eventtap.event.types.flagsChanged); e:rawFlags(x); return e end\n       f(0x840001):post()                                   -- fn + control + deviceLeftControl\n       hs.timer.doAfter(6, function() f(0):post() end)'\n```\n\nSet `~/.local-whisper/output` to `copy` first and restore it afterwards — otherwise the\ntranscript is pasted into whatever window happens to be focused.",
+          "old_string": "- Match with `(rawFlags \u0026 mask) == mask`, never `\u003e 0` — the latter fires on either half,\n  so plain Control would start a recording on every Ctrl-C.\n- Poll the release through `triggerHeld()`, which re-reads\n  `hs.eventtap.checkKeyboardModifiers(true)._raw` and applies the same mask. Generic\n  modifier names (`mods.ctrl`) cannot tell left Control from right Control.\n\nBoth rules are covered by the `trigger` checks in the test suite.",
+          "replace_all": false
+        },
+        "name": "Edit",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce79cGyWkzDnnyDHb3vY5",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 1061,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 1061,
+      "cache_read_input_tokens": 208509,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1061,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 1061,
+          "cache_read_input_tokens": 208509,
+          "input_tokens": 2,
+          "output_tokens": 1101,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 1101,
+      "output_tokens_details": {
+        "thinking_tokens": 0
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "7e7d528f-df9b-45ec-a2d3-195a9de65357",
+  "requestId": "req_011Ce79cFh7uWnZ1Rjh3aZxe",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "timestamp": "2026-08-16T21:37:38.977Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "c6920260-6349-4917-ae05-e713eba5fc4e",
+  "version": "2.1.233"
+}

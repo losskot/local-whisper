@@ -1,0 +1,54 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/tests/test_init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_013SwbYkbc9vsNfVoh9cXUWY",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "6fcc3b0b-4ebd-4fc8-a8d9-813b0611b231",
+  "promptId": "1ddcf7b5-201e-4a14-85c8-a5f41880b7e0",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "6fcc3b0b-4ebd-4fc8-a8d9-813b0611b231",
+  "timestamp": "2026-08-16T20:50:32.244Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/tests/test_init.lua",
+    "newString": "local allowedGlobals = {\n    WhisperActions = true,  -- user-facing action-hook API\n    emergencyStop  = true,  -- called from the overlay callback and the menu bar\n    updateMenuBar  = true,\n}",
+    "oldString": "local allowedGlobals = {\n    _whisper       = true,  -- state probe for `hs -c`\n    WhisperActions = true,  -- user-facing action-hook API\n    emergencyStop  = true,  -- called from the overlay callback and the menu bar\n    updateMenuBar  = true,\n    stopRecording  = true,\n}",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          " -- or Spoon can collide with it. A short allowlist covers the deliberate ones.",
+          " ",
+          " local allowedGlobals = {",
+          "-    _whisper       = true,  -- state probe for `hs -c`",
+          "     WhisperActions = true,  -- user-facing action-hook API",
+          "     emergencyStop  = true,  -- called from the overlay callback and the menu bar",
+          "     updateMenuBar  = true,",
+          "-    stopRecording  = true,",
+          " }",
+          " ",
+          " -- `decls` holds every top-level local, including forward declarations. Assigning to"
+        ],
+        "newLines": 9,
+        "newStart": 270,
+        "oldLines": 11,
+        "oldStart": 270
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "bbcbaf10-6952-446d-85ea-36e11688446a",
+  "version": "2.1.233"
+}

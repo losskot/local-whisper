@@ -1,0 +1,57 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01HQQsxsm13kGT9s3cLefoU6",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "acea4a23-1ce6-430a-a988-d902c6ee3cbe",
+  "promptId": "e5afbad5-c1b1-4424-a694-f4d13fe07c32",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "acea4a23-1ce6-430a-a988-d902c6ee3cbe",
+  "timestamp": "2026-08-16T21:35:20.527Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+    "newString": "-- flagsChanged does not fire on key-up for every modifier, so the release is polled by\n-- re-reading the live keyboard state — through heldMask, since this API drops the\n-- device-specific bits (see TRIGGERS above).\nlocal function triggerHeld()\n    local raw = hs.eventtap.checkKeyboardModifiers(true)._raw or 0\n    return (raw \u0026 trigger.heldMask) == trigger.heldMask\nend",
+    "oldString": "-- flagsChanged does not fire on key-up for every modifier, so the release is polled by\n-- re-reading the live keyboard state through the same mask.\nlocal function triggerHeld()\n    local mods = hs.eventtap.checkKeyboardModifiers(true)\n    return triggerPressed(mods._raw or 0)\nend",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          " end",
+          " ",
+          " -- flagsChanged does not fire on key-up for every modifier, so the release is polled by",
+          "--- re-reading the live keyboard state through the same mask.",
+          "+-- re-reading the live keyboard state — through heldMask, since this API drops the",
+          "+-- device-specific bits (see TRIGGERS above).",
+          " local function triggerHeld()",
+          "-    local mods = hs.eventtap.checkKeyboardModifiers(true)",
+          "-    return triggerPressed(mods._raw or 0)",
+          "+    local raw = hs.eventtap.checkKeyboardModifiers(true)._raw or 0",
+          "+    return (raw \u0026 trigger.heldMask) == trigger.heldMask",
+          " end",
+          " ",
+          " --------------------------------------------------------------------------------"
+        ],
+        "newLines": 11,
+        "newStart": 145,
+        "oldLines": 10,
+        "oldStart": 145
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "0ad70a7b-a114-447b-a87c-cd70421c6de9",
+  "version": "2.1.233"
+}

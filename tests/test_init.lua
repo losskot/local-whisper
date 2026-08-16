@@ -761,11 +761,49 @@ if triggerKey and triggersSrc then
                   string.format("triggerPressed(0x%x) = true — right Control matched a left-Control trigger", mirrored))
         end
 
-        -- triggerHeld() drives the release poller. It must read the raw device flags
-        -- through the same mask, not a generic modifier name.
+        -- triggerHeld() drives the release poller, and it reads a DIFFERENT API than the
+        -- eventtap: hs.eventtap.checkKeyboardModifiers(true)._raw comes from
+        -- CGEventSourceFlagsState, which reports only the generic modifier bits. The
+        -- device-specific bits an event carries (deviceLeftControl = 0x1) are simply not
+        -- there. A trigger polled through its event mask therefore never reads as held,
+        -- and the poller stops the recording 0.1s after the key went down -- which is
+        -- exactly how the first fn+Control build shipped broken.
+        local DEVICE_BITS = RAWFLAGS.deviceLeftShift  | RAWFLAGS.deviceRightShift
+                          | RAWFLAGS.deviceLeftControl| RAWFLAGS.deviceRightControl
+                          | RAWFLAGS.deviceLeftAlternate | RAWFLAGS.deviceRightAlternate
+                          | RAWFLAGS.deviceLeftCommand   | RAWFLAGS.deviceRightCommand
+                          | RAWFLAGS.deviceAlphaShiftStateless
+
+        check("trigger: the trigger defines a separate heldMask for polling",
+              type(trig.heldMask) == "number" and trig.heldMask ~= 0,
+              "heldMask = " .. tostring(trig.heldMask))
+
+        if type(trig.heldMask) == "number" then
+            check("trigger: heldMask contains no device-specific bit (the poll API drops them)",
+                  (trig.heldMask & DEVICE_BITS) == 0,
+                  string.format("heldMask=0x%x carries device bits 0x%x, which CGEventSourceFlagsState never reports",
+                                trig.heldMask, trig.heldMask & DEVICE_BITS))
+
+            -- The generic counterpart must describe the same physical combo: same number
+            -- of modifiers, and each device bit answered by its generic bit.
+            local function bits(mask)
+                local n, b = 0, 1
+                while b <= mask do
+                    if (mask & b) ~= 0 then n = n + 1 end
+                    b = b << 1
+                end
+                return n
+            end
+            check("trigger: heldMask describes the same combo as mask",
+                  bits(trig.heldMask) == bits(trig.mask),
+                  string.format("mask=0x%x has %d modifier(s), heldMask=0x%x has %d",
+                                trig.mask, bits(trig.mask), trig.heldMask, bits(trig.heldMask)))
+        end
+
         local held, hErr = liftFunction("triggerHeld", baseEnv())
         check("trigger: triggerHeld is liftable and compiles", held ~= nil, tostring(hErr))
-        if held and pressed then
+
+        if held and type(trig.heldMask) == "number" then
             local liveFlags, rawArg = 0, nil
             local hEnv = baseEnv()
             hEnv.trigger        = trig
@@ -776,20 +814,22 @@ if triggerKey and triggersSrc then
             end } }
             held = liftFunction("triggerHeld", hEnv)
 
-            liveFlags = trig.mask
-            check("trigger: triggerHeld is true while the whole combo is down",
-                  held() == true, "held() = false with the full mask down")
-            check("trigger: triggerHeld asks for raw device flags",
+            -- What the real API actually returns while the combo is down: generic bits only.
+            liveFlags = trig.heldMask
+            check("trigger: triggerHeld is true for the flags the poll API really returns",
+                  held() == true,
+                  string.format("held() = false for _raw=0x%x — the poller would stop the recording immediately",
+                                trig.heldMask))
+            check("trigger: triggerHeld asks for the raw flag word",
                   rawArg == true,
-                  "checkKeyboardModifiers() called with " .. tostring(rawArg) ..
-                  " — without raw flags it cannot tell left from right")
+                  "checkKeyboardModifiers() called with " .. tostring(rawArg) .. ", want true")
 
             -- Releasing either half must end the recording.
             local released = {}
             local bit = 1
-            while bit <= trig.mask do
-                if (trig.mask & bit) ~= 0 and bit ~= trig.mask then
-                    liveFlags = trig.mask & ~bit
+            while bit <= trig.heldMask do
+                if (trig.heldMask & bit) ~= 0 and bit ~= trig.heldMask then
+                    liveFlags = trig.heldMask & ~bit
                     if held() then released[#released + 1] = string.format("0x%x", bit) end
                 end
                 bit = bit << 1

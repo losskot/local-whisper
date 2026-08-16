@@ -1,0 +1,35 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "1368\t        end\n1369\t    end, { \"-i\", chunkPath, \"-af\", \"volumedetect\", \"-f\", \"null\", \"-\" })\n1370\t    volTask:start()\n1371\tend\n1372\t\n1373\t--------------------------------------------------------------------------------\n1374\t-- Start / stop recording\n1375\t--------------------------------------------------------------------------------\n1376\t\n1377\t-- Warmup state\n1378\tlocal warmupTask = nil\n1379\tlocal warmupTimer = nil\n1380\tlocal isWarmingUp = false\n1381\tlocal warmupAttempt = 0\n1382\tlocal WARMUP_ATTEMPT_SECS = 1.0   -- timeout per attempt\n1383\tlocal WARMUP_MAX_ATTEMPTS = 10    -- give up after this many retries\n1384\t\n1385\tlocal function startActualRecording()\n1386\t    isWarmingUp = false\n1387\t    warmupAttempt = 0\n1388\t    isRecording = true\n1389\t    log(\"recording: start\")\n1390\t\n1391\t    os.execute(\"rm -rf '\" .. CHUNK_DIR .. \"'\")\n1392\t    os.execute(\"mkdir -p '\" .. CHUNK_DIR .. \"'\")\n1393\t\n1394\t    captureActiveApp()\n1395\t    log(\"recording: app=\" .. tostring(capturedAppName) .. \" (\" .. tostring(capturedAppBundleID) .. \")\")\n1396\t\n1397\t    setOverlayText(\"\")\n1398\t    startRecordingIndicator()\n1399\t    updateMenuBar()\n1400\t    -- Pop is played once the first chunk appears on disk (audio is truly flowing)\n1401\t\n1402\t    ffmpegTask = hs.task.new(FFMPEG, function(code, out, err)\n1403\t        log(\"recording: ffmpeg exited \" .. tostring(code))\n1404\t        if code == 251 or code == 1 then\n1405\t            log(\"recording: ERROR — ffmpeg failed to open audio device '\" .. AUDIO_DEVICE .. \"'. Check device format (should be :default, :0, :1) and microphone permissions.\")\n1406\t        end\n1407\t    end, {\n1408\t        \"-f\", \"avfoundation\", \"-i\", AUDIO_DEVICE,\n1409\t        \"-ac\", \"1\", \"-ar\", \"16000\",\n1410\t        \"-f\", \"segment\", \"-segment_time\", \"1\", \"-segment_format\", \"wav\",\n1411\t        CHUNK_DIR .. \"/chunk_%03d.wav\"\n1412\t    })",
+        "tool_use_id": "toolu_01XXVCALYbkhmS5aDGQRGj86",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "0521d2f6-d7a7-41fc-b939-a391da3092c1",
+  "promptId": "1ddcf7b5-201e-4a14-85c8-a5f41880b7e0",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "0521d2f6-d7a7-41fc-b939-a391da3092c1",
+  "timestamp": "2026-08-16T20:45:08.368Z",
+  "toolUseResult": {
+    "file": {
+      "content": "        end\n    end, { \"-i\", chunkPath, \"-af\", \"volumedetect\", \"-f\", \"null\", \"-\" })\n    volTask:start()\nend\n\n--------------------------------------------------------------------------------\n-- Start / stop recording\n--------------------------------------------------------------------------------\n\n-- Warmup state\nlocal warmupTask = nil\nlocal warmupTimer = nil\nlocal isWarmingUp = false\nlocal warmupAttempt = 0\nlocal WARMUP_ATTEMPT_SECS = 1.0   -- timeout per attempt\nlocal WARMUP_MAX_ATTEMPTS = 10    -- give up after this many retries\n\nlocal function startActualRecording()\n    isWarmingUp = false\n    warmupAttempt = 0\n    isRecording = true\n    log(\"recording: start\")\n\n    os.execute(\"rm -rf '\" .. CHUNK_DIR .. \"'\")\n    os.execute(\"mkdir -p '\" .. CHUNK_DIR .. \"'\")\n\n    captureActiveApp()\n    log(\"recording: app=\" .. tostring(capturedAppName) .. \" (\" .. tostring(capturedAppBundleID) .. \")\")\n\n    setOverlayText(\"\")\n    startRecordingIndicator()\n    updateMenuBar()\n    -- Pop is played once the first chunk appears on disk (audio is truly flowing)\n\n    ffmpegTask = hs.task.new(FFMPEG, function(code, out, err)\n        log(\"recording: ffmpeg exited \" .. tostring(code))\n        if code == 251 or code == 1 then\n            log(\"recording: ERROR — ffmpeg failed to open audio device '\" .. AUDIO_DEVICE .. \"'. Check device format (should be :default, :0, :1) and microphone permissions.\")\n        end\n    end, {\n        \"-f\", \"avfoundation\", \"-i\", AUDIO_DEVICE,\n        \"-ac\", \"1\", \"-ar\", \"16000\",\n        \"-f\", \"segment\", \"-segment_time\", \"1\", \"-segment_format\", \"wav\",\n        CHUNK_DIR .. \"/chunk_%03d.wav\"\n    })",
+      "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+      "numLines": 45,
+      "startLine": 1368,
+      "totalLines": 1672
+    },
+    "type": "text"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "25651a6c-f39b-445a-8072-29e7cb43aa6b",
+  "version": "2.1.233"
+}

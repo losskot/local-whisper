@@ -1,0 +1,35 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "1478\t\n1479\t    tryWarmup()\n1480\tend\n1481\t\n1482\tstopRecording = function()\n1483\t    -- Cancel warmup if key released before device was ready\n1484\t    if isWarmingUp then\n1485\t        isWarmingUp = false\n1486\t        warmupAttempt = 0\n1487\t        cancelWarmup()\n1488\t        log(\"warmup: cancelled (key released before device ready)\")\n1489\t        hideOverlay()\n1490\t        return\n1491\t    end\n1492\t\n1493\t    if not isRecording then return end\n1494\t    isRecording = false\n1495\t    log(\"recording: stop\")\n1496\t\n1497\t    if silenceTimer then silenceTimer:stop(); silenceTimer = nil end\n1498\t    silentChunkCount = 0\n1499\t    lastCheckedChunk = 0\n1500\t\n1501\t    stopRecordingIndicator()\n1502\t    updateMenuBar()\n1503\t\n1504\t    if ffmpegTask and ffmpegTask:isRunning() then\n1505\t        ffmpegTask:interrupt()\n1506\t    end\n1507\t    ffmpegTask = nil",
+        "tool_use_id": "toolu_01DFC3aQDhDPXqjxupzru8wZ",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "68b2e642-4fa6-4961-8fe0-45281017282e",
+  "promptId": "1ddcf7b5-201e-4a14-85c8-a5f41880b7e0",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "68b2e642-4fa6-4961-8fe0-45281017282e",
+  "timestamp": "2026-08-16T20:45:35.480Z",
+  "toolUseResult": {
+    "file": {
+      "content": "\n    tryWarmup()\nend\n\nstopRecording = function()\n    -- Cancel warmup if key released before device was ready\n    if isWarmingUp then\n        isWarmingUp = false\n        warmupAttempt = 0\n        cancelWarmup()\n        log(\"warmup: cancelled (key released before device ready)\")\n        hideOverlay()\n        return\n    end\n\n    if not isRecording then return end\n    isRecording = false\n    log(\"recording: stop\")\n\n    if silenceTimer then silenceTimer:stop(); silenceTimer = nil end\n    silentChunkCount = 0\n    lastCheckedChunk = 0\n\n    stopRecordingIndicator()\n    updateMenuBar()\n\n    if ffmpegTask and ffmpegTask:isRunning() then\n        ffmpegTask:interrupt()\n    end\n    ffmpegTask = nil",
+      "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+      "numLines": 30,
+      "startLine": 1478,
+      "totalLines": 1631
+    },
+    "type": "text"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "70dea9ff-f83f-4ce6-b696-ab7633bf9635",
+  "version": "2.1.233"
+}

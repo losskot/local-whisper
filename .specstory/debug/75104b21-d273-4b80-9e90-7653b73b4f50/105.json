@@ -1,0 +1,35 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "1330\t    end\n1331\t\n1332\t    transcribeNextSegment()\n1333\tend\n1334\t\n1335\t--------------------------------------------------------------------------------\n1336\t-- Auto-stop on silence\n1337\t--------------------------------------------------------------------------------\n1338\t\n1339\tlocal stopRecording -- forward declaration (defined below in Start/stop section)\n1340\t\n1341\tlocal function checkSilence()\n1342\t    if not isRecording then return end\n1343\t    local chunks = getChunkFiles()\n1344\t    local numChunks = #chunks\n1345\t    -- Only check completed chunks (not the one being written)\n1346\t    local completed = numChunks - 1\n1347\t    if completed \u003c= lastCheckedChunk then return end\n1348\t\n1349\t    -- Check the latest completed chunk\n1350\t    local chunkPath = chunks[completed]\n1351\t    lastCheckedChunk = completed\n1352\t\n1353\t    local volTask = hs.task.new(FFMPEG, function(code, out, err)\n1354\t        if code ~= 0 or not isRecording then return end\n1355\t        local maxVol = (err or \"\"):match(\"max_volume:%s*([-%.%d]+)\")\n1356\t        if maxVol then\n1357\t            maxVol = tonumber(maxVol)\n1358\t            if maxVol and maxVol \u003c AUTO_STOP_THRESHOLD_DB then\n1359\t                silentChunkCount = silentChunkCount + 1\n1360\t                log(\"silence: chunk \" .. completed .. \" vol=\" .. maxVol .. \"dB (count=\" .. silentChunkCount .. \")\")\n1361\t                if silentChunkCount \u003e= AUTO_STOP_SILENCE_SECONDS then\n1362\t                    log(\"auto-stop: \" .. AUTO_STOP_SILENCE_SECONDS .. \"s of silence\")\n1363\t                    stopRecording()\n1364\t                end\n1365\t            else\n1366\t                silentChunkCount = 0\n1367\t            end\n1368\t        end\n1369\t    end, { \"-i\", chunkPath, \"-af\", \"volumedetect\", \"-f\", \"null\", \"-\" })\n1370\t    volTask:start()\n1371\tend",
+        "tool_use_id": "toolu_01L7Ssv2wxUg6qTbd9Qan3G9",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "a90c9546-a04f-406a-9850-e80dc9013e26",
+  "promptId": "1ddcf7b5-201e-4a14-85c8-a5f41880b7e0",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "a90c9546-a04f-406a-9850-e80dc9013e26",
+  "timestamp": "2026-08-16T20:45:11.267Z",
+  "toolUseResult": {
+    "file": {
+      "content": "    end\n\n    transcribeNextSegment()\nend\n\n--------------------------------------------------------------------------------\n-- Auto-stop on silence\n--------------------------------------------------------------------------------\n\nlocal stopRecording -- forward declaration (defined below in Start/stop section)\n\nlocal function checkSilence()\n    if not isRecording then return end\n    local chunks = getChunkFiles()\n    local numChunks = #chunks\n    -- Only check completed chunks (not the one being written)\n    local completed = numChunks - 1\n    if completed \u003c= lastCheckedChunk then return end\n\n    -- Check the latest completed chunk\n    local chunkPath = chunks[completed]\n    lastCheckedChunk = completed\n\n    local volTask = hs.task.new(FFMPEG, function(code, out, err)\n        if code ~= 0 or not isRecording then return end\n        local maxVol = (err or \"\"):match(\"max_volume:%s*([-%.%d]+)\")\n        if maxVol then\n            maxVol = tonumber(maxVol)\n            if maxVol and maxVol \u003c AUTO_STOP_THRESHOLD_DB then\n                silentChunkCount = silentChunkCount + 1\n                log(\"silence: chunk \" .. completed .. \" vol=\" .. maxVol .. \"dB (count=\" .. silentChunkCount .. \")\")\n                if silentChunkCount \u003e= AUTO_STOP_SILENCE_SECONDS then\n                    log(\"auto-stop: \" .. AUTO_STOP_SILENCE_SECONDS .. \"s of silence\")\n                    stopRecording()\n                end\n            else\n                silentChunkCount = 0\n            end\n        end\n    end, { \"-i\", chunkPath, \"-af\", \"volumedetect\", \"-f\", \"null\", \"-\" })\n    volTask:start()\nend",
+      "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+      "numLines": 42,
+      "startLine": 1330,
+      "totalLines": 1672
+    },
+    "type": "text"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "a60818eb-9780-49a6-a369-7ed8dc4a91d0",
+  "version": "2.1.233"
+}

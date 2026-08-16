@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "-rwxr-xr-x@ 1 vitaliy  admin  200272 Feb 26 11:48 /Applications/Hammerspoon.app/Contents/Frameworks/hs/hs\n/usr/local/bin/hs\npong",
+        "is_error": false,
+        "tool_use_id": "toolu_017PBmzz16uk7P3zhYJGu19k",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "dd1f29cc-e464-42d9-8aa0-e64458ef570a",
+  "promptId": "1ddcf7b5-201e-4a14-85c8-a5f41880b7e0",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "dd1f29cc-e464-42d9-8aa0-e64458ef570a",
+  "timestamp": "2026-08-16T20:48:49.085Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "-rwxr-xr-x@ 1 vitaliy  admin  200272 Feb 26 11:48 /Applications/Hammerspoon.app/Contents/Frameworks/hs/hs\n/usr/local/bin/hs\npong"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "1964efcf-921d-4b28-ad18-72bccd4c3ddd",
+  "version": "2.1.233"
+}

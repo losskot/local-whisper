@@ -1,0 +1,35 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "1035\t--------------------------------------------------------------------------------\n1036\t\n1037\tfunction emergencyStop()\n1038\t    log(\"emergency stop\")\n1039\t    isRecording = false\n1040\t    -- Cancel any in-flight finalization, otherwise the timer armed by stopRecording()\n1041\t    -- still fires and pastes the transcript into whatever is focused after the stop.\n1042\t    finalizationPending = false\n1043\t    if finalizeTimers.timer then finalizeTimers.timer:stop(); finalizeTimers.timer = nil end\n1044\t    if finalizeTimers.watchdog then finalizeTimers.watchdog:stop(); finalizeTimers.watchdog = nil end\n1045\t    if silenceTimer then silenceTimer:stop(); silenceTimer = nil end\n1046\t    stopRecordingIndicator()\n1047\t    if ffmpegTask and ffmpegTask:isRunning() then ffmpegTask:interrupt() end\n1048\t    ffmpegTask = nil\n1049\t    silentChunkCount = 0\n1050\t    lastCheckedChunk = 0\n1051\t    forceHideOverlay()\n1052\t    updateMenuBar()\n1053\t    os.execute(\"killall whisper-cli 2\u003e/dev/null\")\n1054\t    hs.notify.new({ title = \"local-whisper\", informativeText = \"Stopped\" }):send()\n1055\tend\n1056\t\n1057\t--------------------------------------------------------------------------------\n1058\t-- Final transcription\n1059\t--------------------------------------------------------------------------------\n1060\t\n1061\t-- Low-level text insertion at cursor\n1062\tlocal function insertTextAtCursor(text, mode)\n1063\t    if mode == \"paste\" then\n1064\t        -- Note: we intentionally don't save/restore clipboard — getContents() can block",
+        "tool_use_id": "toolu_01Fja4N7tVkvAzHwDpfRjVP7",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "d130636d-dddf-4c4b-9c6f-fc28fe8607a1",
+  "promptId": "1ddcf7b5-201e-4a14-85c8-a5f41880b7e0",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "d130636d-dddf-4c4b-9c6f-fc28fe8607a1",
+  "timestamp": "2026-08-16T20:44:27.482Z",
+  "toolUseResult": {
+    "file": {
+      "content": "--------------------------------------------------------------------------------\n\nfunction emergencyStop()\n    log(\"emergency stop\")\n    isRecording = false\n    -- Cancel any in-flight finalization, otherwise the timer armed by stopRecording()\n    -- still fires and pastes the transcript into whatever is focused after the stop.\n    finalizationPending = false\n    if finalizeTimers.timer then finalizeTimers.timer:stop(); finalizeTimers.timer = nil end\n    if finalizeTimers.watchdog then finalizeTimers.watchdog:stop(); finalizeTimers.watchdog = nil end\n    if silenceTimer then silenceTimer:stop(); silenceTimer = nil end\n    stopRecordingIndicator()\n    if ffmpegTask and ffmpegTask:isRunning() then ffmpegTask:interrupt() end\n    ffmpegTask = nil\n    silentChunkCount = 0\n    lastCheckedChunk = 0\n    forceHideOverlay()\n    updateMenuBar()\n    os.execute(\"killall whisper-cli 2\u003e/dev/null\")\n    hs.notify.new({ title = \"local-whisper\", informativeText = \"Stopped\" }):send()\nend\n\n--------------------------------------------------------------------------------\n-- Final transcription\n--------------------------------------------------------------------------------\n\n-- Low-level text insertion at cursor\nlocal function insertTextAtCursor(text, mode)\n    if mode == \"paste\" then\n        -- Note: we intentionally don't save/restore clipboard — getContents() can block",
+      "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+      "numLines": 30,
+      "startLine": 1035,
+      "totalLines": 1689
+    },
+    "type": "text"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "663ac511-91dc-4524-8864-08e9fe0f1901",
+  "version": "2.1.233"
+}

@@ -1,0 +1,52 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_012V7yanGN2kKACWTKbmye4z",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "dd2989f5-9a22-4099-a711-2a6967e9e47f",
+  "promptId": "1ddcf7b5-201e-4a14-85c8-a5f41880b7e0",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "dd2989f5-9a22-4099-a711-2a6967e9e47f",
+  "timestamp": "2026-08-16T20:44:07.484Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+    "newString": "-- Recent dictations (newest first, max 10)",
+    "oldString": "-- Undo state\nlocal lastInsertedText = nil\n\n-- Recent dictations (newest first, max 10)",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          " local transcribedSecs = 0   -- seconds of audio fully transcribed so far",
+          " local barMaxSecs = 180       -- current max duration displayed (expands at 90%)",
+          " ",
+          "--- Undo state",
+          "-local lastInsertedText = nil",
+          "-",
+          " -- Recent dictations (newest first, max 10)",
+          " local MAX_RECENT = 10",
+          " "
+        ],
+        "newLines": 6,
+        "newStart": 796,
+        "oldLines": 9,
+        "oldStart": 796
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "654c351a-87e2-411a-b606-c7dfc4c9c3f1",
+  "version": "2.1.233"
+}

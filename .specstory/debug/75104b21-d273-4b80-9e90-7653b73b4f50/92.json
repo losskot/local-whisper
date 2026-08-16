@@ -1,0 +1,74 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01VKpmLgRrEcnTEVnH9o4PwQ",
+        "input": {
+          "file_path": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+          "new_string": "-- Insert transcribed text at cursor, with post-processing and action hooks\nlocal function insertTranscribedText(text, detectedLang)\n    if text == \"\" or isHallucination(text) then\n        hideOverlay()\n        return\n    end\n\n    -- Apply app-aware post-processing\n    text = postProcess(text, capturedAppBundleID)\n    if text == \"\" then hideOverlay(); return end\n\n    finishInsertion(text, detectedLang)\nend",
+          "old_string": "-- Insert transcribed text at cursor, with post-processing, optional LLM refinement, and action hooks\nlocal function insertTranscribedText(text, detectedLang)\n    if text == \"\" or isHallucination(text) then\n        hideOverlay()\n        return\n    end\n\n    -- Apply app-aware post-processing\n    text = postProcess(text, capturedAppBundleID)\n    if text == \"\" then hideOverlay(); return end\n\n    -- Skip LLM refinement for voice commands (refine would strip the prefix)\n    local isVoiceCommand = text:lower():match(\"voice%s+command\")\n\n    -- Optional LLM refinement (async, skips short text and voice commands)\n    if not isVoiceCommand and getRefineMode() and #text \u003e= REFINE_MIN_CHARS then\n        setOverlayText(\"Refining...\")\n        refineWithOllama(text, function(refined)\n            finishInsertion(refined, detectedLang)\n        end)\n    else\n        finishInsertion(text, detectedLang)\n    end\nend",
+          "replace_all": false
+        },
+        "name": "Edit",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce75apTq5emTPx1Cjht2n",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 1288,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 1288,
+      "cache_read_input_tokens": 128994,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1288,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 1288,
+          "cache_read_input_tokens": 128994,
+          "input_tokens": 2,
+          "output_tokens": 641,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 641,
+      "output_tokens_details": {
+        "thinking_tokens": 0
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "8d5bd2c7-148b-4253-b042-f2846ea8d53e",
+  "requestId": "req_011Ce75aocER6TfEdhY5rFmL",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "timestamp": "2026-08-16T20:44:44.175Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "7b9faf55-a842-4232-aa15-ed65ca605710",
+  "version": "2.1.233"
+}

@@ -1,0 +1,50 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/AGENTS.md has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_016DsdABoPe3RUoj6QYoPLKu",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "805a6762-08db-4c52-a88f-f6c6ca2bfe6a",
+  "promptId": "e5afbad5-c1b1-4424-a694-f4d13fe07c32",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "805a6762-08db-4c52-a88f-f6c6ca2bfe6a",
+  "timestamp": "2026-08-16T21:37:47.016Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/AGENTS.md",
+    "newString": "### Hammerspoon canvas gotchas\n- `hs.eventtap.checkKeyboardModifiers(true)._raw` reports only generic modifier bits — every `deviceLeft*`/`deviceRight*` bit an event carries is missing there (see the trigger section)\n- Cannot delete a canvas from within its own mouse callback — defer with `hs.timer.doAfter(0.01, ...)`",
+    "oldString": "### Hammerspoon canvas gotchas\n- Cannot delete a canvas from within its own mouse callback — defer with `hs.timer.doAfter(0.01, ...)`",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          " - **Recent dictations not persisting**: Lua upvalue scoping — never reassign a table variable that closures reference; populate in-place instead",
+          " ",
+          " ### Hammerspoon canvas gotchas",
+          "+- `hs.eventtap.checkKeyboardModifiers(true)._raw` reports only generic modifier bits — every `deviceLeft*`/`deviceRight*` bit an event carries is missing there (see the trigger section)",
+          " - Cannot delete a canvas from within its own mouse callback — defer with `hs.timer.doAfter(0.01, ...)`",
+          " - Elements at higher indices render on top and intercept mouse events even when invisible (alpha=0)",
+          " - `hs.task` spawns with minimal environment — always set `HOME` and `PATH` via `task:setEnvironment()`"
+        ],
+        "newLines": 7,
+        "newStart": 197,
+        "oldLines": 6,
+        "oldStart": 197
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "214afdbc-6c1d-4593-b683-b08a3a302fa1",
+  "version": "2.1.233"
+}

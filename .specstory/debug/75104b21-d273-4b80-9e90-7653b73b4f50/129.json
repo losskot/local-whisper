@@ -1,0 +1,74 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_019P7Nz9H96YzWr6CkyDvvQ8",
+        "input": {
+          "file_path": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+          "new_string": "log(\"loaded (trigger=\" .. TRIGGER_KEY .. \", lang=\" .. getLang() .. \", output=\" .. getOutputMode() .. \", model=\" .. getModelName() .. \")\")\nhs.notify.new({\n    title = \"local-whisper\",\n    informativeText = \"Loaded (\" .. getLang():upper() .. \" / \" .. getOutputMode():upper() .. enterStatus .. \" / \" .. getModelName() .. actionsFlag .. \") — hold \" .. trigger.label\n}):send()",
+          "old_string": "log(\"loaded (trigger=\" .. TRIGGER_KEY .. \", lang=\" .. getLang() .. \", output=\" .. getOutputMode() .. \", model=\" .. getModelName() .. \", preferred=\" .. table.concat(getPreferredLangs(), \",\") .. \")\")\nhs.notify.new({\n    title = \"local-whisper\",\n    informativeText = \"Loaded (\" .. getLang():upper() .. \" / \" .. getOutputMode():upper() .. enterStatus .. \" / \" .. getModelName() .. actionsFlag .. \") — hold \" .. TRIGGER_KEY\n}):send()",
+          "replace_all": false
+        },
+        "name": "Edit",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce75hgmAkJxfFKTtYac5M",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 317,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 317,
+      "cache_read_input_tokens": 139745,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 317,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 317,
+          "cache_read_input_tokens": 139745,
+          "input_tokens": 2,
+          "output_tokens": 544,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 544,
+      "output_tokens_details": {
+        "thinking_tokens": 0
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "0bcde50f-7d5e-4ac7-aa58-076d3dd4faf8",
+  "requestId": "req_011Ce75heaCz4ifBeWxzoLcF",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "timestamp": "2026-08-16T20:46:16.177Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "07d67755-be3a-46c2-aee5-6e283302d2a6",
+  "version": "2.1.233"
+}

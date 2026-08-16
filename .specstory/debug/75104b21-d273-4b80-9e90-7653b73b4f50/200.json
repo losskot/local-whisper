@@ -1,0 +1,70 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/AGENTS.md has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01WcZwqd6PicH94CBVez9zVM",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "354ec73e-56b2-495a-95e5-7ad7b45d84d3",
+  "promptId": "1ddcf7b5-201e-4a14-85c8-a5f41880b7e0",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "354ec73e-56b2-495a-95e5-7ad7b45d84d3",
+  "timestamp": "2026-08-16T20:53:46.183Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/AGENTS.md",
+    "newString": "local-whisper is a fully-local macOS dictation tool. Hold **fn + left Control** to record, release to transcribe and insert text at cursor. Powered by whisper.cpp (C/C++, no Python) and Hammerspoon.\n\n## Architecture\n\n```\nHammerspoon eventtap (trigger combo hold/release, matched on raw device flags)\n  → ffmpeg (chunked WAV recording, 1s segments)\n  → whisper-cli (transcription, 55s segments, chosen model — or the remote API)\n  → Post-processing (filler removal, app-aware capitalize)\n  → Action hooks (voice commands, note-taking, app launching)\n  → Text insertion at cursor (paste or keystroke)\n  → Overlay + menu bar updates\n```\n\nTranscription is not streamed: nothing is transcribed until the key is released. Older\ndocs describing live partials, silence-aware splitting, or chained segment prompts\ndescribe code that no longer exists.",
+    "oldString": "local-whisper is a fully-local macOS dictation tool. Hold a modifier key to record, release to transcribe and insert text at cursor. Powered by whisper.cpp (C/C++, no Python) and Hammerspoon.\n\n## Architecture\n\n```\nHammerspoon eventtap (modifier key hold/release)\n  → ffmpeg (chunked WAV recording, 1s segments)\n  → whisper-cli (transcription — tiny model for partials, chosen model for final)\n  → Post-processing (filler removal, app-aware capitalize)\n  → Action hooks (voice commands, note-taking, app launching)\n  → Text insertion at cursor (paste or keystroke)\n  → Overlay + menu bar updates\n```",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          " ",
+          " ## Project overview",
+          " ",
+          "-local-whisper is a fully-local macOS dictation tool. Hold a modifier key to record, release to transcribe and insert text at cursor. Powered by whisper.cpp (C/C++, no Python) and Hammerspoon.",
+          "+local-whisper is a fully-local macOS dictation tool. Hold **fn + left Control** to record, release to transcribe and insert text at cursor. Powered by whisper.cpp (C/C++, no Python) and Hammerspoon.",
+          " ",
+          " ## Architecture",
+          " ",
+          " ```",
+          "-Hammerspoon eventtap (modifier key hold/release)",
+          "+Hammerspoon eventtap (trigger combo hold/release, matched on raw device flags)",
+          "   → ffmpeg (chunked WAV recording, 1s segments)",
+          "-  → whisper-cli (transcription — tiny model for partials, chosen model for final)",
+          "+  → whisper-cli (transcription, 55s segments, chosen model — or the remote API)",
+          "   → Post-processing (filler removal, app-aware capitalize)",
+          "   → Action hooks (voice commands, note-taking, app launching)",
+          "   → Text insertion at cursor (paste or keystroke)",
+          "   → Overlay + menu bar updates",
+          " ```",
+          " ",
+          "+Transcription is not streamed: nothing is transcribed until the key is released. Older",
+          "+docs describing live partials, silence-aware splitting, or chained segment prompts",
+          "+describe code that no longer exists.",
+          "+",
+          " Everything runs inside `~/.hammerspoon/init.lua` — no external bash scripts at runtime.",
+          " ",
+          " ## Key paths"
+        ],
+        "newLines": 24,
+        "newStart": 2,
+        "oldLines": 20,
+        "oldStart": 2
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "92c19065-20fe-4e12-a19c-10cd90b6eff5",
+  "version": "2.1.233"
+}

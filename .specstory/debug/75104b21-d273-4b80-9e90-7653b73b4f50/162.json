@@ -1,0 +1,65 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "signature": "CAIS+QYKhwEIEBgCKkBF0rvKTxao8XarhnJzhDPtJh+tOrDuJzrrJv+x0gg2Cw6kMEBrYci+Id8eG2ffz09rtZ9+c7QUvof8kCt/TaeVMg1jbGF1ZGUtb3B1cy01OAFCCHRoaW5raW5nWiQ4MmY1MDliMS03NDFhLTQ1MzgtYjcyNS1lNWU1ZmVjZjY1NzgSDOBxGubfNqx6pmFuMxoMqUXnK7T10ELPkj0RIjCFjiLKNGM4oiVgPf40jTYHd5oWI8kjg8CTbaglIWZqvixk+KOHsVoNZ2rOeDi0iF0qngVXu3LgdkG8WNXDrncJ49FQdFfhR13ak6rVkILDWpToktTbtMSinyqit9uFwgYxdXUy/oQCaeegYqcMkLGBSugGM86vaxxKjImZc3MaGaYyzOt1PYtkGD8IFV2lM2URrTO/rLiUPOYI6KEKEk/mzjUIZ4xWhc367aaT86mYBnXW9+l7Ex7AfQY9ZV/wx1fhugAvqASOQyBGiF4ACivvXATXExPfY2PnS+LTdeytNXNYspq6zjPOvzt8gOPWVaIUzea0DlaZLakULwMAlwGU6dyVptMKqXqRPAmLI9u5QVvlnC4GE0P5EH7YCbnJH8XmOhyO3qAIVdvSCSMYmeKk5oYRD3AudKlabARyF16vSb09O0HGmrHV2YMhXjv231uF/IyHRLeWaV1/qd7rjL3KqolRDF344lFB1SckkzUs7Ta1Pr+gnk4IVvHW26NEH6Q6pExfDUWXMLzdjzUO77cImShLEeLddQHMjKITn7+K4aihfDp3+kQ/r1px8bRXl8rMHIT01xLDfDMhxraBS/0/LxBBpjlGdA7hqjbdQrYkTl4eXVCNcmXAuuVXh6SxxcwL22k3YjtytTmiFxTvG0tJHvfZLFJjrq/4mfkbTS+FIEXJNDd9dq8rysL0N31X0LLuutAGS2QFQjg2RjxcJR8LmE8enLZzdBbWVVJ/4/zlxnMR8zWbLmE7zjjM+QCA4bv5PLotPgLPR8cdmkPl3OZKwEki7lVlm/IU/cHwv7I7RhuF8o4OlQAoRLJwEIcmqP6Lx3A+nAtmvuq3QOcKy/F9nRVgfK/dfmOtW1vHJShkKPRfNrY+2HLFaOwgLn+7IY4R8spN6/utL3Y79kbhYjUZk8AWc68185YQnr9jTvldaXYonXWGkUt08P3VJJwTeVR7GAE=",
+        "thinking": "",
+        "type": "thinking"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce7664M4bNLYsh9NYh78B",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 1692,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 1692,
+      "cache_read_input_tokens": 153280,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1692,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 1692,
+          "cache_read_input_tokens": 153280,
+          "input_tokens": 2,
+          "output_tokens": 853,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 853,
+      "output_tokens_details": {
+        "thinking_tokens": 244
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "f126d872-2194-4bde-bfc1-0b79a928ef31",
+  "requestId": "req_011Ce7663CMaw9yDuvQSvjm5",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "timestamp": "2026-08-16T20:51:21.107Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "f69d37df-5199-4328-b3a2-400403ec65de",
+  "version": "2.1.233"
+}

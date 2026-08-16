@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "setup.sh:42:echo \"  2) rightCmd     (Right Command)\"\nsetup.sh:50:    2) NEW_KEY=\"rightCmd\";   KEY_LABEL=\"Right Command\" ;;\nREADME.md:223:- **External keyboard mapping**: Some keyboards (e.g., Logitech MX Keys) send non-standard modifier flags, and most non-Apple keyboards have no `fn` key at all. Pick a different `TRIGGER_KEY` in init.lua — `fnLeftCtrl` (default), `rightCmd`, `rightAlt`, or `rightCtrl` — or add your own entry to the `TRIGGERS` table\nAGENTS.md:20:docs describing live partials, silence-aware splitting, or chained segment prompts\nAGENTS.md:80:**Current count: ~121/200** — comfortable headroom after meeting mode, LLM refine, silence auto-stop and preferred languages were removed. Only *top-level* locals count against the limit; locals inside a function body belong to that function's own budget, so match the start of the line exactly:\nAGENTS.md:133:| `meeting`, `refine`, `preferred`, `autostop`, `undo`, `whisperprobe` | a deleted subsystem creeping back in (meeting mode, LLM refine/Ollama, preferred languages, silence auto-stop, undo tracking, the `_whisper` global) |\nCONTRIBUTING.md:9:   - What you did (e.g., \"held Right Cmd, said X\")\ntests/test_init.lua:14:--   * removed subsystems (meeting mode, LLM refine, silence auto-stop, ...) creeping back\ntests/test_init.lua:240:    { name = \"refine\",      what = \"LLM refinement / Ollama\",\ntests/test_init.lua:241:      patterns = { \"%f[%w]refine\", \"ollama\" } },\ntests/test_init.lua:242:    { name = \"preferred\",   what = \"preferred-languages\",\ntests/test_init.lua:243:      patterns = { \"preferred\" } },\ntests/test_init.lua:244:    { name = \"autostop\",    what = \"silence auto-stop\",\ntests/test_init.lua:651:        local partial = runBar({ { 100, 0 }, { 300, 50, 100 } })\ntests/test_init.lua:652:        check(\"progress: a partially transcribed recording shows a partial blue bar\",\ntests/test_init.lua:653:              partial and partial.txn \u003c partial.rec and partial.txn \u003e 1,\ntests/test_init.lua:654:              \"transcribed w=\" .. tostring(partial and partial.txn) ..\ntests/test_init.lua:655:              \", recorded w=\" .. tostring(partial and partial.rec))\ntests/test_init.lua:732:            local partials = {}\ntests/test_init.lua:739:                        partials[#partials + 1] = string.format(\"0x%x\", bit)",
+        "is_error": false,
+        "tool_use_id": "toolu_01RXSfx3dhefST422Nc9XCxz",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "c835a57b-109b-40b9-8aff-53548a52ea95",
+  "promptId": "1ddcf7b5-201e-4a14-85c8-a5f41880b7e0",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "c835a57b-109b-40b9-8aff-53548a52ea95",
+  "timestamp": "2026-08-16T20:57:37.171Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "setup.sh:42:echo \"  2) rightCmd     (Right Command)\"\nsetup.sh:50:    2) NEW_KEY=\"rightCmd\";   KEY_LABEL=\"Right Command\" ;;\nREADME.md:223:- **External keyboard mapping**: Some keyboards (e.g., Logitech MX Keys) send non-standard modifier flags, and most non-Apple keyboards have no `fn` key at all. Pick a different `TRIGGER_KEY` in init.lua — `fnLeftCtrl` (default), `rightCmd`, `rightAlt`, or `rightCtrl` — or add your own entry to the `TRIGGERS` table\nAGENTS.md:20:docs describing live partials, silence-aware splitting, or chained segment prompts\nAGENTS.md:80:**Current count: ~121/200** — comfortable headroom after meeting mode, LLM refine, silence auto-stop and preferred languages were removed. Only *top-level* locals count against the limit; locals inside a function body belong to that function's own budget, so match the start of the line exactly:\nAGENTS.md:133:| `meeting`, `refine`, `preferred`, `autostop`, `undo`, `whisperprobe` | a deleted subsystem creeping back in (meeting mode, LLM refine/Ollama, preferred languages, silence auto-stop, undo tracking, the `_whisper` global) |\nCONTRIBUTING.md:9:   - What you did (e.g., \"held Right Cmd, said X\")\ntests/test_init.lua:14:--   * removed subsystems (meeting mode, LLM refine, silence auto-stop, ...) creeping back\ntests/test_init.lua:240:    { name = \"refine\",      what = \"LLM refinement / Ollama\",\ntests/test_init.lua:241:      patterns = { \"%f[%w]refine\", \"ollama\" } },\ntests/test_init.lua:242:    { name = \"preferred\",   what = \"preferred-languages\",\ntests/test_init.lua:243:      patterns = { \"preferred\" } },\ntests/test_init.lua:244:    { name = \"autostop\",    what = \"silence auto-stop\",\ntests/test_init.lua:651:        local partial = runBar({ { 100, 0 }, { 300, 50, 100 } })\ntests/test_init.lua:652:        check(\"progress: a partially transcribed recording shows a partial blue bar\",\ntests/test_init.lua:653:              partial and partial.txn \u003c partial.rec and partial.txn \u003e 1,\ntests/test_init.lua:654:              \"transcribed w=\" .. tostring(partial and partial.txn) ..\ntests/test_init.lua:655:              \", recorded w=\" .. tostring(partial and partial.rec))\ntests/test_init.lua:732:            local partials = {}\ntests/test_init.lua:739:                        partials[#partials + 1] = string.format(\"0x%x\", bit)"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "a0860a7a-222b-4c01-93dc-5b470217036a",
+  "version": "2.1.233"
+}

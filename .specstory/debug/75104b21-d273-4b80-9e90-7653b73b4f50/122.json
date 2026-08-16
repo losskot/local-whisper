@@ -1,0 +1,74 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01RY6STdX3CjS8Fx4789q9ar",
+        "input": {
+          "file_path": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+          "new_string": "local releasePoller = nil\n\nlocal modTap = hs.eventtap.new({ hs.eventtap.event.types.flagsChanged }, function(event)\n    -- Wrap in pcall so errors don't kill the eventtap\n    local ok, err = pcall(function()\n        local triggered = triggerPressed(event:rawFlags())\n\n        if triggered and not isRecording then\n            startRecording()\n            -- Poll for release since flagsChanged doesn't fire on key-up\n            if releasePoller then releasePoller:stop() end\n            releasePoller = hs.timer.doEvery(0.1, function()\n                if not triggerHeld() then\n                    releasePoller:stop()\n                    releasePoller = nil\n                    stopRecording()\n                end\n            end)\n        elseif not triggered and (isRecording or isWarmingUp) then\n            if releasePoller then releasePoller:stop(); releasePoller = nil end\n            stopRecording()\n        end\n    end)\n    if not ok then log(\"eventtap error: \" .. tostring(err)) end\n\n    return false\nend)\nmodTap:start()",
+          "old_string": "-- Map trigger key to generic modifier name for polling\nlocal GENERIC_MOD = { rightAlt = \"alt\", rightCmd = \"cmd\", rightCtrl = \"ctrl\" }\nlocal genericMod = GENERIC_MOD[TRIGGER_KEY]\n\nlocal releasePoller = nil\n\n-- Global so we can inspect state via hs -c\n_whisper = { modTap = nil, recording = false }\n\nlocal modTap = hs.eventtap.new({ hs.eventtap.event.types.flagsChanged }, function(event)\n    -- Wrap in pcall so errors don't kill the eventtap\n    local ok, err = pcall(function()\n        local rawFlags = event:rawFlags()\n        local triggered = (rawFlags \u0026 triggerMask) \u003e 0\n\n        if triggered and not isRecording then\n            startRecording()\n            -- Poll for release since flagsChanged doesn't fire on key-up\n            if releasePoller then releasePoller:stop() end\n            releasePoller = hs.timer.doEvery(0.1, function()\n                local mods = hs.eventtap.checkKeyboardModifiers()\n                if not mods[genericMod] then\n                    releasePoller:stop()\n                    releasePoller = nil\n                    stopRecording()\n                end\n            end)\n        elseif not triggered and (isRecording or isWarmingUp) then\n            if releasePoller then releasePoller:stop(); releasePoller = nil end\n            stopRecording()\n        end\n    end)\n    if not ok then log(\"eventtap error: \" .. tostring(err)) end\n\n    return false\nend)\nmodTap:start()\n_whisper.modTap = modTap",
+          "replace_all": false
+        },
+        "name": "Edit",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce75g7Qh1fyVXwGb5pvxR",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 1137,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 1137,
+      "cache_read_input_tokens": 136666,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1137,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 1137,
+          "cache_read_input_tokens": 136666,
+          "input_tokens": 2,
+          "output_tokens": 1059,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 1059,
+      "output_tokens_details": {
+        "thinking_tokens": 0
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "dc9e10d5-bcd5-45b0-95b8-adb403d0e5ee",
+  "requestId": "req_011Ce75g6XcFGRNWo3cZBbY6",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "timestamp": "2026-08-16T20:45:59.155Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "e0f67da3-48dd-471e-8b2a-c878811cdfbf",
+  "version": "2.1.233"
+}

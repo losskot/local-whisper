@@ -1,0 +1,51 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/AGENTS.md has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01VdDej8MjKG1L69NdTGfNk8",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "c8d1c474-87f0-4ef5-a90c-cef3ffb3af47",
+  "promptId": "1ddcf7b5-201e-4a14-85c8-a5f41880b7e0",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "c8d1c474-87f0-4ef5-a90c-cef3ffb3af47",
+  "timestamp": "2026-08-16T20:53:50.915Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/AGENTS.md",
+    "newString": "- `~/whisper.cpp/models/` — whisper models (medium, large-v3-turbo, etc.)",
+    "oldString": "- `~/whisper.cpp/models/` — whisper models (medium, tiny, etc.)",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          " - `~/.hammerspoon/local_whisper_actions.lua` — user voice commands (optional, auto-reloads)",
+          " - `~/.local-whisper/` — all user settings (lang, model, output, prompt, recent dictations)",
+          " - `~/whisper.cpp/build/bin/whisper-cli` — transcription binary",
+          "-- `~/whisper.cpp/models/` — whisper models (medium, tiny, etc.)",
+          "+- `~/whisper.cpp/models/` — whisper models (medium, large-v3-turbo, etc.)",
+          " - `$TMPDIR/whisper-dictate/` — all temp state (per-user private dir on macOS)",
+          " - `$TMPDIR/whisper-dictate/chunks/` — recording segments (ephemeral)",
+          " - `$TMPDIR/whisper-dictate/whisper-dictate.log` — debug log"
+        ],
+        "newLines": 7,
+        "newStart": 28,
+        "oldLines": 7,
+        "oldStart": 28
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "476f99dd-097f-4849-9ee3-b8e999535c82",
+  "version": "2.1.233"
+}

@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "ac4c275 Remove dead features; switch the trigger to fn + left Control\n1df06b9 before cleaning\n---\n## main...origin/main\n D .specstory/debug/75104b21-d273-4b80-9e90-7653b73b4f50/session-data.json\n D .specstory/debug/7d3c92af-ac69-47c4-ad94-2c02c7d6e213/session-data.json\n M .specstory/history/2026-08-16_20-16-16Z-not-covered-by-tests.md\n M .specstory/history/2026-08-16_20-32-18Z.md",
+        "is_error": false,
+        "tool_use_id": "toolu_01R2aoi7mtLxgsPPGadvags4",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "17f02674-ff83-4b30-9728-d91d6b411a99",
+  "promptId": "e5afbad5-c1b1-4424-a694-f4d13fe07c32",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "17f02674-ff83-4b30-9728-d91d6b411a99",
+  "timestamp": "2026-08-16T21:40:22.675Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "ac4c275 Remove dead features; switch the trigger to fn + left Control\n1df06b9 before cleaning\n---\n## main...origin/main\n D .specstory/debug/75104b21-d273-4b80-9e90-7653b73b4f50/session-data.json\n D .specstory/debug/7d3c92af-ac69-47c4-ad94-2c02c7d6e213/session-data.json\n M .specstory/history/2026-08-16_20-16-16Z-not-covered-by-tests.md\n M .specstory/history/2026-08-16_20-32-18Z.md"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "33790603-e646-4d71-89c0-e34e40aa2f00",
+  "version": "2.1.233"
+}

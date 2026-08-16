@@ -1,0 +1,53 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_019P7Nz9H96YzWr6CkyDvvQ8",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "07d67755-be3a-46c2-aee5-6e283302d2a6",
+  "promptId": "1ddcf7b5-201e-4a14-85c8-a5f41880b7e0",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "07d67755-be3a-46c2-aee5-6e283302d2a6",
+  "timestamp": "2026-08-16T20:46:17.256Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+    "newString": "log(\"loaded (trigger=\" .. TRIGGER_KEY .. \", lang=\" .. getLang() .. \", output=\" .. getOutputMode() .. \", model=\" .. getModelName() .. \")\")\nhs.notify.new({\n    title = \"local-whisper\",\n    informativeText = \"Loaded (\" .. getLang():upper() .. \" / \" .. getOutputMode():upper() .. enterStatus .. \" / \" .. getModelName() .. actionsFlag .. \") — hold \" .. trigger.label\n}):send()",
+    "oldString": "log(\"loaded (trigger=\" .. TRIGGER_KEY .. \", lang=\" .. getLang() .. \", output=\" .. getOutputMode() .. \", model=\" .. getModelName() .. \", preferred=\" .. table.concat(getPreferredLangs(), \",\") .. \")\")\nhs.notify.new({\n    title = \"local-whisper\",\n    informativeText = \"Loaded (\" .. getLang():upper() .. \" / \" .. getOutputMode():upper() .. enterStatus .. \" / \" .. getModelName() .. actionsFlag .. \") — hold \" .. TRIGGER_KEY\n}):send()",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          " ",
+          " local enterStatus = getEnterMode() and \"⏎\" or \"\"",
+          " local actionsFlag = actionsEnabled and \" +actions\" or \"\"",
+          "-log(\"loaded (trigger=\" .. TRIGGER_KEY .. \", lang=\" .. getLang() .. \", output=\" .. getOutputMode() .. \", model=\" .. getModelName() .. \", preferred=\" .. table.concat(getPreferredLangs(), \",\") .. \")\")",
+          "+log(\"loaded (trigger=\" .. TRIGGER_KEY .. \", lang=\" .. getLang() .. \", output=\" .. getOutputMode() .. \", model=\" .. getModelName() .. \")\")",
+          " hs.notify.new({",
+          "     title = \"local-whisper\",",
+          "-    informativeText = \"Loaded (\" .. getLang():upper() .. \" / \" .. getOutputMode():upper() .. enterStatus .. \" / \" .. getModelName() .. actionsFlag .. \") — hold \" .. TRIGGER_KEY",
+          "+    informativeText = \"Loaded (\" .. getLang():upper() .. \" / \" .. getOutputMode():upper() .. enterStatus .. \" / \" .. getModelName() .. actionsFlag .. \") — hold \" .. trigger.label",
+          " }):send()"
+        ],
+        "newLines": 8,
+        "newStart": 1604,
+        "oldLines": 8,
+        "oldStart": 1604
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "04c1bd3d-1d89-4319-a9c4-186226c4ab76",
+  "version": "2.1.233"
+}

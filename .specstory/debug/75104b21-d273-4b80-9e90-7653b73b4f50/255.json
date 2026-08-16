@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "ac4c275 Remove dead features; switch the trigger to fn + left Control\n1df06b9 before cleaning\n---\nac4c275b74c10fc89ccb10c8e90a164530057e7c\nac4c275b74c10fc89ccb10c8e90a164530057e7c",
+        "is_error": false,
+        "tool_use_id": "toolu_01ALFFqTgSx3b6EdVTqfLxTE",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "184f3f2e-bf7d-42b9-a445-1f23780dd002",
+  "promptId": "1ddcf7b5-201e-4a14-85c8-a5f41880b7e0",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "184f3f2e-bf7d-42b9-a445-1f23780dd002",
+  "timestamp": "2026-08-16T20:59:02.014Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "ac4c275 Remove dead features; switch the trigger to fn + left Control\n1df06b9 before cleaning\n---\nac4c275b74c10fc89ccb10c8e90a164530057e7c\nac4c275b74c10fc89ccb10c8e90a164530057e7c"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "e5372987-2130-48b1-a67f-68f52a3755ec",
+  "version": "2.1.233"
+}

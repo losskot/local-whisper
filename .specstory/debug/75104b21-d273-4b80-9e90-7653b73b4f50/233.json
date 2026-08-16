@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "[22:42:24] recording: stop\n[22:42:24] recording: ffmpeg exited 2\n[22:42:24] final: START — total chunks=0\n[22:42:24] final: not enough chunks, skipping\n[22:42:30] warmup: probing audio device...\n[22:42:30] warmup: attempt 1/10\n[22:42:30] warmup: device ready on attempt 1\n[22:42:30] recording: start\n[22:42:30] recording: app=Telegram (com.tdesktop.Telegram)\n[22:42:31] recording: stop\n[22:42:31] recording: ffmpeg exited 2\n[22:42:31] final: START — total chunks=0\n[22:42:31] final: not enough chunks, skipping\n[22:55:08] actions: loaded /Users/vitaliy/.hammerspoon/local_whisper_actions.lua\n[22:55:08] actions: enabled\n[22:55:08] loaded (trigger=fnLeftCtrl, lang=auto, output=paste, model=large-v3-turbo-q5_0)\n[22:55:35] warmup: probing audio device...\n[22:55:35] warmup: attempt 1/10\n[22:55:36] warmup: cancelled (key released before device ready)\n[22:56:34] warmup: probing audio device...\n[22:56:34] warmup: attempt 1/10\n[22:56:34] warmup: cancelled (key released before device ready)",
+        "is_error": false,
+        "tool_use_id": "toolu_01Do99zfmpmi2kcAoTfJ1vdR",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "1d6af50d-6bec-4320-9744-fe26262174b0",
+  "promptId": "1ddcf7b5-201e-4a14-85c8-a5f41880b7e0",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "1d6af50d-6bec-4320-9744-fe26262174b0",
+  "timestamp": "2026-08-16T20:56:56.768Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "[22:42:24] recording: stop\n[22:42:24] recording: ffmpeg exited 2\n[22:42:24] final: START — total chunks=0\n[22:42:24] final: not enough chunks, skipping\n[22:42:30] warmup: probing audio device...\n[22:42:30] warmup: attempt 1/10\n[22:42:30] warmup: device ready on attempt 1\n[22:42:30] recording: start\n[22:42:30] recording: app=Telegram (com.tdesktop.Telegram)\n[22:42:31] recording: stop\n[22:42:31] recording: ffmpeg exited 2\n[22:42:31] final: START — total chunks=0\n[22:42:31] final: not enough chunks, skipping\n[22:55:08] actions: loaded /Users/vitaliy/.hammerspoon/local_whisper_actions.lua\n[22:55:08] actions: enabled\n[22:55:08] loaded (trigger=fnLeftCtrl, lang=auto, output=paste, model=large-v3-turbo-q5_0)\n[22:55:35] warmup: probing audio device...\n[22:55:35] warmup: attempt 1/10\n[22:55:36] warmup: cancelled (key released before device ready)\n[22:56:34] warmup: probing audio device...\n[22:56:34] warmup: attempt 1/10\n[22:56:34] warmup: cancelled (key released before device ready)"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "f89de634-adec-4f76-8371-052b9002b946",
+  "version": "2.1.233"
+}

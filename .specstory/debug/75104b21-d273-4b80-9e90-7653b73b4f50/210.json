@@ -1,0 +1,52 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/AGENTS.md has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01VebE7t9ChPkwrL48pjyirr",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "6afa4618-7064-4235-9c05-3b6cd20ed83c",
+  "promptId": "1ddcf7b5-201e-4a14-85c8-a5f41880b7e0",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "6afa4618-7064-4235-9c05-3b6cd20ed83c",
+  "timestamp": "2026-08-16T20:54:25.206Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/AGENTS.md",
+    "newString": "| `sound` | unguarded `hs.sound.getByFile(...):play()`, which throws and aborts its callback |\n| `meeting`, `refine`, `preferred`, `autostop`, `undo`, `whisperprobe` | a deleted subsystem creeping back in (meeting mode, LLM refine/Ollama, preferred languages, silence auto-stop, undo tracking, the `_whisper` global) |\n| `trigger` | a combo trigger matched with `\u003e 0` so half of it fires; a release poller that cannot tell left Control from right Control |\n| `globals` | state leaked into Hammerspoon's shared `_ENV` |",
+    "oldString": "| `sound` | unguarded `hs.sound.getByFile(...):play()`, which throws and aborts its callback |\n| `meeting` | meeting-mode code creeping back in |\n| `globals` | state leaked into Hammerspoon's shared `_ENV` |",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          " | `locals` | the Lua 200-per-function ceiling |",
+          " | `scope` | a top-level local referenced by an earlier-defined function (reads as a nil global at runtime, with no load-time error) |",
+          " | `sound` | unguarded `hs.sound.getByFile(...):play()`, which throws and aborts its callback |",
+          "-| `meeting` | meeting-mode code creeping back in |",
+          "+| `meeting`, `refine`, `preferred`, `autostop`, `undo`, `whisperprobe` | a deleted subsystem creeping back in (meeting mode, LLM refine/Ollama, preferred languages, silence auto-stop, undo tracking, the `_whisper` global) |",
+          "+| `trigger` | a combo trigger matched with `\u003e 0` so half of it fires; a release poller that cannot tell left Control from right Control |",
+          " | `globals` | state leaked into Hammerspoon's shared `_ENV` |",
+          " | `sort` | chunk files ordered as strings, which reorders audio past chunk 999 |",
+          " | `emergencyStop` | emergency stop not cancelling a pending finalization |"
+        ],
+        "newLines": 8,
+        "newStart": 130,
+        "oldLines": 7,
+        "oldStart": 130
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "2a0c66ce-ffc3-4831-baf2-66cce195d2cc",
+  "version": "2.1.233"
+}

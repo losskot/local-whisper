@@ -1,0 +1,72 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01CvYiss4aJn212MxjNNkGqf",
+        "input": {
+          "command": "head -30 .beads/README.md 2\u003e/dev/null; echo \"=== metadata:\"; head -c 300 .beads/metadata.json 2\u003e/dev/null; echo; echo \"=== issues:\"; wc -l .beads/issues.jsonl",
+          "description": "Read beads README for accurate description"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce79bPqjYySQNDKW8Kj4k",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 848,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 848,
+      "cache_read_input_tokens": 207661,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 848,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 848,
+          "cache_read_input_tokens": 207661,
+          "input_tokens": 2,
+          "output_tokens": 631,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 631,
+      "output_tokens_details": {
+        "thinking_tokens": 435
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "45e24932-9a80-47b6-83f7-de2be7d49455",
+  "requestId": "req_011Ce79bNrCm1LMaKB4AadyP",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "timestamp": "2026-08-16T21:37:23.809Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "aa29a3b6-a59e-4dfa-bc68-d70dc045cdaa",
+  "version": "2.1.233"
+}

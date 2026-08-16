@@ -1,0 +1,72 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_013KTnaQe8UxhMrT9pvyRC57",
+        "input": {
+          "command": "perl -e 'alarm 25; exec @ARGV' hs -c '\nlocal function flags(f) local e=hs.eventtap.event.newEvent(); e:setType(hs.eventtap.event.types.flagsChanged); e:rawFlags(f); return e end\nflags(0x800001):post()\nlocal out = {}\nlocal m = hs.eventtap.checkKeyboardModifiers(true)\nfor k,v in pairs(m) do out[#out+1] = tostring(k)..\":\"..tostring(v) end\ntable.sort(out)\nflags(0):post()\nreturn string.format(\"posted 0x800001 -\u003e poll sees [%s]\", table.concat(out,\",\"))' 2\u003e\u00261 | tail -1",
+          "description": "Test whether polled state carries device bits"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce79JhdqMFzRXkN4C89Dc",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 1535,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 1535,
+      "cache_read_input_tokens": 193352,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1535,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 1535,
+          "cache_read_input_tokens": 193352,
+          "input_tokens": 2,
+          "output_tokens": 3583,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 3583,
+      "output_tokens_details": {
+        "thinking_tokens": 3234
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "fcebe8cf-e4f7-4b27-8767-19bf6dee1423",
+  "requestId": "req_011Ce79Jg1MMe9EWNzvd5Ryq",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "timestamp": "2026-08-16T21:34:23.205Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "20c4881f-f65c-4d6e-bd21-41d26778c37c",
+  "version": "2.1.233"
+}

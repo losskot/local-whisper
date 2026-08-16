@@ -1,0 +1,58 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/AGENTS.md has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_015YpTuMuT6pgioehNG8PQRg",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "b5a0a1ac-9afd-463e-97c9-0d037d6af857",
+  "promptId": "e5afbad5-c1b1-4424-a694-f4d13fe07c32",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "b5a0a1ac-9afd-463e-97c9-0d037d6af857",
+  "timestamp": "2026-08-16T21:38:02.425Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/AGENTS.md",
+    "newString": "## Workflow\n\n- **Create a bd issue before starting any work**\n- **Always verify work before closing an issue** — run the code, check the output, confirm it does what the issue asks\n- Check `bd ready` for unblocked work\n- `bd create \"Title\" -t task -p 2` to file new work\n- `bd close \u003cid\u003e` when done\n- If `bd` is not on PATH, say so and keep going — do not silently switch to markdown TODOs\n\n### `.specstory/` is code\n\n`.specstory/` (session history, debug dumps, statistics) is **tracked, committed and pushed\nlike any source file**. Do not stash it, do not `.gitignore` it, do not leave it dirty at the\nend of a session, and never exclude it to keep a diff \"clean\" — `git add -A` and push it with\nthe rest of the work. It is the record of how the code got here.",
+    "oldString": "## Workflow\n\n- **Create a bd issue before starting any work**\n- **Always verify work before closing an issue** — run the code, check the output, confirm it does what the issue asks\n- Check `bd ready` for unblocked work\n- `bd create \"Title\" -t task -p 2` to file new work\n- `bd close \u003cid\u003e` when done",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          " - Check `bd ready` for unblocked work",
+          " - `bd create \"Title\" -t task -p 2` to file new work",
+          " - `bd close \u003cid\u003e` when done",
+          "+- If `bd` is not on PATH, say so and keep going — do not silently switch to markdown TODOs",
+          " ",
+          "+### `.specstory/` is code",
+          "+",
+          "+`.specstory/` (session history, debug dumps, statistics) is **tracked, committed and pushed",
+          "+like any source file**. Do not stash it, do not `.gitignore` it, do not leave it dirty at the",
+          "+end of a session, and never exclude it to keep a diff \"clean\" — `git add -A` and push it with",
+          "+the rest of the work. It is the record of how the code got here.",
+          "+",
+          " \u003c!-- BEGIN BEADS INTEGRATION --\u003e",
+          " ## Issue Tracking with bd (beads)",
+          " "
+        ],
+        "newLines": 15,
+        "newStart": 217,
+        "oldLines": 7,
+        "oldStart": 217
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "fcf00a13-59b1-4a81-9d34-5ffe2273cc3f",
+  "version": "2.1.233"
+}

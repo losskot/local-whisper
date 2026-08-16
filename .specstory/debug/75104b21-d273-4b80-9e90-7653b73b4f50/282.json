@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "[23:36:46] recording: ffmpeg exited 255\n[23:36:47] final: START — total chunks=3\n[23:36:47] final: first=chunk_000.wav  last=chunk_002.wav  duration≈3s\n[23:36:47] final: segments=1 (FINAL_SEGMENT_SECS=55)\n[23:36:47] final: seg 1 → 3 chunks (chunk_000.wav … chunk_002.wav)\n[23:36:47] final: seg 1 writing concat list (3 files) → /var/folders/ph/3yv4hw8567g12wy09lntpvt40000gp/T//whisper-dictate/seg_concat_1.txt\n[23:36:47] final: seg 1 starting ffmpeg concat → /var/folders/ph/3yv4hw8567g12wy09lntpvt40000gp/T//whisper-dictate/seg_1.wav\n[23:36:47] final: seg 1 concat OK — wav size=82680 bytes\n[23:36:47] final: seg 1 starting whisper lang=auto model=ggml-large-v3-turbo-q5_0.bin\n[23:36:55] final: seg 1 whisper(auto) exit=0 outlen=52 errlen=4052\n[23:36:55] seg 1 auto-detected: ru\n[23:36:55] final: seg 1 onSegmentText hallucination=false len=50\n[23:36:55] final: seg 1 accepted text: 'Нажимается, работает. А ну...'\n[23:36:55] final: finishAll — collected 1 text segment(s)\n[23:36:55] final combined (1 seg(s)): 'Нажимается, работает. А ну...'\n[23:36:55] action: inserted [Code]: Нажимается, работает. А ну...",
+        "is_error": false,
+        "tool_use_id": "toolu_01Xd1iv8uJHp5eVUhngD9PDV",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "11bfdd7e-cc8f-4698-ab29-3799dbc8b74f",
+  "promptId": "e5afbad5-c1b1-4424-a694-f4d13fe07c32",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "11bfdd7e-cc8f-4698-ab29-3799dbc8b74f",
+  "timestamp": "2026-08-16T21:36:56.166Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "[23:36:46] recording: ffmpeg exited 255\n[23:36:47] final: START — total chunks=3\n[23:36:47] final: first=chunk_000.wav  last=chunk_002.wav  duration≈3s\n[23:36:47] final: segments=1 (FINAL_SEGMENT_SECS=55)\n[23:36:47] final: seg 1 → 3 chunks (chunk_000.wav … chunk_002.wav)\n[23:36:47] final: seg 1 writing concat list (3 files) → /var/folders/ph/3yv4hw8567g12wy09lntpvt40000gp/T//whisper-dictate/seg_concat_1.txt\n[23:36:47] final: seg 1 starting ffmpeg concat → /var/folders/ph/3yv4hw8567g12wy09lntpvt40000gp/T//whisper-dictate/seg_1.wav\n[23:36:47] final: seg 1 concat OK — wav size=82680 bytes\n[23:36:47] final: seg 1 starting whisper lang=auto model=ggml-large-v3-turbo-q5_0.bin\n[23:36:55] final: seg 1 whisper(auto) exit=0 outlen=52 errlen=4052\n[23:36:55] seg 1 auto-detected: ru\n[23:36:55] final: seg 1 onSegmentText hallucination=false len=50\n[23:36:55] final: seg 1 accepted text: 'Нажимается, работает. А ну...'\n[23:36:55] final: finishAll — collected 1 text segment(s)\n[23:36:55] final combined (1 seg(s)): 'Нажимается, работает. А ну...'\n[23:36:55] action: inserted [Code]: Нажимается, работает. А ну..."
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "6a6bfc46-2fa0-4d9f-a8db-f1bcb816e293",
+  "version": "2.1.233"
+}

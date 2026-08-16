@@ -1,0 +1,51 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/AGENTS.md has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01LoQJFV9raeBx555wx1oi2M",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "701af6f6-d053-4223-b573-d2cf946695d5",
+  "promptId": "1ddcf7b5-201e-4a14-85c8-a5f41880b7e0",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "701af6f6-d053-4223-b573-d2cf946695d5",
+  "timestamp": "2026-08-16T20:54:40.750Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/AGENTS.md",
+    "newString": "### Common debug patterns\n- **Trigger does nothing**: the log shows no `warmup:` line at all — check that the keyboard actually has an `fn` key and that Hammerspoon still holds Accessibility permission\n- **Voice commands not matching**",
+    "oldString": "### Common debug patterns\n- **Refine not working**: Check `refine: failed` in logs — common causes: Ollama not running, wrong model name, missing `$HOME` env\n- **Voice commands not matching**",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          " function whose helpers were since renamed fails by erroring rather than by asserting.",
+          " ",
+          " ### Common debug patterns",
+          "-- **Refine not working**: Check `refine: failed` in logs — common causes: Ollama not running, wrong model name, missing `$HOME` env",
+          "+- **Trigger does nothing**: the log shows no `warmup:` line at all — check that the keyboard actually has an `fn` key and that Hammerspoon still holds Accessibility permission",
+          " - **Voice commands not matching**: Check `final (auto/...)` log line — whisper may have transcribed differently than expected",
+          " - **X button not closing overlay**: `hs.canvas:delete()` inside its own mouse callback is silently ignored — must use `canvas:hide()` immediately then defer deletion with `hs.timer.doAfter(0.01, ...)`",
+          " - **Recent dictations not persisting**: Lua upvalue scoping — never reassign a table variable that closures reference; populate in-place instead"
+        ],
+        "newLines": 7,
+        "newStart": 161,
+        "oldLines": 7,
+        "oldStart": 161
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "8e70098d-6478-46f0-877a-55d4001b63ac",
+  "version": "2.1.233"
+}

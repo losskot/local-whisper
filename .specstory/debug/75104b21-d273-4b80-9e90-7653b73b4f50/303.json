@@ -1,0 +1,72 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01R2aoi7mtLxgsPPGadvags4",
+        "input": {
+          "command": "git log --oneline -2; echo \"---\"; git status -sb | head -5",
+          "description": "Check commit state after timeout"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce79qCGMWKfmNFyteEHzj",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 763,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 763,
+      "cache_read_input_tokens": 212334,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 763,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 763,
+          "cache_read_input_tokens": 212334,
+          "input_tokens": 2,
+          "output_tokens": 99,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 99,
+      "output_tokens_details": {
+        "thinking_tokens": 0
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "d669caab-3fe4-4e76-85be-d5c6cf6bc10c",
+  "requestId": "req_011Ce79qAmoxxLT1CkTh6F9o",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "timestamp": "2026-08-16T21:40:22.252Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "17f02674-ff83-4b30-9728-d91d6b411a99",
+  "version": "2.1.233"
+}

@@ -1,0 +1,89 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/README.md has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01DyX7C6p5JkV1bpX8x1mrNU",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "3dea14c2-d4ba-4263-bcf1-4e8ce4ec8a10",
+  "promptId": "1ddcf7b5-201e-4a14-85c8-a5f41880b7e0",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "3dea14c2-d4ba-4263-bcf1-4e8ce4ec8a10",
+  "timestamp": "2026-08-16T20:52:54.323Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/README.md",
+    "newString": "```\nTrigger combo hold/release (detected by Hammerspoon eventtap on raw device flags)\n  → warmup probe: short ffmpeg run to open the audio device before committing\n  → ffmpeg records chunked WAV segments (1s each) via avfoundation\n  ↓  (key released)\n  → doFinalTranscription(): group the 1s chunks into 55s segments\n  → per segment: ffmpeg concat → whisper-cli (or the remote API), in order\n  → progress bar tracks transcribed seconds against recorded seconds\n  → join the segment texts, drop whisper's known silence hallucinations\n  → Post-processing: remove fillers, capitalize, app-aware adjustments\n  → Voice command hooks: beforeInsert → actions → text insertion → afterInsert\n  → Text inserted at cursor via paste (Cmd+V), keystroke, or clipboard-only (COPY mode)\n```\n\n## Troubleshooting",
+    "oldString": "```\nModifier key hold/release (detected by Hammerspoon eventtap)\n  → warmup probe: short ffmpeg run to open the audio device before committing\n  → ffmpeg records chunked WAV segments (1s each) via avfoundation\n  ↓\n  ┌─ every 3s during recording ──────────────────────────────────────────────┐\n  │  streamCheckAndDispatch(): if ≥25s of chunks ready →                     │\n  │    splitAtSilence(): find quietest 1s chunk near boundary (8s lookback)  │\n  │    dispatchSegment(N): concat → whisper-cli (async, runs while recording) │\n  └──────────────────────────────────────────────────────────────────────────┘\n  ↓  (key released)\n  → doFinalTranscription(): dispatch only remaining unchunked audio\n  → each segment uses --prompt from previous segment for semantic continuity\n  → pipelineFinalize(): join results in order when all segments complete\n  → Post-processing: remove fillers, capitalize, app-aware adjustments\n  → Optional LLM refinement via Ollama (punctuation, formatting, cleanup)\n  → Voice command hooks: beforeInsert → actions → text insertion → afterInsert\n  → Text inserted at cursor via paste (Cmd+V), keystroke, or clipboard-only (COPY mode)\n```\n\n**Latency profile** (60s dictation, large-v3-turbo model, ~0.4× real-time):\n\n| | Before | After |\n|---|---|---|\n| Post-stop wait | ~25 s | ~5 s |\n| Why | All segments transcribed after stop | Only the short tail segment remains |\n\n## Auto-stop on silence\n\nRecording automatically stops after 3 consecutive seconds of silence (\u003c -40 dB). This is useful for hands-free dictation. Configure thresholds in `init.lua`:\n\n```lua\nlocal AUTO_STOP_SILENCE_SECONDS = 3\nlocal AUTO_STOP_THRESHOLD_DB = -40\n```\n\n## Troubleshooting",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          " ## How it works",
+          " ",
+          " ```",
+          "-Modifier key hold/release (detected by Hammerspoon eventtap)",
+          "+Trigger combo hold/release (detected by Hammerspoon eventtap on raw device flags)",
+          "   → warmup probe: short ffmpeg run to open the audio device before committing",
+          "   → ffmpeg records chunked WAV segments (1s each) via avfoundation",
+          "-  ↓",
+          "-  ┌─ every 3s during recording ──────────────────────────────────────────────┐",
+          "-  │  streamCheckAndDispatch(): if ≥25s of chunks ready →                     │",
+          "-  │    splitAtSilence(): find quietest 1s chunk near boundary (8s lookback)  │",
+          "-  │    dispatchSegment(N): concat → whisper-cli (async, runs while recording) │",
+          "-  └──────────────────────────────────────────────────────────────────────────┘",
+          "   ↓  (key released)",
+          "-  → doFinalTranscription(): dispatch only remaining unchunked audio",
+          "-  → each segment uses --prompt from previous segment for semantic continuity",
+          "-  → pipelineFinalize(): join results in order when all segments complete",
+          "+  → doFinalTranscription(): group the 1s chunks into 55s segments",
+          "+  → per segment: ffmpeg concat → whisper-cli (or the remote API), in order",
+          "+  → progress bar tracks transcribed seconds against recorded seconds",
+          "+  → join the segment texts, drop whisper's known silence hallucinations",
+          "   → Post-processing: remove fillers, capitalize, app-aware adjustments",
+          "-  → Optional LLM refinement via Ollama (punctuation, formatting, cleanup)",
+          "   → Voice command hooks: beforeInsert → actions → text insertion → afterInsert",
+          "   → Text inserted at cursor via paste (Cmd+V), keystroke, or clipboard-only (COPY mode)",
+          " ```",
+          " ",
+          "-**Latency profile** (60s dictation, large-v3-turbo model, ~0.4× real-time):",
+          "-",
+          "-| | Before | After |",
+          "-|---|---|---|",
+          "-| Post-stop wait | ~25 s | ~5 s |",
+          "-| Why | All segments transcribed after stop | Only the short tail segment remains |",
+          "-",
+          "-## Auto-stop on silence",
+          "-",
+          "-Recording automatically stops after 3 consecutive seconds of silence (\u003c -40 dB). This is useful for hands-free dictation. Configure thresholds in `init.lua`:",
+          "-",
+          "-```lua",
+          "-local AUTO_STOP_SILENCE_SECONDS = 3",
+          "-local AUTO_STOP_THRESHOLD_DB = -40",
+          "-```",
+          "-",
+          " ## Troubleshooting",
+          " ",
+          " - **No transcription output**: Check `$TMPDIR/whisper-dictate/whisper-dictate.log` for errors (run `echo $TMPDIR` to find the path)"
+        ],
+        "newLines": 19,
+        "newStart": 201,
+        "oldLines": 41,
+        "oldStart": 201
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "2adc9e6b-a1d4-4bd9-9257-3fced7d64b8a",
+  "version": "2.1.233"
+}

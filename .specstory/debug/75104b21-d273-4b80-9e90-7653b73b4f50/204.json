@@ -1,0 +1,58 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/AGENTS.md has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01AT3qSqrnFMXPM2u4uxj875",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "2eba33d2-0667-49f1-9f09-d734d670f991",
+  "promptId": "1ddcf7b5-201e-4a14-85c8-a5f41880b7e0",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "2eba33d2-0667-49f1-9f09-d734d670f991",
+  "timestamp": "2026-08-16T20:53:59.162Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/AGENTS.md",
+    "newString": "**Current count: ~121/200** — comfortable headroom after meeting mode, LLM refine, silence auto-stop and preferred languages were removed. Only *top-level* locals count against the limit; locals inside a function body belong to that function's own budget, so match the start of the line exactly:\n\n```bash\ngrep -c '^local ' hammerspoon/init.lua\n```\n\n**Rule**: Never add a new top-level `local` without first verifying the count stays ≤ 200. If the count climbs back toward the ceiling, group related state into a single table rather than adding bare locals — `finalizeTimers` (`{ timer, watchdog }`) and `TRIGGERS` (per-trigger `{ mask, label }`) are the existing examples of that pattern.",
+    "oldString": "**Current count: ~144/200** — comfortable headroom since meeting mode was removed. Only *top-level* locals count against the limit; locals inside a function body belong to that function's own budget, so match the start of the line exactly:\n\n```bash\ngrep -c '^local ' hammerspoon/init.lua\n```\n\n**Rule**: Never add a new top-level `local` without first verifying the count stays ≤ 200. If the count climbs back toward the ceiling, group related state into a single table rather than adding bare locals — `finalizeTimers` (`{ timer, watchdog }`) and `ollamaProbe` (`{ value, at }`) are the existing examples of that pattern.",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          " ",
+          " Lua 5.4 (Hammerspoon's runtime) enforces a **hard limit of 200 locals per function**. The top-level chunk of `init.lua` counts as one function. This limit is a compiler error — exceeding it prevents the file from loading at all.",
+          " ",
+          "-**Current count: ~144/200** — comfortable headroom since meeting mode was removed. Only *top-level* locals count against the limit; locals inside a function body belong to that function's own budget, so match the start of the line exactly:",
+          "+**Current count: ~121/200** — comfortable headroom after meeting mode, LLM refine, silence auto-stop and preferred languages were removed. Only *top-level* locals count against the limit; locals inside a function body belong to that function's own budget, so match the start of the line exactly:",
+          " ",
+          " ```bash",
+          " grep -c '^local ' hammerspoon/init.lua",
+          " ```",
+          " ",
+          "-**Rule**: Never add a new top-level `local` without first verifying the count stays ≤ 200. If the count climbs back toward the ceiling, group related state into a single table rather than adding bare locals — `finalizeTimers` (`{ timer, watchdog }`) and `ollamaProbe` (`{ value, at }`) are the existing examples of that pattern.",
+          "+**Rule**: Never add a new top-level `local` without first verifying the count stays ≤ 200. If the count climbs back toward the ceiling, group related state into a single table rather than adding bare locals — `finalizeTimers` (`{ timer, watchdog }`) and `TRIGGERS` (per-trigger `{ mask, label }`) are the existing examples of that pattern.",
+          " ",
+          " ### Declaration order matters as much as the count",
+          " "
+        ],
+        "newLines": 13,
+        "newStart": 77,
+        "oldLines": 13,
+        "oldStart": 77
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "72089832-fef4-4945-8e3f-f21c09c02baf",
+  "version": "2.1.233"
+}

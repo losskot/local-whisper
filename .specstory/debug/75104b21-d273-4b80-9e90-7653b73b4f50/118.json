@@ -1,0 +1,53 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01Wm1Pkf1u2KjzhWah7aAv5G",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "2e0de159-31c2-4dbb-bd13-e1618e675169",
+  "promptId": "1ddcf7b5-201e-4a14-85c8-a5f41880b7e0",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "2e0de159-31c2-4dbb-bd13-e1618e675169",
+  "timestamp": "2026-08-16T20:45:44.938Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+    "newString": "    log(\"recording: stop\")\n\n    stopRecordingIndicator()",
+    "oldString": "    log(\"recording: stop\")\n\n    if silenceTimer then silenceTimer:stop(); silenceTimer = nil end\n    silentChunkCount = 0\n    lastCheckedChunk = 0\n\n    stopRecordingIndicator()",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          "     isRecording = false",
+          "     log(\"recording: stop\")",
+          " ",
+          "-    if silenceTimer then silenceTimer:stop(); silenceTimer = nil end",
+          "-    silentChunkCount = 0",
+          "-    lastCheckedChunk = 0",
+          "-",
+          "     stopRecordingIndicator()",
+          "     updateMenuBar()",
+          " "
+        ],
+        "newLines": 6,
+        "newStart": 1494,
+        "oldLines": 10,
+        "oldStart": 1494
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "6bfa7956-c520-4426-abfd-b580de334ab7",
+  "version": "2.1.233"
+}

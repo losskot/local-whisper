@@ -1,0 +1,60 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_012BtYiwoUduXi3nM2ibJM2B",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "32c51e9b-0e64-4d30-8454-feeb85b511ce",
+  "promptId": "1ddcf7b5-201e-4a14-85c8-a5f41880b7e0",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "32c51e9b-0e64-4d30-8454-feeb85b511ce",
+  "timestamp": "2026-08-16T20:43:37.030Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+    "newString": "local function getEnterMode()",
+    "oldString": "local function getPreferredLangs()\n    local content = readFile(PREFERRED_LANGS_FILE):gsub(\"%s+$\", \"\")\n    if content == \"\" then return {\"en\"} end\n    local langs = {}\n    for lang in content:gmatch(\"[^,]+\") do\n        lang = lang:match(\"^%s*(.-)%s*$\")\n        if lang ~= \"\" then table.insert(langs, lang) end\n    end\n    return #langs \u003e 0 and langs or {\"en\"}\nend\n\nlocal function getEnterMode()",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          "     return \"paste\"",
+          " end",
+          " ",
+          "-local function getPreferredLangs()",
+          "-    local content = readFile(PREFERRED_LANGS_FILE):gsub(\"%s+$\", \"\")",
+          "-    if content == \"\" then return {\"en\"} end",
+          "-    local langs = {}",
+          "-    for lang in content:gmatch(\"[^,]+\") do",
+          "-        lang = lang:match(\"^%s*(.-)%s*$\")",
+          "-        if lang ~= \"\" then table.insert(langs, lang) end",
+          "-    end",
+          "-    return #langs \u003e 0 and langs or {\"en\"}",
+          "-end",
+          "-",
+          " local function getEnterMode()",
+          "     local mode = readFile(ENTER_FILE):gsub(\"%s+\", \"\")",
+          "     return mode == \"on\""
+        ],
+        "newLines": 6,
+        "newStart": 198,
+        "oldLines": 17,
+        "oldStart": 198
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "272e5726-1c3e-4f39-8b64-edf4f73e2390",
+  "version": "2.1.233"
+}

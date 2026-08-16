@@ -1,0 +1,73 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_015YMmcs5i4eJyxTQH7PFWqC",
+        "input": {
+          "file_path": "/Users/vitaliy/Documents/GitHub/local-whisper/AGENTS.md",
+          "limit": 60,
+          "offset": 86
+        },
+        "name": "Read",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce76JHWQrXaQgmNt86G6Q",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 678,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 678,
+      "cache_read_input_tokens": 173223,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 678,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 678,
+          "cache_read_input_tokens": 173223,
+          "input_tokens": 2,
+          "output_tokens": 123,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 123,
+      "output_tokens_details": {
+        "thinking_tokens": 0
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "72089832-fef4-4945-8e3f-f21c09c02baf",
+  "requestId": "req_011Ce76JGKUYkkoV65GQgiNr",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "timestamp": "2026-08-16T20:54:02.196Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "69a50b1a-9172-4e2a-bc4b-cff9c45e1021",
+  "version": "2.1.233"
+}

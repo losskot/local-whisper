@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "# Beads - AI-Native Issue Tracking\n\nWelcome to Beads! This repository uses **Beads** for issue tracking - a modern, AI-native tool designed to live directly in your codebase alongside your code.\n\n## What is Beads?\n\nBeads is issue tracking that lives in your repo, making it perfect for AI coding agents and developers who want their issues close to their code. No web UI required - everything works through the CLI and integrates seamlessly with git.\n\n**Learn more:** [github.com/steveyegge/beads](https://github.com/steveyegge/beads)\n\n## Quick Start\n\n### Essential Commands\n\n```bash\n# Create new issues\nbd create \"Add user authentication\"\n\n# View all issues\nbd list\n\n# View issue details\nbd show \u003cissue-id\u003e\n\n# Update issue status\nbd update \u003cissue-id\u003e --status in_progress\nbd update \u003cissue-id\u003e --status done\n\n# Sync with Dolt remote\nbd dolt push\n=== metadata:\n{\n  \"database\": \"dolt\",\n  \"backend\": \"dolt\",\n  \"dolt_mode\": \"server\",\n  \"dolt_database\": \"beads_local-free-openwhisper\",\n  \"project_id\": \"78b98a04-0609-4dc0-9616-a68295853d80\"\n}\n=== issues:\n       8 .beads/issues.jsonl",
+        "is_error": false,
+        "tool_use_id": "toolu_01CvYiss4aJn212MxjNNkGqf",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "aa29a3b6-a59e-4dfa-bc68-d70dc045cdaa",
+  "promptId": "e5afbad5-c1b1-4424-a694-f4d13fe07c32",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "aa29a3b6-a59e-4dfa-bc68-d70dc045cdaa",
+  "timestamp": "2026-08-16T21:37:23.945Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "# Beads - AI-Native Issue Tracking\n\nWelcome to Beads! This repository uses **Beads** for issue tracking - a modern, AI-native tool designed to live directly in your codebase alongside your code.\n\n## What is Beads?\n\nBeads is issue tracking that lives in your repo, making it perfect for AI coding agents and developers who want their issues close to their code. No web UI required - everything works through the CLI and integrates seamlessly with git.\n\n**Learn more:** [github.com/steveyegge/beads](https://github.com/steveyegge/beads)\n\n## Quick Start\n\n### Essential Commands\n\n```bash\n# Create new issues\nbd create \"Add user authentication\"\n\n# View all issues\nbd list\n\n# View issue details\nbd show \u003cissue-id\u003e\n\n# Update issue status\nbd update \u003cissue-id\u003e --status in_progress\nbd update \u003cissue-id\u003e --status done\n\n# Sync with Dolt remote\nbd dolt push\n=== metadata:\n{\n  \"database\": \"dolt\",\n  \"backend\": \"dolt\",\n  \"dolt_mode\": \"server\",\n  \"dolt_database\": \"beads_local-free-openwhisper\",\n  \"project_id\": \"78b98a04-0609-4dc0-9616-a68295853d80\"\n}\n=== issues:\n       8 .beads/issues.jsonl"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "7e7d528f-df9b-45ec-a2d3-195a9de65357",
+  "version": "2.1.233"
+}

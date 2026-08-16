@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "README.md\ndolt-monitor.pid.lock\nexport-state.json\nhooks\ninteractions.jsonl\nissues.jsonl\nmetadata.json\nbeads not found\n---\nalphaShift=0x10000\nalphaShiftStateless=0x1000000\nalternate=0x80000\ncommand=0x100000\ncontrol=0x40000\ndeviceAlphaShiftStateless=0x80\ndeviceLeftAlternate=0x20\ndeviceLeftCommand=0x8\ndeviceLeftControl=0x1\ndeviceLeftShift=0x2\ndeviceRightAlternate=0x40\ndeviceRightCommand=0x10\ndeviceRightControl=0x2000\ndeviceRightShift=0x4\nhelp=0x400000\nnonCoalesced=0x100\nnumericPad=0x200000\nsecondaryFn=0x800000\nshift=0x20000",
+        "is_error": false,
+        "tool_use_id": "toolu_01VDj2pEZx7FeRYGxkrAQ74S",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "11c9be9c-e4e4-4cfc-b03f-3682e0c53afd",
+  "promptId": "1ddcf7b5-201e-4a14-85c8-a5f41880b7e0",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "11c9be9c-e4e4-4cfc-b03f-3682e0c53afd",
+  "timestamp": "2026-08-16T20:42:35.933Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "README.md\ndolt-monitor.pid.lock\nexport-state.json\nhooks\ninteractions.jsonl\nissues.jsonl\nmetadata.json\nbeads not found\n---\nalphaShift=0x10000\nalphaShiftStateless=0x1000000\nalternate=0x80000\ncommand=0x100000\ncontrol=0x40000\ndeviceAlphaShiftStateless=0x80\ndeviceLeftAlternate=0x20\ndeviceLeftCommand=0x8\ndeviceLeftControl=0x1\ndeviceLeftShift=0x2\ndeviceRightAlternate=0x40\ndeviceRightCommand=0x10\ndeviceRightControl=0x2000\ndeviceRightShift=0x4\nhelp=0x400000\nnonCoalesced=0x100\nnumericPad=0x200000\nsecondaryFn=0x800000\nshift=0x20000"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "d17960de-f8b8-4e87-a8e2-edd271bafd05",
+  "version": "2.1.233"
+}

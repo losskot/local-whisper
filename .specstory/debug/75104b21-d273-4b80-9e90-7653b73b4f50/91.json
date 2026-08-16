@@ -1,0 +1,35 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "1110\t        app = capturedAppName or \"?\",\n1111\t    })\n1112\t    while #recentDictations \u003e MAX_RECENT do\n1113\t        table.remove(recentDictations)\n1114\t    end\n1115\t    saveRecentDictations()\n1116\t\n1117\t    local display = finalText\n1118\t    if detectedLang then display = display .. \" [\" .. detectedLang:upper() .. \"]\" end\n1119\t    setOverlayText(display)\n1120\t    playSound(\"Glass\")\n1121\t    hs.timer.doAfter(OVERLAY_LINGER, hideOverlay)\n1122\tend\n1123\t\n1124\t-- Insert transcribed text at cursor, with post-processing, optional LLM refinement, and action hooks\n1125\tlocal function insertTranscribedText(text, detectedLang)\n1126\t    if text == \"\" or isHallucination(text) then\n1127\t        hideOverlay()\n1128\t        return\n1129\t    end\n1130\t\n1131\t    -- Apply app-aware post-processing\n1132\t    text = postProcess(text, capturedAppBundleID)\n1133\t    if text == \"\" then hideOverlay(); return end\n1134\t\n1135\t    -- Skip LLM refinement for voice commands (refine would strip the prefix)\n1136\t    local isVoiceCommand = text:lower():match(\"voice%s+command\")\n1137\t\n1138\t    -- Optional LLM refinement (async, skips short text and voice commands)\n1139\t    if not isVoiceCommand and getRefineMode() and #text \u003e= REFINE_MIN_CHARS then\n1140\t        setOverlayText(\"Refining...\")\n1141\t        refineWithOllama(text, function(refined)\n1142\t            finishInsertion(refined, detectedLang)\n1143\t        end)\n1144\t    else\n1145\t        finishInsertion(text, detectedLang)\n1146\t    end\n1147\tend\n1148\t\n1149\t-- Max seconds per whisper call — keeps each segment within whisper's sweet spot\n1150\t-- and prevents the model from losing the beginning of long recordings.\n1151\tlocal FINAL_SEGMENT_SECS = 55\n1152\t\n1153\tlocal function doFinalTranscription()\n1154\t    local chunks = getChunkFiles()\n1155\t\n1156\t    -- ДИАГНОСТИКА: логируем все чанки и состояние\n1157\t    log(\"final: START — total chunks=\" .. #chunks)\n1158\t    if #chunks \u003e 0 then\n1159\t        local first = chunks[1]:match(\"([^/]+)$\") or chunks[1]\n1160\t        local last  = chunks[#chunks]:match(\"([^/]+)$\") or chunks[#chunks]\n1161\t        log(\"final: first=\" .. first .. \"  last=\" .. last .. \"  duration≈\" .. #chunks .. \"s\")\n1162\t    end\n1163\t\n1164\t    if #chunks \u003c 2 then\n1165\t        log(\"final: not enough chunks, skipping\")\n1166\t        hideProgressBar()\n1167\t        hideOverlay()\n1168\t        return\n1169\t    end\n1170\t\n1171\t    setOverlayText(\"Transcribing...\")\n1172\t\n1173\t    local lang = getLang()\n1174\t    local preferred = getPreferredLangs()\n1175\t    local promptArgs = getPromptArgs()\n1176\t\n1177\t    -- Split 1-second chunks into groups of FINAL_SEGMENT_SECS\n1178\t    local segmentGroups = {}\n1179\t    local i = 1",
+        "tool_use_id": "toolu_01X6e7qjnS4JMGhArFDxepTQ",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "e94f15b2-f97b-4575-b63e-96df83bd9b28",
+  "promptId": "1ddcf7b5-201e-4a14-85c8-a5f41880b7e0",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "e94f15b2-f97b-4575-b63e-96df83bd9b28",
+  "timestamp": "2026-08-16T20:44:36.928Z",
+  "toolUseResult": {
+    "file": {
+      "content": "        app = capturedAppName or \"?\",\n    })\n    while #recentDictations \u003e MAX_RECENT do\n        table.remove(recentDictations)\n    end\n    saveRecentDictations()\n\n    local display = finalText\n    if detectedLang then display = display .. \" [\" .. detectedLang:upper() .. \"]\" end\n    setOverlayText(display)\n    playSound(\"Glass\")\n    hs.timer.doAfter(OVERLAY_LINGER, hideOverlay)\nend\n\n-- Insert transcribed text at cursor, with post-processing, optional LLM refinement, and action hooks\nlocal function insertTranscribedText(text, detectedLang)\n    if text == \"\" or isHallucination(text) then\n        hideOverlay()\n        return\n    end\n\n    -- Apply app-aware post-processing\n    text = postProcess(text, capturedAppBundleID)\n    if text == \"\" then hideOverlay(); return end\n\n    -- Skip LLM refinement for voice commands (refine would strip the prefix)\n    local isVoiceCommand = text:lower():match(\"voice%s+command\")\n\n    -- Optional LLM refinement (async, skips short text and voice commands)\n    if not isVoiceCommand and getRefineMode() and #text \u003e= REFINE_MIN_CHARS then\n        setOverlayText(\"Refining...\")\n        refineWithOllama(text, function(refined)\n            finishInsertion(refined, detectedLang)\n        end)\n    else\n        finishInsertion(text, detectedLang)\n    end\nend\n\n-- Max seconds per whisper call — keeps each segment within whisper's sweet spot\n-- and prevents the model from losing the beginning of long recordings.\nlocal FINAL_SEGMENT_SECS = 55\n\nlocal function doFinalTranscription()\n    local chunks = getChunkFiles()\n\n    -- ДИАГНОСТИКА: логируем все чанки и состояние\n    log(\"final: START — total chunks=\" .. #chunks)\n    if #chunks \u003e 0 then\n        local first = chunks[1]:match(\"([^/]+)$\") or chunks[1]\n        local last  = chunks[#chunks]:match(\"([^/]+)$\") or chunks[#chunks]\n        log(\"final: first=\" .. first .. \"  last=\" .. last .. \"  duration≈\" .. #chunks .. \"s\")\n    end\n\n    if #chunks \u003c 2 then\n        log(\"final: not enough chunks, skipping\")\n        hideProgressBar()\n        hideOverlay()\n        return\n    end\n\n    setOverlayText(\"Transcribing...\")\n\n    local lang = getLang()\n    local preferred = getPreferredLangs()\n    local promptArgs = getPromptArgs()\n\n    -- Split 1-second chunks into groups of FINAL_SEGMENT_SECS\n    local segmentGroups = {}\n    local i = 1",
+      "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+      "numLines": 70,
+      "startLine": 1110,
+      "totalLines": 1686
+    },
+    "type": "text"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "8d5bd2c7-148b-4253-b042-f2846ea8d53e",
+  "version": "2.1.233"
+}

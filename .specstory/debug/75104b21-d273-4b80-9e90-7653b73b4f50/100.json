@@ -1,0 +1,53 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01Hjc4gsyrd82SVMCW6C3e7D",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "dea539d1-1b76-4ea5-a19e-98396e2fc3a9",
+  "promptId": "1ddcf7b5-201e-4a14-85c8-a5f41880b7e0",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "dea539d1-1b76-4ea5-a19e-98396e2fc3a9",
+  "timestamp": "2026-08-16T20:45:02.248Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+    "newString": "                    -- Accept whatever language auto-detected — forcing a retry with a fixed\n                    -- language would \"translate\" mixed-language content (surzhyk, English terms, etc.)",
+    "oldString": "                    -- Accept whatever language auto-detected — forcing a retry with preferred[1]\n                    -- would cause \"translation\" of mixed-language content (surzhyk, English terms, etc.)",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          "                     local detected = (err2 or \"\"):match(\"auto%-detected language:%s*(%w+)\")",
+          "                     log(\"seg \" .. n .. \" auto-detected: \" .. tostring(detected))",
+          " ",
+          "-                    -- Accept whatever language auto-detected — forcing a retry with preferred[1]",
+          "-                    -- would cause \"translation\" of mixed-language content (surzhyk, English terms, etc.)",
+          "+                    -- Accept whatever language auto-detected — forcing a retry with a fixed",
+          "+                    -- language would \"translate\" mixed-language content (surzhyk, English terms, etc.)",
+          "                     local text = (out2 or \"\"):gsub(\"^%s+\", \"\"):gsub(\"%s+$\", \"\"):gsub(\"%s+\", \" \")",
+          "                     onSegmentText(text, detected)",
+          "                 end, autoArgs)"
+        ],
+        "newLines": 8,
+        "newStart": 1301,
+        "oldLines": 8,
+        "oldStart": 1301
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "d85f28e9-9223-4858-842c-5987408b3edb",
+  "version": "2.1.233"
+}

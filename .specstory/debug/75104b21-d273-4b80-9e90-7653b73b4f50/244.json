@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "+local TRIGGER_KEY = \"fnLeftCtrl\"\n+local RAWFLAGS = hs.eventtap.event.rawFlagMasks\n+\n+local TRIGGERS = {\n+    rightAlt   = { mask = RAWFLAGS.deviceRightAlternate, label = \"right Option\" },\n+    rightCmd   = { mask = RAWFLAGS.deviceRightCommand,   label = \"right Command\" },\n+    rightCtrl  = { mask = RAWFLAGS.deviceRightControl,   label = \"right Control\" },\n+    fnLeftCtrl = { mask = RAWFLAGS.secondaryFn | RAWFLAGS.deviceLeftControl, label = \"fn + left Control\" },\n+local trigger = TRIGGERS[TRIGGER_KEY]\n+if not trigger then\n+local function triggerPressed(rawFlags)\n+    return (rawFlags \u0026 trigger.mask) == trigger.mask\n+end\n+\n+local function triggerHeld()\n+    local mods = hs.eventtap.checkKeyboardModifiers(true)\n+    return triggerPressed(mods._raw or 0)\n+end\n+\n+    finishInsertion(text, detectedLang)\n+                    -- Accept whatever language auto-detected — forcing a retry with a fixed\n+                    -- language would \"translate\" mixed-language content (surzhyk, English terms, etc.)\n+local function stopRecording()\n+        local triggered = triggerPressed(event:rawFlags())\n+                if not triggerHeld() then\n+log(\"loaded (trigger=\" .. TRIGGER_KEY .. \", lang=\" .. getLang() .. \", output=\" .. getOutputMode() .. \", model=\" .. getModelName() .. \")\")\n+    informativeText = \"Loaded (\" .. getLang():upper() .. \" / \" .. getOutputMode():upper() .. enterStatus .. \" / \" .. getModelName() .. actionsFlag .. \") — hold \" .. trigger.label",
+        "is_error": false,
+        "tool_use_id": "toolu_01GYFKR4rbBNpjcap6RUTeWi",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "df4a7e23-a289-42ce-8ad6-da2b6975bbbd",
+  "promptId": "1ddcf7b5-201e-4a14-85c8-a5f41880b7e0",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "df4a7e23-a289-42ce-8ad6-da2b6975bbbd",
+  "timestamp": "2026-08-16T20:58:02.400Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "+local TRIGGER_KEY = \"fnLeftCtrl\"\n+local RAWFLAGS = hs.eventtap.event.rawFlagMasks\n+\n+local TRIGGERS = {\n+    rightAlt   = { mask = RAWFLAGS.deviceRightAlternate, label = \"right Option\" },\n+    rightCmd   = { mask = RAWFLAGS.deviceRightCommand,   label = \"right Command\" },\n+    rightCtrl  = { mask = RAWFLAGS.deviceRightControl,   label = \"right Control\" },\n+    fnLeftCtrl = { mask = RAWFLAGS.secondaryFn | RAWFLAGS.deviceLeftControl, label = \"fn + left Control\" },\n+local trigger = TRIGGERS[TRIGGER_KEY]\n+if not trigger then\n+local function triggerPressed(rawFlags)\n+    return (rawFlags \u0026 trigger.mask) == trigger.mask\n+end\n+\n+local function triggerHeld()\n+    local mods = hs.eventtap.checkKeyboardModifiers(true)\n+    return triggerPressed(mods._raw or 0)\n+end\n+\n+    finishInsertion(text, detectedLang)\n+                    -- Accept whatever language auto-detected — forcing a retry with a fixed\n+                    -- language would \"translate\" mixed-language content (surzhyk, English terms, etc.)\n+local function stopRecording()\n+        local triggered = triggerPressed(event:rawFlags())\n+                if not triggerHeld() then\n+log(\"loaded (trigger=\" .. TRIGGER_KEY .. \", lang=\" .. getLang() .. \", output=\" .. getOutputMode() .. \", model=\" .. getModelName() .. \")\")\n+    informativeText = \"Loaded (\" .. getLang():upper() .. \" / \" .. getOutputMode():upper() .. enterStatus .. \" / \" .. getModelName() .. actionsFlag .. \") — hold \" .. trigger.label"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "262d6c97-bdbf-4efa-89e8-ef04ccc78c8f",
+  "version": "2.1.233"
+}
