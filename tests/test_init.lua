@@ -91,6 +91,52 @@ local function readsOnly(s)
 end
 
 --------------------------------------------------------------------------------
+-- Sandbox helpers (behavioral tests)
+--------------------------------------------------------------------------------
+-- Functions are lifted out of the source under test and executed against stubbed
+-- globals, so the tests exercise the real implementation rather than a copy that
+-- drifts. Every name the lifted function closes over in init.lua resolves to the
+-- sandbox _ENV here, which is what makes the stubs and the after-the-fact state
+-- assertions work.
+
+local function baseEnv()
+    return {
+        math = math, string = string, table = table, os = os,
+        tostring = tostring, tonumber = tonumber, type = type,
+        ipairs = ipairs, pairs = pairs, select = select,
+    }
+end
+
+local function loadIn(chunk, env, name)
+    return load(chunk, name or "sandbox", "t", env)
+end
+
+-- Source text of a top-level `local function NAME(...) ... end`, located by its
+-- declaration and terminated by the matching column-0 `end`.
+local function extractFunction(name)
+    local startLine
+    for i, s in ipairs(stripped) do
+        if s:match("^local%s+function%s+" .. name .. "%s*%(") then startLine = i break end
+    end
+    if not startLine then return nil end
+    for i = startLine + 1, #lines do
+        if stripped[i]:match("^end%s*$") then
+            return table.concat({ table.unpack(lines, startLine, i) }, "\n")
+        end
+    end
+    return nil
+end
+
+-- Load a lifted `local function` and return it, bound to `env`.
+local function liftFunction(name, env)
+    local fnSrc = extractFunction(name)
+    if not fnSrc then return nil, "could not locate local function " .. name .. "()" end
+    local factory, err = loadIn(fnSrc .. "\nreturn " .. name, env, name)
+    if not factory then return nil, tostring(err) end
+    return factory()
+end
+
+--------------------------------------------------------------------------------
 -- 1. Syntax
 --------------------------------------------------------------------------------
 
@@ -312,6 +358,305 @@ else
     check("emergencyStop: stops the finalization timers",
           body:find("finalizeTimers%.timer") ~= nil and body:find("finalizeTimers%.watchdog") ~= nil,
           "emergencyStop() does not stop finalizeTimers.timer/.watchdog")
+end
+
+--------------------------------------------------------------------------------
+-- 10. Overlay state is declared above the callback that closes over it
+--------------------------------------------------------------------------------
+-- The generic scan above is heuristic; these three names are the ones that actually
+-- broke (X button, unpin, menu-bar pinning), so pin the invariant explicitly.
+
+local createLine
+for i, s in ipairs(stripped) do
+    if s:match("^local%s+function%s+createOverlay%s*%(") then createLine = i break end
+end
+if not createLine then
+    check("overlay: createOverlay() is locatable", false, "could not find createOverlay()")
+else
+    check("overlay: createOverlay() is locatable", true)
+    local late = {}
+    for _, name in ipairs({ "overlayPinned", "isRecording", "hideOverlay" }) do
+        if not decls[name] or decls[name] > createLine then
+            late[#late + 1] = name .. " (declared at L" .. tostring(decls[name]) .. ")"
+        end
+    end
+    check("overlay: pin/recording state is declared above createOverlay",
+          #late == 0,
+          "declared below createOverlay (L" .. createLine .. "): " .. table.concat(late, ", "))
+end
+
+--------------------------------------------------------------------------------
+-- 11. Overlay click behavior (behavioral -- runs the real mouse callback)
+--------------------------------------------------------------------------------
+-- Two live bugs live here: clicking X mid-recording used to hide the overlay while
+-- ffmpeg kept running, and deleting the canvas from inside its own mouse callback is
+-- silently ignored by hs.canvas, so the delete must stay deferred.
+
+local cbSrc = src:match("overlay:mouseCallback(%b())")
+if not cbSrc then
+    check("overlay: mouse callback is extractable from source", false,
+          "could not locate overlay:mouseCallback(function(canvas, event, id, ...) ... end)")
+else
+    check("overlay: mouse callback is extractable from source", true)
+
+    -- Click the overlay and return the resulting stub state. Deferred work is captured
+    -- rather than run, so a test can assert on both sides of the hs.timer.doAfter.
+    local function click(opts)
+        local env    = baseEnv()
+        local calls  = { hide = 0, delete = 0, emergency = 0, hideOverlay = 0 }
+        local defer  = {}
+        local canvas = {
+            [1]    = { fillColor = {} },
+            hide   = function() calls.hide = calls.hide + 1 end,
+            delete = function() calls.delete = calls.delete + 1 end,
+        }
+        env.log           = function() end
+        env.isRecording   = opts.recording and true or false
+        env.overlayPinned = opts.pinned and true or false
+        env.overlay       = canvas
+        env.emergencyStop = function() calls.emergency = calls.emergency + 1 end
+        env.hideOverlay   = function() calls.hideOverlay = calls.hideOverlay + 1 end
+        env.hs = { timer = { doAfter = function(d, fn) defer[#defer + 1] = { delay = d, fn = fn } end } }
+
+        local factory, err = loadIn("return " .. cbSrc, env, "mouseCallback")
+        if not factory then return nil, tostring(err) end
+        -- A raw error here would abort the whole suite, so report it as a failure instead.
+        local ok, runErr = pcall(factory(), canvas, opts.event, opts.id, 0, 0)
+        if not ok then return nil, "callback errored: " .. tostring(runErr) end
+        return { env = env, calls = calls, defer = defer, canvas = canvas }
+    end
+
+    local probe, probeErr = click({ event = "mouseDown", id = "close", recording = true })
+    check("overlay: mouse callback compiles", probe ~= nil, tostring(probeErr))
+
+    if probe then
+        -- X mid-recording: hide now, tear down on the deferred pass.
+        check("overlay: X hides the canvas immediately",
+              probe.calls.hide == 1, "canvas:hide() called " .. probe.calls.hide .. " times")
+        check("overlay: X defers the canvas delete (deleting inside the callback is ignored)",
+              #probe.defer == 1 and probe.calls.delete == 0,
+              #probe.defer .. " deferred call(s), delete called " .. probe.calls.delete .. " times synchronously")
+
+        if #probe.defer == 1 then
+            probe.defer[1].fn()
+            check("overlay: X during recording stops the recording",
+                  probe.calls.emergency == 1,
+                  "emergencyStop() called " .. probe.calls.emergency .. " times")
+            check("overlay: X during recording leaves teardown to emergencyStop",
+                  probe.calls.delete == 0,
+                  "overlay:delete() called directly instead of via emergencyStop()")
+            check("overlay: X unpins the overlay",
+                  probe.env.overlayPinned == false,
+                  "overlayPinned = " .. tostring(probe.env.overlayPinned))
+        end
+
+        -- X while idle: no recording to stop, so the callback owns the teardown.
+        local idle = click({ event = "mouseDown", id = "close", recording = false, pinned = true })
+        if idle and #idle.defer == 1 then
+            idle.defer[1].fn()
+            check("overlay: X while idle deletes the overlay and clears the handle",
+                  idle.calls.delete == 1 and idle.env.overlay == nil,
+                  "delete called " .. idle.calls.delete .. " times, overlay = " .. tostring(idle.env.overlay))
+            check("overlay: X while idle does not call emergencyStop",
+                  idle.calls.emergency == 0,
+                  "emergencyStop() called " .. idle.calls.emergency .. " times")
+        else
+            check("overlay: X while idle deletes the overlay and clears the handle", false,
+                  "expected exactly one deferred call, got " .. tostring(idle and #idle.defer))
+        end
+
+        -- mouseUp on the X must not fall through to the background pin toggle.
+        local upOnX = click({ event = "mouseUp", id = "close", recording = false, pinned = false })
+        check("overlay: mouseUp on X does not toggle pinning",
+              upOnX and upOnX.env.overlayPinned == false and upOnX.calls.hide == 0,
+              "overlayPinned = " .. tostring(upOnX and upOnX.env.overlayPinned))
+
+        -- Unpinning must not hide the overlay while a recording is still running.
+        local unpinRec = click({ event = "mouseUp", id = "bg", recording = true, pinned = true })
+        check("overlay: unpinning mid-recording keeps the overlay on screen",
+              unpinRec and unpinRec.env.overlayPinned == false and unpinRec.calls.hideOverlay == 0,
+              "hideOverlay() called " .. tostring(unpinRec and unpinRec.calls.hideOverlay) .. " times while recording")
+
+        local unpinIdle = click({ event = "mouseUp", id = "bg", recording = false, pinned = true })
+        check("overlay: unpinning while idle hides the overlay",
+              unpinIdle and unpinIdle.env.overlayPinned == false and unpinIdle.calls.hideOverlay == 1,
+              "hideOverlay() called " .. tostring(unpinIdle and unpinIdle.calls.hideOverlay) .. " times while idle")
+    end
+end
+
+--------------------------------------------------------------------------------
+-- 12. startRecording re-press recovery (behavioral)
+--------------------------------------------------------------------------------
+-- Pressing the trigger again inside the 0.3s finalization window must flush the
+-- pending dictation AND start the new one. Returning after the flush swallowed the
+-- keypress -- the user held the key and nothing recorded.
+
+local function pressTrigger(state)
+    local env   = baseEnv()
+    local calls = { final = 0, warmup = 0, overlayText = 0, showOverlay = 0 }
+    local timerStub = function(tag)
+        return { stop = function() calls["stopped_" .. tag] = true end }
+    end
+
+    env.log                  = function() end
+    env.isRecording          = state.recording and true or false
+    env.isWarmingUp          = state.warmingUp and true or false
+    env.finalizationPending  = state.pending and true or false
+    env.warmupAttempt        = 7  -- non-zero, so the reset is observable
+    env.finalizeTimers       = { timer = timerStub("timer"), watchdog = timerStub("watchdog") }
+    env.doFinalTranscription = function() calls.final = calls.final + 1 end
+    env.setOverlayText       = function() calls.overlayText = calls.overlayText + 1 end
+    env.showOverlay          = function() calls.showOverlay = calls.showOverlay + 1 end
+    env.tryWarmup            = function() calls.warmup = calls.warmup + 1 end
+
+    local fn, err = liftFunction("startRecording", env)
+    if not fn then return nil, err end
+    local ok, runErr = pcall(fn)
+    if not ok then return nil, "startRecording() errored: " .. tostring(runErr) end
+    return { env = env, calls = calls }
+end
+
+local repress, repressErr = pressTrigger({ pending = true })
+check("startRecording: function is liftable and compiles", repress ~= nil, tostring(repressErr))
+
+if repress then
+    check("startRecording: a pending finalization is flushed on re-press",
+          repress.calls.final == 1,
+          "doFinalTranscription() called " .. repress.calls.final .. " times")
+    check("startRecording: re-press still starts the new recording (keypress not swallowed)",
+          repress.calls.warmup == 1 and repress.env.isWarmingUp == true,
+          "tryWarmup() called " .. repress.calls.warmup .. " times, isWarmingUp = " ..
+          tostring(repress.env.isWarmingUp))
+    check("startRecording: the flush cancels both finalization timers",
+          repress.calls.stopped_timer and repress.calls.stopped_watchdog and
+          repress.env.finalizeTimers.timer == nil and repress.env.finalizeTimers.watchdog == nil,
+          "timer stopped=" .. tostring(repress.calls.stopped_timer) ..
+          " watchdog stopped=" .. tostring(repress.calls.stopped_watchdog) ..
+          " timer=" .. tostring(repress.env.finalizeTimers.timer) ..
+          " watchdog=" .. tostring(repress.env.finalizeTimers.watchdog))
+    check("startRecording: the flush clears finalizationPending",
+          repress.env.finalizationPending == false,
+          "finalizationPending = " .. tostring(repress.env.finalizationPending))
+    check("startRecording: the new recording shows the overlay",
+          repress.calls.showOverlay == 1 and repress.calls.overlayText == 1,
+          "showOverlay=" .. repress.calls.showOverlay .. " setOverlayText=" .. repress.calls.overlayText)
+
+    local plain = pressTrigger({})
+    check("startRecording: with nothing pending it just starts recording",
+          plain and plain.calls.final == 0 and plain.calls.warmup == 1,
+          "doFinalTranscription=" .. tostring(plain and plain.calls.final) ..
+          " tryWarmup=" .. tostring(plain and plain.calls.warmup))
+
+    local busy = pressTrigger({ recording = true, pending = true })
+    check("startRecording: no-ops while already recording",
+          busy and busy.calls.warmup == 0 and busy.calls.final == 0,
+          "tryWarmup=" .. tostring(busy and busy.calls.warmup) ..
+          " doFinalTranscription=" .. tostring(busy and busy.calls.final))
+
+    local warming = pressTrigger({ warmingUp = true, pending = true })
+    check("startRecording: no-ops while already warming up",
+          warming and warming.calls.warmup == 0 and warming.calls.final == 0,
+          "tryWarmup=" .. tostring(warming and warming.calls.warmup) ..
+          " doFinalTranscription=" .. tostring(warming and warming.calls.final))
+end
+
+--------------------------------------------------------------------------------
+-- 13. Progress bar reaches 100% (behavioral)
+--------------------------------------------------------------------------------
+-- Left on the live clock, `elapsed` keeps climbing during transcription and re-trips
+-- the 90% auto-expand on every finished segment, so barMaxSecs outruns transcribedSecs
+-- and the blue bar never catches the red one. stopRecordingIndicator() freezes the
+-- duration into recordedSecs; updateProgressBar() must honour it.
+
+local elSrc = src:match("local%s+EL%s*=%s*(%b{})")
+local EL = elSrc and loadIn("return " .. elSrc, baseEnv(), "EL")
+EL = EL and EL()
+check("progress: EL element-index table is extractable", type(EL) == "table",
+      "could not read `local EL = { ... }` from source")
+
+if type(EL) == "table" then
+    -- Drive updateProgressBar() over a scripted timeline of (clock, transcribedSecs).
+    local function runBar(steps, recordedSecs)
+        local env  = baseEnv()
+        local now  = 0
+        env.EL     = EL
+        env.overlay = { [EL.bar_rec] = {}, [EL.bar_txn] = {} }
+        env.recordingStartTime = 0
+        env.recordedSecs       = recordedSecs
+        env.transcribedSecs    = 0
+        env.barMaxSecs         = 180
+        env.hs = { timer = { secondsSinceEpoch = function() return now end } }
+
+        local fn, err = liftFunction("updateProgressBar", env)
+        if not fn then return nil, err end
+        for _, step in ipairs(steps) do
+            now = step[1]
+            env.transcribedSecs = step[2]
+            if step[3] ~= nil then env.recordedSecs = step[3] end
+            local ok, runErr = pcall(fn)
+            if not ok then return nil, "updateProgressBar() errored: " .. tostring(runErr) end
+        end
+        return {
+            rec = env.overlay[EL.bar_rec].frame.w,
+            txn = env.overlay[EL.bar_txn].frame.w,
+            barMaxSecs = env.barMaxSecs,
+            env = env,
+        }
+    end
+
+    -- 100s of audio, then transcription finishes while the wall clock runs on to 240s
+    -- (past 0.9 * 180 = 162s, which is what used to re-trip the auto-expand).
+    local bar, barErr = runBar({
+        { 60,  0 },              -- mid-recording
+        { 100, 0 },              -- key released at 100s
+        { 130, 33,  100 },       -- stopRecordingIndicator() froze recordedSecs = 100
+        { 170, 66 },
+        { 240, 100 },            -- all 100s transcribed
+    })
+    check("progress: updateProgressBar is liftable and compiles", bar ~= nil, tostring(barErr))
+
+    if bar then
+        check("progress: the blue bar reaches the red bar when transcription completes",
+              bar.txn == bar.rec,
+              "transcribed bar w=" .. bar.txn .. ", recorded bar w=" .. bar.rec)
+        check("progress: the bar scale stops expanding once recording stops",
+              bar.barMaxSecs == 180,
+              "barMaxSecs grew to " .. bar.barMaxSecs .. " after the recording ended")
+        check("progress: the bars are drawn at a visible width",
+              bar.rec == math.floor((100 / 180) * 386),
+              "recorded bar w=" .. bar.rec .. ", want " .. math.floor((100 / 180) * 386))
+
+        -- Half-transcribed audio must still read as half, not as full.
+        local partial = runBar({ { 100, 0 }, { 300, 50, 100 } })
+        check("progress: a partially transcribed recording shows a partial blue bar",
+              partial and partial.txn < partial.rec and partial.txn > 1,
+              "transcribed w=" .. tostring(partial and partial.txn) ..
+              ", recorded w=" .. tostring(partial and partial.rec))
+
+        -- The freeze must not disable the auto-expand for genuinely long recordings.
+        local long = runBar({ { 60, 0 }, { 170, 0 } })
+        check("progress: the bar still auto-expands during a long recording",
+              long and long.barMaxSecs == 360,
+              "barMaxSecs = " .. tostring(long and long.barMaxSecs) .. " at 170s recorded (want 360)")
+    end
+
+    -- The two halves of the freeze contract that updateProgressBar depends on.
+    local startBody = extractFunction("startRecordingIndicator")
+    local stopBody  = extractFunction("stopRecordingIndicator")
+    check("progress: startRecordingIndicator clears the frozen duration",
+          startBody ~= nil and startBody:find("recordedSecs%s*=%s*nil") ~= nil,
+          "startRecordingIndicator() does not reset recordedSecs = nil")
+    check("progress: stopRecordingIndicator freezes the recorded duration",
+          stopBody ~= nil and stopBody:find("recordedSecs%s*=%s*hs%.timer%.secondsSinceEpoch") ~= nil,
+          "stopRecordingIndicator() does not freeze recordedSecs from the clock")
+
+    -- BAR_MAX in updateProgressBar and the bar_bg track width in createOverlay are
+    -- separate literals; drifting apart would misreport progress at the right edge.
+    local barMax  = src:match("local%s+BAR_MAX%s*=%s*(%d+)")
+    local trackW  = src:match('id%s*=%s*"bar_bg".-w%s*=%s*(%d+)')
+    check("progress: BAR_MAX matches the bar_bg track width",
+          barMax ~= nil and barMax == trackW,
+          "BAR_MAX=" .. tostring(barMax) .. ", bar_bg w=" .. tostring(trackW))
 end
 
 --------------------------------------------------------------------------------

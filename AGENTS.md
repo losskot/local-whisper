@@ -135,15 +135,29 @@ implementation:
 | `globals` | state leaked into Hammerspoon's shared `_ENV` |
 | `sort` | chunk files ordered as strings, which reorders audio past chunk 999 |
 | `emergencyStop` | emergency stop not cancelling a pending finalization |
+| `overlay` | clicking the X mid-recording leaving ffmpeg running; deleting the canvas from inside its own mouse callback; unpinning hiding the overlay while still recording |
+| `startRecording` | a re-press inside the finalization window flushing the old dictation but swallowing the new keypress |
+| `progress` | the blue transcription bar never catching the red recording bar, because a live clock re-trips the 90% auto-expand after recording stops |
 
-The `sort` checks extract the real comparator out of the source under test and execute
-it, so they track the implementation instead of a copy that can drift.
+The behavioral checks lift the real function out of the source under test — the sort
+comparator, the overlay mouse callback, `startRecording()`, `updateProgressBar()` — and
+execute it against stubbed globals, so they track the implementation instead of a copy
+that can drift. A lifted function's upvalues resolve to the sandbox `_ENV`, which is what
+lets a test both inject state (`isRecording = true`) and assert on it afterwards
+(`overlayPinned == false`).
 
-Because the suite takes a path argument, you can point it at an older revision to
-confirm a check actually fails on the bug it claims to guard:
+Three behaviors remain untestable here and need a manual pass after touching the overlay:
+whether the canvas actually disappears on screen, whether macOS delivers the click to the
+X at all, and how the bars look while a real transcription runs.
+
+Because the suite takes a path argument, you can point it at an older revision — or at a
+deliberately broken copy — to confirm a check actually fails on the bug it claims to guard:
 ```bash
 git show HEAD~1:hammerspoon/init.lua > /tmp/before.lua && ./tests/test_init.sh /tmp/before.lua
 ```
+Prefer a one-line mutation of the *current* file over an old revision when checking a
+specific guard: an old revision fails for many unrelated reasons at once, and a lifted
+function whose helpers were since renamed fails by erroring rather than by asserting.
 
 ### Common debug patterns
 - **Refine not working**: Check `refine: failed` in logs — common causes: Ollama not running, wrong model name, missing `$HOME` env
