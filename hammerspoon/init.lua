@@ -126,12 +126,27 @@ local function getRefinePrompt()
     return REFINE_DEFAULT_PROMPT
 end
 
+-- Cached so the menu bar doesn't reprobe on every open. Hammerspoon is single-threaded,
+-- so a synchronous curl here blocks the eventtap too — hence both --max-time and the cache.
+local ollamaProbe = { value = nil, at = 0 }
+local OLLAMA_PROBE_TTL = 30  -- seconds
+
 local function hasOllama()
-    -- Check if Ollama API is reachable
-    local ok = os.execute("curl -s -o /dev/null -w '' http://localhost:11434/api/tags 2>/dev/null")
-    if ok then return true end
-    -- Fallback: check if binary exists
-    return os.execute("command -v ollama >/dev/null 2>&1")
+    local now = hs.timer.secondsSinceEpoch()
+    if ollamaProbe.value ~= nil and (now - ollamaProbe.at) < OLLAMA_PROBE_TTL then
+        return ollamaProbe.value
+    end
+    -- Check if Ollama API is reachable. --max-time is mandatory: a wedged Ollama (loading a
+    -- large model, or a stopped process) would otherwise freeze the whole app, killing the
+    -- dictation trigger key until curl gave up on its own.
+    local ok = os.execute("curl -s --max-time 1 -o /dev/null -w '' http://localhost:11434/api/tags 2>/dev/null")
+    if not ok then
+        -- Fallback: check if binary exists
+        ok = os.execute("command -v ollama >/dev/null 2>&1")
+    end
+    ollamaProbe.value = ok and true or false
+    ollamaProbe.at = now
+    return ollamaProbe.value
 end
 
 local function getRefineMode()
@@ -152,7 +167,6 @@ local function cycleRefine()
 end
 
 -- Timing
-local PARTIAL_INTERVAL = 2.0   -- seconds between partial transcriptions
 local OVERLAY_LINGER = 0.5     -- seconds to show final text before closing
 
 -- Known whisper hallucinations on silence/short audio
@@ -193,6 +207,19 @@ local function log(msg)
         f:write(os.date("[%H:%M:%S] ") .. msg .. "\n")
         f:close()
     end
+end
+
+-- Play a system sound by name. getByFile returns nil if the file is missing or AudioToolbox
+-- fails to load it, and indexing that nil throws — which previously aborted whichever
+-- callback was mid-flight, stranding the overlay on screen. Never let a chime break a flow.
+local function playSound(name, volume)
+    local ok, snd = pcall(hs.sound.getByFile, "/System/Library/Sounds/" .. name .. ".aiff")
+    if not ok or not snd then
+        log("sound: could not load " .. name)
+        return
+    end
+    if volume then snd:volume(volume) end
+    pcall(function() snd:play() end)
 end
 
 local function readFile(path)
@@ -364,7 +391,15 @@ local function getChunkFiles()
             table.insert(chunks, CHUNK_DIR .. "/" .. file)
         end
     end
-    table.sort(chunks)
+    -- Sort by the numeric index, not lexicographically: ffmpeg's %03d overflows past 999
+    -- ("chunk_1000.wav" sorts before "chunk_999.wav" as a string), which would splice the
+    -- tail of any recording longer than ~16m40s into the middle of the transcript.
+    table.sort(chunks, function(a, b)
+        local ia = tonumber(a:match("chunk_(%d+)%.wav$")) or 0
+        local ib = tonumber(b:match("chunk_(%d+)%.wav$")) or 0
+        if ia == ib then return a < b end
+        return ia < ib
+    end)
     return chunks
 end
 
@@ -404,16 +439,6 @@ local function cycleEnter()
     local next = getEnterMode() and "off" or "on"
     writeFile(ENTER_FILE, next)
     return next
-end
-
--- Pick fastest available model for live partial transcription
-local function getPartialModelPath()
-    local preferred = { "tiny", "tiny.en", "base", "base.en", "small", "small.en" }
-    for _, name in ipairs(preferred) do
-        local path = MODELS_DIR .. "/ggml-" .. name .. ".bin"
-        if hs.fs.attributes(path) then return path end
-    end
-    return getModelPath()  -- fall back to main model
 end
 
 -- Human-readable message for a curl exit code, for overlay/notification display.
@@ -713,6 +738,13 @@ end
 
 local overlay = nil
 
+-- Declared here, above createOverlay, because createOverlay's mouse callback closes over
+-- them. A `local` declared further down the chunk is NOT in scope for a function defined
+-- earlier — the reference would silently compile to a nil global instead.
+local overlayPinned = false
+local isRecording = false
+local hideOverlay  -- assigned below
+
 -- Element indices: 1=bg, 2=text, 3=dot, 4=timer, 5=bar_bg, 6=bar_rec, 7=bar_txn, 8=close
 local EL = { text = 2, dot = 3, timer = 4, bar_bg = 5, bar_rec = 6, bar_txn = 7, close = 8 }
 
@@ -832,8 +864,11 @@ local function showOverlay()
     overlay:show()
 end
 
-local function hideOverlay()
+hideOverlay = function()
     if overlayPinned then return end  -- pinned overlay stays open
+    -- Never tear down mid-dictation: a previous dictation's finalization can still be in
+    -- flight when a new recording starts, and its deferred hide would kill the live overlay.
+    if isRecording then return end
     if overlay then overlay:delete(); overlay = nil end
 end
 
@@ -850,14 +885,11 @@ end
 -- State
 --------------------------------------------------------------------------------
 
-local isRecording = false
-local overlayPinned = false
+-- isRecording and overlayPinned are declared in the Overlay UI section above,
+-- because createOverlay's mouse callback captures them.
 local ffmpegTask = nil
-local partialTimer = nil
-local partialBusy = false
-local lastChunkCount = 0
 local finalizationPending = false  -- true between stopRecording() and doFinalTranscription() actually starting
-_whisperFinalize = { timer = nil, watchdog = nil }
+local finalizeTimers = { timer = nil, watchdog = nil }
 
 -- Menu bar
 local menuBar = nil
@@ -866,6 +898,7 @@ local menuBar = nil
 local pulseTimer = nil
 local clockTimer = nil
 local recordingStartTime = 0
+local recordedSecs = nil    -- frozen recording duration once stopped; nil while recording
 local pulseAlpha = 1.0
 local pulseFading = true
 
@@ -949,11 +982,6 @@ function updateMenuBar()
     end
 end
 
--- Forward-declare meeting state and functions (defined in Meeting mode section below)
-local meetingRecording = false
-local meetingStartTime = nil
-local startMeeting, stopMeeting
-
 local function buildMenuBarMenu()
     local items = {}
 
@@ -1004,23 +1032,6 @@ local function buildMenuBarMenu()
     -- Preferred langs
     local preferred = table.concat(getPreferredLangs(), ", ")
     table.insert(items, { title = "Preferred: " .. preferred, disabled = true })
-
-    table.insert(items, { title = "-" })
-
-    -- Meeting mode
-    if meetingRecording then
-        local elapsed = hs.timer.secondsSinceEpoch() - (meetingStartTime or 0)
-        local mins = math.floor(elapsed / 60)
-        table.insert(items, {
-            title = "⏹ Stop Meeting Notes (" .. mins .. "m)",
-            fn = function() stopMeeting() end,
-        })
-    else
-        table.insert(items, {
-            title = "🎙 Start Meeting Notes",
-            fn = function() startMeeting() end,
-        })
-    end
 
     table.insert(items, { title = "-" })
 
@@ -1098,7 +1109,10 @@ end
 local function updateProgressBar()
     if not overlay then return end
     local BAR_MAX = 386  -- px, matches bar_bg width in createOverlay
-    local elapsed = hs.timer.secondsSinceEpoch() - recordingStartTime
+    -- Freeze at the final duration once recording stops. Left live, this keeps climbing
+    -- during transcription and re-trips the auto-expand below on every segment, so
+    -- barMaxSecs outruns transcribedSecs and the blue bar never reaches 100%.
+    local elapsed = recordedSecs or (hs.timer.secondsSinceEpoch() - recordingStartTime)
     -- Auto-expand: when recording reaches 90% of max, extend by another 3 min
     if elapsed >= barMaxSecs * 0.9 then barMaxSecs = barMaxSecs + 180 end
     local recFrac = math.min(elapsed / barMaxSecs, 1.0)
@@ -1117,6 +1131,7 @@ end
 local function startRecordingIndicator()
     if not overlay then return end
     recordingStartTime = hs.timer.secondsSinceEpoch()
+    recordedSecs = nil
     transcribedSecs = 0
     barMaxSecs = 180
     pulseAlpha = 1.0
@@ -1157,6 +1172,8 @@ local function startRecordingIndicator()
 end
 
 local function stopRecordingIndicator()
+    -- Freeze the elapsed duration so the progress bar stops advancing during transcription.
+    recordedSecs = hs.timer.secondsSinceEpoch() - recordingStartTime
     if pulseTimer then pulseTimer:stop(); pulseTimer = nil end
     if clockTimer then clockTimer:stop(); clockTimer = nil end
     if overlay then
@@ -1173,91 +1190,21 @@ end
 function emergencyStop()
     log("emergency stop")
     isRecording = false
-    if partialTimer then partialTimer:stop(); partialTimer = nil end
+    -- Cancel any in-flight finalization, otherwise the timer armed by stopRecording()
+    -- still fires and pastes the transcript into whatever is focused after the stop.
+    finalizationPending = false
+    if finalizeTimers.timer then finalizeTimers.timer:stop(); finalizeTimers.timer = nil end
+    if finalizeTimers.watchdog then finalizeTimers.watchdog:stop(); finalizeTimers.watchdog = nil end
     if silenceTimer then silenceTimer:stop(); silenceTimer = nil end
     stopRecordingIndicator()
     if ffmpegTask and ffmpegTask:isRunning() then ffmpegTask:interrupt() end
     ffmpegTask = nil
-    partialBusy = false
     silentChunkCount = 0
     lastCheckedChunk = 0
     forceHideOverlay()
     updateMenuBar()
     os.execute("killall whisper-cli 2>/dev/null")
     hs.notify.new({ title = "local-whisper", informativeText = "Stopped" }):send()
-end
-
---------------------------------------------------------------------------------
--- Partial transcription (live preview while recording)
---------------------------------------------------------------------------------
-
-local function doPartialTranscribe()
-    if partialBusy or not isRecording then return end
-
-    local chunks = getChunkFiles()
-    local numChunks = #chunks
-    if numChunks < 3 then return end
-
-    local completed = numChunks - 1  -- skip last chunk (being written)
-    if completed <= lastChunkCount then return end
-
-    partialBusy = true
-
-    -- Batch last 4 completed chunks
-    local startIdx = math.max(1, completed - 3)
-    local batchList = WHISPER_TMP .. "/partial_concat.txt"
-    local f = io.open(batchList, "w")
-    for i = startIdx, completed do
-        f:write("file '" .. chunks[i] .. "'\n")
-    end
-    f:close()
-
-    local batchWav = WHISPER_TMP .. "/partial_batch.wav"
-    local concatTask = hs.task.new(FFMPEG, function(code)
-        if code ~= 0 then
-            partialBusy = false
-            return
-        end
-        local lang = getLang()
-        -- In auto mode, use first preferred lang for speed during partial transcription
-        if lang == "auto" then lang = getPreferredLangs()[1] end
-
-        local function onPartialText(text, errMsg)
-            partialBusy = false
-            lastChunkCount = completed
-            if not isRecording then return end
-            if errMsg then
-                setOverlayText("API error: " .. errMsg)
-                log("partial: " .. errMsg)
-                return
-            end
-            text = (text or ""):gsub("^%s+", ""):gsub("%s+$", ""):gsub("%s+", " ")
-            if text ~= "" and not isHallucination(text) then
-                local display = text
-                if #display > 200 then display = "..." .. display:sub(-197) end
-                setOverlayText(display)
-                log("partial: " .. text)
-            end
-        end
-
-        if isApiMode() then
-            transcribeViaAPI(batchWav, lang, 10, onPartialText)
-        else
-            local whisperArgs = { "-m", getPartialModelPath(), "-f", batchWav, "-l", lang, "-nt", "--no-prints" }
-            local promptArgs = getPromptArgs()
-            for _, a in ipairs(promptArgs) do table.insert(whisperArgs, a) end
-            local whisperTask = hs.task.new(WHISPER_BIN, function(code2, out2)
-                if code2 ~= 0 then
-                    partialBusy = false
-                    lastChunkCount = completed
-                    return
-                end
-                onPartialText(out2)
-            end, whisperArgs)
-            whisperTask:start()
-        end
-    end, { "-y", "-f", "concat", "-safe", "0", "-i", batchList, "-c", "copy", batchWav })
-    concatTask:start()
 end
 
 --------------------------------------------------------------------------------
@@ -1326,7 +1273,7 @@ local function finishInsertion(text, detectedLang)
     local display = finalText
     if detectedLang then display = display .. " [" .. detectedLang:upper() .. "]" end
     setOverlayText(display)
-    hs.sound.getByFile("/System/Library/Sounds/Glass.aiff"):play()
+    playSound("Glass")
     hs.timer.doAfter(OVERLAY_LINGER, hideOverlay)
 end
 
@@ -1363,7 +1310,7 @@ local function doFinalTranscription()
     local chunks = getChunkFiles()
 
     -- ДИАГНОСТИКА: логируем все чанки и состояние
-    log("final: START — total chunks=" .. #chunks .. ", partialBusy=" .. tostring(partialBusy))
+    log("final: START — total chunks=" .. #chunks)
     if #chunks > 0 then
         local first = chunks[1]:match("([^/]+)$") or chunks[1]
         local last  = chunks[#chunks]:match("([^/]+)$") or chunks[#chunks]
@@ -1635,12 +1582,8 @@ local function startActualRecording()
     })
     ffmpegTask:start()
 
-    lastChunkCount = 0
-    partialBusy = false
     silentChunkCount = 0
     lastCheckedChunk = 0
-    -- Partial transcription disabled: low quality, not useful
-    -- partialTimer = hs.timer.doEvery(PARTIAL_INTERVAL, doPartialTranscribe)
 
     -- Poll until first chunk exists on disk → audio is truly flowing → play Pop
     -- Uses recursive doAfter (not doEvery) to avoid stop-within-callback issues.
@@ -1654,7 +1597,7 @@ local function startActualRecording()
             else
                 log("recording: first chunk timeout, playing Pop anyway")
             end
-            hs.sound.getByFile("/System/Library/Sounds/Pop.aiff"):play()
+            playSound("Pop")
         else
             hs.timer.doAfter(0.05, function() pollForFirstChunk(attempt + 1) end)
         end
@@ -1719,7 +1662,7 @@ tryWarmup = function()
             warmupAttempt = 0
             log("warmup: FAILED after " .. WARMUP_MAX_ATTEMPTS .. " attempts — audio device unresponsive")
             setOverlayText("Микрофон недоступен")
-            hs.sound.getByFile("/System/Library/Sounds/Basso.aiff"):play()
+            playSound("Basso")
             hs.timer.doAfter(2.5, hideOverlay)
         end
     end)
@@ -1728,12 +1671,14 @@ end
 local function startRecording()
     if isRecording or isWarmingUp then return end
     if finalizationPending then
+        -- A previous dictation is still waiting to be finalized (fast re-press inside the
+        -- 0.3s window, or the timer was dropped across sleep). Flush it now and fall
+        -- through — returning here would silently swallow the keypress the user just made.
         finalizationPending = false
-        if _whisperFinalize.timer then _whisperFinalize.timer:stop(); _whisperFinalize.timer = nil end
-        if _whisperFinalize.watchdog then _whisperFinalize.watchdog:stop(); _whisperFinalize.watchdog = nil end
-        log("recovery: resuming finalization before starting a new recording")
+        if finalizeTimers.timer then finalizeTimers.timer:stop(); finalizeTimers.timer = nil end
+        if finalizeTimers.watchdog then finalizeTimers.watchdog:stop(); finalizeTimers.watchdog = nil end
+        log("recovery: flushing pending finalization, then starting the new recording")
         doFinalTranscription()
-        return
     end
     isWarmingUp = true
     warmupAttempt = 0
@@ -1760,9 +1705,7 @@ stopRecording = function()
     isRecording = false
     log("recording: stop")
 
-    if partialTimer then partialTimer:stop(); partialTimer = nil end
     if silenceTimer then silenceTimer:stop(); silenceTimer = nil end
-    partialBusy = false
     silentChunkCount = 0
     lastCheckedChunk = 0
 
@@ -1778,26 +1721,23 @@ stopRecording = function()
     -- system suspends can be silently dropped across sleep (see sleepWatcher below), so track
     -- pending state and recover on wake instead of just losing the recording silently.
     finalizationPending = true
-    _whisperFinalize.timer = hs.timer.doAfter(0.3, function()
-        _whisperFinalize.timer = nil
+    finalizeTimers.timer = hs.timer.doAfter(0.3, function()
+        finalizeTimers.timer = nil
         if not finalizationPending then return end
         finalizationPending = false
-        if _whisperFinalize.watchdog then _whisperFinalize.watchdog:stop(); _whisperFinalize.watchdog = nil end
+        if finalizeTimers.watchdog then finalizeTimers.watchdog:stop(); finalizeTimers.watchdog = nil end
         doFinalTranscription()
     end)
-    _whisperFinalize.watchdog = hs.timer.doAfter(5, function()
-        _whisperFinalize.watchdog = nil
+    finalizeTimers.watchdog = hs.timer.doAfter(5, function()
+        finalizeTimers.watchdog = nil
         if not finalizationPending then return end
         finalizationPending = false
-        if _whisperFinalize.timer then _whisperFinalize.timer:stop(); _whisperFinalize.timer = nil end
+        if finalizeTimers.timer then finalizeTimers.timer:stop(); finalizeTimers.timer = nil end
         log("recovery: finalization timer delayed, starting directly")
         doFinalTranscription()
     end)
 
-    pcall(function()
-        local snd = hs.sound.getByFile("/System/Library/Sounds/Tink.aiff")
-        if snd then snd:play() end
-    end)
+    playSound("Tink")
 end
 
 --------------------------------------------------------------------------------
@@ -1859,8 +1799,8 @@ local sleepWatcher = hs.caffeinate.watcher.new(function(eventType)
     log("system: woke from sleep")
     if finalizationPending then
         finalizationPending = false
-        if _whisperFinalize.timer then _whisperFinalize.timer:stop(); _whisperFinalize.timer = nil end
-        if _whisperFinalize.watchdog then _whisperFinalize.watchdog:stop(); _whisperFinalize.watchdog = nil end
+        if finalizeTimers.timer then finalizeTimers.timer:stop(); finalizeTimers.timer = nil end
+        if finalizeTimers.watchdog then finalizeTimers.watchdog:stop(); finalizeTimers.watchdog = nil end
         log("system: finalization timer was lost across sleep, resuming now")
         doFinalTranscription()
     elseif isRecording then
@@ -1871,895 +1811,6 @@ end)
 sleepWatcher:start()
 
 --------------------------------------------------------------------------------
--- Meeting mode
---------------------------------------------------------------------------------
-
-local MEETINGS_DIR = CONFIG_DIR .. "/meetings"
-local MEETING_CHUNK_SECONDS = 8                       -- step between window starts
-local MEETING_OVERLAP_SECONDS = 4                     -- audio reused at the head of each window for context
-local MEETING_TRANSCRIBE_POLL_SECONDS = 2
-local MEETING_WINDOW_TIMEOUT_SECONDS = 60             -- watchdog: kill task if it runs longer than this
-local MEETING_PCM_BYTES_PER_SEC = 16000 * 2           -- 16 kHz, mono, 16-bit
-local MEETING_AGGREGATE_NAME = "local-whisper Output"
-local MEETING_HELPER_BIN = CONFIG_DIR .. "/bin/aggregate-audio"
--- meetingRecording and meetingStartTime are forward-declared before buildMenuBarMenu
-local meetingFfmpegTask = nil
-local meetingChunkDir = WHISPER_TMP .. "/meeting_chunks"
-local meetingPcmPath = meetingChunkDir .. "/recording.pcm"
-local meetingTranscript = {}
-local meetingNotepad = nil
-local meetingTranscribeTimer = nil
-local meetingControlTimer = nil
-local meetingNextWindowIdx = 1
-local meetingLastEmittedText = ""
-local meetingStopFlushed = false
-local meetingWindowQueue = {}        -- pending windows waiting to slice+transcribe
-local meetingProcessing = false      -- one slice+whisper pipeline at a time
-local meetingPendingTranscriptions = 0
-local meetingStopping = false
-local meetingSavingOutput = false
-local meetingPriorOutputUID = nil
--- Strong refs to in-flight hs.task objects so they can't be garbage-collected
--- before their callbacks fire. Hammerspoon's hs.task wraps a Lua userdata
--- whose __gc tears down the callback; without this table, locals in the
--- slice/whisper closures may be reaped between spawn and completion and
--- silently drop the callback. Keyed by an opaque token; cleared in callback.
-local meetingActiveTasks = {}
-local meetingActiveTasksSeq = 0
-local saveMeetingOutput
-
--- Run the aggregate-audio helper synchronously; returns (stdout, exitCode).
-local function runAudioHelper(...)
-    if not hs.fs.attributes(MEETING_HELPER_BIN) then return nil, -1 end
-    local args = { ... }
-    local quoted = {}
-    for _, a in ipairs(args) do table.insert(quoted, "'" .. tostring(a):gsub("'", "'\\''") .. "'") end
-    local cmd = "'" .. MEETING_HELPER_BIN .. "' " .. table.concat(quoted, " ")
-    local out, ok, _, code = hs.execute(cmd)
-    if out then out = out:gsub("%s+$", "") end
-    if ok then return out, 0 end
-    return out, code or -1
-end
-
--- Check that everything meeting mode needs is in place.
-local function hasBlackHole()
-    if not hs.audiodevice.findInputByName("BlackHole 2ch") then return false end
-    if not hs.fs.attributes(MEETING_HELPER_BIN) then return false end
-    return true
-end
-
--- Get BlackHole device string for ffmpeg (audio-only via avfoundation)
-local function getBlackHoleDevice()
-    local devices = hs.audiodevice.allInputDevices()
-    for _, dev in ipairs(devices) do
-        if dev:name() == "BlackHole 2ch" then
-            return ":BlackHole 2ch"
-        end
-    end
-    return nil
-end
-
--- Show setup instructions when meeting mode wasn't enabled at install time.
-local function showBlackHoleSetup()
-    local msg = "Meeting mode is disabled.\n\n"
-        .. "To enable it, re-run the installer and answer 'y' when asked\n"
-        .. "about meeting recording mode:\n\n"
-        .. "  cd ~/code/local-free-openwhisper && ./install.sh\n\n"
-        .. "The installer will:\n"
-        .. "  1. Install BlackHole 2ch (virtual audio driver)\n"
-        .. "  2. Build a small helper at ~/.local-whisper/bin/aggregate-audio\n"
-        .. "  3. Create a Multi-Output Device automatically\n\n"
-        .. "No manual Audio MIDI Setup steps required."
-    hs.dialog.blockAlert("Meeting Mode Setup", msg, "OK")
-end
-
--- Pick a sensible audible fallback output (anything that's not the
--- aggregate and not BlackHole). Used when the user is stranded on the
--- aggregate (e.g., a previous meeting got stuck and didn't restore).
-local function pickFallbackOutput()
-    local out, code = runAudioHelper("list")
-    if code ~= 0 or not out then return nil end
-    for line in out:gmatch("[^\n]+") do
-        local uid, name = line:match("^([^\t]+)\t(.+)$")
-        if uid and name
-           and uid ~= "com.local-whisper.aggregate-output"
-           and not name:find("BlackHole") then
-            return uid
-        end
-    end
-    return nil
-end
-
--- Switch system default output to a freshly-built aggregate so audio
--- flows to both the user's current speakers and BlackHole. Always
--- recreates the aggregate so it tracks the user's current audible
--- device (handles disconnected monitors, headphones plugged in mid-day,
--- etc.). Saves the previous default for restoration on stopMeeting.
-local function switchToAggregateOutput()
-    local prior, code = runAudioHelper("default-uid")
-    if code ~= 0 or not prior or prior == "" then
-        log("meeting: cannot read system default output")
-        return false
-    end
-
-    -- If the user is already stranded on our aggregate (previous meeting
-    -- failed to restore), pick a fallback as the audible side first so
-    -- the recreated aggregate has a real audible sub-device.
-    if prior == "com.local-whisper.aggregate-output" then
-        local fallback = pickFallbackOutput()
-        if not fallback then
-            log("meeting: stranded on aggregate, no audible fallback available")
-            return false
-        end
-        log("meeting: stranded on aggregate, falling back to " .. fallback)
-        runAudioHelper("set-default", fallback)
-        prior = fallback
-    end
-
-    -- Tear down the old aggregate and rebuild against current default.
-    local aggUid, aggCode = runAudioHelper("recreate")
-    if aggCode ~= 0 or not aggUid or aggUid == "" then
-        log("meeting: aggregate recreate failed (helper missing or BlackHole gone)")
-        return false
-    end
-
-    meetingPriorOutputUID = prior
-    local _, setCode = runAudioHelper("set-default", aggUid)
-    if setCode ~= 0 then
-        log("meeting: failed to switch system output to aggregate")
-        meetingPriorOutputUID = nil
-        return false
-    end
-    log("meeting: rebuilt aggregate, switched system output to it (was " .. prior .. ")")
-    return true
-end
-
--- On Hammerspoon load, if we boot with system default already on the
--- aggregate, a previous meeting got stuck and never restored. Drop us
--- onto a sensible fallback so the user has audible sound at startup.
-local function recoverIfStrandedOnAggregate()
-    if not hs.fs.attributes(MEETING_HELPER_BIN) then return end
-    local prior = runAudioHelper("default-uid")
-    if prior ~= "com.local-whisper.aggregate-output" then return end
-    local fallback = pickFallbackOutput()
-    if fallback then
-        runAudioHelper("set-default", fallback)
-        log("meeting: startup recovery — switched stranded output to " .. fallback)
-    end
-end
-
--- Restore the system default output saved by switchToAggregateOutput.
-local function restorePriorOutput()
-    if not meetingPriorOutputUID then return end
-    local prior = meetingPriorOutputUID
-    meetingPriorOutputUID = nil
-    local _, code = runAudioHelper("set-default", prior)
-    if code == 0 then
-        log("meeting: restored system output to " .. prior)
-    else
-        log("meeting: failed to restore system output to " .. prior)
-    end
-end
-
--- Notepad HTML
-local function meetingNotepadHTML(meetingTitle)
-    return [[<!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8">
-<style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-        font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-        background: #1a1a2e;
-        color: #e0e0e0;
-        display: flex;
-        flex-direction: column;
-        height: 100vh;
-        overflow: hidden;
-    }
-    .header {
-        padding: 10px 14px;
-        background: #16213e;
-        border-bottom: 1px solid #0f3460;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-shrink: 0;
-    }
-    .header h2 {
-        font-size: 13px;
-        color: #e94560;
-        font-weight: 600;
-    }
-    .header-right {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-    .timer {
-        font-size: 12px;
-        color: #888;
-        font-family: monospace;
-    }
-    .stop-btn {
-        border: none;
-        border-radius: 6px;
-        background: #e94560;
-        color: #fff;
-        font-size: 11px;
-        font-weight: 600;
-        padding: 6px 10px;
-        cursor: pointer;
-    }
-    .stop-btn:hover { background: #f15c74; }
-    .stop-btn:disabled {
-        background: #5b2a34;
-        color: #c9a7af;
-        cursor: default;
-    }
-    .tabs {
-        display: flex;
-        background: #16213e;
-        border-bottom: 1px solid #0f3460;
-        flex-shrink: 0;
-    }
-    .tab {
-        padding: 6px 14px;
-        font-size: 12px;
-        cursor: pointer;
-        color: #888;
-        border-bottom: 2px solid transparent;
-    }
-    .tab.active {
-        color: #e94560;
-        border-bottom-color: #e94560;
-    }
-    .tab:hover { color: #ccc; }
-    .panel {
-        flex: 1;
-        display: none;
-        overflow: hidden;
-    }
-    .panel.active { display: flex; flex-direction: column; }
-    .notes-hint {
-        padding: 10px 14px 0 14px;
-        font-size: 11px;
-        line-height: 1.4;
-        color: #7f8aa3;
-    }
-    #notes {
-        flex: 1;
-        background: #1a1a2e;
-        color: #e0e0e0;
-        border: none;
-        padding: 12px 14px;
-        font-size: 13px;
-        line-height: 1.5;
-        resize: none;
-        outline: none;
-        font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-    }
-    #notes::placeholder { color: #555; }
-    #transcript {
-        flex: 1;
-        padding: 12px 14px;
-        font-size: 12px;
-        line-height: 1.6;
-        overflow-y: auto;
-        color: #bbb;
-        white-space: pre-wrap;
-    }
-    .transcript-empty {
-        padding: 12px 14px;
-        color: #6e7890;
-        font-size: 12px;
-    }
-    .chunk {
-        margin-bottom: 8px;
-        padding-bottom: 8px;
-        border-bottom: 1px solid #222;
-    }
-    .chunk-time {
-        font-size: 10px;
-        color: #e94560;
-        margin-bottom: 2px;
-    }
-    .status {
-        padding: 4px 14px;
-        font-size: 11px;
-        color: #555;
-        background: #16213e;
-        border-top: 1px solid #0f3460;
-        flex-shrink: 0;
-    }
-</style>
-</head>
-<body>
-    <div class="header">
-        <h2>]] .. meetingTitle .. [[</h2>
-        <div class="header-right">
-            <span class="timer" id="timer">0:00</span>
-            <button class="stop-btn" id="stop-btn" onclick="requestStop()">Stop &amp; Save</button>
-        </div>
-    </div>
-    <div class="tabs">
-        <div class="tab active" onclick="switchTab('notes')">My Notes</div>
-        <div class="tab" onclick="switchTab('transcript')">Live Transcript</div>
-    </div>
-    <div class="panel active" id="panel-notes">
-        <div class="notes-hint">Use this pane for your own notes. The live transcript appears in the Transcript tab every few seconds.</div>
-        <textarea id="notes" placeholder="Type your meeting notes here...&#10;&#10;Tips:&#10;- Key decisions&#10;- Action items&#10;- Questions to follow up"></textarea>
-    </div>
-    <div class="panel" id="panel-transcript">
-        <div class="transcript-empty" id="transcript-empty">Listening... first transcript chunk should appear in about ]] .. tostring(MEETING_CHUNK_SECONDS) .. [[ seconds.</div>
-        <div id="transcript"></div>
-    </div>
-    <div class="status" id="status">Recording from BlackHole 2ch... waiting for first transcript chunk.</div>
-<script>
-    window.stopRequested = false;
-
-    function switchTab(name) {
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-        document.querySelector('.tab[onclick*="' + name + '"]').classList.add('active');
-        document.getElementById('panel-' + name).classList.add('active');
-    }
-
-    // Timer
-    let startTime = Date.now();
-    let timerInterval = setInterval(() => {
-        let elapsed = Math.floor((Date.now() - startTime) / 1000);
-        let min = Math.floor(elapsed / 60);
-        let sec = elapsed % 60;
-        document.getElementById('timer').textContent = min + ':' + (sec < 10 ? '0' : '') + sec;
-    }, 1000);
-
-    function stopTimer() {
-        if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
-    }
-
-    // Called from Lua to append transcript chunks
-    function appendTranscript(time, text) {
-        let empty = document.getElementById('transcript-empty');
-        if (empty) empty.remove();
-        let div = document.createElement('div');
-        div.className = 'chunk';
-        let timeDiv = document.createElement('div');
-        timeDiv.className = 'chunk-time';
-        timeDiv.textContent = time;
-        let textDiv = document.createElement('div');
-        textDiv.textContent = text;
-        div.appendChild(timeDiv);
-        div.appendChild(textDiv);
-        let container = document.getElementById('transcript');
-        container.appendChild(div);
-        container.scrollTop = container.scrollHeight;
-    }
-
-    function setStatus(msg) {
-        document.getElementById('status').textContent = msg;
-    }
-
-    function requestStop() {
-        window.stopRequested = true;
-        let button = document.getElementById('stop-btn');
-        button.disabled = true;
-        button.textContent = 'Stopping...';
-        setStatus('Stopping meeting and saving notes...');
-        stopTimer();
-    }
-
-    function setStoppingState() {
-        let button = document.getElementById('stop-btn');
-        button.disabled = true;
-        button.textContent = 'Stopping...';
-        stopTimer();
-    }
-
-    function setSavedState() {
-        let button = document.getElementById('stop-btn');
-        button.disabled = true;
-        button.textContent = 'Saved';
-        stopTimer();
-    }
-
-    function getNotes() {
-        return document.getElementById('notes').value;
-    }
-</script>
-</body>
-</html>]]
-end
-
--- Create and show the notepad window
-local function showMeetingNotepad()
-    if meetingNotepad then meetingNotepad:delete(); meetingNotepad = nil end
-
-    local screen = hs.screen.mainScreen():frame()
-    local w, h = 380, 500
-    local x = screen.x + screen.w - w - 20
-    local y = screen.y + 60
-
-    local title = os.date("Meeting — %H:%M")
-
-    meetingNotepad = hs.webview.new({ x = x, y = y, w = w, h = h })
-    meetingNotepad:windowStyle({ "titled", "closable", "resizable", "miniaturizable" })
-    meetingNotepad:level(hs.canvas.windowLevels.floating)
-    meetingNotepad:allowTextEntry(true)
-    meetingNotepad:windowTitle("Meeting Notes")
-    meetingNotepad:html(meetingNotepadHTML(title))
-    meetingNotepad:show()
-    meetingNotepad:bringToFront()
-end
-
--- Get user notes from the notepad
-local function getMeetingNotes(callback)
-    if not meetingNotepad then callback(""); return end
-    meetingNotepad:evaluateJavaScript("getNotes()", function(result, err)
-        callback(result or "")
-    end)
-end
-
--- Append a transcript chunk to the notepad
-local function appendTranscriptToNotepad(timeStr, text)
-    if not meetingNotepad then return end
-    local escaped = text:gsub("\\", "\\\\"):gsub("'", "\\'"):gsub("\n", "\\n"):gsub("\r", "")
-    local timeEscaped = timeStr:gsub("'", "\\'")
-    meetingNotepad:evaluateJavaScript("appendTranscript('" .. timeEscaped .. "', '" .. escaped .. "')")
-end
-
-local function setNotepadStatus(msg)
-    if not meetingNotepad then return end
-    local escaped = msg:gsub("\\", "\\\\"):gsub("'", "\\'")
-    meetingNotepad:evaluateJavaScript("setStatus('" .. escaped .. "')")
-end
-
-local function setNotepadStoppingState()
-    if not meetingNotepad then return end
-    meetingNotepad:evaluateJavaScript("setStoppingState()")
-end
-
-local function setNotepadSavedState()
-    if not meetingNotepad then return end
-    meetingNotepad:evaluateJavaScript("setSavedState()")
-end
-
-local function pollMeetingControls()
-    if not meetingNotepad or not meetingRecording or meetingStopping then return end
-    meetingNotepad:evaluateJavaScript("window.stopRequested === true", function(result, err)
-        if result == true or result == "true" or result == 1 then
-            stopMeeting()
-        end
-    end)
-end
-
-local function maybeFinalizeMeetingSave()
-    if not meetingStopping or meetingSavingOutput or meetingPendingTranscriptions > 0 then return end
-    meetingSavingOutput = true
-    setNotepadStatus("Saving meeting notes...")
-    getMeetingNotes(function(notes)
-        saveMeetingOutput(notes, function(filepath)
-            meetingStopping = false
-            if meetingControlTimer then meetingControlTimer:stop(); meetingControlTimer = nil end
-            restorePriorOutput()
-            setNotepadSavedState()
-            updateMenuBar()
-            hs.notify.new({
-                title = "Meeting notes saved",
-                informativeText = filepath,
-            }):send()
-        end)
-    end)
-end
-
--- Bounds (in seconds) of the Nth transcription window. Windows after the
--- first start MEETING_OVERLAP_SECONDS earlier than the previous one ended,
--- giving whisper context across word boundaries.
-local function meetingWindowBounds(idx)
-    if idx == 1 then return 0, MEETING_CHUNK_SECONDS end
-    local startSec = MEETING_CHUNK_SECONDS * (idx - 1) - MEETING_OVERLAP_SECONDS
-    local endSec   = MEETING_CHUNK_SECONDS * idx
-    return startSec, endSec
-end
-
--- Remove the duplicated overlap region from the start of `curr`. Whisper's
--- output for the same audio shifts with context, so an exact suffix/prefix
--- match almost never fires. Instead: search for the last K words of `prev`
--- anywhere in the first half of `curr`, and strip everything up to and
--- including that match. K decreases from 6 down to 3 to allow for word
--- drops; below 3 false-positive risk on common phrases is too high.
-local function stripOverlap(prev, curr)
-    if prev == "" or curr == "" then return curr end
-    local function words(s)
-        local out = {}
-        for w in s:gmatch("%S+") do table.insert(out, w) end
-        return out
-    end
-    local function norm(w)
-        local s = w:lower():gsub("^[%p]+", ""):gsub("[%p]+$", "")
-        return s  -- discard gsub's replacement-count second return value
-    end
-    local p, c = words(prev), words(curr)
-    if #p < 3 or #c < 3 then return curr end
-    local searchLimit = math.min(#c - 1, math.max(8, math.floor(#c * 0.6)))
-    for k = math.min(6, #p), 3, -1 do
-        local tail = {}
-        for i = #p - k + 1, #p do table.insert(tail, norm(p[i])) end
-        for startPos = 1, searchLimit - k + 1 do
-            local match = true
-            for j = 1, k do
-                if norm(c[startPos + j - 1]) ~= tail[j] then match = false; break end
-            end
-            if match then
-                local out = {}
-                for i = startPos + k, #c do table.insert(out, c[i]) end
-                return table.concat(out, " ")
-            end
-        end
-    end
-    return curr
-end
-
-local sliceAndTranscribeWindow  -- forward decl
-
--- Pop the next pending window off the queue and run it. Whisper.cpp on
--- Apple Silicon Metal doesn't tolerate concurrent invocations well (they
--- deadlock racing for the GPU), so the pipeline serializes here.
-local function processNextWindow()
-    if meetingProcessing then return end
-    if #meetingWindowQueue == 0 then return end
-    local job = table.remove(meetingWindowQueue, 1)
-    meetingProcessing = true
-    sliceAndTranscribeWindow(job.idx, job.startSec, job.endSec)
-end
-
--- Slice [startSec, endSec) from the growing PCM recording into a temp WAV,
--- then run whisper on it; on success, dedupe overlap and append to the
--- transcript. Two-stage hs.task pipeline: ffmpeg → whisper. Serialized
--- via meetingProcessing/meetingWindowQueue.
-sliceAndTranscribeWindow = function(idx, startSec, endSec)
-    local windowPath = string.format("%s/window_%04d.wav", meetingChunkDir, idx)
-    local outPrefix  = string.format("%s/window_%04d", meetingChunkDir, idx)
-    local outTxtPath = outPrefix .. ".txt"
-    local startLabelSec = MEETING_CHUNK_SECONDS * (idx - 1)
-    local timeStr = string.format("%d:%02d",
-        math.floor(startLabelSec / 60), startLabelSec % 60)
-
-    -- pending count was already incremented by enqueueWindow
-
-    local released = false
-    local taskToken
-    local watchdog
-    local function release(reason)
-        if released then return end
-        released = true
-        if watchdog then watchdog:stop(); watchdog = nil end
-        if taskToken then meetingActiveTasks[taskToken] = nil; taskToken = nil end
-        os.remove(windowPath)
-        os.remove(outTxtPath)
-        meetingPendingTranscriptions = math.max(0, meetingPendingTranscriptions - 1)
-        meetingProcessing = false
-        if reason then log("meeting: window " .. idx .. " released: " .. reason) end
-        maybeFinalizeMeetingSave()
-        processNextWindow()
-    end
-
-    -- Single shell pipeline: ffmpeg slices PCM → whisper writes -otxt file.
-    -- Replaces the previous nested hs.task (slice's callback spawning whisper),
-    -- which was hanging on the second window — whisper exited cleanly but the
-    -- inner hs.task callback never fired. With one task we get one reliable
-    -- exit callback; whisper output is read from the file, not piped stdout.
-    -- In API mode the shell pipeline only slices the audio; transcription is
-    -- done afterwards via transcribeViaAPI (remote OpenAI-compatible endpoint).
-    local apiMode = isApiMode()
-    local model = getModelPath()
-    local function shquote(s) return "'" .. s:gsub("'", "'\\''") .. "'" end
-    local cmd
-    if apiMode then
-        cmd = string.format(
-            "set -e\n" ..
-            "%s -y -hide_banner -loglevel error -f s16le -ar 16000 -ac 1 -ss %.3f -i %s -t %.3f %s\n",
-            shquote(FFMPEG), startSec, shquote(meetingPcmPath), endSec - startSec, shquote(windowPath)
-        )
-    else
-        cmd = string.format(
-            "set -e\n" ..
-            "%s -y -hide_banner -loglevel error -f s16le -ar 16000 -ac 1 -ss %.3f -i %s -t %.3f %s\n" ..
-            "%s -m %s -f %s -otxt -of %s --no-prints -t 4 -l auto >/dev/null 2>&1\n",
-            shquote(FFMPEG), startSec, shquote(meetingPcmPath), endSec - startSec, shquote(windowPath),
-            shquote(WHISPER_BIN), shquote(model), shquote(windowPath), shquote(outPrefix)
-        )
-    end
-
-    meetingActiveTasksSeq = meetingActiveTasksSeq + 1
-    taskToken = "win_" .. idx .. "_" .. meetingActiveTasksSeq
-
-    local function emitText(raw)
-        local text = raw:gsub("%[.*%]", ""):gsub("^%s+", ""):gsub("%s+$", "")
-        if text == "" or isHallucination(text) then return end
-        local emit = stripOverlap(meetingLastEmittedText, text)
-        meetingLastEmittedText = text
-        if emit ~= "" then
-            table.insert(meetingTranscript, { time = timeStr, text = emit })
-            appendTranscriptToNotepad(timeStr, emit)
-            log("meeting: window " .. idx .. " → " .. #emit .. " chars (raw " .. #text .. ")")
-        end
-    end
-
-    local task  -- forward-declared: the callback below reassigns it in API mode
-    task = hs.task.new("/bin/sh", function(code, _stdout, _stderr)
-        if released then return end  -- watchdog already handled this
-        if code ~= 0 then
-            log("meeting: window " .. idx .. " pipeline exited " .. tostring(code))
-            release(nil)
-            return
-        end
-
-        if apiMode then
-            -- ffmpeg slice succeeded — hand the window off to the remote API.
-            task = transcribeViaAPI(windowPath, "auto", MEETING_WINDOW_TIMEOUT_SECONDS - 2, function(text)
-                if released then return end
-                local ok, err = pcall(emitText, text or "")
-                if not ok then
-                    log("meeting: window " .. idx .. " emit error: " .. tostring(err))
-                end
-                release(nil)
-            end)
-            meetingActiveTasks[taskToken] = task
-            return
-        end
-
-        local ok, err = pcall(function()
-            local f = io.open(outTxtPath, "r")
-            if not f then
-                log("meeting: window " .. idx .. " no output file")
-                return
-            end
-            local raw = f:read("*all") or ""
-            f:close()
-            emitText(raw)
-        end)
-        if not ok then
-            log("meeting: window " .. idx .. " emit error: " .. tostring(err))
-        end
-        release(nil)
-    end, { "-c", cmd })
-    task:setEnvironment({ HOME = HOME, PATH = "/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin" })
-    meetingActiveTasks[taskToken] = task
-
-    -- Watchdog: if a window's pipeline runs longer than the timeout (whisper
-    -- hangs, OS-level pipe stuck, whatever), kill it and release the lock so
-    -- subsequent windows aren't blocked forever.
-    watchdog = hs.timer.doAfter(MEETING_WINDOW_TIMEOUT_SECONDS, function()
-        if released then return end
-        log("meeting: window " .. idx .. " timed out after " .. MEETING_WINDOW_TIMEOUT_SECONDS .. "s, killing")
-        if task and task:isRunning() then task:terminate() end
-        release("watchdog timeout")
-    end)
-
-    log("meeting: window " .. idx .. " starting [" .. string.format("%.1f, %.1f", startSec, endSec) .. "]")
-    if not task:start() then
-        release("pipeline failed to start")
-    end
-end
-
--- Enqueue a window job and inc the pending count up front (so save logic
--- waits for it). Actual slicing+whisper runs serialized via processNextWindow.
-local function enqueueWindow(idx, startSec, endSec)
-    meetingPendingTranscriptions = meetingPendingTranscriptions + 1
-    table.insert(meetingWindowQueue, { idx = idx, startSec = startSec, endSec = endSec })
-end
-
--- Tick: enqueue any windows whose audio has fully arrived in recording.pcm.
-local function emitReadyWindows()
-    if not meetingRecording and not meetingStopping then return end
-    local attr = hs.fs.attributes(meetingPcmPath)
-    if not attr or attr.size <= 0 then return end
-    local recordedSec = attr.size / MEETING_PCM_BYTES_PER_SEC
-    local startSec, endSec = meetingWindowBounds(meetingNextWindowIdx)
-    while recordedSec >= endSec do
-        log(string.format("meeting: enqueue window %d [%.1f, %.1f] (recorded %.1fs, queue=%d, processing=%s)",
-            meetingNextWindowIdx, startSec, endSec, recordedSec,
-            #meetingWindowQueue, tostring(meetingProcessing)))
-        enqueueWindow(meetingNextWindowIdx, startSec, endSec)
-        meetingNextWindowIdx = meetingNextWindowIdx + 1
-        startSec, endSec = meetingWindowBounds(meetingNextWindowIdx)
-    end
-    processNextWindow()
-end
-
--- Stop-time flush: enqueue one last partial window for [next.start, recording-end).
-local function emitFinalPartialWindow()
-    if meetingStopFlushed then return end
-    meetingStopFlushed = true
-    local attr = hs.fs.attributes(meetingPcmPath)
-    if not attr or attr.size <= 0 then return end
-    local recordedSec = attr.size / MEETING_PCM_BYTES_PER_SEC
-    local startSec, _ = meetingWindowBounds(meetingNextWindowIdx)
-    if recordedSec - startSec < 1.0 then return end  -- skip tail under 1s
-    enqueueWindow(meetingNextWindowIdx, startSec, recordedSec)
-    meetingNextWindowIdx = meetingNextWindowIdx + 1
-    processNextWindow()
-end
-
--- Save meeting output as markdown
-saveMeetingOutput = function(notes, callback)
-    os.execute("mkdir -p '" .. MEETINGS_DIR .. "'")
-    local filename = os.date("%Y-%m-%d-%H%M") .. ".md"
-    local filepath = MEETINGS_DIR .. "/" .. filename
-
-    -- Build transcript text
-    local transcriptText = ""
-    for _, chunk in ipairs(meetingTranscript) do
-        transcriptText = transcriptText .. "[" .. chunk.time .. "] " .. chunk.text .. "\n\n"
-    end
-
-    -- Build the markdown
-    local md = "# Meeting Notes — " .. os.date("%Y-%m-%d %H:%M") .. "\n\n"
-
-    if notes and notes:gsub("%s+", "") ~= "" then
-        md = md .. "## My Notes\n\n" .. notes .. "\n\n"
-    end
-
-    if transcriptText ~= "" then
-        md = md .. "## Transcript\n\n" .. transcriptText
-    end
-
-    -- Try to summarize with Ollama
-    if getRefineMode() and hasOllama() and #transcriptText > 100 then
-        setNotepadStatus("Generating summary with Ollama...")
-        local summaryPrompt = "Summarize this meeting transcript into: 1) Key Points (bullet list), 2) Action Items (bullet list), 3) Decisions Made (bullet list). Be concise. Output ONLY the summary in markdown format.\n\n" .. transcriptText:sub(1, 4000)
-        local jsonPayload = hs.json.encode({
-            model = getRefineModel(),
-            prompt = summaryPrompt,
-            stream = false,
-        })
-        local tmpPayload = WHISPER_TMP .. "/meeting_summary_payload.json"
-        local f = io.open(tmpPayload, "w")
-        if f then f:write(jsonPayload); f:close() end
-        local task = hs.task.new("/usr/bin/curl", function(code, stdout, stderr)
-            if code == 0 and stdout and #stdout > 0 then
-                local ok, result = pcall(hs.json.decode, stdout)
-                if ok and result and result.response then
-                    local summary = result.response:gsub("^%s+", ""):gsub("%s+$", "")
-                    if summary ~= "" then
-                        md = "# Meeting Notes — " .. os.date("%Y-%m-%d %H:%M") .. "\n\n"
-                            .. "## Summary\n\n" .. summary .. "\n\n"
-                        if notes and notes:gsub("%s+", "") ~= "" then
-                            md = md .. "## My Notes\n\n" .. notes .. "\n\n"
-                        end
-                        md = md .. "## Full Transcript\n\n" .. transcriptText
-                        log("meeting: summary generated (" .. #summary .. " chars)")
-                    end
-                end
-            end
-            -- Save regardless of summary success
-            local fout = io.open(filepath, "w")
-            if fout then fout:write(md); fout:close() end
-            log("meeting: saved to " .. filepath)
-            setNotepadStatus("Saved to " .. filepath)
-            callback(filepath)
-        end, {
-            "-s", "-X", "POST",
-            "http://localhost:11434/api/generate",
-            "-H", "Content-Type: application/json",
-            "-d", "@" .. tmpPayload,
-            "--max-time", "60",
-        })
-        task:setEnvironment({ HOME = HOME, PATH = "/usr/bin:/bin" })
-        task:start()
-    else
-        local fout = io.open(filepath, "w")
-        if fout then fout:write(md); fout:close() end
-        log("meeting: saved to " .. filepath)
-        setNotepadStatus("Saved to " .. filepath)
-        callback(filepath)
-    end
-end
-
--- Start meeting recording
-startMeeting = function()
-    if meetingRecording then return end
-    if not hasBlackHole() then
-        showBlackHoleSetup()
-        return
-    end
-
-    meetingRecording = true
-    meetingStartTime = hs.timer.secondsSinceEpoch()
-    meetingTranscript = {}
-    meetingNextWindowIdx = 1
-    meetingLastEmittedText = ""
-    meetingStopFlushed = false
-    meetingWindowQueue = {}
-    meetingProcessing = false
-    meetingPendingTranscriptions = 0
-    meetingStopping = false
-    meetingSavingOutput = false
-
-    os.execute("rm -rf '" .. meetingChunkDir .. "'")
-    os.execute("mkdir -p '" .. meetingChunkDir .. "'")
-
-    log("meeting: start")
-
-    -- Route system audio through the aggregate so BlackHole receives it.
-    switchToAggregateOutput()
-
-    -- Show notepad
-    showMeetingNotepad()
-
-    -- Record system audio (via BlackHole) AND the user's microphone, mixed
-    -- into a single growing raw PCM file. A Lua-side slicer (emitReadyWindows)
-    -- pulls overlapping windows out of this file and runs whisper on them,
-    -- so words straddling chunk boundaries don't get cut.
-    local bhDevice = getBlackHoleDevice()
-    local micDev = hs.audiodevice.defaultInputDevice()
-    local micName = micDev and micDev:name() or nil
-    if micName == "BlackHole 2ch" then micName = nil end
-
-    local args = { "-y", "-f", "avfoundation", "-i", bhDevice }
-    if micName then
-        table.insert(args, "-f")
-        table.insert(args, "avfoundation")
-        table.insert(args, "-i")
-        table.insert(args, ":" .. micName)
-        table.insert(args, "-filter_complex")
-        table.insert(args, "[0:a][1:a]amix=inputs=2:duration=longest:dropout_transition=0")
-        log("meeting: capturing system audio + mic '" .. micName .. "'")
-    else
-        log("meeting: capturing system audio only (no default input device)")
-    end
-    for _, a in ipairs({
-        "-ac", "1", "-ar", "16000",
-        "-f", "s16le",
-        meetingPcmPath,
-    }) do table.insert(args, a) end
-
-    meetingFfmpegTask = hs.task.new(FFMPEG, function(code, out, err)
-        log("meeting: ffmpeg exited " .. tostring(code))
-    end, args)
-    meetingFfmpegTask:setEnvironment({ HOME = HOME, PATH = "/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin" })
-    meetingFfmpegTask:start()
-
-    -- Periodically slice ready overlapping windows out of the growing PCM
-    meetingTranscribeTimer = hs.timer.doEvery(MEETING_TRANSCRIBE_POLL_SECONDS, emitReadyWindows)
-    if meetingControlTimer then meetingControlTimer:stop(); meetingControlTimer = nil end
-    meetingControlTimer = hs.timer.doEvery(0.5, pollMeetingControls)
-
-    updateMenuBar()
-    hs.notify.new({ title = "local-whisper", informativeText = "Meeting recording started" }):send()
-end
-
--- Stop meeting recording
-stopMeeting = function()
-    if not meetingRecording then return end
-    meetingRecording = false
-    log("meeting: stop")
-
-    -- Stop ffmpeg
-    if meetingFfmpegTask and meetingFfmpegTask:isRunning() then
-        meetingFfmpegTask:interrupt()
-    end
-    meetingFfmpegTask = nil
-
-    -- Stop the slice/poll timers
-    if meetingTranscribeTimer then meetingTranscribeTimer:stop(); meetingTranscribeTimer = nil end
-    if meetingControlTimer then meetingControlTimer:stop(); meetingControlTimer = nil end
-    meetingStopping = true
-    setNotepadStoppingState()
-
-    setNotepadStatus("Transcribing final window...")
-    hs.timer.doAfter(2, function()
-        emitReadyWindows()         -- catch any complete windows still pending
-        emitFinalPartialWindow()   -- flush trailing audio shorter than a full step
-        maybeFinalizeMeetingSave()
-    end)
-
-    updateMenuBar()
-end
-
---------------------------------------------------------------------------------
 -- Startup
 --------------------------------------------------------------------------------
 
@@ -2767,57 +1818,6 @@ end
 if type(hs.microphoneState) == "function" and not hs.microphoneState() then
     log("requesting microphone permission")
     hs.microphoneState(true)
-end
-
--- If a previous Hammerspoon session left us stranded on the meeting
--- aggregate (e.g., the meeting got stuck and never restored), drop us
--- onto an audible fallback so the user has sound at startup.
-recoverIfStrandedOnAggregate()
-
--- Global state-dump callable from outside Hammerspoon via:
---   /Applications/Hammerspoon.app/Contents/Frameworks/hs/hs -c "meetingDoctor()"
--- Used by tools/meeting-doctor.sh. Prints a one-shot snapshot of meeting
--- state — exactly what's needed to debug a stuck meeting without poking
--- around init.lua internals.
-function _G.meetingDoctor()
-    local lines = {}
-    local function add(k, v) table.insert(lines, k .. "=" .. tostring(v)) end
-    add("meetingRecording", meetingRecording)
-    add("meetingStopping", meetingStopping)
-    add("meetingSavingOutput", meetingSavingOutput)
-    add("meetingProcessing", meetingProcessing)
-    add("meetingPendingTranscriptions", meetingPendingTranscriptions)
-    add("meetingNextWindowIdx", meetingNextWindowIdx)
-    add("meetingQueueLen", #meetingWindowQueue)
-    add("meetingPriorOutputUID", meetingPriorOutputUID or "<nil>")
-    add("meetingFfmpegRunning", meetingFfmpegTask and meetingFfmpegTask:isRunning() or false)
-    local active = 0
-    for _ in pairs(meetingActiveTasks) do active = active + 1 end
-    add("meetingActiveTasks", active)
-    local activeKeys = {}
-    for k, t in pairs(meetingActiveTasks) do
-        table.insert(activeKeys, k .. "(running=" .. tostring(t and t:isRunning()) .. ")")
-    end
-    add("meetingActiveTasksDetail", table.concat(activeKeys, ","))
-    local attr = hs.fs.attributes(meetingPcmPath)
-    add("recordingPcmBytes", attr and attr.size or 0)
-    if attr and attr.size > 0 then
-        add("recordingPcmSeconds", string.format("%.1f", attr.size / MEETING_PCM_BYTES_PER_SEC))
-    end
-    return table.concat(lines, "\n")
-end
-
--- Also restore on Hammerspoon shutdown / reload, in case a meeting is
--- mid-flight when the user reloads config.
-hs.shutdownCallback = function()
-    if meetingRecording or meetingStopping then
-        if meetingFfmpegTask and meetingFfmpegTask:isRunning() then
-            meetingFfmpegTask:interrupt()
-        end
-        if meetingPriorOutputUID then
-            runAudioHelper("set-default", meetingPriorOutputUID)
-        end
-    end
 end
 
 -- Create default preferred langs file if it doesn't exist

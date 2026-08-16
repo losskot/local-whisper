@@ -54,7 +54,7 @@ ok "Homebrew found"
 
 # ─── Step 1: Brew dependencies ──────────────────────────────────────────────
 echo ""
-info "Step 1/6: Installing dependencies via Homebrew..."
+info "Step 1/5: Installing dependencies via Homebrew..."
 
 BREW_FORMULAE=(ffmpeg cmake git)
 for formula in "${BREW_FORMULAE[@]}"; do
@@ -77,7 +77,7 @@ fi
 
 # ─── Step 2: Build whisper.cpp ───────────────────────────────────────────────
 echo ""
-info "Step 2/6: Building whisper.cpp..."
+info "Step 2/5: Building whisper.cpp..."
 
 if [[ -x "$WHISPER_CPP_DIR/build/bin/whisper-cli" ]]; then
     ok "whisper-cli already built at $WHISPER_CPP_DIR/build/bin/whisper-cli"
@@ -105,7 +105,7 @@ fi
 
 # ─── Step 3: Download models ────────────────────────────────────────────────
 echo ""
-info "Step 3/6: Downloading whisper models..."
+info "Step 3/5: Downloading whisper models..."
 
 MODEL_FILE="$WHISPER_CPP_DIR/models/ggml-${WHISPER_MODEL}.bin"
 if [[ -f "$MODEL_FILE" ]]; then
@@ -143,7 +143,7 @@ fi
 
 # ─── Step 4: Install Hammerspoon config ─────────────────────────────────────
 echo ""
-info "Step 4/6: Setting up Hammerspoon..."
+info "Step 4/5: Setting up Hammerspoon..."
 
 mkdir -p "$HAMMERSPOON_DIR"
 
@@ -183,66 +183,7 @@ fi
 
 # ─── Step 5: Setup (permissions, trigger key, audio device, HS CLI) ─────────
 echo ""
-info "Step 5/6: Running setup (permissions, trigger key, audio device)..."
+info "Step 5/5: Running setup (permissions, trigger key, audio device)..."
 echo ""
 bash "$SCRIPT_DIR/setup.sh"
 
-# ─── Step 6: Optional — meeting recording mode ───────────────────────────────
-echo ""
-info "Step 6/6: Meeting recording mode (optional)"
-echo ""
-echo "  Adds 'Meeting Mode' to the menu bar — captures system audio during"
-echo "  calls (Zoom, Meet, Teams, etc.), produces a live transcript and"
-echo "  Ollama summary."
-echo ""
-echo "  Requires BlackHole 2ch (free virtual audio driver). On opt-in, this"
-echo "  installer also builds a small Swift helper that creates a"
-echo "  Multi-Output Device automatically — no Audio MIDI Setup needed."
-echo ""
-echo "  Skip if you only want hold-to-dictate. Re-run this installer later"
-echo "  to enable it."
-echo ""
-read -r -p "  Enable meeting recording mode? [y/N]: " ENABLE_MEETING
-
-if [[ "$ENABLE_MEETING" =~ ^[Yy]$ ]]; then
-    if brew list --cask blackhole-2ch &>/dev/null; then
-        ok "BlackHole 2ch already installed"
-    else
-        info "Installing BlackHole 2ch..."
-        brew install --cask blackhole-2ch
-        ok "BlackHole 2ch installed"
-    fi
-
-    HELPER_SRC="$SCRIPT_DIR/tools/aggregate-audio.swift"
-    HELPER_BIN_DIR="$CONFIG_DIR/bin"
-    HELPER_BIN="$HELPER_BIN_DIR/aggregate-audio"
-    if [[ ! -f "$HELPER_SRC" ]]; then
-        error "Missing $HELPER_SRC — meeting mode helper cannot be built."
-        exit 1
-    fi
-    mkdir -p "$HELPER_BIN_DIR"
-    info "Building audio helper (swiftc)..."
-    if swiftc -O "$HELPER_SRC" -o "$HELPER_BIN"; then
-        ok "Helper installed at $HELPER_BIN"
-    else
-        error "Failed to build audio helper. Is the Xcode Command Line Tools package installed?"
-        error "  xcode-select --install"
-        exit 1
-    fi
-
-    info "Creating 'local-whisper Output' Multi-Output Device..."
-    if AGG_UID=$("$HELPER_BIN" create 2>&1); then
-        ok "Aggregate device ready (UID: $AGG_UID)"
-        echo ""
-        echo "  Meeting mode will switch your system output to this device only"
-        echo "  while a meeting is recording, then switch back when you stop."
-        echo "  No further setup needed — start meetings from the menu bar."
-    else
-        warn "Could not create aggregate device automatically:"
-        warn "  $AGG_UID"
-        warn "If you just installed BlackHole, you may need to reboot first,"
-        warn "then re-run this installer."
-    fi
-else
-    ok "Skipped — meeting mode disabled. Re-run installer to enable."
-fi
