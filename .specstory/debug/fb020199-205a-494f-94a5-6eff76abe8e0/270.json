@@ -1,0 +1,74 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01PKBquL6B9VavSKSnyFd6g3",
+        "input": {
+          "file_path": "/Users/vitaliy/Documents/GitHub/local-whisper/AGENTS.md",
+          "new_string": "**Current count: ~144/200** — comfortable headroom since meeting mode was removed. Only *top-level* locals count against the limit; locals inside a function body belong to that function's own budget, so match the start of the line exactly:\n\n```bash\ngrep -c '^local ' hammerspoon/init.lua\n```\n\n**Rule**: Never add a new top-level `local` without first verifying the count stays ≤ 200. If the count climbs back toward the ceiling, group related state into a single table rather than adding bare locals — `finalizeTimers` (`{ timer, watchdog }`) and `ollamaProbe` (`{ value, at }`) are the existing examples of that pattern.\n\n### Declaration order matters as much as the count\n\nA `local` is only in scope for code that appears *after* its declaration. A function defined earlier in the file that references the name does **not** capture it — the reference silently compiles to a global lookup that reads `nil` at runtime, with no error at load time. This produced three separate live bugs in the overlay code (X button, unpin, pinning from the menu bar).\n\n`overlayPinned`, `isRecording`, and the `hideOverlay` forward declaration therefore sit **above** `createOverlay`, whose mouse callback closes over all three. When adding state that a callback touches, declare it above every function that references it.",
+          "old_string": "**Current count: ~199/200** — effectively no headroom left. Before adding any new top-level `local`, check the count:\n\n```bash\ngrep -c '^\\s*local ' hammerspoon/init.lua\n```\n\n**Mitigation already in place** — instead of adding bare top-level locals, group related state into existing tables:\n\n| Table | Contents |\n|-------|----------|\n| `PL`  | All pipeline/transcription state (`results`, `lang`, `nextChunk`, `nextSeg`, `total`, `done`, `finalizing`, `streamTimer`, `whisperActive`, `whisperQueue`, `watchdog`) |\n| `MC`  | Meeting-mode constants (`MEETING_PAUSE_SECS`, `MEETING_MAX_GAP`, etc.) |\n| `barState` | Menu bar animation state |\n\n**Rule**: Never add a new top-level `local` without first verifying the count stays ≤ 200. If at or near 200, group into an existing table or create a new one.",
+          "replace_all": false
+        },
+        "name": "Edit",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce6zBhD3GxvYk26SL6J9C",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 356,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 356,
+      "cache_read_input_tokens": 120534,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 356,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 356,
+          "cache_read_input_tokens": 120534,
+          "input_tokens": 2,
+          "output_tokens": 1147,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 1147,
+      "output_tokens_details": {
+        "thinking_tokens": 152
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "fe40bfda-de49-4ff4-bf23-d521f736bda6",
+  "requestId": "req_011Ce6zBfd3VPLND7bZFGoHj",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "timestamp": "2026-08-16T19:34:03.242Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "81add96f-b3b6-4e43-9a56-4b8726ae6c1c",
+  "version": "2.1.233"
+}

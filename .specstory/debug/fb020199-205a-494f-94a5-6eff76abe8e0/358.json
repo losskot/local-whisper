@@ -1,0 +1,51 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/tests/test_init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01GsyUifPbwoUxK6ewpksfHM",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "6a308fc1-ff77-435b-9fbe-afaae97bd091",
+  "promptId": "eaaa32ad-5904-4856-b68d-d7aea6bbb94c",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "6a308fc1-ff77-435b-9fbe-afaae97bd091",
+  "timestamp": "2026-08-16T20:08:41.996Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/tests/test_init.lua",
+    "newString": "local violations = {}\nfor name, declLine in pairs(decls) do\n    for i = 1, declLine - 1 do\n        if usesName(readsOnly(stripped[i]), name) and not shadowedBefore(name, i + 1) then",
+    "oldString": "local violations = {}\nfor name, declLine in pairs(decls) do\n    for i = 1, declLine - 1 do\n        if usesName(stripped[i], name) and not shadowedBefore(name, i + 1) then",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          " local violations = {}",
+          " for name, declLine in pairs(decls) do",
+          "     for i = 1, declLine - 1 do",
+          "-        if usesName(stripped[i], name) and not shadowedBefore(name, i + 1) then",
+          "+        if usesName(readsOnly(stripped[i]), name) and not shadowedBefore(name, i + 1) then",
+          "             violations[#violations + 1] = string.format(\"%s used at L%d, declared at L%d\", name, i, declLine)",
+          "             break",
+          "         end"
+        ],
+        "newLines": 7,
+        "newStart": 150,
+        "oldLines": 7,
+        "oldStart": 150
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "0a13bef6-20f0-4e97-b58c-bb497029afec",
+  "version": "2.1.233"
+}

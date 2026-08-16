@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "  \u001b[0;32mPASS\u001b[0m  emergencyStop: clears finalizationPending\n  \u001b[0;32mPASS\u001b[0m  emergencyStop: stops the finalization timers\n\n\u001b[0;32m\u001b[1mAll 14 checks passed.\u001b[0m\n=== hs health:\ntrigger=true",
+        "is_error": false,
+        "tool_use_id": "toolu_01AxxntjDeeX1rUvGWKSFpyi",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "ec55c392-a651-4115-a992-bdd059a90ef5",
+  "promptId": "bf6b9be6-e6cf-4e39-8634-328ab8e3b411",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "ec55c392-a651-4115-a992-bdd059a90ef5",
+  "timestamp": "2026-08-16T20:11:44.869Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "  \u001b[0;32mPASS\u001b[0m  emergencyStop: clears finalizationPending\n  \u001b[0;32mPASS\u001b[0m  emergencyStop: stops the finalization timers\n\n\u001b[0;32m\u001b[1mAll 14 checks passed.\u001b[0m\n=== hs health:\ntrigger=true"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "150b98d4-acf5-4229-ba5c-5447c9855fa7",
+  "version": "2.1.233"
+}

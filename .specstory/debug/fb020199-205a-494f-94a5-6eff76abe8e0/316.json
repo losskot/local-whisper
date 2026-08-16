@@ -1,0 +1,65 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "signature": "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",
+        "thinking": "",
+        "type": "thinking"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce6zewhRoB1WXTrUiG1bp",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 391,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 391,
+      "cache_read_input_tokens": 132268,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 391,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 391,
+          "cache_read_input_tokens": 132268,
+          "input_tokens": 2,
+          "output_tokens": 803,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 803,
+      "output_tokens_details": {
+        "thinking_tokens": 628
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "b70a89f2-9475-4987-b4f6-fbbd31df597f",
+  "requestId": "req_011Ce6zeuZhEq6yViUiU4bcJ",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "timestamp": "2026-08-16T19:40:08.331Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "98f3ad94-6487-4139-8df0-24f60ddc2eae",
+  "version": "2.1.233"
+}

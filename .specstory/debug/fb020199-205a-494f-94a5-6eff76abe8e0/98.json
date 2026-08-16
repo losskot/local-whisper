@@ -1,0 +1,28 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "text": "Fix all, I never use miting mode att all - cut if away forever",
+        "type": "text"
+      }
+    ],
+    "role": "user"
+  },
+  "origin": {
+    "kind": "human"
+  },
+  "parentUuid": "07d1aa47-77b0-4e2d-87a3-a8a8c15f5ed0",
+  "permissionMode": "auto",
+  "promptId": "a651875f-fcbc-4b8f-85e0-3d18600f4667",
+  "promptSource": "sdk",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "timestamp": "2026-08-16T19:26:44.705Z",
+  "type": "user",
+  "userType": "external",
+  "uuid": "1d8d0ff8-4d28-41ff-b618-9f0d83d6d96e",
+  "version": "2.1.233"
+}

@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "fix/remove-meeting-mode-and-review-findings",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "*   a1e9f9a Merge: remove meeting mode, fix review findings, add init.lua test suite\n|\\  \n| * 3e41166 Remove meeting mode; fix code review findings; add init.lua test suite\n|/  \n* 1f546aa before code review fixing\n* 30a76bf fixes fixes",
+        "is_error": false,
+        "tool_use_id": "toolu_016bPePY68VRDxr3KNQZWkEh",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "907fc266-ab9b-4a64-b4d1-a43d4874d50a",
+  "promptId": "bf6b9be6-e6cf-4e39-8634-328ab8e3b411",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "907fc266-ab9b-4a64-b4d1-a43d4874d50a",
+  "timestamp": "2026-08-16T20:11:38.172Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "*   a1e9f9a Merge: remove meeting mode, fix review findings, add init.lua test suite\n|\\  \n| * 3e41166 Remove meeting mode; fix code review findings; add init.lua test suite\n|/  \n* 1f546aa before code review fixing\n* 30a76bf fixes fixes"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "47954d85-9a72-464f-beb2-5f7f0c51517b",
+  "version": "2.1.233"
+}

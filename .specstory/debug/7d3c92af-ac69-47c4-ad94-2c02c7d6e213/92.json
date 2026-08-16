@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "=== unpin-hides-while-recording mutant ===\noverlay: unpinning mid-recording keeps the overlay on screen",
+        "is_error": false,
+        "tool_use_id": "toolu_01BxCFeo4EceLNLDaTC9NnVc",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "e1b116ac-ea5c-4eb5-8025-f097b014856c",
+  "promptId": "63032b1d-97b3-4f08-ae8f-b358bb0a478a",
+  "sessionId": "7d3c92af-ac69-47c4-ad94-2c02c7d6e213",
+  "sourceToolAssistantUUID": "e1b116ac-ea5c-4eb5-8025-f097b014856c",
+  "timestamp": "2026-08-16T20:27:48.461Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "=== unpin-hides-while-recording mutant ===\noverlay: unpinning mid-recording keeps the overlay on screen"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "d926987f-cbf3-4e9c-adb2-5cfcd9177949",
+  "version": "2.1.233"
+}

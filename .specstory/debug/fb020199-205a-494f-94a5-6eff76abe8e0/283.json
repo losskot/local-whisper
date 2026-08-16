@@ -1,0 +1,64 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "text": "Reloaded successfully with the eventtap live. Checking the log:",
+        "type": "text"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce6zEStQjqE6UNrmdDJbi",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 300,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 300,
+      "cache_read_input_tokens": 123131,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 300,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 300,
+          "cache_read_input_tokens": 123131,
+          "input_tokens": 2,
+          "output_tokens": 200,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 200,
+      "output_tokens_details": {
+        "thinking_tokens": 34
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "32320ce3-6d07-4183-b259-43d9eb19c150",
+  "requestId": "req_011Ce6zERsPZHAACE1emWTkn",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "timestamp": "2026-08-16T19:34:29.429Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "0649ea56-d9ed-45cd-8def-de6e05e7b9d3",
+  "version": "2.1.233"
+}

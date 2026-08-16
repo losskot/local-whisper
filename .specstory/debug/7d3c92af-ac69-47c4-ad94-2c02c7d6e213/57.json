@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "  \u001b[0;32mPASS\u001b[0m  progress: startRecordingIndicator clears the frozen duration\n  \u001b[0;32mPASS\u001b[0m  progress: stopRecordingIndicator freezes the recorded duration\n  \u001b[0;32mPASS\u001b[0m  progress: BAR_MAX matches the bar_bg track width\n\n\u001b[0;32m\u001b[1mAll 47 checks passed.\u001b[0m\n=== NEGATIVE CONTROL: pre-fix revision 1f546aa ===\n  \u001b[0;31mFAIL\u001b[0m  scope: no top-level local used before its declaration\n  \u001b[0;31mFAIL\u001b[0m  sound: no unguarded getByFile():play()\n  \u001b[0;31mFAIL\u001b[0m  meeting: no meeting-mode code remains\n  \u001b[0;31mFAIL\u001b[0m  globals: no unintended top-level globals\n  \u001b[0;31mFAIL\u001b[0m  sort: comparator is extractable from source\n  \u001b[0;31mFAIL\u001b[0m  sort: ffmpeg output template and comparator pattern agree\n  \u001b[0;31mFAIL\u001b[0m  emergencyStop: clears finalizationPending\n  \u001b[0;31mFAIL\u001b[0m  emergencyStop: stops the finalization timers\n  \u001b[0;31mFAIL\u001b[0m  overlay: pin/recording state is declared above createOverlay\n  \u001b[0;31mFAIL\u001b[0m  startRecording: function is liftable and compiles\n  \u001b[0;31mFAIL\u001b[0m  progress: the blue bar reaches the red bar when transcription completes\n  \u001b[0;31mFAIL\u001b[0m  progress: the bar scale stops expanding once recording stops\n  \u001b[0;31mFAIL\u001b[0m  progress: the bars are drawn at a visible width\n  \u001b[0;31mFAIL\u001b[0m  progress: startRecordingIndicator clears the frozen duration\n  \u001b[0;31mFAIL\u001b[0m  progress: stopRecordingIndicator freezes the recorded duration\n\u001b[0;31m\u001b[1m15 of 36 checks failed.\u001b[0m",
+        "is_error": false,
+        "tool_use_id": "toolu_01YCAeKtyvxBaRqYEeMJ9naK",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "d8328b1b-f57f-4ae4-8b30-5274ab5d9103",
+  "promptId": "63032b1d-97b3-4f08-ae8f-b358bb0a478a",
+  "sessionId": "7d3c92af-ac69-47c4-ad94-2c02c7d6e213",
+  "sourceToolAssistantUUID": "d8328b1b-f57f-4ae4-8b30-5274ab5d9103",
+  "timestamp": "2026-08-16T20:20:39.465Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "  \u001b[0;32mPASS\u001b[0m  progress: startRecordingIndicator clears the frozen duration\n  \u001b[0;32mPASS\u001b[0m  progress: stopRecordingIndicator freezes the recorded duration\n  \u001b[0;32mPASS\u001b[0m  progress: BAR_MAX matches the bar_bg track width\n\n\u001b[0;32m\u001b[1mAll 47 checks passed.\u001b[0m\n=== NEGATIVE CONTROL: pre-fix revision 1f546aa ===\n  \u001b[0;31mFAIL\u001b[0m  scope: no top-level local used before its declaration\n  \u001b[0;31mFAIL\u001b[0m  sound: no unguarded getByFile():play()\n  \u001b[0;31mFAIL\u001b[0m  meeting: no meeting-mode code remains\n  \u001b[0;31mFAIL\u001b[0m  globals: no unintended top-level globals\n  \u001b[0;31mFAIL\u001b[0m  sort: comparator is extractable from source\n  \u001b[0;31mFAIL\u001b[0m  sort: ffmpeg output template and comparator pattern agree\n  \u001b[0;31mFAIL\u001b[0m  emergencyStop: clears finalizationPending\n  \u001b[0;31mFAIL\u001b[0m  emergencyStop: stops the finalization timers\n  \u001b[0;31mFAIL\u001b[0m  overlay: pin/recording state is declared above createOverlay\n  \u001b[0;31mFAIL\u001b[0m  startRecording: function is liftable and compiles\n  \u001b[0;31mFAIL\u001b[0m  progress: the blue bar reaches the red bar when transcription completes\n  \u001b[0;31mFAIL\u001b[0m  progress: the bar scale stops expanding once recording stops\n  \u001b[0;31mFAIL\u001b[0m  progress: the bars are drawn at a visible width\n  \u001b[0;31mFAIL\u001b[0m  progress: startRecordingIndicator clears the frozen duration\n  \u001b[0;31mFAIL\u001b[0m  progress: stopRecordingIndicator freezes the recorded duration\n\u001b[0;31m\u001b[1m15 of 36 checks failed.\u001b[0m"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "eb44dbdb-53b3-4dca-8d3c-a8ed2896218e",
+  "version": "2.1.233"
+}

@@ -1,0 +1,64 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "text": "All 47 checks pass and `init.lua` is untouched — this is test-only work. Now landing it per the project workflow:",
+        "type": "text"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce74N1xuFHytcrzxok3Mu",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 236,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 236,
+      "cache_read_input_tokens": 90588,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 236,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 236,
+          "cache_read_input_tokens": 90588,
+          "input_tokens": 2,
+          "output_tokens": 605,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 605,
+      "output_tokens_details": {
+        "thinking_tokens": 436
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "f1f54ba7-4aa3-4157-94e0-850ec8f8bcbe",
+  "requestId": "req_011Ce74N13qACejPJ1J2AVW8",
+  "sessionId": "7d3c92af-ac69-47c4-ad94-2c02c7d6e213",
+  "timestamp": "2026-08-16T20:28:45.175Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "79406697-499e-4824-88fb-e64c1ab9a5e9",
+  "version": "2.1.233"
+}

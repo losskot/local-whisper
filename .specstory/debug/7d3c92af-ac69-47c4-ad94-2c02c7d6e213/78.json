@@ -1,0 +1,27 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "Exit code 143\nCommand timed out after 3m 0s\nwrote xbutton_no_emergencystop\nwrote xbutton_sync_delete\nwrote progress_live_clock\nwrote overlay_unpin_hides_while_recording",
+        "is_error": true,
+        "tool_use_id": "toolu_016kFJuaQ1488bdt7NMdVB7j",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "b30f5eee-260c-44f2-85b0-775acd2a8fd3",
+  "promptId": "63032b1d-97b3-4f08-ae8f-b358bb0a478a",
+  "sessionId": "7d3c92af-ac69-47c4-ad94-2c02c7d6e213",
+  "sourceToolAssistantUUID": "b30f5eee-260c-44f2-85b0-775acd2a8fd3",
+  "timestamp": "2026-08-16T20:26:58.066Z",
+  "toolUseResult": "Error: Exit code 143\nCommand timed out after 3m 0s\nwrote xbutton_no_emergencystop\nwrote xbutton_sync_delete\nwrote progress_live_clock\nwrote overlay_unpin_hides_while_recording",
+  "type": "user",
+  "userType": "external",
+  "uuid": "dcbf4e7f-877a-4203-ab87-e3c1d06ac6f5",
+  "version": "2.1.233"
+}

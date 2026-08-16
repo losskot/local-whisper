@@ -1,0 +1,64 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "text": "Only `main` exists, local and remote both at `f934465` — the test work is already committed and pushed, so there's no branch to merge. The only outstanding changes are the SpecStory transcripts. Let me confirm that's all they are:",
+        "type": "text"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce74bFbZLMZSf1fEpaTBo",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 528,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 528,
+      "cache_read_input_tokens": 94600,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 528,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 528,
+          "cache_read_input_tokens": 94600,
+          "input_tokens": 2,
+          "output_tokens": 565,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 565,
+      "output_tokens_details": {
+        "thinking_tokens": 308
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "c674b83b-2443-4716-904d-3ff69ce7ccac",
+  "requestId": "req_011Ce74bEU6RGeWY1MVZTEdt",
+  "sessionId": "7d3c92af-ac69-47c4-ad94-2c02c7d6e213",
+  "timestamp": "2026-08-16T20:31:43.003Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "8c1dca59-6e36-4aa7-84c6-decdf7adeb2e",
+  "version": "2.1.233"
+}

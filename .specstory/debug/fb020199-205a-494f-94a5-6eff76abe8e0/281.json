@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "error communicating with Hammerspoon: message port was invalidated\nerror unregistering CLI instance with Hammerspoon: message port invalid (transport errors are normal if Hammerspoon is reloading)\n=== reloaded, probing state:\ntrigger=true",
+        "is_error": false,
+        "tool_use_id": "toolu_01ABYjcAk1AWPSL3oGyjMZ64",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "32863f9b-1371-4b74-a979-5627a2a0a871",
+  "promptId": "a651875f-fcbc-4b8f-85e0-3d18600f4667",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "32863f9b-1371-4b74-a979-5627a2a0a871",
+  "timestamp": "2026-08-16T19:34:26.481Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "error communicating with Hammerspoon: message port was invalidated\nerror unregistering CLI instance with Hammerspoon: message port invalid (transport errors are normal if Hammerspoon is reloading)\n=== reloaded, probing state:\ntrigger=true"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "dbac37a5-0800-4659-933b-12ccdebb43cf",
+  "version": "2.1.233"
+}

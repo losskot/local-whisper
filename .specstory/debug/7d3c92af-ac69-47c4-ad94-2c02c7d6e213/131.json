@@ -1,0 +1,28 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "text": "treat specstory as a part of the code - just commit",
+        "type": "text"
+      }
+    ],
+    "role": "user"
+  },
+  "origin": {
+    "kind": "human"
+  },
+  "parentUuid": "ebad8822-d422-44b8-960a-1e800758b127",
+  "permissionMode": "auto",
+  "promptId": "5f55d23e-946d-4281-988b-ba7ecf86aadc",
+  "promptSource": "sdk",
+  "sessionId": "7d3c92af-ac69-47c4-ad94-2c02c7d6e213",
+  "timestamp": "2026-08-16T20:33:27.676Z",
+  "type": "user",
+  "userType": "external",
+  "uuid": "18cb7965-8ff4-4d1f-8209-29d479f74ac4",
+  "version": "2.1.233"
+}

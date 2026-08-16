@@ -1,0 +1,72 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_017aWD33FiDQcEq5iGaCSViK",
+        "input": {
+          "command": "ls -la ~/.local-whisper/bin/ 2\u003e/dev/null; echo \"--- default output:\"; hs -c 'local d=hs.audiodevice.defaultOutputDevice(); return d and (d:name()..\" | uid=\"..tostring(d:uid())) or \"none\"' 2\u003e\u00261 | tail -2",
+          "description": "Check if meeting mode is installed and current output device"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce6z7HfLJ6V55DHoVR93V",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 2188,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 2188,
+      "cache_read_input_tokens": 114461,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 2188,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 2188,
+          "cache_read_input_tokens": 114461,
+          "input_tokens": 2,
+          "output_tokens": 703,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 703,
+      "output_tokens_details": {
+        "thinking_tokens": 515
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "58ea655f-f6e2-4a08-94be-59c8f02d2090",
+  "requestId": "req_011Ce6z7Gbb1hhFMmynn8vQX",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "timestamp": "2026-08-16T19:32:59.740Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "50f69776-3343-4310-a68a-865be9037e42",
+  "version": "2.1.233"
+}

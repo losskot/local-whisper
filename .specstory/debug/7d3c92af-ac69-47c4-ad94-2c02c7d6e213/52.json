@@ -1,0 +1,52 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/tests/test_init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01R6PMMXhWaa35aAKVwBsUat",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "b17d47d4-bde1-4ec4-b201-d03043a32518",
+  "promptId": "63032b1d-97b3-4f08-ae8f-b358bb0a478a",
+  "sessionId": "7d3c92af-ac69-47c4-ad94-2c02c7d6e213",
+  "sourceToolAssistantUUID": "b17d47d4-bde1-4ec4-b201-d03043a32518",
+  "timestamp": "2026-08-16T20:20:24.669Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/tests/test_init.lua",
+    "newString": "    local fn, err = liftFunction(\"startRecording\", env)\n    if not fn then return nil, err end\n    local ok, runErr = pcall(fn)\n    if not ok then return nil, \"startRecording() errored: \" .. tostring(runErr) end\n    return { env = env, calls = calls }",
+    "oldString": "    local fn, err = liftFunction(\"startRecording\", env)\n    if not fn then return nil, err end\n    fn()\n    return { env = env, calls = calls }",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          " ",
+          "     local fn, err = liftFunction(\"startRecording\", env)",
+          "     if not fn then return nil, err end",
+          "-    fn()",
+          "+    local ok, runErr = pcall(fn)",
+          "+    if not ok then return nil, \"startRecording() errored: \" .. tostring(runErr) end",
+          "     return { env = env, calls = calls }",
+          " end",
+          " "
+        ],
+        "newLines": 8,
+        "newStart": 511,
+        "oldLines": 7,
+        "oldStart": 511
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "730b1a3c-b5c0-4dab-bae9-eda667b6db60",
+  "version": "2.1.233"
+}

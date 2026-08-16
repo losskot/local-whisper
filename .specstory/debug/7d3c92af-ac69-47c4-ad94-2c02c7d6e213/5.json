@@ -1,0 +1,28 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "text": "Not covered by tests: the three fixes with no automated guard are the overlay X-button behavior, the startRecording re-press recovery, and the progress bar reaching 100%. All three need a live UI interaction that the suite can't drive. The static scope check does guard the root cause of the X-button bug, but not the click behavior itself — worth a manual pass: hold your trigger key, click the overlay X mid-recording, and confirm it now stops rather than recording on invisibly.\n\nbd is still not installed on this machine, so no issues were filed for that follow-up\n\n\nimplement",
+        "type": "text"
+      }
+    ],
+    "role": "user"
+  },
+  "origin": {
+    "kind": "human"
+  },
+  "parentUuid": null,
+  "permissionMode": "auto",
+  "promptId": "63032b1d-97b3-4f08-ae8f-b358bb0a478a",
+  "promptSource": "sdk",
+  "sessionId": "7d3c92af-ac69-47c4-ad94-2c02c7d6e213",
+  "timestamp": "2026-08-16T20:16:16.531Z",
+  "type": "user",
+  "userType": "external",
+  "uuid": "93a1e3de-95b5-4c88-a4c5-28f563899aa2",
+  "version": "2.1.233"
+}

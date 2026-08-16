@@ -1,0 +1,72 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01J6RPwFXKre8aM1TwY6vLm7",
+        "input": {
+          "command": "python3 -c \"\nlines=open('hammerspoon/init.lua').read().split('\\n')\nfor a,b in [(153,157),(408,418),(1155,1166),(1273,1277),(1544,1554),(1668,1678)]:\n    print('=== %d-%d'%(a,b))\n    for i in range(a,b+1): print('%5d|%s'%(i,lines[i-1][:86]))\"",
+          "description": "Read remaining partial-code sites"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce6yud44jivQFM3dEPgEv",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 542,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 542,
+      "cache_read_input_tokens": 97642,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 542,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 542,
+          "cache_read_input_tokens": 97642,
+          "input_tokens": 2,
+          "output_tokens": 500,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 500,
+      "output_tokens_details": {
+        "thinking_tokens": 288
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "8f42b3a4-ab54-4a37-810e-0a301b3d7751",
+  "requestId": "req_011Ce6yuc6X8179sSvGb7nTW",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "timestamp": "2026-08-16T19:30:18.521Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "069489fe-e0de-4e82-9761-6b43ed096cee",
+  "version": "2.1.233"
+}

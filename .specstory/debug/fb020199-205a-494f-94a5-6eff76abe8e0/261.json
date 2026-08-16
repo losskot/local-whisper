@@ -1,0 +1,35 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "72\t### Lua 200-local-per-function hard ceiling\n73\t\n74\tLua 5.4 (Hammerspoon's runtime) enforces a **hard limit of 200 locals per function**. The top-level chunk of `init.lua` counts as one function. This limit is a compiler error — exceeding it prevents the file from loading at all.\n75\t\n76\t**Current count: ~199/200** — effectively no headroom left. Before adding any new top-level `local`, check the count:\n77\t\n78\t```bash\n79\tgrep -c '^\\s*local ' hammerspoon/init.lua\n80\t```\n81\t\n82\t**Mitigation already in place** — instead of adding bare top-level locals, group related state into existing tables:\n83\t\n84\t| Table | Contents |\n85\t|-------|----------|\n86\t| `PL`  | All pipeline/transcription state (`results`, `lang`, `nextChunk`, `nextSeg`, `total`, `done`, `finalizing`, `streamTimer`, `whisperActive`, `whisperQueue`, `watchdog`) |\n87\t| `MC`  | Meeting-mode constants (`MEETING_PAUSE_SECS`, `MEETING_MAX_GAP`, etc.) |\n88\t| `barState` | Menu bar animation state |\n89\t\n90\t**Rule**: Never add a new top-level `local` without first verifying the count stays ≤ 200. If at or near 200, group into an existing table or create a new one.\n91\t\n92\t## Testing \u0026 debugging\n93\t",
+        "tool_use_id": "toolu_015waHNCejbcyWyefbq34bFU",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "a509d827-6c5c-40fb-a7a9-9d20db3dddca",
+  "promptId": "a651875f-fcbc-4b8f-85e0-3d18600f4667",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "a509d827-6c5c-40fb-a7a9-9d20db3dddca",
+  "timestamp": "2026-08-16T19:33:30.970Z",
+  "toolUseResult": {
+    "file": {
+      "content": "### Lua 200-local-per-function hard ceiling\n\nLua 5.4 (Hammerspoon's runtime) enforces a **hard limit of 200 locals per function**. The top-level chunk of `init.lua` counts as one function. This limit is a compiler error — exceeding it prevents the file from loading at all.\n\n**Current count: ~199/200** — effectively no headroom left. Before adding any new top-level `local`, check the count:\n\n```bash\ngrep -c '^\\s*local ' hammerspoon/init.lua\n```\n\n**Mitigation already in place** — instead of adding bare top-level locals, group related state into existing tables:\n\n| Table | Contents |\n|-------|----------|\n| `PL`  | All pipeline/transcription state (`results`, `lang`, `nextChunk`, `nextSeg`, `total`, `done`, `finalizing`, `streamTimer`, `whisperActive`, `whisperQueue`, `watchdog`) |\n| `MC`  | Meeting-mode constants (`MEETING_PAUSE_SECS`, `MEETING_MAX_GAP`, etc.) |\n| `barState` | Menu bar animation state |\n\n**Rule**: Never add a new top-level `local` without first verifying the count stays ≤ 200. If at or near 200, group into an existing table or create a new one.\n\n## Testing \u0026 debugging\n",
+      "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/AGENTS.md",
+      "numLines": 22,
+      "startLine": 72,
+      "totalLines": 257
+    },
+    "type": "text"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "2d79938c-a197-485a-aac9-f061f33ac3e2",
+  "version": "2.1.233"
+}

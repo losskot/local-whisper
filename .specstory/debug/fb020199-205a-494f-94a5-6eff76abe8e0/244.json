@@ -1,0 +1,65 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "signature": "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",
+        "thinking": "",
+        "type": "thinking"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce6z7HfLJ6V55DHoVR93V",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 2188,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 2188,
+      "cache_read_input_tokens": 114461,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 2188,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 2188,
+          "cache_read_input_tokens": 114461,
+          "input_tokens": 2,
+          "output_tokens": 703,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 703,
+      "output_tokens_details": {
+        "thinking_tokens": 515
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "b42c3954-36b2-444e-a858-1c9d487fc63f",
+  "requestId": "req_011Ce6z7Gbb1hhFMmynn8vQX",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "timestamp": "2026-08-16T19:32:58.117Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "58ea655f-f6e2-4a08-94be-59c8f02d2090",
+  "version": "2.1.233"
+}

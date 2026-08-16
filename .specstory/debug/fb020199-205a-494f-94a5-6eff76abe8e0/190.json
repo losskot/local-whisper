@@ -1,0 +1,60 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01T1i7rtoAfU7D9DCQAv7Dtj",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "3629e9ef-f4de-4d0a-8577-340e7221d47d",
+  "promptId": "a651875f-fcbc-4b8f-85e0-3d18600f4667",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "3629e9ef-f4de-4d0a-8577-340e7221d47d",
+  "timestamp": "2026-08-16T19:30:37.324Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+    "newString": "function emergencyStop()\n    log(\"emergency stop\")\n    isRecording = false\n    -- Cancel any in-flight finalization, otherwise the timer armed by stopRecording()\n    -- still fires and pastes the transcript into whatever is focused after the stop.\n    finalizationPending = false\n    if finalizeTimers.timer then finalizeTimers.timer:stop(); finalizeTimers.timer = nil end\n    if finalizeTimers.watchdog then finalizeTimers.watchdog:stop(); finalizeTimers.watchdog = nil end\n    if silenceTimer then silenceTimer:stop(); silenceTimer = nil end\n    stopRecordingIndicator()\n    if ffmpegTask and ffmpegTask:isRunning() then ffmpegTask:interrupt() end\n    ffmpegTask = nil\n    silentChunkCount = 0\n    lastCheckedChunk = 0\n    forceHideOverlay()",
+    "oldString": "function emergencyStop()\n    log(\"emergency stop\")\n    isRecording = false\n    if partialTimer then partialTimer:stop(); partialTimer = nil end\n    if silenceTimer then silenceTimer:stop(); silenceTimer = nil end\n    stopRecordingIndicator()\n    if ffmpegTask and ffmpegTask:isRunning() then ffmpegTask:interrupt() end\n    ffmpegTask = nil\n    partialBusy = false\n    silentChunkCount = 0\n    lastCheckedChunk = 0\n    forceHideOverlay()",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          " function emergencyStop()",
+          "     log(\"emergency stop\")",
+          "     isRecording = false",
+          "-    if partialTimer then partialTimer:stop(); partialTimer = nil end",
+          "+    -- Cancel any in-flight finalization, otherwise the timer armed by stopRecording()",
+          "+    -- still fires and pastes the transcript into whatever is focused after the stop.",
+          "+    finalizationPending = false",
+          "+    if finalizeTimers.timer then finalizeTimers.timer:stop(); finalizeTimers.timer = nil end",
+          "+    if finalizeTimers.watchdog then finalizeTimers.watchdog:stop(); finalizeTimers.watchdog = nil end",
+          "     if silenceTimer then silenceTimer:stop(); silenceTimer = nil end",
+          "     stopRecordingIndicator()",
+          "     if ffmpegTask and ffmpegTask:isRunning() then ffmpegTask:interrupt() end",
+          "     ffmpegTask = nil",
+          "-    partialBusy = false",
+          "     silentChunkCount = 0",
+          "     lastCheckedChunk = 0",
+          "     forceHideOverlay()"
+        ],
+        "newLines": 15,
+        "newStart": 1144,
+        "oldLines": 12,
+        "oldStart": 1144
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "395b5f20-0921-45d1-8439-6c171ba261bd",
+  "version": "2.1.233"
+}

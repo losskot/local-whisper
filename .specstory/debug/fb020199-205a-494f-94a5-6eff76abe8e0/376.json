@@ -1,0 +1,73 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01Au1P4spWVtccRmTBFtcwKj",
+        "input": {
+          "command": "pgrep -x Hammerspoon \u003e/dev/null \u0026\u0026 hs -c 'return \"hs ok, trigger=\" .. tostring(_whisper.modTap:isEnabled())' 2\u003e\u00261 | tail -1; echo \"=== files:\"; git --no-pager status --short -- hammerspoon/ tools/ tests/ install.sh uninstall.sh AGENTS.md",
+          "description": "Final health and file status",
+          "timeout": 60000
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce72v5wven7o61ss2sxkd",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 458,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 458,
+      "cache_read_input_tokens": 162671,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 458,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 458,
+          "cache_read_input_tokens": 162671,
+          "input_tokens": 2,
+          "output_tokens": 222,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 222,
+      "output_tokens_details": {
+        "thinking_tokens": 0
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "4edab008-9606-4091-bb06-3850cfe5c064",
+  "requestId": "req_011Ce72v4d47emZpS7yJxgVE",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "timestamp": "2026-08-16T20:09:42.744Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "1e731669-7e77-4c6b-9af1-0c0003ff468b",
+  "version": "2.1.233"
+}

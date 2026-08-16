@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "=== live-clock progress mutant ===\nprogress: the blue bar reaches the red bar when transcription completes\ttranscribed bar w=107, recorded bar w=257\nprogress: the bar scale stops expanding once recording stops\tbarMaxSecs grew to 360 after the recording ended\nprogress: the bars are drawn at a visible width\trecorded bar w=257, want 214",
+        "is_error": false,
+        "tool_use_id": "toolu_01DChQ57tKXsBpFXXee72WQw",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "7fe7bcc0-b38e-4cae-80a0-fb127ffb1644",
+  "promptId": "63032b1d-97b3-4f08-ae8f-b358bb0a478a",
+  "sessionId": "7d3c92af-ac69-47c4-ad94-2c02c7d6e213",
+  "sourceToolAssistantUUID": "7fe7bcc0-b38e-4cae-80a0-fb127ffb1644",
+  "timestamp": "2026-08-16T20:27:41.668Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "=== live-clock progress mutant ===\nprogress: the blue bar reaches the red bar when transcription completes\ttranscribed bar w=107, recorded bar w=257\nprogress: the bar scale stops expanding once recording stops\tbarMaxSecs grew to 360 after the recording ended\nprogress: the bars are drawn at a visible width\trecorded bar w=257, want 214"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "74c0c3f5-3b76-42d4-a8b9-48ac2240082d",
+  "version": "2.1.233"
+}

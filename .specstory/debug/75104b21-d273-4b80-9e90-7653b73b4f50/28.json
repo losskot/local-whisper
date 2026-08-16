@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "1:-- Copy to: ~/.hammerspoon/local_whisper_actions.lua\n2:-- Voice commands for local-whisper dictation.\n3:-- All commands start with \"voice command\" to prevent false matches on normal speech.\n4:--\n5:-- Hooks:\n6:--   beforeInsert(ctx)  -\u003e runs before text insertion\n7:--   actions = { ... }  -\u003e ordered list of actions\n8:--   afterInsert(ctx)   -\u003e runs after insertion\n9:--\n10:-- Context fields:\n11:--   ctx.text, ctx.textLower, ctx.originalText\n12:--   ctx.lang, ctx.outputMode\n13:--   ctx.appName, ctx.appBundleID   -- app that was focused when recording started\n14:--   ctx.insert, ctx.inserted, ctx.handled\n15:--   ctx.timestamp, ctx.isoTime     -- when the dictation was recorded\n16:--\n17:-- Context methods:\n18:--   ctx:setText(\"new text\")\n19:--   ctx:disableInsert(), ctx:enableInsert()\n20:--   ctx:launchApp(\"Safari\")\n21:--   ctx:appendToFile(path, line)\n22:--   ctx:runShell(\"command\", optionalInputText)\n23:--   ctx:keystroke({\"cmd\"}, \"a\")      -- fire a keystroke\n24:--   ctx:notify(\"message\"), ctx:log(\"message\")\n25:--\n26:-- Patterns match against ctx.textLower (case-insensitive).\n27:-- Set ctx.handled = true in any hook to skip remaining actions.\n28:-- Config auto-reloads when the file changes.\n33:    beforeInsert = function(ctx)\n35:        -- \"voice command cancel/abort\" — can appear anywhere in the text\n45:        -- All other commands require \"voice command\" at the start\n49:        -- \"voice command note \u003canything\u003e\" — save to ~/whisper_notes.md\n61:        -- \"voice command remind \u003canything\u003e\" — create a macOS Reminder\n79:        -- \"voice command open app \u003cname\u003e\" — launch or focus an app\n91:        -- \"voice command select all\" — Cmd+A\n99:        -- \"voice command copy\" — Cmd+C\n108:        -- \"voice command paste\" — Cmd+V\n116:        -- \"voice command undo\" — Cmd+Z\n128:    afterInsert = function(ctx)",
+        "is_error": false,
+        "tool_use_id": "toolu_01H31HDV3UidA7FB19SfXGNe",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "7c332981-427f-4db9-a2df-9879c456346a",
+  "promptId": "ce6a097e-2d74-458a-9872-d6b4d3ea53bd",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "7c332981-427f-4db9-a2df-9879c456346a",
+  "timestamp": "2026-08-16T20:33:23.152Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "1:-- Copy to: ~/.hammerspoon/local_whisper_actions.lua\n2:-- Voice commands for local-whisper dictation.\n3:-- All commands start with \"voice command\" to prevent false matches on normal speech.\n4:--\n5:-- Hooks:\n6:--   beforeInsert(ctx)  -\u003e runs before text insertion\n7:--   actions = { ... }  -\u003e ordered list of actions\n8:--   afterInsert(ctx)   -\u003e runs after insertion\n9:--\n10:-- Context fields:\n11:--   ctx.text, ctx.textLower, ctx.originalText\n12:--   ctx.lang, ctx.outputMode\n13:--   ctx.appName, ctx.appBundleID   -- app that was focused when recording started\n14:--   ctx.insert, ctx.inserted, ctx.handled\n15:--   ctx.timestamp, ctx.isoTime     -- when the dictation was recorded\n16:--\n17:-- Context methods:\n18:--   ctx:setText(\"new text\")\n19:--   ctx:disableInsert(), ctx:enableInsert()\n20:--   ctx:launchApp(\"Safari\")\n21:--   ctx:appendToFile(path, line)\n22:--   ctx:runShell(\"command\", optionalInputText)\n23:--   ctx:keystroke({\"cmd\"}, \"a\")      -- fire a keystroke\n24:--   ctx:notify(\"message\"), ctx:log(\"message\")\n25:--\n26:-- Patterns match against ctx.textLower (case-insensitive).\n27:-- Set ctx.handled = true in any hook to skip remaining actions.\n28:-- Config auto-reloads when the file changes.\n33:    beforeInsert = function(ctx)\n35:        -- \"voice command cancel/abort\" — can appear anywhere in the text\n45:        -- All other commands require \"voice command\" at the start\n49:        -- \"voice command note \u003canything\u003e\" — save to ~/whisper_notes.md\n61:        -- \"voice command remind \u003canything\u003e\" — create a macOS Reminder\n79:        -- \"voice command open app \u003cname\u003e\" — launch or focus an app\n91:        -- \"voice command select all\" — Cmd+A\n99:        -- \"voice command copy\" — Cmd+C\n108:        -- \"voice command paste\" — Cmd+V\n116:        -- \"voice command undo\" — Cmd+Z\n128:    afterInsert = function(ctx)"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "f3f7683d-9205-4e43-b9ba-a322c6e841da",
+  "version": "2.1.233"
+}

@@ -1,0 +1,53 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/tests/test_init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01Dsh1bxAJRn4p9x7iWi5dcQ",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "9039ec66-a630-4ffb-919e-9f9e4e6fa16f",
+  "promptId": "63032b1d-97b3-4f08-ae8f-b358bb0a478a",
+  "sessionId": "7d3c92af-ac69-47c4-ad94-2c02c7d6e213",
+  "sourceToolAssistantUUID": "9039ec66-a630-4ffb-919e-9f9e4e6fa16f",
+  "timestamp": "2026-08-16T20:20:23.434Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/tests/test_init.lua",
+    "newString": "        local factory, err = loadIn(\"return \" .. cbSrc, env, \"mouseCallback\")\n        if not factory then return nil, tostring(err) end\n        -- A raw error here would abort the whole suite, so report it as a failure instead.\n        local ok, runErr = pcall(factory(), canvas, opts.event, opts.id, 0, 0)\n        if not ok then return nil, \"callback errored: \" .. tostring(runErr) end\n        return { env = env, calls = calls, defer = defer, canvas = canvas }",
+    "oldString": "        local factory, err = loadIn(\"return \" .. cbSrc, env, \"mouseCallback\")\n        if not factory then return nil, tostring(err) end\n        factory()(canvas, opts.event, opts.id, 0, 0)\n        return { env = env, calls = calls, defer = defer, canvas = canvas }",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          " ",
+          "         local factory, err = loadIn(\"return \" .. cbSrc, env, \"mouseCallback\")",
+          "         if not factory then return nil, tostring(err) end",
+          "-        factory()(canvas, opts.event, opts.id, 0, 0)",
+          "+        -- A raw error here would abort the whole suite, so report it as a failure instead.",
+          "+        local ok, runErr = pcall(factory(), canvas, opts.event, opts.id, 0, 0)",
+          "+        if not ok then return nil, \"callback errored: \" .. tostring(runErr) end",
+          "         return { env = env, calls = calls, defer = defer, canvas = canvas }",
+          "     end",
+          " "
+        ],
+        "newLines": 9,
+        "newStart": 420,
+        "oldLines": 7,
+        "oldStart": 420
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "8704d7eb-1c6d-490f-bbfd-d342eb13f9bc",
+  "version": "2.1.233"
+}

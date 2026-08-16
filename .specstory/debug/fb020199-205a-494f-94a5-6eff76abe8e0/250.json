@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "55:# ─── Step 1: Brew dependencies ──────────────────────────────────────────────\n57:info \"Step 1/6: Installing dependencies via Homebrew...\"\n78:# ─── Step 2: Build whisper.cpp ───────────────────────────────────────────────\n80:info \"Step 2/6: Building whisper.cpp...\"\n106:# ─── Step 3: Download models ────────────────────────────────────────────────\n108:info \"Step 3/6: Downloading whisper models...\"\n144:# ─── Step 4: Install Hammerspoon config ─────────────────────────────────────\n146:info \"Step 4/6: Setting up Hammerspoon...\"\n184:# ─── Step 5: Setup (permissions, trigger key, audio device, HS CLI) ─────────\n186:info \"Step 5/6: Running setup (permissions, trigger key, audio device)...\"\n190:# ─── Step 6: Optional — meeting recording mode ───────────────────────────────\n192:info \"Step 6/6: Meeting recording mode (optional)\"",
+        "is_error": false,
+        "tool_use_id": "toolu_018uQPdFiYYkccVZArKZU47R",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "028c45bf-565d-43bb-bc6c-fe40dd20fcf5",
+  "promptId": "a651875f-fcbc-4b8f-85e0-3d18600f4667",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "028c45bf-565d-43bb-bc6c-fe40dd20fcf5",
+  "timestamp": "2026-08-16T19:33:08.512Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "55:# ─── Step 1: Brew dependencies ──────────────────────────────────────────────\n57:info \"Step 1/6: Installing dependencies via Homebrew...\"\n78:# ─── Step 2: Build whisper.cpp ───────────────────────────────────────────────\n80:info \"Step 2/6: Building whisper.cpp...\"\n106:# ─── Step 3: Download models ────────────────────────────────────────────────\n108:info \"Step 3/6: Downloading whisper models...\"\n144:# ─── Step 4: Install Hammerspoon config ─────────────────────────────────────\n146:info \"Step 4/6: Setting up Hammerspoon...\"\n184:# ─── Step 5: Setup (permissions, trigger key, audio device, HS CLI) ─────────\n186:info \"Step 5/6: Running setup (permissions, trigger key, audio device)...\"\n190:# ─── Step 6: Optional — meeting recording mode ───────────────────────────────\n192:info \"Step 6/6: Meeting recording mode (optional)\""
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "398aeb5f-6d76-4d4d-a5cc-9f1243be4c3f",
+  "version": "2.1.233"
+}

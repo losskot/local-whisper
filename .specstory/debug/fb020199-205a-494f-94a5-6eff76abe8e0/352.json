@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": " 1745|--------------------------------------------------------------------------------\n 1746|\n 1747|-- Map trigger key to generic modifier name for polling\n 1748|local GENERIC_MOD = { rightAlt = \"alt\", rightCmd = \"cmd\", rightCtrl = \"ctrl\" }\n 1749|local genericMod = GENERIC_MOD[TRIGGER_KEY]\n 1750|\n 1751|local releasePoller = nil\n 1752|\n 1753|-- Global so we can inspect state via hs -c\n 1754|_whisper = { modTap = nil, recording = false }\n 1755|\n 1756|local modTap = hs.eventtap.new({ hs.eventtap.event.types.flagsChanged }, function(event)\n 1757|    -- Wrap in pcall so errors don't kill the eventtap\n 1758|    local ok, err = pcall(function()\n 1759|        local rawFlags = event:rawFlags()\n 1760|        local triggered = (rawFlags \u0026 triggerMask) \u003e 0\n 1761|\n 1762|        if triggered and not isRecording then",
+        "is_error": false,
+        "tool_use_id": "toolu_0127qX6KsxLiEL7nma2U5wG5",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "7a4bdfda-5670-42b5-866e-70f1fcfb5815",
+  "promptId": "eaaa32ad-5904-4856-b68d-d7aea6bbb94c",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "7a4bdfda-5670-42b5-866e-70f1fcfb5815",
+  "timestamp": "2026-08-16T20:08:06.443Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": " 1745|--------------------------------------------------------------------------------\n 1746|\n 1747|-- Map trigger key to generic modifier name for polling\n 1748|local GENERIC_MOD = { rightAlt = \"alt\", rightCmd = \"cmd\", rightCtrl = \"ctrl\" }\n 1749|local genericMod = GENERIC_MOD[TRIGGER_KEY]\n 1750|\n 1751|local releasePoller = nil\n 1752|\n 1753|-- Global so we can inspect state via hs -c\n 1754|_whisper = { modTap = nil, recording = false }\n 1755|\n 1756|local modTap = hs.eventtap.new({ hs.eventtap.event.types.flagsChanged }, function(event)\n 1757|    -- Wrap in pcall so errors don't kill the eventtap\n 1758|    local ok, err = pcall(function()\n 1759|        local rawFlags = event:rawFlags()\n 1760|        local triggered = (rawFlags \u0026 triggerMask) \u003e 0\n 1761|\n 1762|        if triggered and not isRecording then"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "a43847ea-ab38-42b8-9a80-b7fda4b63cae",
+  "version": "2.1.233"
+}

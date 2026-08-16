@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "=== 951-956\n  951|\n  952|-- Forward-declare meeting state and functions (defined in Meeting mode section below)\n  953|local meetingRecording = false\n  954|local meetingStartTime = nil\n  955|local startMeeting, stopMeeting\n  956|\n=== 1008-1010\n 1008|    table.insert(items, { title = \"-\" })\n 1009|\n 1010|    -- Meeting mode\n=== 1024-1027\n 1024|\n 1025|    table.insert(items, { title = \"-\" })\n 1026|\n 1027|    -- Settings overlay\n=== 1872-1875\n 1872|\n 1873|--------------------------------------------------------------------------------\n 1874|-- Meeting mode\n 1875|--------------------------------------------------------------------------------\n=== 2760-2763\n 2760|end\n 2761|\n 2762|--------------------------------------------------------------------------------\n 2763|-- Startup\n=== 2770-2778\n 2770|end\n 2771|\n 2772|-- If a previous Hammerspoon session left us stranded on the meeting\n 2773|-- aggregate (e.g., the meeting got stuck and never restored), drop us\n 2774|-- onto an audible fallback so the user has sound at startup.\n 2775|recoverIfStrandedOnAggregate()\n 2776|\n 2777|-- Global state-dump callable from outside Hammerspoon via:\n 2778|--   /Applications/Hammerspoon.app/Contents/Frameworks/hs/hs -c \"meetingDoctor()\"\n=== 2806-2813\n 2806|    end\n 2807|    return table.concat(lines, \"\\n\")\n 2808|end\n 2809|\n 2810|-- Also restore on Hammerspoon shutdown / reload, in case a meeting is\n 2811|-- mid-flight when the user reloads config.\n 2812|hs.shutdownCallback = function()\n 2813|    if meetingRecording or meetingStopping then\n=== 2820-2824\n 2820|    end\n 2821|end\n 2822|\n 2823|-- Create default preferred langs file if it doesn't exist\n 2824|if readFile(PREFERRED_LANGS_FILE) == \"\" then",
+        "is_error": false,
+        "tool_use_id": "toolu_01VhAFpvusSQchq6Gb41TKu1",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "9343506e-a928-4047-8dd9-2c3473e108d4",
+  "promptId": "a651875f-fcbc-4b8f-85e0-3d18600f4667",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "9343506e-a928-4047-8dd9-2c3473e108d4",
+  "timestamp": "2026-08-16T19:29:11.254Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "=== 951-956\n  951|\n  952|-- Forward-declare meeting state and functions (defined in Meeting mode section below)\n  953|local meetingRecording = false\n  954|local meetingStartTime = nil\n  955|local startMeeting, stopMeeting\n  956|\n=== 1008-1010\n 1008|    table.insert(items, { title = \"-\" })\n 1009|\n 1010|    -- Meeting mode\n=== 1024-1027\n 1024|\n 1025|    table.insert(items, { title = \"-\" })\n 1026|\n 1027|    -- Settings overlay\n=== 1872-1875\n 1872|\n 1873|--------------------------------------------------------------------------------\n 1874|-- Meeting mode\n 1875|--------------------------------------------------------------------------------\n=== 2760-2763\n 2760|end\n 2761|\n 2762|--------------------------------------------------------------------------------\n 2763|-- Startup\n=== 2770-2778\n 2770|end\n 2771|\n 2772|-- If a previous Hammerspoon session left us stranded on the meeting\n 2773|-- aggregate (e.g., the meeting got stuck and never restored), drop us\n 2774|-- onto an audible fallback so the user has sound at startup.\n 2775|recoverIfStrandedOnAggregate()\n 2776|\n 2777|-- Global state-dump callable from outside Hammerspoon via:\n 2778|--   /Applications/Hammerspoon.app/Contents/Frameworks/hs/hs -c \"meetingDoctor()\"\n=== 2806-2813\n 2806|    end\n 2807|    return table.concat(lines, \"\\n\")\n 2808|end\n 2809|\n 2810|-- Also restore on Hammerspoon shutdown / reload, in case a meeting is\n 2811|-- mid-flight when the user reloads config.\n 2812|hs.shutdownCallback = function()\n 2813|    if meetingRecording or meetingStopping then\n=== 2820-2824\n 2820|    end\n 2821|end\n 2822|\n 2823|-- Create default preferred langs file if it doesn't exist\n 2824|if readFile(PREFERRED_LANGS_FILE) == \"\" then"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "c43eb614-9764-42b9-a3c4-f77843244b78",
+  "version": "2.1.233"
+}

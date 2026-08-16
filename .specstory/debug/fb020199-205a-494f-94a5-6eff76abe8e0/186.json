@@ -1,0 +1,51 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua has been updated successfully. (note: the file had been modified on disk since you last read it — the edit applied cleanly, but the file contains other changes not in your context. Read it before edits that depend on surrounding content.)",
+        "tool_use_id": "toolu_01Wp9uohk8QKfDYtU9uj23HL",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "1b3d09ca-7f80-4732-9ddc-34226a8a1e22",
+  "promptId": "a651875f-fcbc-4b8f-85e0-3d18600f4667",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "1b3d09ca-7f80-4732-9ddc-34226a8a1e22",
+  "timestamp": "2026-08-16T19:30:27.064Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+    "newString": "-- Timing\nlocal OVERLAY_LINGER = 0.5     -- seconds to show final text before closing",
+    "oldString": "-- Timing\nlocal PARTIAL_INTERVAL = 2.0   -- seconds between partial transcriptions\nlocal OVERLAY_LINGER = 0.5     -- seconds to show final text before closing",
+    "originalFile": null,
+    "replaceAll": false,
+    "staleRecovered": true,
+    "structuredPatch": [
+      {
+        "lines": [
+          " end",
+          " ",
+          " -- Timing",
+          "-local PARTIAL_INTERVAL = 2.0   -- seconds between partial transcriptions",
+          " local OVERLAY_LINGER = 0.5     -- seconds to show final text before closing",
+          " ",
+          " -- Known whisper hallucinations on silence/short audio"
+        ],
+        "newLines": 6,
+        "newStart": 152,
+        "oldLines": 7,
+        "oldStart": 152
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "0fc9f039-4e1d-45f6-8b24-8ebff4547318",
+  "version": "2.1.233"
+}

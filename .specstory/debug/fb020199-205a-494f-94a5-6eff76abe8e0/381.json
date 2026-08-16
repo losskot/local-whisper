@@ -1,0 +1,72 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_0196ZHLB9KX2bnYzYnrgtGhi",
+        "input": {
+          "command": "git branch --show-current; echo \"=== ahead/behind:\"; git fetch -q origin 2\u003e\u00261 | tail -2; git rev-list --left-right --count origin/main...HEAD 2\u003e\u00261; echo \"=== dirty (non-specstory):\"; git status --short | grep -v '.specstory' ",
+          "description": "Check branch and remote state"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce72yoRcQwn2f6q4LsDv8",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 911,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 911,
+      "cache_read_input_tokens": 163468,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 911,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 911,
+          "cache_read_input_tokens": 163468,
+          "input_tokens": 2,
+          "output_tokens": 1161,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 1161,
+      "output_tokens_details": {
+        "thinking_tokens": 986
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "b3302075-d759-49e8-8638-12c4a8506ea1",
+  "requestId": "req_011Ce72ymZzTn8aMTKZfgHmH",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "timestamp": "2026-08-16T20:10:44.991Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "8c03fd39-9db4-4d76-85fc-554214d41579",
+  "version": "2.1.233"
+}

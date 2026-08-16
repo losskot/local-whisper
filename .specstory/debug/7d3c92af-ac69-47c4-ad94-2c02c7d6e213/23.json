@@ -1,0 +1,35 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "900\tlocal recordingStartTime = 0\n901\tlocal recordedSecs = nil    -- frozen recording duration once stopped; nil while recording\n902\tlocal pulseAlpha = 1.0\n903\tlocal pulseFading = true\n904\t\n905\t-- Progress bar state\n906\tlocal transcribedSecs = 0   -- seconds of audio fully transcribed so far\n907\tlocal barMaxSecs = 180       -- current max duration displayed (expands at 90%)\n908\t\n909\t-- Undo state\n910\tlocal lastInsertedText = nil\n911\t\n912\t-- Recent dictations (newest first, max 10)\n913\tlocal MAX_RECENT = 10\n914\t\n915\tlocal recentDictations = {}\n916\t\n917\tlocal function loadRecentDictations()\n918\t    local f = io.open(RECENT_FILE, \"r\")\n919\t    if not f then return end",
+        "tool_use_id": "toolu_01DzkfhyBLLQKhtuSgvznttv",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "cd45a22a-affe-4ce4-b734-661f17cf0ab9",
+  "promptId": "63032b1d-97b3-4f08-ae8f-b358bb0a478a",
+  "sessionId": "7d3c92af-ac69-47c4-ad94-2c02c7d6e213",
+  "sourceToolAssistantUUID": "cd45a22a-affe-4ce4-b734-661f17cf0ab9",
+  "timestamp": "2026-08-16T20:16:36.415Z",
+  "toolUseResult": {
+    "file": {
+      "content": "local recordingStartTime = 0\nlocal recordedSecs = nil    -- frozen recording duration once stopped; nil while recording\nlocal pulseAlpha = 1.0\nlocal pulseFading = true\n\n-- Progress bar state\nlocal transcribedSecs = 0   -- seconds of audio fully transcribed so far\nlocal barMaxSecs = 180       -- current max duration displayed (expands at 90%)\n\n-- Undo state\nlocal lastInsertedText = nil\n\n-- Recent dictations (newest first, max 10)\nlocal MAX_RECENT = 10\n\nlocal recentDictations = {}\n\nlocal function loadRecentDictations()\n    local f = io.open(RECENT_FILE, \"r\")\n    if not f then return end",
+      "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+      "numLines": 20,
+      "startLine": 900,
+      "totalLines": 1842
+    },
+    "type": "text"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "9ee908f8-1fd9-4f39-802f-f03875961550",
+  "version": "2.1.233"
+}

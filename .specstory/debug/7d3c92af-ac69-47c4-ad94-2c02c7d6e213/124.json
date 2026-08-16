@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": " 312 .specstory/debug/fb020199-205a-494f-94a5-6eff76abe8e0\n   2 .specstory/history\n   1 .specstory/debug/7d3c92af-ac69-47c4-ad94-2c02c7d6e213\n   1 .specstory\n--- anything outside .specstory? ---\n(none)",
+        "is_error": false,
+        "tool_use_id": "toolu_01SjMTVrtfprcEGp34XGdsPZ",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "bb2bf5d8-0be1-450a-ac40-cd6b4ac6d82a",
+  "promptId": "d1eb4684-ea53-46c0-81d7-d8a877df031a",
+  "sessionId": "7d3c92af-ac69-47c4-ad94-2c02c7d6e213",
+  "sourceToolAssistantUUID": "bb2bf5d8-0be1-450a-ac40-cd6b4ac6d82a",
+  "timestamp": "2026-08-16T20:31:45.978Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": " 312 .specstory/debug/fb020199-205a-494f-94a5-6eff76abe8e0\n   2 .specstory/history\n   1 .specstory/debug/7d3c92af-ac69-47c4-ad94-2c02c7d6e213\n   1 .specstory\n--- anything outside .specstory? ---\n(none)"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "6cfeaf0b-894c-49cc-8294-7e151b732aec",
+  "version": "2.1.233"
+}

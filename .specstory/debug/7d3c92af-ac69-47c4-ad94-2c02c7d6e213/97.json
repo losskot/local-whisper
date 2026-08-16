@@ -1,0 +1,74 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_0156TmZYSqbHJfTnEBeL1tRP",
+        "input": {
+          "file_path": "/Users/vitaliy/Documents/GitHub/local-whisper/AGENTS.md",
+          "new_string": "| `sort` | chunk files ordered as strings, which reorders audio past chunk 999 |\n| `emergencyStop` | emergency stop not cancelling a pending finalization |\n| `overlay` | clicking the X mid-recording leaving ffmpeg running; deleting the canvas from inside its own mouse callback; unpinning hiding the overlay while still recording |\n| `startRecording` | a re-press inside the finalization window flushing the old dictation but swallowing the new keypress |\n| `progress` | the blue transcription bar never catching the red recording bar, because a live clock re-trips the 90% auto-expand after recording stops |\n\nThe behavioral checks lift the real function out of the source under test — the sort\ncomparator, the overlay mouse callback, `startRecording()`, `updateProgressBar()` — and\nexecute it against stubbed globals, so they track the implementation instead of a copy\nthat can drift. A lifted function's upvalues resolve to the sandbox `_ENV`, which is what\nlets a test both inject state (`isRecording = true`) and assert on it afterwards\n(`overlayPinned == false`).\n\nThree behaviors remain untestable here and need a manual pass after touching the overlay:\nwhether the canvas actually disappears on screen, whether macOS delivers the click to the\nX at all, and how the bars look while a real transcription runs.",
+          "old_string": "| `sort` | chunk files ordered as strings, which reorders audio past chunk 999 |\n| `emergencyStop` | emergency stop not cancelling a pending finalization |\n\nThe `sort` checks extract the real comparator out of the source under test and execute\nit, so they track the implementation instead of a copy that can drift.",
+          "replace_all": false
+        },
+        "name": "Edit",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce74LBZ4JzzA2YKx4jxAV",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 2168,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 2168,
+      "cache_read_input_tokens": 87150,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 2168,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 2168,
+          "cache_read_input_tokens": 87150,
+          "input_tokens": 2,
+          "output_tokens": 697,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 697,
+      "output_tokens_details": {
+        "thinking_tokens": 0
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "cdf2c260-3f88-48af-9451-a64dd5553d8d",
+  "requestId": "req_011Ce74LAdzS2WERahj7iZwm",
+  "sessionId": "7d3c92af-ac69-47c4-ad94-2c02c7d6e213",
+  "timestamp": "2026-08-16T20:28:20.752Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "112d526a-2071-4fd4-aa90-a7316c79ed84",
+  "version": "2.1.233"
+}

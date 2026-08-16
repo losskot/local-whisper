@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "declarations: {'ollamaProbe': 131, 'playSound': 215, 'overlayPinned': 744, 'isRecording': 745, 'hideOverlay': 746, 'finalizeTimers': 892, 'recordedSecs': 901}\n\nuses BEFORE declaration (should be empty):",
+        "is_error": false,
+        "tool_use_id": "toolu_01WC6hFUxt4kq9paYZspbSnm",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "d0e58945-0e70-4286-9f82-f7aa1bb2650b",
+  "promptId": "a651875f-fcbc-4b8f-85e0-3d18600f4667",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "d0e58945-0e70-4286-9f82-f7aa1bb2650b",
+  "timestamp": "2026-08-16T19:39:50.015Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "declarations: {'ollamaProbe': 131, 'playSound': 215, 'overlayPinned': 744, 'isRecording': 745, 'hideOverlay': 746, 'finalizeTimers': 892, 'recordedSecs': 901}\n\nuses BEFORE declaration (should be empty):"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "614cde53-1a2e-40ff-aa8a-7b0caab9c2ed",
+  "version": "2.1.233"
+}

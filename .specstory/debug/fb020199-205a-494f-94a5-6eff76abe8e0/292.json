@@ -1,0 +1,19 @@
+{
+  "attachment": {
+    "commandMode": "task-notification",
+    "prompt": "\u003ctask-notification\u003e\n\u003ctask-id\u003eb445vwogn\u003c/task-id\u003e\n\u003ctool-use-id\u003etoolu_0133qELVXoRXgZASEiikoGwp\u003c/tool-use-id\u003e\n\u003coutput-file\u003e/private/tmp/claude-502/-Users-vitaliy-Documents-GitHub-local-whisper/fb020199-205a-494f-94a5-6eff76abe8e0/tasks/b445vwogn.output\u003c/output-file\u003e\n\u003cstatus\u003efailed\u003c/status\u003e\n\u003csummary\u003eBackground command \"Verify chunk sort comparator\" failed with exit code 144\u003c/summary\u003e\n\u003c/task-notification\u003e",
+    "timestamp": "2026-08-16T19:37:01.525Z",
+    "type": "queued_command"
+  },
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "parentUuid": "f158fb66-f948-4591-bff4-5153834b797a",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "timestamp": "2026-08-16T19:37:01.525Z",
+  "type": "attachment",
+  "userType": "external",
+  "uuid": "2f889ab4-81b4-43c1-846c-05d43fa54bb6",
+  "version": "2.1.233"
+}

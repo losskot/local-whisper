@@ -1,0 +1,52 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/tests/test_init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01FAd76NGeFpC6JGWHFFxXbY",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "5887de8e-8be7-4e7a-9132-b7cfa1614aa0",
+  "promptId": "63032b1d-97b3-4f08-ae8f-b358bb0a478a",
+  "sessionId": "7d3c92af-ac69-47c4-ad94-2c02c7d6e213",
+  "sourceToolAssistantUUID": "5887de8e-8be7-4e7a-9132-b7cfa1614aa0",
+  "timestamp": "2026-08-16T20:20:31.391Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/tests/test_init.lua",
+    "newString": "        local fn, err = liftFunction(\"updateProgressBar\", env)\n        if not fn then return nil, err end\n        for _, step in ipairs(steps) do\n            now = step[1]\n            env.transcribedSecs = step[2]\n            if step[3] ~= nil then env.recordedSecs = step[3] end\n            local ok, runErr = pcall(fn)\n            if not ok then return nil, \"updateProgressBar() errored: \" .. tostring(runErr) end\n        end\n        return {",
+    "oldString": "        local fn, err = liftFunction(\"updateProgressBar\", env)\n        if not fn then return nil, err end\n        for _, step in ipairs(steps) do\n            now = step[1]\n            env.transcribedSecs = step[2]\n            if step[3] ~= nil then env.recordedSecs = step[3] end\n            fn()\n        end\n        return {",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          "             now = step[1]",
+          "             env.transcribedSecs = step[2]",
+          "             if step[3] ~= nil then env.recordedSecs = step[3] end",
+          "-            fn()",
+          "+            local ok, runErr = pcall(fn)",
+          "+            if not ok then return nil, \"updateProgressBar() errored: \" .. tostring(runErr) end",
+          "         end",
+          "         return {",
+          "             rec = env.overlay[EL.bar_rec].frame.w,"
+        ],
+        "newLines": 8,
+        "newStart": 593,
+        "oldLines": 7,
+        "oldStart": 593
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "c252cbef-ddc7-4436-815f-24f62be4d96d",
+  "version": "2.1.233"
+}

@@ -1,0 +1,64 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "text": "Local `main` is already 1 commit ahead of origin — let me see what's unpushed before I add to it:",
+        "type": "text"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce731H9kzkbBiUBmXqqEV",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 1291,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 1291,
+      "cache_read_input_tokens": 164379,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1291,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 1291,
+          "cache_read_input_tokens": 164379,
+          "input_tokens": 2,
+          "output_tokens": 296,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 296,
+      "output_tokens_details": {
+        "thinking_tokens": 156
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "7e40b0a9-051b-443d-890c-43a9258fccf8",
+  "requestId": "req_011Ce731FKdCYz5iUpwHnyF1",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "timestamp": "2026-08-16T20:10:52.594Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "ff5203cf-7cbe-4634-912a-f33740e220bf",
+  "version": "2.1.233"
+}

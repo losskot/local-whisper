@@ -1,0 +1,23 @@
+{
+  "attachment": {
+    "addedBlocks": [
+      "## claude.ai Image Generator\nGenerates and edits images with an Azure AI Foundry deployment of gpt-image-2. Use generate_image for new images and edit_image to modify one that generate_image already produced.\n\nEvery result leads with the generated image as inline image content at full resolution, annotated for the user at priority 1.0. Show that image to the user directly — it is the answer, and it is already attached, so there is nothing to fetch. Download links follow at priority 0.2 as a fallback for saving the original file; do not make the user click one just to see the picture."
+    ],
+    "addedNames": [
+      "claude.ai Image Generator"
+    ],
+    "removedNames": [],
+    "type": "mcp_instructions_delta"
+  },
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "parentUuid": "d802573e-59ab-4b2e-af4f-d1280a0eab50",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "timestamp": "2026-08-16T20:32:18.030Z",
+  "type": "attachment",
+  "userType": "external",
+  "uuid": "071f476c-8d8a-4b5f-95de-815ff7d384c8",
+  "version": "2.1.233"
+}

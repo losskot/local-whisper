@@ -1,0 +1,65 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "signature": "CAISxwIKhwEIEBgCKkDJaXMoQqh4pPgoZ6daVsCbfE2iH/ElOPy/+AZC3neYkTXIJuImoXxY8wyn0Rnw7GZi7LDZ92MuiWdXRFIIeXuVMg1jbGF1ZGUtb3B1cy01OAFCCHRoaW5raW5nWiQ4MmY1MDliMS03NDFhLTQ1MzgtYjcyNS1lNWU1ZmVjZjY1NzgSDIv4ZDTscG8+HBBRlRoMvF+oZKrIAXQIeJIuIjD8QYSmTEda6TTDM5vGoLvgKTsgIKFw2FCwzFEmVXUt/g6SV3Q3ydaNwyaV21svVAgqbaAS3ELfuPR9r09y443oBEudmYWT0nnUKIb2OdXAB/8mutaEkGK25pTw4aBKU7dEYVdTrZBRlwl0935yIrSyROc+5stj9RWoaFR9nTsAMjU2C3WrrZL2WJGu9Gz+UBa2ty/5DvsVf7xxvYYsTiAYAQ==",
+        "thinking": "",
+        "type": "thinking"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce6zEStQjqE6UNrmdDJbi",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 300,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 300,
+      "cache_read_input_tokens": 123131,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 300,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 300,
+          "cache_read_input_tokens": 123131,
+          "input_tokens": 2,
+          "output_tokens": 200,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 200,
+      "output_tokens_details": {
+        "thinking_tokens": 34
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "dbac37a5-0800-4659-933b-12ccdebb43cf",
+  "requestId": "req_011Ce6zERsPZHAACE1emWTkn",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "timestamp": "2026-08-16T19:34:28.720Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "32320ce3-6d07-4183-b259-43d9eb19c150",
+  "version": "2.1.233"
+}

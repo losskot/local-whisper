@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "AGENTS.md\nCLAUDE.md\nCONTRIBUTING.md\nLICENSE\nREADME.md\nRECOVERED_18-54_dictation.txt\ndocs\nhammerspoon\ninstall.sh\nsetup.sh\ntests\ntools\nuninstall.sh\nwhisper.cpp\n    1841 hammerspoon/init.lua\n     135 hammerspoon/local_whisper_actions.example.lua\n    1976 total\nTRANSCRIBE.md\nVOICE_COMMANDS.md",
+        "is_error": false,
+        "tool_use_id": "toolu_01C9jzNM5sfuhayPFk3oHusm",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "8478db89-b33d-4b65-bbf2-dc784b4fe798",
+  "promptId": "ce6a097e-2d74-458a-9872-d6b4d3ea53bd",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "8478db89-b33d-4b65-bbf2-dc784b4fe798",
+  "timestamp": "2026-08-16T20:32:26.923Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "AGENTS.md\nCLAUDE.md\nCONTRIBUTING.md\nLICENSE\nREADME.md\nRECOVERED_18-54_dictation.txt\ndocs\nhammerspoon\ninstall.sh\nsetup.sh\ntests\ntools\nuninstall.sh\nwhisper.cpp\n    1841 hammerspoon/init.lua\n     135 hammerspoon/local_whisper_actions.example.lua\n    1976 total\nTRANSCRIBE.md\nVOICE_COMMANDS.md"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "bae8ad1c-7c6c-4341-bdfb-781eaff0e3e9",
+  "version": "2.1.233"
+}

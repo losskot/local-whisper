@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "=== 951,956\ncat: illegal option -- A\nusage: cat [-belnstuv] [file ...]\n=== 1008,1010\ncat: illegal option -- A\nusage: cat [-belnstuv] [file ...]\n=== 1024,1027\ncat: illegal option -- A\nusage: cat [-belnstuv] [file ...]\n=== 1872,1875\ncat: illegal option -- A\nusage: cat [-belnstuv] [file ...]\n=== 2760,2763\ncat: illegal option -- A\nusage: cat [-belnstuv] [file ...]\n=== 2770,2778\ncat: illegal option -- A\nusage: cat [-belnstuv] [file ...]\n=== 2806,2813\ncat: illegal option -- A\nusage: cat [-belnstuv] [file ...]\n=== 2820,2824\ncat: illegal option -- A\nusage: cat [-belnstuv] [file ...]",
+        "is_error": false,
+        "tool_use_id": "toolu_01W1NuEp7DFRY5yB4NPwUR3H",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "ef5cc262-b88d-4838-ac14-55417c27de7e",
+  "promptId": "a651875f-fcbc-4b8f-85e0-3d18600f4667",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "ef5cc262-b88d-4838-ac14-55417c27de7e",
+  "timestamp": "2026-08-16T19:29:05.660Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "=== 951,956\ncat: illegal option -- A\nusage: cat [-belnstuv] [file ...]\n=== 1008,1010\ncat: illegal option -- A\nusage: cat [-belnstuv] [file ...]\n=== 1024,1027\ncat: illegal option -- A\nusage: cat [-belnstuv] [file ...]\n=== 1872,1875\ncat: illegal option -- A\nusage: cat [-belnstuv] [file ...]\n=== 2760,2763\ncat: illegal option -- A\nusage: cat [-belnstuv] [file ...]\n=== 2770,2778\ncat: illegal option -- A\nusage: cat [-belnstuv] [file ...]\n=== 2806,2813\ncat: illegal option -- A\nusage: cat [-belnstuv] [file ...]\n=== 2820,2824\ncat: illegal option -- A\nusage: cat [-belnstuv] [file ...]"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "675a9022-e451-43df-8b97-3dd3fa63bc6a",
+  "version": "2.1.233"
+}

@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "17:local WHISPER_TMP = TMPDIR .. \"/whisper-dictate\"\n170:local OVERLAY_LINGER = 0.5     -- seconds to show final text before closing\n204:local function log(msg)",
+        "is_error": false,
+        "tool_use_id": "toolu_01FJdk7jVCyu5eK5Ydk9dPLu",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "b2d1a2d4-55df-49a1-b4b9-f7103f96462c",
+  "promptId": "a651875f-fcbc-4b8f-85e0-3d18600f4667",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "b2d1a2d4-55df-49a1-b4b9-f7103f96462c",
+  "timestamp": "2026-08-16T19:31:07.891Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "17:local WHISPER_TMP = TMPDIR .. \"/whisper-dictate\"\n170:local OVERLAY_LINGER = 0.5     -- seconds to show final text before closing\n204:local function log(msg)"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "11487bab-3da0-43da-bd13-8ae45bb65271",
+  "version": "2.1.233"
+}

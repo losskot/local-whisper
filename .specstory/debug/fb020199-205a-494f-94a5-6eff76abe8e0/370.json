@@ -1,0 +1,35 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "92\t### Slash commands\n93\t- `/debug` — check logs, config state, Ollama status, and recent errors\n94\t- `/test-refine` — run the LLM refinement eval suite\n95\t\n96\t### Reading logs\n97\t```bash\n98\tTMPDIR_REAL=$(getconf DARWIN_USER_TEMP_DIR) \u0026\u0026 tail -30 \"${TMPDIR_REAL}whisper-dictate/whisper-dictate.log\"\n99\t```\n100\tNote: `$TMPDIR` inside a sandbox may differ from the real user TMPDIR. Always use `getconf DARWIN_USER_TEMP_DIR` for reliable access.\n101\t\n102\t### Testing Ollama refinement without dictating\n103\t```bash\n104\tcurl -s http://localhost:11434/api/generate \\\n105\t  -d '{\"model\":\"gemma3:4b\",\"prompt\":\"\u003cprompt\u003e\\n\\n\u003ctest input\u003e\",\"stream\":false}' \\\n106\t  | python3 -c \"import sys,json; print(json.load(sys.stdin)['response'])\"\n107\t```\n108\tThis lets you iterate on prompt wording without reloading Hammerspoon or dictating.\n109\t\n110\t### Running the refine eval suite\n111\t```bash\n112\t./tests/test_refine.sh\n113\t```\n114\tTests filler removal, list formatting, preamble prevention, and content preservation.\n115\t\n116\t### Common debug patterns\n117\t- **Refine not working**: Check `refine: failed` in logs — common causes: Ollama not running, wrong model name, missing `$HOME` env\n118\t- **Voice commands not matching**: Check `final (auto/...)` log line — whisper may have transcribed differently than expected\n119\t- **X button not closing overlay**: `hs.canvas:delete()` inside its own mouse callback is silently ignored — must use `canvas:hide()` immediately then defer deletion with `hs.timer.doAfter(0.01, ...)`",
+        "tool_use_id": "toolu_01DNZxhpR6ppSbPzvEnMTg19",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "37c5b32b-b8f9-4d00-b326-49efedcc4a4a",
+  "promptId": "eaaa32ad-5904-4856-b68d-d7aea6bbb94c",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "37c5b32b-b8f9-4d00-b326-49efedcc4a4a",
+  "timestamp": "2026-08-16T20:09:16.874Z",
+  "toolUseResult": {
+    "file": {
+      "content": "### Slash commands\n- `/debug` — check logs, config state, Ollama status, and recent errors\n- `/test-refine` — run the LLM refinement eval suite\n\n### Reading logs\n```bash\nTMPDIR_REAL=$(getconf DARWIN_USER_TEMP_DIR) \u0026\u0026 tail -30 \"${TMPDIR_REAL}whisper-dictate/whisper-dictate.log\"\n```\nNote: `$TMPDIR` inside a sandbox may differ from the real user TMPDIR. Always use `getconf DARWIN_USER_TEMP_DIR` for reliable access.\n\n### Testing Ollama refinement without dictating\n```bash\ncurl -s http://localhost:11434/api/generate \\\n  -d '{\"model\":\"gemma3:4b\",\"prompt\":\"\u003cprompt\u003e\\n\\n\u003ctest input\u003e\",\"stream\":false}' \\\n  | python3 -c \"import sys,json; print(json.load(sys.stdin)['response'])\"\n```\nThis lets you iterate on prompt wording without reloading Hammerspoon or dictating.\n\n### Running the refine eval suite\n```bash\n./tests/test_refine.sh\n```\nTests filler removal, list formatting, preamble prevention, and content preservation.\n\n### Common debug patterns\n- **Refine not working**: Check `refine: failed` in logs — common causes: Ollama not running, wrong model name, missing `$HOME` env\n- **Voice commands not matching**: Check `final (auto/...)` log line — whisper may have transcribed differently than expected\n- **X button not closing overlay**: `hs.canvas:delete()` inside its own mouse callback is silently ignored — must use `canvas:hide()` immediately then defer deletion with `hs.timer.doAfter(0.01, ...)`",
+      "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/AGENTS.md",
+      "numLines": 28,
+      "startLine": 92,
+      "totalLines": 255
+    },
+    "type": "text"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "e7d9238d-ce74-47ea-a77e-0489db334499",
+  "version": "2.1.233"
+}

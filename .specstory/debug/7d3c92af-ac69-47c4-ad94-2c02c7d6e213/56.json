@@ -1,0 +1,72 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01YCAeKtyvxBaRqYEeMJ9naK",
+        "input": {
+          "command": "./tests/test_init.sh 2\u003e\u00261 | tail -5; echo \"=== NEGATIVE CONTROL: pre-fix revision 1f546aa ===\"; ./tests/test_init.sh /tmp/lw_before.lua 2\u003e\u00261 | grep -E \"FAIL|failed|passed\" | head -30",
+          "description": "Re-run suite and test against pre-fix revision"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce73kFpb5umXa8zEjvqCg",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 493,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 493,
+      "cache_read_input_tokens": 77574,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 493,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 493,
+          "cache_read_input_tokens": 77574,
+          "input_tokens": 2,
+          "output_tokens": 275,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 275,
+      "output_tokens_details": {
+        "thinking_tokens": 85
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "a19bbeb0-e461-4cdf-b4fe-22f51c71aa3e",
+  "requestId": "req_011Ce73kF6RyS87Lf1oScmxh",
+  "sessionId": "7d3c92af-ac69-47c4-ad94-2c02c7d6e213",
+  "timestamp": "2026-08-16T20:20:35.616Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "d8328b1b-f57f-4ae4-8b30-5274ab5d9103",
+  "version": "2.1.233"
+}

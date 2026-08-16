@@ -1,0 +1,74 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_012TdRWa4dhwGpo3rQ4Gj9GX",
+        "input": {
+          "file_path": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+          "new_string": "    playSound(\"Tink\")\nend",
+          "old_string": "    pcall(function()\n        local snd = hs.sound.getByFile(\"/System/Library/Sounds/Tink.aiff\")\n        if snd then snd:play() end\n    end)\nend",
+          "replace_all": false
+        },
+        "name": "Edit",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce6yzW2n7zLHhyeCZbJPt",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 555,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 555,
+      "cache_read_input_tokens": 104744,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 555,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 555,
+          "cache_read_input_tokens": 104744,
+          "input_tokens": 2,
+          "output_tokens": 912,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 912,
+      "output_tokens_details": {
+        "thinking_tokens": 0
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "289e71b0-a572-4f1d-b177-08de94ed4087",
+  "requestId": "req_011Ce6yzVACFTKG5doArVbaF",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "timestamp": "2026-08-16T19:31:25.677Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "12810f0d-e833-421e-a72d-89ef59df87a6",
+  "version": "2.1.233"
+}

@@ -1,0 +1,59 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_019rCfqkcBR2w2Bea3nq14nq",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "4c9bfd43-926d-4fbb-ac17-d0e265d16a9c",
+  "promptId": "a651875f-fcbc-4b8f-85e0-3d18600f4667",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "4c9bfd43-926d-4fbb-ac17-d0e265d16a9c",
+  "timestamp": "2026-08-16T19:30:29.286Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+    "newString": "",
+    "oldString": "-- Pick fastest available model for live partial transcription\nlocal function getPartialModelPath()\n    local preferred = { \"tiny\", \"tiny.en\", \"base\", \"base.en\", \"small\", \"small.en\" }\n    for _, name in ipairs(preferred) do\n        local path = MODELS_DIR .. \"/ggml-\" .. name .. \".bin\"\n        if hs.fs.attributes(path) then return path end\n    end\n    return getModelPath()  -- fall back to main model\nend\n\n",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          "     return next",
+          " end",
+          " ",
+          "--- Pick fastest available model for live partial transcription",
+          "-local function getPartialModelPath()",
+          "-    local preferred = { \"tiny\", \"tiny.en\", \"base\", \"base.en\", \"small\", \"small.en\" }",
+          "-    for _, name in ipairs(preferred) do",
+          "-        local path = MODELS_DIR .. \"/ggml-\" .. name .. \".bin\"",
+          "-        if hs.fs.attributes(path) then return path end",
+          "-    end",
+          "-    return getModelPath()  -- fall back to main model",
+          "-end",
+          "-",
+          " -- Human-readable message for a curl exit code, for overlay/notification display.",
+          " local CURL_ERROR_MESSAGES = {",
+          "     [6] = \"host not found\","
+        ],
+        "newLines": 6,
+        "newStart": 405,
+        "oldLines": 16,
+        "oldStart": 405
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "b07a158f-beba-4c82-8d92-15e8369fedce",
+  "version": "2.1.233"
+}

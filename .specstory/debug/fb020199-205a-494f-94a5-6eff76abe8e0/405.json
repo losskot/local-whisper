@@ -1,0 +1,64 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "text": "Pushed. `main` and `origin/main` are fully in sync (`0 0`). Cleaning up the merged branch:",
+        "type": "text"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce736DiXBwPQmYzdErqzU",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 272,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 272,
+      "cache_read_input_tokens": 169166,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 272,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 272,
+          "cache_read_input_tokens": 169166,
+          "input_tokens": 2,
+          "output_tokens": 450,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 450,
+      "output_tokens_details": {
+        "thinking_tokens": 261
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "e81b5289-ae4d-464c-8164-e2ae7f2054b7",
+  "requestId": "req_011Ce736CWM4svT6c8ntWUP7",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "timestamp": "2026-08-16T20:12:01.178Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "f5e02f84-bd0c-4c5f-8d62-2fc1a782174f",
+  "version": "2.1.233"
+}

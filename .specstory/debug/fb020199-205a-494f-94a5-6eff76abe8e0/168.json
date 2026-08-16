@@ -1,0 +1,57 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua has been updated successfully. (note: the file had been modified on disk since you last read it — the edit applied cleanly, but the file contains other changes not in your context. Read it before edits that depend on surrounding content.)",
+        "tool_use_id": "toolu_019TDmbDd2QFJW4EHLrxj3pz",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "7ad0620e-d448-4218-96bd-c2904e31fc2b",
+  "promptId": "a651875f-fcbc-4b8f-85e0-3d18600f4667",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "7ad0620e-d448-4218-96bd-c2904e31fc2b",
+  "timestamp": "2026-08-16T19:29:46.837Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+    "newString": "local overlay = nil\n\n-- Declared here, above createOverlay, because createOverlay's mouse callback closes over\n-- them. A `local` declared further down the chunk is NOT in scope for a function defined\n-- earlier — the reference would silently compile to a nil global instead.\nlocal overlayPinned = false\nlocal isRecording = false\nlocal hideOverlay  -- assigned below\n\n-- Element indices: 1=bg, 2=text, 3=dot, 4=timer, 5=bar_bg, 6=bar_rec, 7=bar_txn, 8=close",
+    "oldString": "local overlay = nil\n\n-- Element indices: 1=bg, 2=text, 3=dot, 4=timer, 5=bar_bg, 6=bar_rec, 7=bar_txn, 8=close",
+    "originalFile": null,
+    "replaceAll": false,
+    "staleRecovered": true,
+    "structuredPatch": [
+      {
+        "lines": [
+          " ",
+          " local overlay = nil",
+          " ",
+          "+-- Declared here, above createOverlay, because createOverlay's mouse callback closes over",
+          "+-- them. A `local` declared further down the chunk is NOT in scope for a function defined",
+          "+-- earlier — the reference would silently compile to a nil global instead.",
+          "+local overlayPinned = false",
+          "+local isRecording = false",
+          "+local hideOverlay  -- assigned below",
+          "+",
+          " -- Element indices: 1=bg, 2=text, 3=dot, 4=timer, 5=bar_bg, 6=bar_rec, 7=bar_txn, 8=close",
+          " local EL = { text = 2, dot = 3, timer = 4, bar_bg = 5, bar_rec = 6, bar_txn = 7, close = 8 }",
+          " "
+        ],
+        "newLines": 13,
+        "newStart": 713,
+        "oldLines": 6,
+        "oldStart": 713
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "e68fc8e1-dd16-437c-85e7-b3d5435115f1",
+  "version": "2.1.233"
+}

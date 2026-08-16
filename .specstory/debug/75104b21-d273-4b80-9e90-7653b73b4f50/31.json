@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "89:local PREFERRED_LANGS_FILE = CONFIG_DIR .. \"/preferred_langs\"\n1033:    local preferred = table.concat(getPreferredLangs(), \", \")\n1034:    table.insert(items, { title = \"Preferred: \" .. preferred, disabled = true })\n1330:    local preferred = getPreferredLangs()\n1474:                    -- Accept whatever language auto-detected — forcing a retry with preferred[1]\n1680:        log(\"recovery: flushing pending finalization, then starting the new recording\")\n1736:        log(\"recovery: finalization timer delayed, starting directly\")\n1823:-- Create default preferred langs file if it doesn't exist\n1837:log(\"loaded (trigger=\" .. TRIGGER_KEY .. \", lang=\" .. getLang() .. \", output=\" .. getOutputMode() .. \", model=\" .. getModelName() .. \", preferred=\" .. table.concat(getPreferredLangs(), \",\") .. \")\")\n---локалов:\n144",
+        "is_error": false,
+        "tool_use_id": "toolu_01GcsDtoPsznAVonxyt67pY8",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "6734bf82-527f-4b3c-ae41-ecb987f21b86",
+  "promptId": "ce6a097e-2d74-458a-9872-d6b4d3ea53bd",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "6734bf82-527f-4b3c-ae41-ecb987f21b86",
+  "timestamp": "2026-08-16T20:33:59.622Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "89:local PREFERRED_LANGS_FILE = CONFIG_DIR .. \"/preferred_langs\"\n1033:    local preferred = table.concat(getPreferredLangs(), \", \")\n1034:    table.insert(items, { title = \"Preferred: \" .. preferred, disabled = true })\n1330:    local preferred = getPreferredLangs()\n1474:                    -- Accept whatever language auto-detected — forcing a retry with preferred[1]\n1680:        log(\"recovery: flushing pending finalization, then starting the new recording\")\n1736:        log(\"recovery: finalization timer delayed, starting directly\")\n1823:-- Create default preferred langs file if it doesn't exist\n1837:log(\"loaded (trigger=\" .. TRIGGER_KEY .. \", lang=\" .. getLang() .. \", output=\" .. getOutputMode() .. \", model=\" .. getModelName() .. \", preferred=\" .. table.concat(getPreferredLangs(), \",\") .. \")\")\n---локалов:\n144"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "910000c8-aa03-43f2-b23b-5e5f6477d470",
+  "version": "2.1.233"
+}

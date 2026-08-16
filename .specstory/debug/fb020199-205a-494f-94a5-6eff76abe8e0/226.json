@@ -1,0 +1,59 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01Vnuvc3QMc34WaWLvS48Tpo",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "5fec98be-92ec-42c9-9801-97760de439e1",
+  "promptId": "a651875f-fcbc-4b8f-85e0-3d18600f4667",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "5fec98be-92ec-42c9-9801-97760de439e1",
+  "timestamp": "2026-08-16T19:32:22.425Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+    "newString": "    if finalizationPending then\n        -- A previous dictation is still waiting to be finalized (fast re-press inside the\n        -- 0.3s window, or the timer was dropped across sleep). Flush it now and fall\n        -- through — returning here would silently swallow the keypress the user just made.\n        finalizationPending = false\n        if finalizeTimers.timer then finalizeTimers.timer:stop(); finalizeTimers.timer = nil end\n        if finalizeTimers.watchdog then finalizeTimers.watchdog:stop(); finalizeTimers.watchdog = nil end\n        log(\"recovery: flushing pending finalization, then starting the new recording\")\n        doFinalTranscription()\n    end\n    isWarmingUp = true",
+    "oldString": "    if finalizationPending then\n        finalizationPending = false\n        if finalizeTimers.timer then finalizeTimers.timer:stop(); finalizeTimers.timer = nil end\n        if finalizeTimers.watchdog then finalizeTimers.watchdog:stop(); finalizeTimers.watchdog = nil end\n        log(\"recovery: resuming finalization before starting a new recording\")\n        doFinalTranscription()\n        return\n    end\n    isWarmingUp = true",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          " local function startRecording()",
+          "     if isRecording or isWarmingUp then return end",
+          "     if finalizationPending then",
+          "+        -- A previous dictation is still waiting to be finalized (fast re-press inside the",
+          "+        -- 0.3s window, or the timer was dropped across sleep). Flush it now and fall",
+          "+        -- through — returning here would silently swallow the keypress the user just made.",
+          "         finalizationPending = false",
+          "         if finalizeTimers.timer then finalizeTimers.timer:stop(); finalizeTimers.timer = nil end",
+          "         if finalizeTimers.watchdog then finalizeTimers.watchdog:stop(); finalizeTimers.watchdog = nil end",
+          "-        log(\"recovery: resuming finalization before starting a new recording\")",
+          "+        log(\"recovery: flushing pending finalization, then starting the new recording\")",
+          "         doFinalTranscription()",
+          "-        return",
+          "     end",
+          "     isWarmingUp = true",
+          "     warmupAttempt = 0"
+        ],
+        "newLines": 14,
+        "newStart": 1664,
+        "oldLines": 12,
+        "oldStart": 1664
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "34588b28-41d9-4fb0-84f3-e3171c688bc2",
+  "version": "2.1.233"
+}

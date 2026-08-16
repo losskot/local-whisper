@@ -1,0 +1,52 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01EKAcCtTDEMDjLwheVKd3kM",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "0cef81a5-4990-4682-8822-850fcadb34d4",
+  "promptId": "a651875f-fcbc-4b8f-85e0-3d18600f4667",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "0cef81a5-4990-4682-8822-850fcadb34d4",
+  "timestamp": "2026-08-16T19:30:47.112Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+    "newString": "    if silenceTimer then silenceTimer:stop(); silenceTimer = nil end\n    silentChunkCount = 0\n    lastCheckedChunk = 0\n\n    stopRecordingIndicator()",
+    "oldString": "    if partialTimer then partialTimer:stop(); partialTimer = nil end\n    if silenceTimer then silenceTimer:stop(); silenceTimer = nil end\n    partialBusy = false\n    silentChunkCount = 0\n    lastCheckedChunk = 0\n\n    stopRecordingIndicator()",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          "     isRecording = false",
+          "     log(\"recording: stop\")",
+          " ",
+          "-    if partialTimer then partialTimer:stop(); partialTimer = nil end",
+          "     if silenceTimer then silenceTimer:stop(); silenceTimer = nil end",
+          "-    partialBusy = false",
+          "     silentChunkCount = 0",
+          "     lastCheckedChunk = 0",
+          " "
+        ],
+        "newLines": 7,
+        "newStart": 1657,
+        "oldLines": 9,
+        "oldStart": 1657
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "20f54bc1-633f-4b60-a5df-2e90c5b7466f",
+  "version": "2.1.233"
+}

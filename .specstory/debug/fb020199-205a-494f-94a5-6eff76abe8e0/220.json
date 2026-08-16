@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "867:hideOverlay = function()\n1124:local function startRecordingIndicator()\n1540:local isWarmingUp = false\n1541:local warmupAttempt = 0\n1545:local function startActualRecording()\n1546:    isWarmingUp = false\n1611:    if not isWarmingUp then return end\n1625:            if stderr and stderr ~= \"\" and isWarmingUp then\n1642:        if not isWarmingUp then return end\n1651:            isWarmingUp = false\n1661:local function startRecording()\n1662:    if isRecording or isWarmingUp then return end\n1671:    isWarmingUp = true\n1683:    if isWarmingUp then\n1684:        isWarmingUp = false\n1762:        elseif not triggered and (isRecording or isWarmingUp) then",
+        "is_error": false,
+        "tool_use_id": "toolu_019ei623eJteWzQAZk2XcLVu",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "1a7608c9-012f-48df-85f6-5cfa9ddc591d",
+  "promptId": "a651875f-fcbc-4b8f-85e0-3d18600f4667",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "1a7608c9-012f-48df-85f6-5cfa9ddc591d",
+  "timestamp": "2026-08-16T19:31:57.239Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "867:hideOverlay = function()\n1124:local function startRecordingIndicator()\n1540:local isWarmingUp = false\n1541:local warmupAttempt = 0\n1545:local function startActualRecording()\n1546:    isWarmingUp = false\n1611:    if not isWarmingUp then return end\n1625:            if stderr and stderr ~= \"\" and isWarmingUp then\n1642:        if not isWarmingUp then return end\n1651:            isWarmingUp = false\n1661:local function startRecording()\n1662:    if isRecording or isWarmingUp then return end\n1671:    isWarmingUp = true\n1683:    if isWarmingUp then\n1684:        isWarmingUp = false\n1762:        elseif not triggered and (isRecording or isWarmingUp) then"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "38380be0-8db9-4c2c-8279-083d4baee011",
+  "version": "2.1.233"
+}

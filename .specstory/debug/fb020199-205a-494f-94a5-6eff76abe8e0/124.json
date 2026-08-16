@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "uninstall.sh\ninstall.sh\ntools/meeting-doctor.sh\nAGENTS.md\ndocs/TRANSCRIBE.md\nhammerspoon/init.lua\n--- tools:\naggregate-audio.swift\nmeeting-doctor.sh\ntranscribe.sh",
+        "is_error": false,
+        "tool_use_id": "toolu_01LWgK7akkHytYCaNbD3bSsR",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "3e9b4a83-4700-4dcd-9f0c-305bb99a7491",
+  "promptId": "a651875f-fcbc-4b8f-85e0-3d18600f4667",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "3e9b4a83-4700-4dcd-9f0c-305bb99a7491",
+  "timestamp": "2026-08-16T19:27:47.376Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "uninstall.sh\ninstall.sh\ntools/meeting-doctor.sh\nAGENTS.md\ndocs/TRANSCRIBE.md\nhammerspoon/init.lua\n--- tools:\naggregate-audio.swift\nmeeting-doctor.sh\ntranscribe.sh"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "72c27e6b-2933-4198-985b-3b609d319dc3",
+  "version": "2.1.233"
+}

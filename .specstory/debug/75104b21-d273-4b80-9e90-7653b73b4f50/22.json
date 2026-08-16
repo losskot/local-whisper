@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "tests:\ntotal 88\ndrwxr-xr-x   5 vitaliy  staff    160 Aug 16 22:20 .\ndrwxr-xr-x@ 24 vitaliy  staff    768 Aug 16 22:28 ..\n-rw-r--r--   1 vitaliy  staff  32144 Aug 16 22:20 test_init.lua\n-rwxr-xr-x   1 vitaliy  staff   2454 Aug 16 22:11 test_init.sh\n-rwxr-xr-x   1 vitaliy  staff   6460 May 28 01:26 test_refine.sh\n\ntools:\ntotal 24\ndrwxr-xr-x   3 vitaliy  staff     96 Aug 16 22:11 .\ndrwxr-xr-x@ 24 vitaliy  staff    768 Aug 16 22:28 ..\n-rwxr-xr-x@  1 vitaliy  staff  11139 Jun 22 22:03 transcribe.sh\n---\n1:-- Copy to: ~/.hammerspoon/local_whisper_actions.lua\n2:-- Voice commands for local-whisper dictation.\n3:-- All commands start with \"voice command\" to prevent false matches on normal speech.\n5:-- Hooks:\n6:--   beforeInsert(ctx)  -\u003e runs before text insertion\n7:--   actions = { ... }  -\u003e ordered list of actions\n8:--   afterInsert(ctx)   -\u003e runs after insertion\n10:-- Context fields:\n11:--   ctx.text, ctx.textLower, ctx.originalText\n12:--   ctx.lang, ctx.outputMode\n13:--   ctx.appName, ctx.appBundleID   -- app that was focused when recording started\n14:--   ctx.insert, ctx.inserted, ctx.handled\n15:--   ctx.timestamp, ctx.isoTime     -- when the dictation was recorded\n17:-- Context methods:\n18:--   ctx:setText(\"new text\")\n19:--   ctx:disableInsert(), ctx:enableInsert()\n20:--   ctx:launchApp(\"Safari\")\n21:--   ctx:appendToFile(path, line)\n22:--   ctx:runShell(\"command\", optionalInputText)\n23:--   ctx:keystroke({\"cmd\"}, \"a\")      -- fire a keystroke\n24:--   ctx:notify(\"message\"), ctx:log(\"message\")\n26:-- Patterns match against ctx.textLower (case-insensitive).\n27:-- Set ctx.handled = true in any hook to skip remaining actions.\n28:-- Config auto-reloads when the file changes.\n30:local HOME = os.getenv(\"HOME\")",
+        "is_error": false,
+        "tool_use_id": "toolu_01AX3jWZqwnuengxiauKwTyo",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "d07d9ed1-ca93-480d-b519-ce249fdb149e",
+  "promptId": "ce6a097e-2d74-458a-9872-d6b4d3ea53bd",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "d07d9ed1-ca93-480d-b519-ce249fdb149e",
+  "timestamp": "2026-08-16T20:33:01.386Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "tests:\ntotal 88\ndrwxr-xr-x   5 vitaliy  staff    160 Aug 16 22:20 .\ndrwxr-xr-x@ 24 vitaliy  staff    768 Aug 16 22:28 ..\n-rw-r--r--   1 vitaliy  staff  32144 Aug 16 22:20 test_init.lua\n-rwxr-xr-x   1 vitaliy  staff   2454 Aug 16 22:11 test_init.sh\n-rwxr-xr-x   1 vitaliy  staff   6460 May 28 01:26 test_refine.sh\n\ntools:\ntotal 24\ndrwxr-xr-x   3 vitaliy  staff     96 Aug 16 22:11 .\ndrwxr-xr-x@ 24 vitaliy  staff    768 Aug 16 22:28 ..\n-rwxr-xr-x@  1 vitaliy  staff  11139 Jun 22 22:03 transcribe.sh\n---\n1:-- Copy to: ~/.hammerspoon/local_whisper_actions.lua\n2:-- Voice commands for local-whisper dictation.\n3:-- All commands start with \"voice command\" to prevent false matches on normal speech.\n5:-- Hooks:\n6:--   beforeInsert(ctx)  -\u003e runs before text insertion\n7:--   actions = { ... }  -\u003e ordered list of actions\n8:--   afterInsert(ctx)   -\u003e runs after insertion\n10:-- Context fields:\n11:--   ctx.text, ctx.textLower, ctx.originalText\n12:--   ctx.lang, ctx.outputMode\n13:--   ctx.appName, ctx.appBundleID   -- app that was focused when recording started\n14:--   ctx.insert, ctx.inserted, ctx.handled\n15:--   ctx.timestamp, ctx.isoTime     -- when the dictation was recorded\n17:-- Context methods:\n18:--   ctx:setText(\"new text\")\n19:--   ctx:disableInsert(), ctx:enableInsert()\n20:--   ctx:launchApp(\"Safari\")\n21:--   ctx:appendToFile(path, line)\n22:--   ctx:runShell(\"command\", optionalInputText)\n23:--   ctx:keystroke({\"cmd\"}, \"a\")      -- fire a keystroke\n24:--   ctx:notify(\"message\"), ctx:log(\"message\")\n26:-- Patterns match against ctx.textLower (case-insensitive).\n27:-- Set ctx.handled = true in any hook to skip remaining actions.\n28:-- Config auto-reloads when the file changes.\n30:local HOME = os.getenv(\"HOME\")"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "18c01cf6-2577-4452-80db-333c5c564b06",
+  "version": "2.1.233"
+}

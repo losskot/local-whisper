@@ -1,0 +1,74 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01E4UjNu8sVvcgEAAfarbXSZ",
+        "input": {
+          "file_path": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+          "new_string": "hideOverlay = function()\n    if overlayPinned then return end  -- pinned overlay stays open\n    if overlay then overlay:delete(); overlay = nil end\nend",
+          "old_string": "local function hideOverlay()\n    if overlayPinned then return end  -- pinned overlay stays open\n    if overlay then overlay:delete(); overlay = nil end\nend",
+          "replace_all": false
+        },
+        "name": "Edit",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce6yspnwq8uzqy3SdQF13",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 1407,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 1407,
+      "cache_read_input_tokens": 93154,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1407,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 1407,
+          "cache_read_input_tokens": 93154,
+          "input_tokens": 2,
+          "output_tokens": 653,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 653,
+      "output_tokens_details": {
+        "thinking_tokens": 0
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "e68fc8e1-dd16-437c-85e7-b3d5435115f1",
+  "requestId": "req_011Ce6ysoz5byzc2CxzTUJ3H",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "timestamp": "2026-08-16T19:29:50.725Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "b041500f-f460-46de-9155-ccee62e79739",
+  "version": "2.1.233"
+}

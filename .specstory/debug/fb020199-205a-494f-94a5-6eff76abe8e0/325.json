@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "curl probe (ollama down):\ncurl -s --max-time 1 -o /dev/null -w '' http://localhost:11434/api/tags 2\u003e   0.00s user 0.01s system 26% cpu 0.051 total\n  exit=7\nollama binary present?\n  no (exit 1)",
+        "is_error": false,
+        "tool_use_id": "toolu_01EW7826pbVwYg7f66A7ui2G",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "8d70ec90-a5c8-4f73-aa73-6febd5243634",
+  "promptId": "a651875f-fcbc-4b8f-85e0-3d18600f4667",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "8d70ec90-a5c8-4f73-aa73-6febd5243634",
+  "timestamp": "2026-08-16T19:40:26.075Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "curl probe (ollama down):\ncurl -s --max-time 1 -o /dev/null -w '' http://localhost:11434/api/tags 2\u003e   0.00s user 0.01s system 26% cpu 0.051 total\n  exit=7\nollama binary present?\n  no (exit 1)"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "92b08d6d-65bf-436f-8983-897a4f805885",
+  "version": "2.1.233"
+}

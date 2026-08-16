@@ -1,0 +1,73 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_016kFJuaQ1488bdt7NMdVB7j",
+        "input": {
+          "command": "S=/private/tmp/claude-502/-Users-vitaliy-Documents-GitHub-local-whisper/7d3c92af-ac69-47c4-ad94-2c02c7d6e213/scratchpad\nR=/Users/vitaliy/Documents/GitHub/local-whisper\npython3 - \"$S\" \u003c\u003c'EOF'\nimport sys\nS=sys.argv[1]\nsrc=open('/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua').read()\nmuts={\n 'xbutton_no_emergencystop':(\"\"\"                    if isRecording then\n                        emergencyStop()\n                    else\n                        if overlay then overlay:delete(); overlay = nil end\n                    end\"\"\",\n  \"\"\"                    if overlay then overlay:delete(); overlay = nil end\"\"\"),\n 'xbutton_sync_delete':(\"\"\"                canvas:hide()\n                hs.timer.doAfter(0.01, function()\n                    overlayPinned = false\n                    if isRecording then\n                        emergencyStop()\n                    else\n                        if overlay then overlay:delete(); overlay = nil end\n                    end\n                end)\"\"\",\n  \"\"\"                canvas:hide()\n                overlayPinned = false\n                if isRecording then\n                    emergencyStop()\n                else\n                    if overlay then overlay:delete(); overlay = nil end\n                end\"\"\"),\n 'progress_live_clock':(\"\"\"    local elapsed = recordedSecs or (hs.timer.secondsSinceEpoch() - recordingStartTime)\"\"\",\n  \"\"\"    local elapsed = hs.timer.secondsSinceEpoch() - recordingStartTime\"\"\"),\n 'overlay_unpin_hides_while_recording':(\"\"\"                if not isRecording then hideOverlay() end\"\"\",\n  \"\"\"                hideOverlay()\"\"\"),\n}\nfor name,(old,new) in muts.items():\n    assert old in src, name\n    open(f'{S}/mut_{name}.lua','w').write(src.replace(old,new))\n    print(\"wrote\", name)\nEOF\nfor m in xbutton_no_emergencystop xbutton_sync_delete progress_live_clock overlay_unpin_hides_while_recording; do\n  hs -c \"_G.LW_TARGET='$S/mut_$m.lua'; _G.LW_OUT='$S/out_$m.txt'; dofile('$R/tests/test_init.lua')\" \u003e/dev/null 2\u003e\u00261\n  echo \"--- MUTANT: $m ---\"\n  grep \"^FAIL\" \"$S/out_$m.txt\" | cut -f2 || echo \"  SURVIVED (no check caught it)\"\ndone",
+          "description": "Run remaining mutation tests",
+          "timeout": 180000
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce73zWpsHtkntgEibhed3",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 636,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 636,
+      "cache_read_input_tokens": 82256,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 636,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 636,
+          "cache_read_input_tokens": 82256,
+          "input_tokens": 2,
+          "output_tokens": 1070,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 1070,
+      "output_tokens_details": {
+        "thinking_tokens": 68
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "f052e8b4-84d3-43c1-9260-2ec9101c11e6",
+  "requestId": "req_011Ce73zVuoTez5iPkoksm2i",
+  "sessionId": "7d3c92af-ac69-47c4-ad94-2c02c7d6e213",
+  "timestamp": "2026-08-16T20:23:55.809Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "b30f5eee-260c-44f2-85b0-775acd2a8fd3",
+  "version": "2.1.233"
+}

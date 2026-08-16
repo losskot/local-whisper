@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "=== /private/tmp/claude-502/-Users-vitaliy-Documents-GitHub-local-whisper/7d3c92af-ac69-47c4-ad94-2c02c7d6e213/scratchpad/out_x1.txt ===\noverlay: X during recording stops the recording\noverlay: X during recording leaves teardown to emergencyStop\n=== /private/tmp/claude-502/-Users-vitaliy-Documents-GitHub-local-whisper/7d3c92af-ac69-47c4-ad94-2c02c7d6e213/scratchpad/out_xbutton_no_emergencystop.txt ===\noverlay: X during recording stops the recording\noverlay: X during recording leaves teardown to emergencyStop",
+        "is_error": false,
+        "tool_use_id": "toolu_016MuDxxWHAzj9dBhU5TA6UF",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "c8dfb912-66a5-4eb1-829a-5f54c908df35",
+  "promptId": "63032b1d-97b3-4f08-ae8f-b358bb0a478a",
+  "sessionId": "7d3c92af-ac69-47c4-ad94-2c02c7d6e213",
+  "sourceToolAssistantUUID": "c8dfb912-66a5-4eb1-829a-5f54c908df35",
+  "timestamp": "2026-08-16T20:27:23.271Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "=== /private/tmp/claude-502/-Users-vitaliy-Documents-GitHub-local-whisper/7d3c92af-ac69-47c4-ad94-2c02c7d6e213/scratchpad/out_x1.txt ===\noverlay: X during recording stops the recording\noverlay: X during recording leaves teardown to emergencyStop\n=== /private/tmp/claude-502/-Users-vitaliy-Documents-GitHub-local-whisper/7d3c92af-ac69-47c4-ad94-2c02c7d6e213/scratchpad/out_xbutton_no_emergencystop.txt ===\noverlay: X during recording stops the recording\noverlay: X during recording leaves teardown to emergencyStop"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "2e107104-14a4-4f2f-b60a-519f407a8f4b",
+  "version": "2.1.233"
+}

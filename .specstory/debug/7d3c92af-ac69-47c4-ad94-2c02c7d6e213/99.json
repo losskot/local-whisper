@@ -1,0 +1,74 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01455WdrH8My5MZqZ4Y2HNR8",
+        "input": {
+          "file_path": "/Users/vitaliy/Documents/GitHub/local-whisper/AGENTS.md",
+          "new_string": "Because the suite takes a path argument, you can point it at an older revision — or at a\ndeliberately broken copy — to confirm a check actually fails on the bug it claims to guard:\n```bash\ngit show HEAD~1:hammerspoon/init.lua \u003e /tmp/before.lua \u0026\u0026 ./tests/test_init.sh /tmp/before.lua\n```\nPrefer a one-line mutation of the *current* file over an old revision when checking a\nspecific guard: an old revision fails for many unrelated reasons at once, and a lifted\nfunction whose helpers were since renamed fails by erroring rather than by asserting.",
+          "old_string": "Because the suite takes a path argument, you can point it at an older revision to\nconfirm a check actually fails on the bug it claims to guard:\n```bash\ngit show HEAD~1:hammerspoon/init.lua \u003e /tmp/before.lua \u0026\u0026 ./tests/test_init.sh /tmp/before.lua\n```",
+          "replace_all": false
+        },
+        "name": "Edit",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce74LyNMVc9qPcnL6pJ9a",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 761,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 761,
+      "cache_read_input_tokens": 89318,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 761,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 761,
+          "cache_read_input_tokens": 89318,
+          "input_tokens": 2,
+          "output_tokens": 445,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 445,
+      "output_tokens_details": {
+        "thinking_tokens": 0
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "4b30faa3-9183-4ed0-8c2b-ec709b330263",
+  "requestId": "req_011Ce74LvgsdFqEUcCsQWgqL",
+  "sessionId": "7d3c92af-ac69-47c4-ad94-2c02c7d6e213",
+  "timestamp": "2026-08-16T20:28:28.657Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "db61dfe2-b506-465f-9f6c-9b3a9959aebb",
+  "version": "2.1.233"
+}

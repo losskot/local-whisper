@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "## main...origin/main\n M .specstory/debug/fb020199-205a-494f-94a5-6eff76abe8e0/session-data.json\n--- specstory in history? ---\n1f546aa before code review fixing\n.specstory/debug/2d125efe-df0d-4cfa-9dc2-b86ee9ffa227/session-data.json\n.specstory/debug/2fbcc84e-8925-4665-874c-85b561e28b33/session-data.json\n.specstory/debug/3d001364-d99b-4082-a436-cfbaad7d8be1/session-data.json\n.specstory/debug/3e65aa28-ec73-40d3-a498-b67b9423b32b/session-data.json\n.specstory/debug/422f2647-f198-45c4-98cd-bd3911e47bca/session-data.json\n--- untracked count ---\n313",
+        "is_error": false,
+        "tool_use_id": "toolu_01Rs2CRXwQKYtV9bHpzMeYh5",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "9820129c-90c1-48cb-84f8-99eefc310135",
+  "promptId": "63032b1d-97b3-4f08-ae8f-b358bb0a478a",
+  "sessionId": "7d3c92af-ac69-47c4-ad94-2c02c7d6e213",
+  "sourceToolAssistantUUID": "9820129c-90c1-48cb-84f8-99eefc310135",
+  "timestamp": "2026-08-16T20:29:17.336Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "## main...origin/main\n M .specstory/debug/fb020199-205a-494f-94a5-6eff76abe8e0/session-data.json\n--- specstory in history? ---\n1f546aa before code review fixing\n.specstory/debug/2d125efe-df0d-4cfa-9dc2-b86ee9ffa227/session-data.json\n.specstory/debug/2fbcc84e-8925-4665-874c-85b561e28b33/session-data.json\n.specstory/debug/3d001364-d99b-4082-a436-cfbaad7d8be1/session-data.json\n.specstory/debug/3e65aa28-ec73-40d3-a498-b67b9423b32b/session-data.json\n.specstory/debug/422f2647-f198-45c4-98cd-bd3911e47bca/session-data.json\n--- untracked count ---\n313"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "6fc87d62-50d4-428a-b750-aa2394b7e7cc",
+  "version": "2.1.233"
+}

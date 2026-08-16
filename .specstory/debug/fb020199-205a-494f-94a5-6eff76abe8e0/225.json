@@ -1,0 +1,74 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01Vnuvc3QMc34WaWLvS48Tpo",
+        "input": {
+          "file_path": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+          "new_string": "    if finalizationPending then\n        -- A previous dictation is still waiting to be finalized (fast re-press inside the\n        -- 0.3s window, or the timer was dropped across sleep). Flush it now and fall\n        -- through — returning here would silently swallow the keypress the user just made.\n        finalizationPending = false\n        if finalizeTimers.timer then finalizeTimers.timer:stop(); finalizeTimers.timer = nil end\n        if finalizeTimers.watchdog then finalizeTimers.watchdog:stop(); finalizeTimers.watchdog = nil end\n        log(\"recovery: flushing pending finalization, then starting the new recording\")\n        doFinalTranscription()\n    end\n    isWarmingUp = true",
+          "old_string": "    if finalizationPending then\n        finalizationPending = false\n        if finalizeTimers.timer then finalizeTimers.timer:stop(); finalizeTimers.timer = nil end\n        if finalizeTimers.watchdog then finalizeTimers.watchdog:stop(); finalizeTimers.watchdog = nil end\n        log(\"recovery: resuming finalization before starting a new recording\")\n        doFinalTranscription()\n        return\n    end\n    isWarmingUp = true",
+          "replace_all": false
+        },
+        "name": "Edit",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce6z3W94X3oYNRDTUhsam",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 2487,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 2487,
+      "cache_read_input_tokens": 106569,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 2487,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 2487,
+          "cache_read_input_tokens": 106569,
+          "input_tokens": 2,
+          "output_tokens": 2169,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 2169,
+      "output_tokens_details": {
+        "thinking_tokens": 1222
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "af4c2e48-028d-4d5c-bcbf-b50b212ef4f9",
+  "requestId": "req_011Ce6z3RrLtyKA73TrrCxEj",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "timestamp": "2026-08-16T19:32:21.393Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "5fec98be-92ec-42c9-9801-97760de439e1",
+  "version": "2.1.233"
+}

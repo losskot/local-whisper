@@ -1,0 +1,28 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "text": "commit and merge",
+        "type": "text"
+      }
+    ],
+    "role": "user"
+  },
+  "origin": {
+    "kind": "human"
+  },
+  "parentUuid": "55b1ff59-5b88-435c-90d7-f4e39c89feeb",
+  "permissionMode": "auto",
+  "promptId": "d1eb4684-ea53-46c0-81d7-d8a877df031a",
+  "promptSource": "sdk",
+  "sessionId": "7d3c92af-ac69-47c4-ad94-2c02c7d6e213",
+  "timestamp": "2026-08-16T20:31:28.539Z",
+  "type": "user",
+  "userType": "external",
+  "uuid": "655dd7be-b108-429d-93d1-583792de9182",
+  "version": "2.1.233"
+}

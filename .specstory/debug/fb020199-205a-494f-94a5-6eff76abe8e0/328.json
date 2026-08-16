@@ -1,0 +1,28 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "text": "make ant execute tests",
+        "type": "text"
+      }
+    ],
+    "role": "user"
+  },
+  "origin": {
+    "kind": "human"
+  },
+  "parentUuid": "cdd68904-8017-42a4-b435-d702e1d37bc3",
+  "permissionMode": "auto",
+  "promptId": "eaaa32ad-5904-4856-b68d-d7aea6bbb94c",
+  "promptSource": "sdk",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "timestamp": "2026-08-16T20:05:01.706Z",
+  "type": "user",
+  "userType": "external",
+  "uuid": "da297bf2-f316-475e-849a-8079b6f00bc8",
+  "version": "2.1.233"
+}

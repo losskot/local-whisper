@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "checkSilence           1511:local function checkSilence()|\nsilenceTimer           940:local silenceTimer = nil|1198:    if silenceTimer then silenceTimer:stop(); silenceTimer = nil end|1708:    if silenceTimer then silenceTimer:stop(); silenceTimer = nil end|\nlastInsertedText       910:local lastInsertedText = nil|1244:        lastInsertedText = finalText|\ngetPreferredLangs      253:local function getPreferredLangs()|461:-- app (getLang/getPreferredLangs/action hooks) works in short codes like \"en\"/\"ru\".|1033:    local preferred = table.concat(getPreferredLangs(), \", \")|1330:    local preferred = getPreferredLangs()|1837:log(\"loaded (\n_whisper               96:local ACTIONS_FILE = HOME .. \"/.hammerspoon/local_whisper_actions.lua\"|1754:_whisper = { modTap = nil, recording = false }|1784:_whisper.modTap = modTap|\nhs.hotkey              \nAUTO_STOP              99:local AUTO_STOP_SILENCE_SECONDS = 3|100:local AUTO_STOP_THRESHOLD_DB = -40|1528:            if maxVol and maxVol \u003c AUTO_STOP_THRESHOLD_DB then|1531:                if silentChunkCount \u003e= AUTO_STOP_SILENCE_SECONDS then|1532:                    log(\"auto-stop\nMAX_RECENT             913:local MAX_RECENT = 10|1268:    while #recentDictations \u003e MAX_RECENT do|\nreloadActionConfig     599:local function reloadActionConfig()|727:    local cfg = reloadActionConfig()|\nforceHideOverlay       875:local function forceHideOverlay()|1043:                forceHideOverlay()|1204:    forceHideOverlay()|\ncurlErrorMessage       452:local function curlErrorMessage(code, err)|507:            local errMsg = curlErrorMessage(code, err)|\ngetAvailableModels     39:local function getAvailableModels()|415:    local models = getAvailableModels()|\ncycleLang              407:local function cycleLang()|996:        fn = function() cycleLang(); updateMenuBar() end,|\ncycleModel             414:local function cycleModel()|1002:        fn = function() cycleModel(); updateMenuBar() end,|\ncycleOutput            431:local function cycleOutput()|1008:        fn = function() cycleOutput(); updateMenuBar() end,|\ncycleEnter             438:local function cycleEnter()|1015:        fn = function() cycleEnter(); updateMenuBar() end,|\ncycleRefine            164:local function cycleRefine()|1023:            fn = function() cycleRefine(); updateMenuBar() end,|",
+        "is_error": false,
+        "tool_use_id": "toolu_01V1JCXqNnf6kx97Skma1cmh",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "b64cb4b0-89bd-49c1-9aa2-46ff3cc6ef37",
+  "promptId": "ce6a097e-2d74-458a-9872-d6b4d3ea53bd",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "b64cb4b0-89bd-49c1-9aa2-46ff3cc6ef37",
+  "timestamp": "2026-08-16T20:32:52.243Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "checkSilence           1511:local function checkSilence()|\nsilenceTimer           940:local silenceTimer = nil|1198:    if silenceTimer then silenceTimer:stop(); silenceTimer = nil end|1708:    if silenceTimer then silenceTimer:stop(); silenceTimer = nil end|\nlastInsertedText       910:local lastInsertedText = nil|1244:        lastInsertedText = finalText|\ngetPreferredLangs      253:local function getPreferredLangs()|461:-- app (getLang/getPreferredLangs/action hooks) works in short codes like \"en\"/\"ru\".|1033:    local preferred = table.concat(getPreferredLangs(), \", \")|1330:    local preferred = getPreferredLangs()|1837:log(\"loaded (\n_whisper               96:local ACTIONS_FILE = HOME .. \"/.hammerspoon/local_whisper_actions.lua\"|1754:_whisper = { modTap = nil, recording = false }|1784:_whisper.modTap = modTap|\nhs.hotkey              \nAUTO_STOP              99:local AUTO_STOP_SILENCE_SECONDS = 3|100:local AUTO_STOP_THRESHOLD_DB = -40|1528:            if maxVol and maxVol \u003c AUTO_STOP_THRESHOLD_DB then|1531:                if silentChunkCount \u003e= AUTO_STOP_SILENCE_SECONDS then|1532:                    log(\"auto-stop\nMAX_RECENT             913:local MAX_RECENT = 10|1268:    while #recentDictations \u003e MAX_RECENT do|\nreloadActionConfig     599:local function reloadActionConfig()|727:    local cfg = reloadActionConfig()|\nforceHideOverlay       875:local function forceHideOverlay()|1043:                forceHideOverlay()|1204:    forceHideOverlay()|\ncurlErrorMessage       452:local function curlErrorMessage(code, err)|507:            local errMsg = curlErrorMessage(code, err)|\ngetAvailableModels     39:local function getAvailableModels()|415:    local models = getAvailableModels()|\ncycleLang              407:local function cycleLang()|996:        fn = function() cycleLang(); updateMenuBar() end,|\ncycleModel             414:local function cycleModel()|1002:        fn = function() cycleModel(); updateMenuBar() end,|\ncycleOutput            431:local function cycleOutput()|1008:        fn = function() cycleOutput(); updateMenuBar() end,|\ncycleEnter             438:local function cycleEnter()|1015:        fn = function() cycleEnter(); updateMenuBar() end,|\ncycleRefine            164:local function cycleRefine()|1023:            fn = function() cycleRefine(); updateMenuBar() end,|"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "aabd350b-1237-469d-89dc-d5f8e04412a2",
+  "version": "2.1.233"
+}

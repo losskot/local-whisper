@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "lua not found\nlua5.4 not found\nluajit not found\n---\n/Applications/Hammerspoon.app/Contents/Frameworks/hs/hs\nhs cli present",
+        "is_error": false,
+        "tool_use_id": "toolu_013HSiWpQqjk1WjcVVJzUqFL",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "0e55e2b2-3103-4fce-9658-85012205da39",
+  "promptId": "eaaa32ad-5904-4856-b68d-d7aea6bbb94c",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "0e55e2b2-3103-4fce-9658-85012205da39",
+  "timestamp": "2026-08-16T20:05:25.832Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "lua not found\nlua5.4 not found\nluajit not found\n---\n/Applications/Hammerspoon.app/Contents/Frameworks/hs/hs\nhs cli present"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "d981adf5-dd3d-4d43-80aa-3166f6cd2c37",
+  "version": "2.1.233"
+}

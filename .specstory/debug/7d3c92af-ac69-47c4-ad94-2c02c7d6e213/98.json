@@ -1,0 +1,66 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/AGENTS.md has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_0156TmZYSqbHJfTnEBeL1tRP",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "112d526a-2071-4fd4-aa90-a7316c79ed84",
+  "promptId": "63032b1d-97b3-4f08-ae8f-b358bb0a478a",
+  "sessionId": "7d3c92af-ac69-47c4-ad94-2c02c7d6e213",
+  "sourceToolAssistantUUID": "112d526a-2071-4fd4-aa90-a7316c79ed84",
+  "timestamp": "2026-08-16T20:28:21.856Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/AGENTS.md",
+    "newString": "| `sort` | chunk files ordered as strings, which reorders audio past chunk 999 |\n| `emergencyStop` | emergency stop not cancelling a pending finalization |\n| `overlay` | clicking the X mid-recording leaving ffmpeg running; deleting the canvas from inside its own mouse callback; unpinning hiding the overlay while still recording |\n| `startRecording` | a re-press inside the finalization window flushing the old dictation but swallowing the new keypress |\n| `progress` | the blue transcription bar never catching the red recording bar, because a live clock re-trips the 90% auto-expand after recording stops |\n\nThe behavioral checks lift the real function out of the source under test — the sort\ncomparator, the overlay mouse callback, `startRecording()`, `updateProgressBar()` — and\nexecute it against stubbed globals, so they track the implementation instead of a copy\nthat can drift. A lifted function's upvalues resolve to the sandbox `_ENV`, which is what\nlets a test both inject state (`isRecording = true`) and assert on it afterwards\n(`overlayPinned == false`).\n\nThree behaviors remain untestable here and need a manual pass after touching the overlay:\nwhether the canvas actually disappears on screen, whether macOS delivers the click to the\nX at all, and how the bars look while a real transcription runs.",
+    "oldString": "| `sort` | chunk files ordered as strings, which reorders audio past chunk 999 |\n| `emergencyStop` | emergency stop not cancelling a pending finalization |\n\nThe `sort` checks extract the real comparator out of the source under test and execute\nit, so they track the implementation instead of a copy that can drift.",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          " | `globals` | state leaked into Hammerspoon's shared `_ENV` |",
+          " | `sort` | chunk files ordered as strings, which reorders audio past chunk 999 |",
+          " | `emergencyStop` | emergency stop not cancelling a pending finalization |",
+          "+| `overlay` | clicking the X mid-recording leaving ffmpeg running; deleting the canvas from inside its own mouse callback; unpinning hiding the overlay while still recording |",
+          "+| `startRecording` | a re-press inside the finalization window flushing the old dictation but swallowing the new keypress |",
+          "+| `progress` | the blue transcription bar never catching the red recording bar, because a live clock re-trips the 90% auto-expand after recording stops |",
+          " ",
+          "-The `sort` checks extract the real comparator out of the source under test and execute",
+          "-it, so they track the implementation instead of a copy that can drift.",
+          "+The behavioral checks lift the real function out of the source under test — the sort",
+          "+comparator, the overlay mouse callback, `startRecording()`, `updateProgressBar()` — and",
+          "+execute it against stubbed globals, so they track the implementation instead of a copy",
+          "+that can drift. A lifted function's upvalues resolve to the sandbox `_ENV`, which is what",
+          "+lets a test both inject state (`isRecording = true`) and assert on it afterwards",
+          "+(`overlayPinned == false`).",
+          " ",
+          "+Three behaviors remain untestable here and need a manual pass after touching the overlay:",
+          "+whether the canvas actually disappears on screen, whether macOS delivers the click to the",
+          "+X at all, and how the bars look while a real transcription runs.",
+          "+",
+          " Because the suite takes a path argument, you can point it at an older revision to",
+          " confirm a check actually fails on the bug it claims to guard:",
+          " ```bash"
+        ],
+        "newLines": 21,
+        "newStart": 135,
+        "oldLines": 10,
+        "oldStart": 135
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "4b30faa3-9183-4ed0-8c2b-ec709b330263",
+  "version": "2.1.233"
+}

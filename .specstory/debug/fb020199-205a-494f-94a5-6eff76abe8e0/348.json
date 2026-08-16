@@ -1,0 +1,27 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "Exit code 1\n\u001b[1mlocal-whisper init.lua test suite\u001b[0m\nTarget: \u001b[1mhammerspoon/init.lua\u001b[0m\n\n  \u001b[0;32mPASS\u001b[0m  syntax: file compiles\n  \u001b[0;32mPASS\u001b[0m  locals: top-level count within Lua's 200 ceiling\n  \u001b[0;31mFAIL\u001b[0m  scope: no top-level local used before its declaration\n        \u001b[1;33mmodTap used at L1754, declared at L1756\u001b[0m\n  \u001b[0;32mPASS\u001b[0m  sound: no unguarded getByFile():play()\n  \u001b[0;32mPASS\u001b[0m  meeting: no meeting-mode code remains\n  \u001b[0;31mFAIL\u001b[0m  globals: no unintended top-level globals\n        \u001b[1;33mleaked: hideOverlay (L867), tryWarmup (L1620)\u001b[0m\n  \u001b[0;32mPASS\u001b[0m  sort: comparator is extractable from source\n  \u001b[0;32mPASS\u001b[0m  sort: comparator compiles\n  \u001b[0;32mPASS\u001b[0m  sort: chunks order numerically across the 999 boundary\n  \u001b[0;32mPASS\u001b[0m  sort: chunk 999 precedes chunk 1000 (lexicographic would not)\n  \u001b[0;32mPASS\u001b[0m  sort: ffmpeg output template and comparator pattern agree\n  \u001b[0;32mPASS\u001b[0m  emergencyStop: function body is locatable\n  \u001b[0;32mPASS\u001b[0m  emergencyStop: clears finalizationPending\n  \u001b[0;32mPASS\u001b[0m  emergencyStop: stops the finalization timers\n\n\u001b[0;31m\u001b[1m2 of 14 checks failed.\u001b[0m",
+        "is_error": true,
+        "tool_use_id": "toolu_01WDNdyfsYngBenWmmzMXqrK",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "ea08c565-0f8d-49ea-b9e7-0e1e30ebdc9d",
+  "promptId": "eaaa32ad-5904-4856-b68d-d7aea6bbb94c",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "ea08c565-0f8d-49ea-b9e7-0e1e30ebdc9d",
+  "timestamp": "2026-08-16T20:07:50.682Z",
+  "toolUseResult": "Error: Exit code 1\n\u001b[1mlocal-whisper init.lua test suite\u001b[0m\nTarget: \u001b[1mhammerspoon/init.lua\u001b[0m\n\n  \u001b[0;32mPASS\u001b[0m  syntax: file compiles\n  \u001b[0;32mPASS\u001b[0m  locals: top-level count within Lua's 200 ceiling\n  \u001b[0;31mFAIL\u001b[0m  scope: no top-level local used before its declaration\n        \u001b[1;33mmodTap used at L1754, declared at L1756\u001b[0m\n  \u001b[0;32mPASS\u001b[0m  sound: no unguarded getByFile():play()\n  \u001b[0;32mPASS\u001b[0m  meeting: no meeting-mode code remains\n  \u001b[0;31mFAIL\u001b[0m  globals: no unintended top-level globals\n        \u001b[1;33mleaked: hideOverlay (L867), tryWarmup (L1620)\u001b[0m\n  \u001b[0;32mPASS\u001b[0m  sort: comparator is extractable from source\n  \u001b[0;32mPASS\u001b[0m  sort: comparator compiles\n  \u001b[0;32mPASS\u001b[0m  sort: chunks order numerically across the 999 boundary\n  \u001b[0;32mPASS\u001b[0m  sort: chunk 999 precedes chunk 1000 (lexicographic would not)\n  \u001b[0;32mPASS\u001b[0m  sort: ffmpeg output template and comparator pattern agree\n  \u001b[0;32mPASS\u001b[0m  emergencyStop: function body is locatable\n  \u001b[0;32mPASS\u001b[0m  emergencyStop: clears finalizationPending\n  \u001b[0;32mPASS\u001b[0m  emergencyStop: stops the finalization timers\n\n\u001b[0;31m\u001b[1m2 of 14 checks failed.\u001b[0m",
+  "type": "user",
+  "userType": "external",
+  "uuid": "db6ef199-749e-4696-8280-cd7f26d59be4",
+  "version": "2.1.233"
+}

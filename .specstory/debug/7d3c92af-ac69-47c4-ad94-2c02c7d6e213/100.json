@@ -1,0 +1,59 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/AGENTS.md has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01455WdrH8My5MZqZ4Y2HNR8",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "db61dfe2-b506-465f-9f6c-9b3a9959aebb",
+  "promptId": "63032b1d-97b3-4f08-ae8f-b358bb0a478a",
+  "sessionId": "7d3c92af-ac69-47c4-ad94-2c02c7d6e213",
+  "sourceToolAssistantUUID": "db61dfe2-b506-465f-9f6c-9b3a9959aebb",
+  "timestamp": "2026-08-16T20:28:29.711Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/AGENTS.md",
+    "newString": "Because the suite takes a path argument, you can point it at an older revision — or at a\ndeliberately broken copy — to confirm a check actually fails on the bug it claims to guard:\n```bash\ngit show HEAD~1:hammerspoon/init.lua \u003e /tmp/before.lua \u0026\u0026 ./tests/test_init.sh /tmp/before.lua\n```\nPrefer a one-line mutation of the *current* file over an old revision when checking a\nspecific guard: an old revision fails for many unrelated reasons at once, and a lifted\nfunction whose helpers were since renamed fails by erroring rather than by asserting.",
+    "oldString": "Because the suite takes a path argument, you can point it at an older revision to\nconfirm a check actually fails on the bug it claims to guard:\n```bash\ngit show HEAD~1:hammerspoon/init.lua \u003e /tmp/before.lua \u0026\u0026 ./tests/test_init.sh /tmp/before.lua\n```",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          " whether the canvas actually disappears on screen, whether macOS delivers the click to the",
+          " X at all, and how the bars look while a real transcription runs.",
+          " ",
+          "-Because the suite takes a path argument, you can point it at an older revision to",
+          "-confirm a check actually fails on the bug it claims to guard:",
+          "+Because the suite takes a path argument, you can point it at an older revision — or at a",
+          "+deliberately broken copy — to confirm a check actually fails on the bug it claims to guard:",
+          " ```bash",
+          " git show HEAD~1:hammerspoon/init.lua \u003e /tmp/before.lua \u0026\u0026 ./tests/test_init.sh /tmp/before.lua",
+          " ```",
+          "+Prefer a one-line mutation of the *current* file over an old revision when checking a",
+          "+specific guard: an old revision fails for many unrelated reasons at once, and a lifted",
+          "+function whose helpers were since renamed fails by erroring rather than by asserting.",
+          " ",
+          " ### Common debug patterns",
+          " - **Refine not working**: Check `refine: failed` in logs — common causes: Ollama not running, wrong model name, missing `$HOME` env"
+        ],
+        "newLines": 14,
+        "newStart": 150,
+        "oldLines": 11,
+        "oldStart": 150
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "3d6372c1-380b-4e95-943f-440aae752335",
+  "version": "2.1.233"
+}

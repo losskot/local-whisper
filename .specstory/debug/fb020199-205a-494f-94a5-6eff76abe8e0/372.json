@@ -1,0 +1,82 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/AGENTS.md has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_0172B56mokkR1fnygdrq7uJX",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "1ae20cbf-79af-438b-b4fe-f0f113bf5b78",
+  "promptId": "eaaa32ad-5904-4856-b68d-d7aea6bbb94c",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "1ae20cbf-79af-438b-b4fe-f0f113bf5b78",
+  "timestamp": "2026-08-16T20:09:29.318Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/AGENTS.md",
+    "newString": "### Running the refine eval suite\n```bash\n./tests/test_refine.sh\n```\nTests filler removal, list formatting, preamble prevention, and content preservation.\nRequires Ollama running locally — it calls the HTTP API directly and bails out otherwise.\n\n### Running the init.lua test suite\n```bash\n./tests/test_init.sh                    # test the repo's init.lua\n./tests/test_init.sh path/to/init.lua   # test a specific file\n```\nRequires Hammerspoon to be running — there is no standalone Lua interpreter in this\nstack, so `tests/test_init.lua` is executed through the `hs` CLI.\n\nGuards the bug classes that have actually bitten this file, rather than restating the\nimplementation:\n\n| Check | Catches |\n|-------|---------|\n| `syntax` | file no longer compiles |\n| `locals` | the Lua 200-per-function ceiling |\n| `scope` | a top-level local referenced by an earlier-defined function (reads as a nil global at runtime, with no load-time error) |\n| `sound` | unguarded `hs.sound.getByFile(...):play()`, which throws and aborts its callback |\n| `meeting` | meeting-mode code creeping back in |\n| `globals` | state leaked into Hammerspoon's shared `_ENV` |\n| `sort` | chunk files ordered as strings, which reorders audio past chunk 999 |\n| `emergencyStop` | emergency stop not cancelling a pending finalization |\n\nThe `sort` checks extract the real comparator out of the source under test and execute\nit, so they track the implementation instead of a copy that can drift.\n\nBecause the suite takes a path argument, you can point it at an older revision to\nconfirm a check actually fails on the bug it claims to guard:\n```bash\ngit show HEAD~1:hammerspoon/init.lua \u003e /tmp/before.lua \u0026\u0026 ./tests/test_init.sh /tmp/before.lua\n```",
+    "oldString": "### Running the refine eval suite\n```bash\n./tests/test_refine.sh\n```\nTests filler removal, list formatting, preamble prevention, and content preservation.",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          " ./tests/test_refine.sh",
+          " ```",
+          " Tests filler removal, list formatting, preamble prevention, and content preservation.",
+          "+Requires Ollama running locally — it calls the HTTP API directly and bails out otherwise.",
+          " ",
+          "+### Running the init.lua test suite",
+          "+```bash",
+          "+./tests/test_init.sh                    # test the repo's init.lua",
+          "+./tests/test_init.sh path/to/init.lua   # test a specific file",
+          "+```",
+          "+Requires Hammerspoon to be running — there is no standalone Lua interpreter in this",
+          "+stack, so `tests/test_init.lua` is executed through the `hs` CLI.",
+          "+",
+          "+Guards the bug classes that have actually bitten this file, rather than restating the",
+          "+implementation:",
+          "+",
+          "+| Check | Catches |",
+          "+|-------|---------|",
+          "+| `syntax` | file no longer compiles |",
+          "+| `locals` | the Lua 200-per-function ceiling |",
+          "+| `scope` | a top-level local referenced by an earlier-defined function (reads as a nil global at runtime, with no load-time error) |",
+          "+| `sound` | unguarded `hs.sound.getByFile(...):play()`, which throws and aborts its callback |",
+          "+| `meeting` | meeting-mode code creeping back in |",
+          "+| `globals` | state leaked into Hammerspoon's shared `_ENV` |",
+          "+| `sort` | chunk files ordered as strings, which reorders audio past chunk 999 |",
+          "+| `emergencyStop` | emergency stop not cancelling a pending finalization |",
+          "+",
+          "+The `sort` checks extract the real comparator out of the source under test and execute",
+          "+it, so they track the implementation instead of a copy that can drift.",
+          "+",
+          "+Because the suite takes a path argument, you can point it at an older revision to",
+          "+confirm a check actually fails on the bug it claims to guard:",
+          "+```bash",
+          "+git show HEAD~1:hammerspoon/init.lua \u003e /tmp/before.lua \u0026\u0026 ./tests/test_init.sh /tmp/before.lua",
+          "+```",
+          "+",
+          " ### Common debug patterns",
+          " - **Refine not working**: Check `refine: failed` in logs — common causes: Ollama not running, wrong model name, missing `$HOME` env",
+          " - **Voice commands not matching**: Check `final (auto/...)` log line — whisper may have transcribed differently than expected"
+        ],
+        "newLines": 39,
+        "newStart": 112,
+        "oldLines": 7,
+        "oldStart": 112
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "0f16cfc2-af4e-434a-b93e-e744c60548af",
+  "version": "2.1.233"
+}

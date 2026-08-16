@@ -1,0 +1,61 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/tests/test_init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01MZdrkUS5eD4dyuNaHjvwxU",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "4ff7d544-4527-426c-ae63-ed6f47a6965a",
+  "promptId": "eaaa32ad-5904-4856-b68d-d7aea6bbb94c",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "4ff7d544-4527-426c-ae63-ed6f47a6965a",
+  "timestamp": "2026-08-16T20:08:36.451Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/tests/test_init.lua",
+    "newString": "-- Word-boundary match for an identifier.\nlocal function usesName(line, name)\n    return line:find(\"%f[%w_]\" .. name .. \"%f[^%w_]\") ~= nil\nend\n\n-- Blank out identifier occurrences that are not variable *reads*, so the\n-- use-before-declaration scan doesn't fire on them:\n--   * field access / method call  -- obj.name, obj:name\n--   * assignment targets and table-constructor keys -- name = ..., { name = ... }\n-- A read of `name` on the right-hand side survives, which is what the scan wants.\nlocal function readsOnly(s)\n    s = s:gsub(\"%.%s*[%w_]+\", \" \")\n    s = s:gsub(\":%s*[%w_]+\", \" \")\n    s = s:gsub(\"[%w_]+%s*=[^=]\", \" \")\n    return s\nend",
+    "oldString": "-- Word-boundary match for an identifier.\nlocal function usesName(line, name)\n    return line:find(\"%f[%w_]\" .. name .. \"%f[^%w_]\") ~= nil\nend",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          "     return line:find(\"%f[%w_]\" .. name .. \"%f[^%w_]\") ~= nil",
+          " end",
+          " ",
+          "+-- Blank out identifier occurrences that are not variable *reads*, so the",
+          "+-- use-before-declaration scan doesn't fire on them:",
+          "+--   * field access / method call  -- obj.name, obj:name",
+          "+--   * assignment targets and table-constructor keys -- name = ..., { name = ... }",
+          "+-- A read of `name` on the right-hand side survives, which is what the scan wants.",
+          "+local function readsOnly(s)",
+          "+    s = s:gsub(\"%.%s*[%w_]+\", \" \")",
+          "+    s = s:gsub(\":%s*[%w_]+\", \" \")",
+          "+    s = s:gsub(\"[%w_]+%s*=[^=]\", \" \")",
+          "+    return s",
+          "+end",
+          "+",
+          " --------------------------------------------------------------------------------",
+          " -- 1. Syntax",
+          " --------------------------------------------------------------------------------"
+        ],
+        "newLines": 18,
+        "newStart": 78,
+        "oldLines": 6,
+        "oldStart": 78
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "98314584-2983-40d4-8b05-05b91e8d5a98",
+  "version": "2.1.233"
+}

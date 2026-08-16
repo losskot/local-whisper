@@ -1,0 +1,58 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/uninstall.sh has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01BtT2vmeHCzGP8mTFU3SJ6d",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "5339d4b1-6704-494f-9697-005d5ac33e1a",
+  "promptId": "a651875f-fcbc-4b8f-85e0-3d18600f4667",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "5339d4b1-6704-494f-9697-005d5ac33e1a",
+  "timestamp": "2026-08-16T19:33:23.340Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/uninstall.sh",
+    "newString": "# ─── Legacy: aggregate audio device from the removed meeting mode ───────────\n# Meeting mode no longer exists, but installs from before its removal may still\n# have the helper and its Multi-Output Device. Clean those up if present.\nHELPER_BIN=\"$CONFIG_DIR/bin/aggregate-audio\"\nif [[ -x \"$HELPER_BIN\" ]]; then\n    if \"$HELPER_BIN\" delete \u0026\u003e/dev/null; then\n        ok \"Removed leftover 'local-whisper Output' Multi-Output Device\"\n    fi\nfi",
+    "oldString": "# ─── Aggregate audio device (meeting mode) ──────────────────────────────────\nHELPER_BIN=\"$CONFIG_DIR/bin/aggregate-audio\"\nif [[ -x \"$HELPER_BIN\" ]]; then\n    if \"$HELPER_BIN\" delete \u0026\u003e/dev/null; then\n        ok \"Removed 'local-whisper Output' Multi-Output Device\"\n    fi\nfi",
+    "originalFile": "#!/usr/bin/env bash\n# uninstall.sh — remove local-whisper from your system\nset -euo pipefail\n\n# ─── Colors ──────────────────────────────────────────────────────────────────\nRED='\\033[0;31m'\nGREEN='\\033[0;32m'\nYELLOW='\\033[1;33m'\nBLUE='\\033[0;34m'\nBOLD='\\033[1m'\nNC='\\033[0m'\n\ninfo()  { echo -e \"${BLUE}[*]${NC} $*\"; }\nok()    { echo -e \"${GREEN}[+]${NC} $*\"; }\nwarn()  { echo -e \"${YELLOW}[!]${NC} $*\"; }\n\nHAMMERSPOON_DIR=\"$HOME/.hammerspoon\"\nCONFIG_DIR=\"$HOME/.local-whisper\"\nWHISPER_CPP_DIR=\"$HOME/whisper.cpp\"\nWHISPER_TMP=\"${TMPDIR:-/tmp}/whisper-dictate\"\n\necho \"\"\necho -e \"${BOLD}local-whisper uninstaller${NC}\"\necho \"\"\necho \"This will remove local-whisper configuration files.\"\necho \"It will NOT uninstall Homebrew packages (ffmpeg, cmake, hammerspoon).\"\necho \"\"\nread -r -p \"Continue? [y/N] \" CONFIRM\nif [[ ! \"$CONFIRM\" =~ ^[yY]$ ]]; then\n    echo \"Aborted.\"\n    exit 0\nfi\n\necho \"\"\n\n# ─── Hammerspoon config ─────────────────────────────────────────────────────\nif [[ -f \"$HAMMERSPOON_DIR/init.lua\" ]] \u0026\u0026 grep -q \"local-whisper\" \"$HAMMERSPOON_DIR/init.lua\"; then\n    rm \"$HAMMERSPOON_DIR/init.lua\"\n    ok \"Removed ~/.hammerspoon/init.lua\"\n\n    if [[ -f \"$HAMMERSPOON_DIR/init.lua.backup\" ]]; then\n        mv \"$HAMMERSPOON_DIR/init.lua.backup\" \"$HAMMERSPOON_DIR/init.lua\"\n        ok \"Restored init.lua.backup\"\n    fi\nelse\n    info \"No local-whisper init.lua found (skipped)\"\nfi\n\nif [[ -f \"$HAMMERSPOON_DIR/local_whisper_actions.lua\" ]]; then\n    rm \"$HAMMERSPOON_DIR/local_whisper_actions.lua\"\n    ok \"Removed ~/.hammerspoon/local_whisper_actions.lua\"\nfi\n\n# ─── Aggregate audio device (meeting mode) ──────────────────────────────────\nHELPER_BIN=\"$CONFIG_DIR/bin/aggregate-audio\"\nif [[ -x \"$HELPER_BIN\" ]]; then\n    if \"$HELPER_BIN\" delete \u0026\u003e/dev/null; then\n        ok \"Removed 'local-whisper Output' Multi-Output Device\"\n    fi\nfi\n\n# ─── Config directory ────────────────────────────────────────────────────────\nif [[ -d \"$CONFIG_DIR\" ]]; then\n    rm -rf \"$CONFIG_DIR\"\n    ok \"Removed ~/.local-whisper/\"\nfi\n\n# ─── Temp files ──────────────────────────────────────────────────────────────\nif [[ -d \"$WHISPER_TMP\" ]]; then\n    rm -rf \"$WHISPER_TMP\"\n    ok \"Removed temp files\"\nfi\n\n# ─── whisper.cpp (optional) ──────────────────────────────────────────────────\necho \"\"\nif [[ -d \"$WHISPER_CPP_DIR\" ]]; then\n    read -r -p \"Also remove ~/whisper.cpp (models + build)? This frees ~2 GB. [y/N] \" REMOVE_WHISPER\n    if [[ \"$REMOVE_WHISPER\" =~ ^[yY]$ ]]; then\n        rm -rf \"$WHISPER_CPP_DIR\"\n        ok \"Removed ~/whisper.cpp\"\n    else\n        info \"Kept ~/whisper.cpp\"\n    fi\nelse\n    info \"~/whisper.cpp not found (skipped)\"\nfi\n\n# ─── Done ────────────────────────────────────────────────────────────────────\necho \"\"\necho -e \"${GREEN}${BOLD}Uninstall complete.${NC}\"\necho \"\"\necho \"To also remove Homebrew packages (optional):\"\necho \"  brew uninstall --cask hammerspoon\"\necho \"  brew uninstall ffmpeg cmake\"\necho \"\"\n",
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          "     ok \"Removed ~/.hammerspoon/local_whisper_actions.lua\"",
+          " fi",
+          " ",
+          "-# ─── Aggregate audio device (meeting mode) ──────────────────────────────────",
+          "+# ─── Legacy: aggregate audio device from the removed meeting mode ───────────",
+          "+# Meeting mode no longer exists, but installs from before its removal may still",
+          "+# have the helper and its Multi-Output Device. Clean those up if present.",
+          " HELPER_BIN=\"$CONFIG_DIR/bin/aggregate-audio\"",
+          " if [[ -x \"$HELPER_BIN\" ]]; then",
+          "     if \"$HELPER_BIN\" delete \u0026\u003e/dev/null; then",
+          "-        ok \"Removed 'local-whisper Output' Multi-Output Device\"",
+          "+        ok \"Removed leftover 'local-whisper Output' Multi-Output Device\"",
+          "     fi",
+          " fi",
+          " "
+        ],
+        "newLines": 13,
+        "newStart": 51,
+        "oldLines": 11,
+        "oldStart": 51
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "95da7671-2eed-433f-8cf3-a78104340c40",
+  "version": "2.1.233"
+}

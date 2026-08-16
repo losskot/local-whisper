@@ -1,0 +1,62 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/tests/test_init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_013jRrhRkheBvgfdBEPESMFs",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "d3a0a589-eda6-4946-aee9-a04021289d94",
+  "promptId": "eaaa32ad-5904-4856-b68d-d7aea6bbb94c",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "d3a0a589-eda6-4946-aee9-a04021289d94",
+  "timestamp": "2026-08-16T20:08:47.151Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/tests/test_init.lua",
+    "newString": "-- `decls` holds every top-level local, including forward declarations. Assigning to\n-- one of those (e.g. `hideOverlay = function() ... end`) writes the local, not a global.\nlocal leaked = {}\nfor i, s in ipairs(stripped) do\n    -- top-level `name = ...` (not local, not indented, not a comparison)\n    local name = s:match(\"^([%w_]+)%s*=[^=]\")\n    if name and not allowedGlobals[name] and not decls[name] then\n        leaked[#leaked + 1] = name .. \" (L\" .. i .. \")\"\n    end\n    local gfn = s:match(\"^function%s+([%w_]+)%s*%(\")\n    if gfn and not allowedGlobals[gfn] and not decls[gfn] then\n        leaked[#leaked + 1] = gfn .. \"() (L\" .. i .. \")\"\n    end\nend",
+    "oldString": "local leaked = {}\nfor i, s in ipairs(stripped) do\n    -- top-level `name = ...` (not local, not indented, not a comparison)\n    local name = s:match(\"^([%w_]+)%s*=[^=]\")\n    if name and not allowedGlobals[name] then\n        leaked[#leaked + 1] = name .. \" (L\" .. i .. \")\"\n    end\n    local gfn = s:match(\"^function%s+([%w_]+)%s*%(\")\n    if gfn and not allowedGlobals[gfn] then\n        leaked[#leaked + 1] = gfn .. \"() (L\" .. i .. \")\"\n    end\nend",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          "     stopRecording  = true,",
+          " }",
+          " ",
+          "+-- `decls` holds every top-level local, including forward declarations. Assigning to",
+          "+-- one of those (e.g. `hideOverlay = function() ... end`) writes the local, not a global.",
+          " local leaked = {}",
+          " for i, s in ipairs(stripped) do",
+          "     -- top-level `name = ...` (not local, not indented, not a comparison)",
+          "     local name = s:match(\"^([%w_]+)%s*=[^=]\")",
+          "-    if name and not allowedGlobals[name] then",
+          "+    if name and not allowedGlobals[name] and not decls[name] then",
+          "         leaked[#leaked + 1] = name .. \" (L\" .. i .. \")\"",
+          "     end",
+          "     local gfn = s:match(\"^function%s+([%w_]+)%s*%(\")",
+          "-    if gfn and not allowedGlobals[gfn] then",
+          "+    if gfn and not allowedGlobals[gfn] and not decls[gfn] then",
+          "         leaked[#leaked + 1] = gfn .. \"() (L\" .. i .. \")\"",
+          "     end",
+          " end"
+        ],
+        "newLines": 17,
+        "newStart": 208,
+        "oldLines": 15,
+        "oldStart": 208
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "4f0d6841-7569-405e-b640-f558ce57ffbd",
+  "version": "2.1.233"
+}

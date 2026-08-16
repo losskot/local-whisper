@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "\u001b[1mlocal-whisper refine eval suite\u001b[0m\nModel: \u001b[1mgemma3:4b\u001b[0m\n\n\u001b[0;31mError: Ollama not reachable at http://localhost:11434/api/generate\u001b[0m\nMake sure Ollama is running: ollama serve\n=== exit:",
+        "is_error": false,
+        "tool_use_id": "toolu_01Kh9HLnFgN3o37SVJMcJYPo",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "d5cb6015-0567-4e5f-80f2-7dfeda088b58",
+  "promptId": "a651875f-fcbc-4b8f-85e0-3d18600f4667",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "d5cb6015-0567-4e5f-80f2-7dfeda088b58",
+  "timestamp": "2026-08-16T19:40:16.771Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "\u001b[1mlocal-whisper refine eval suite\u001b[0m\nModel: \u001b[1mgemma3:4b\u001b[0m\n\n\u001b[0;31mError: Ollama not reachable at http://localhost:11434/api/generate\u001b[0m\nMake sure Ollama is running: ollama serve\n=== exit:"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "f20d1f32-1596-43df-a2d3-30810e691162",
+  "version": "2.1.233"
+}

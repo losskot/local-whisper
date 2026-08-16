@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "total 64\ndrwxr-xr-x   10 vitaliy  staff   320 Aug 16 18:39 .\ndrwxr-x---+ 163 vitaliy  staff  5216 Aug 16 22:31 ..\n-rw-r--r--@   1 vitaliy  staff     3 Jul 21 20:20 enter\n-rw-r--r--@   1 vitaliy  staff     4 Jul 21 20:20 lang\n-rw-r--r--@   1 vitaliy  staff    19 Aug 12 01:23 model\n-rw-r--r--@   1 vitaliy  staff     5 Aug  3 13:56 output\n-rw-r--r--@   1 vitaliy  staff     6 May 28 02:06 preferred_langs\n-rw-r--r--@   1 vitaliy  staff  5703 Aug 16 22:32 recent.json\ndrwxr-xr-x    3 vitaliy  staff    96 Aug 16 18:39 recovery\n-rw-r--r--@   1 vitaliy  staff     3 Jun 15 03:43 refine\n---\nlang             auto\nmodel            large-v3-turbo-q5_0\noutput           paste\nenter            off\nrefine           off\nrefine_model     \nprompt           \npreferred_langs  ru,uk\n---\ntotal 16\ndrwxr-xr-x    5 vitaliy  staff   160 Jul  2 01:22 .\ndrwxr-x---+ 163 vitaliy  staff  5216 Aug 16 22:31 ..\ndrwxr-xr-x@   2 vitaliy  staff    64 May 28 01:54 Spoons\nlrwxr-xr-x    1 vitaliy  staff    66 Jul  2 01:22 init.lua -\u003e /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua\n-rw-r--r--    1 vitaliy  staff  4868 May 28 01:50 local_whisper_actions.lua\n---\n#!/usr/bin/env bash\n# transcribe.sh — batch audio/video transcription using whisper.cpp large-v3-turbo\n#\n# Usage:\n#   ./transcribe.sh [OPTIONS] FILE|DIR [FILE|DIR ...]\n#",
+        "is_error": false,
+        "tool_use_id": "toolu_01RGLC16D8sPkpCTLzeV3kFx",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "12affcd9-31d3-4fca-bfd0-5c3b83e2e4f3",
+  "promptId": "ce6a097e-2d74-458a-9872-d6b4d3ea53bd",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "12affcd9-31d3-4fca-bfd0-5c3b83e2e4f3",
+  "timestamp": "2026-08-16T20:33:09.204Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "total 64\ndrwxr-xr-x   10 vitaliy  staff   320 Aug 16 18:39 .\ndrwxr-x---+ 163 vitaliy  staff  5216 Aug 16 22:31 ..\n-rw-r--r--@   1 vitaliy  staff     3 Jul 21 20:20 enter\n-rw-r--r--@   1 vitaliy  staff     4 Jul 21 20:20 lang\n-rw-r--r--@   1 vitaliy  staff    19 Aug 12 01:23 model\n-rw-r--r--@   1 vitaliy  staff     5 Aug  3 13:56 output\n-rw-r--r--@   1 vitaliy  staff     6 May 28 02:06 preferred_langs\n-rw-r--r--@   1 vitaliy  staff  5703 Aug 16 22:32 recent.json\ndrwxr-xr-x    3 vitaliy  staff    96 Aug 16 18:39 recovery\n-rw-r--r--@   1 vitaliy  staff     3 Jun 15 03:43 refine\n---\nlang             auto\nmodel            large-v3-turbo-q5_0\noutput           paste\nenter            off\nrefine           off\nrefine_model     \nprompt           \npreferred_langs  ru,uk\n---\ntotal 16\ndrwxr-xr-x    5 vitaliy  staff   160 Jul  2 01:22 .\ndrwxr-x---+ 163 vitaliy  staff  5216 Aug 16 22:31 ..\ndrwxr-xr-x@   2 vitaliy  staff    64 May 28 01:54 Spoons\nlrwxr-xr-x    1 vitaliy  staff    66 Jul  2 01:22 init.lua -\u003e /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua\n-rw-r--r--    1 vitaliy  staff  4868 May 28 01:50 local_whisper_actions.lua\n---\n#!/usr/bin/env bash\n# transcribe.sh — batch audio/video transcription using whisper.cpp large-v3-turbo\n#\n# Usage:\n#   ./transcribe.sh [OPTIONS] FILE|DIR [FILE|DIR ...]\n#"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "fbac45b1-9a15-46a0-94a1-5a8aeacfc9ef",
+  "version": "2.1.233"
+}

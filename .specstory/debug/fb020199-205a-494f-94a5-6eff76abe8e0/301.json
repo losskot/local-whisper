@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "Hammerspoon running (pid 44222)\nipc ok, trigger=true",
+        "is_error": false,
+        "tool_use_id": "toolu_01GRaZDpPyaN5N2RNWSC7L7K",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "5fc12d2e-0929-4306-9368-cc85624175d7",
+  "promptId": "a651875f-fcbc-4b8f-85e0-3d18600f4667",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "5fc12d2e-0929-4306-9368-cc85624175d7",
+  "timestamp": "2026-08-16T19:39:19.934Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "Hammerspoon running (pid 44222)\nipc ok, trigger=true"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "0a1759ae-f869-4128-aae7-9a8711eccb4b",
+  "version": "2.1.233"
+}

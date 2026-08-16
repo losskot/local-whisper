@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "test_init.sh: syntax OK\n  \u001b[0;32mPASS\u001b[0m  emergencyStop: function body is locatable\n  \u001b[0;32mPASS\u001b[0m  emergencyStop: clears finalizationPending\n  \u001b[0;32mPASS\u001b[0m  emergencyStop: stops the finalization timers\n\n\u001b[0;32m\u001b[1mAll 14 checks passed.\u001b[0m",
+        "is_error": false,
+        "tool_use_id": "toolu_01S53d63wXMYWynR29cQwKMh",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "8890b744-1daa-483e-8aad-cdefc1e09712",
+  "promptId": "eaaa32ad-5904-4856-b68d-d7aea6bbb94c",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "8890b744-1daa-483e-8aad-cdefc1e09712",
+  "timestamp": "2026-08-16T20:09:37.688Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "test_init.sh: syntax OK\n  \u001b[0;32mPASS\u001b[0m  emergencyStop: function body is locatable\n  \u001b[0;32mPASS\u001b[0m  emergencyStop: clears finalizationPending\n  \u001b[0;32mPASS\u001b[0m  emergencyStop: stops the finalization timers\n\n\u001b[0;32m\u001b[1mAll 14 checks passed.\u001b[0m"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "4edab008-9606-4091-bb06-3850cfe5c064",
+  "version": "2.1.233"
+}

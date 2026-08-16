@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "bd not found\nbd NOT INSTALLED",
+        "is_error": false,
+        "tool_use_id": "toolu_01PDBMZ8v7WbxoHNsHDDVHpy",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "ea23e340-2f62-4382-ac4b-a569a4d728ed",
+  "promptId": "63032b1d-97b3-4f08-ae8f-b358bb0a478a",
+  "sessionId": "7d3c92af-ac69-47c4-ad94-2c02c7d6e213",
+  "sourceToolAssistantUUID": "ea23e340-2f62-4382-ac4b-a569a4d728ed",
+  "timestamp": "2026-08-16T20:16:21.539Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "bd not found\nbd NOT INSTALLED"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "f0e8323a-6fc9-41dc-a191-ab5b84ac4368",
+  "version": "2.1.233"
+}

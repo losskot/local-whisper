@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "57:info \"Step 1/5: Installing dependencies via Homebrew...\"\n80:info \"Step 2/5: Building whisper.cpp...\"\n108:info \"Step 3/5: Downloading whisper models...\"\n146:info \"Step 4/5: Setting up Hammerspoon...\"\n186:info \"Step 5/5: Running setup (permissions, trigger key, audio device)...\"\n--- tail:\nfi\n\n# ─── Step 5: Setup (permissions, trigger key, audio device, HS CLI) ─────────\necho \"\"\ninfo \"Step 5/5: Running setup (permissions, trigger key, audio device)...\"\necho \"\"\nbash \"$SCRIPT_DIR/setup.sh\"",
+        "is_error": false,
+        "tool_use_id": "toolu_01QQAvUfivRruJ9xfxLd6sAs",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "9ef3cadf-b241-4bb8-9106-702420f98a89",
+  "promptId": "a651875f-fcbc-4b8f-85e0-3d18600f4667",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "9ef3cadf-b241-4bb8-9106-702420f98a89",
+  "timestamp": "2026-08-16T19:33:14.366Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "57:info \"Step 1/5: Installing dependencies via Homebrew...\"\n80:info \"Step 2/5: Building whisper.cpp...\"\n108:info \"Step 3/5: Downloading whisper models...\"\n146:info \"Step 4/5: Setting up Hammerspoon...\"\n186:info \"Step 5/5: Running setup (permissions, trigger key, audio device)...\"\n--- tail:\nfi\n\n# ─── Step 5: Setup (permissions, trigger key, audio device, HS CLI) ─────────\necho \"\"\ninfo \"Step 5/5: Running setup (permissions, trigger key, audio device)...\"\necho \"\"\nbash \"$SCRIPT_DIR/setup.sh\""
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "d1cbf649-62b1-4ac8-a340-693e139c6fef",
+  "version": "2.1.233"
+}

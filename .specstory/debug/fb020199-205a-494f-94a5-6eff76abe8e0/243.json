@@ -1,0 +1,35 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "48\t\n49\tif [[ -f \"$HAMMERSPOON_DIR/local_whisper_actions.lua\" ]]; then\n50\t    rm \"$HAMMERSPOON_DIR/local_whisper_actions.lua\"\n51\t    ok \"Removed ~/.hammerspoon/local_whisper_actions.lua\"\n52\tfi\n53\t\n54\t# ─── Aggregate audio device (meeting mode) ──────────────────────────────────\n55\tHELPER_BIN=\"$CONFIG_DIR/bin/aggregate-audio\"\n56\tif [[ -x \"$HELPER_BIN\" ]]; then\n57\t    if \"$HELPER_BIN\" delete \u0026\u003e/dev/null; then\n58\t        ok \"Removed 'local-whisper Output' Multi-Output Device\"\n59\t    fi\n60\tfi\n61\t\n62\t# ─── Config directory ────────────────────────────────────────────────────────\n63\tif [[ -d \"$CONFIG_DIR\" ]]; then\n64\t    rm -rf \"$CONFIG_DIR\"\n65\t    ok \"Removed ~/.local-whisper/\"\n66\tfi\n67\t\n68\t# ─── Temp files ──────────────────────────────────────────────────────────────\n69\tif [[ -d \"$WHISPER_TMP\" ]]; then\n70\t    rm -rf \"$WHISPER_TMP\"\n71\t    ok \"Removed temp files\"\n72\tfi\n73\t\n74\t# ─── whisper.cpp (optional) ──────────────────────────────────────────────────\n75\techo \"\"\n76\tif [[ -d \"$WHISPER_CPP_DIR\" ]]; then\n77\t    read -r -p \"Also remove ~/whisper.cpp (models + build)? This frees ~2 GB. [y/N] \" REMOVE_WHISPER",
+        "tool_use_id": "toolu_01WjQkwbyApHj5GayqJyDLjv",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "43ef9ef4-6628-4f31-8578-0c661487e0c8",
+  "promptId": "a651875f-fcbc-4b8f-85e0-3d18600f4667",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "43ef9ef4-6628-4f31-8578-0c661487e0c8",
+  "timestamp": "2026-08-16T19:32:49.413Z",
+  "toolUseResult": {
+    "file": {
+      "content": "\nif [[ -f \"$HAMMERSPOON_DIR/local_whisper_actions.lua\" ]]; then\n    rm \"$HAMMERSPOON_DIR/local_whisper_actions.lua\"\n    ok \"Removed ~/.hammerspoon/local_whisper_actions.lua\"\nfi\n\n# ─── Aggregate audio device (meeting mode) ──────────────────────────────────\nHELPER_BIN=\"$CONFIG_DIR/bin/aggregate-audio\"\nif [[ -x \"$HELPER_BIN\" ]]; then\n    if \"$HELPER_BIN\" delete \u0026\u003e/dev/null; then\n        ok \"Removed 'local-whisper Output' Multi-Output Device\"\n    fi\nfi\n\n# ─── Config directory ────────────────────────────────────────────────────────\nif [[ -d \"$CONFIG_DIR\" ]]; then\n    rm -rf \"$CONFIG_DIR\"\n    ok \"Removed ~/.local-whisper/\"\nfi\n\n# ─── Temp files ──────────────────────────────────────────────────────────────\nif [[ -d \"$WHISPER_TMP\" ]]; then\n    rm -rf \"$WHISPER_TMP\"\n    ok \"Removed temp files\"\nfi\n\n# ─── whisper.cpp (optional) ──────────────────────────────────────────────────\necho \"\"\nif [[ -d \"$WHISPER_CPP_DIR\" ]]; then\n    read -r -p \"Also remove ~/whisper.cpp (models + build)? This frees ~2 GB. [y/N] \" REMOVE_WHISPER",
+      "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/uninstall.sh",
+      "numLines": 30,
+      "startLine": 48,
+      "totalLines": 96
+    },
+    "type": "text"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "b42c3954-36b2-444e-a858-1c9d487fc63f",
+  "version": "2.1.233"
+}

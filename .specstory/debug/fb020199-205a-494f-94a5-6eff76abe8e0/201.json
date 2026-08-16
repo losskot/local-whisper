@@ -1,0 +1,75 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_014CyWXiFZWemaBQWsuHTvVv",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "03596bfa-155d-4d60-ad8e-c7551eb06e7d",
+  "promptId": "a651875f-fcbc-4b8f-85e0-3d18600f4667",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "03596bfa-155d-4d60-ad8e-c7551eb06e7d",
+  "timestamp": "2026-08-16T19:31:00.051Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+    "newString": "-- Cached so the menu bar doesn't reprobe on every open. Hammerspoon is single-threaded,\n-- so a synchronous curl here blocks the eventtap too — hence both --max-time and the cache.\nlocal ollamaProbe = { value = nil, at = 0 }\nlocal OLLAMA_PROBE_TTL = 30  -- seconds\n\nlocal function hasOllama()\n    local now = hs.timer.secondsSinceEpoch()\n    if ollamaProbe.value ~= nil and (now - ollamaProbe.at) \u003c OLLAMA_PROBE_TTL then\n        return ollamaProbe.value\n    end\n    -- Check if Ollama API is reachable. --max-time is mandatory: a wedged Ollama (loading a\n    -- large model, or a stopped process) would otherwise freeze the whole app, killing the\n    -- dictation trigger key until curl gave up on its own.\n    local ok = os.execute(\"curl -s --max-time 1 -o /dev/null -w '' http://localhost:11434/api/tags 2\u003e/dev/null\")\n    if not ok then\n        -- Fallback: check if binary exists\n        ok = os.execute(\"command -v ollama \u003e/dev/null 2\u003e\u00261\")\n    end\n    ollamaProbe.value = ok and true or false\n    ollamaProbe.at = now\n    return ollamaProbe.value\nend",
+    "oldString": "local function hasOllama()\n    -- Check if Ollama API is reachable\n    local ok = os.execute(\"curl -s -o /dev/null -w '' http://localhost:11434/api/tags 2\u003e/dev/null\")\n    if ok then return true end\n    -- Fallback: check if binary exists\n    return os.execute(\"command -v ollama \u003e/dev/null 2\u003e\u00261\")\nend",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          "     return REFINE_DEFAULT_PROMPT",
+          " end",
+          " ",
+          "+-- Cached so the menu bar doesn't reprobe on every open. Hammerspoon is single-threaded,",
+          "+-- so a synchronous curl here blocks the eventtap too — hence both --max-time and the cache.",
+          "+local ollamaProbe = { value = nil, at = 0 }",
+          "+local OLLAMA_PROBE_TTL = 30  -- seconds",
+          "+",
+          " local function hasOllama()",
+          "-    -- Check if Ollama API is reachable",
+          "-    local ok = os.execute(\"curl -s -o /dev/null -w '' http://localhost:11434/api/tags 2\u003e/dev/null\")",
+          "-    if ok then return true end",
+          "-    -- Fallback: check if binary exists",
+          "-    return os.execute(\"command -v ollama \u003e/dev/null 2\u003e\u00261\")",
+          "+    local now = hs.timer.secondsSinceEpoch()",
+          "+    if ollamaProbe.value ~= nil and (now - ollamaProbe.at) \u003c OLLAMA_PROBE_TTL then",
+          "+        return ollamaProbe.value",
+          "+    end",
+          "+    -- Check if Ollama API is reachable. --max-time is mandatory: a wedged Ollama (loading a",
+          "+    -- large model, or a stopped process) would otherwise freeze the whole app, killing the",
+          "+    -- dictation trigger key until curl gave up on its own.",
+          "+    local ok = os.execute(\"curl -s --max-time 1 -o /dev/null -w '' http://localhost:11434/api/tags 2\u003e/dev/null\")",
+          "+    if not ok then",
+          "+        -- Fallback: check if binary exists",
+          "+        ok = os.execute(\"command -v ollama \u003e/dev/null 2\u003e\u00261\")",
+          "+    end",
+          "+    ollamaProbe.value = ok and true or false",
+          "+    ollamaProbe.at = now",
+          "+    return ollamaProbe.value",
+          " end",
+          " ",
+          " local function getRefineMode()"
+        ],
+        "newLines": 27,
+        "newStart": 126,
+        "oldLines": 12,
+        "oldStart": 126
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "89dd9c08-d97e-4e21-aeec-e366dcc80dbf",
+  "version": "2.1.233"
+}

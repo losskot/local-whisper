@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "468:local function transcribeViaAPI(wavPath, lang, timeoutSecs, callback)\n1244:            transcribeViaAPI(batchWav, lang, 10, onPartialText)\n1496:                transcribeViaAPI(segWav, effectiveLang, 60, function(text, detected, errMsg)\n1912:local function runAudioHelper(...)\n1960:    local out, code = runAudioHelper(\"list\")\n1979:    local prior, code = runAudioHelper(\"default-uid\")\n1995:        runAudioHelper(\"set-default\", fallback)\n2000:    local aggUid, aggCode = runAudioHelper(\"recreate\")\n2007:    local _, setCode = runAudioHelper(\"set-default\", aggUid)\n2022:    local prior = runAudioHelper(\"default-uid\")\n2026:        runAudioHelper(\"set-default\", fallback)\n2036:    local _, code = runAudioHelper(\"set-default\", prior)\n2372:local function stripOverlap(prev, curr)\n2454:    -- done afterwards via transcribeViaAPI (remote OpenAI-compatible endpoint).\n2457:    local function shquote(s) return \"'\" .. s:gsub(\"'\", \"'\\\\''\") .. \"'\" end\n2463:            shquote(FFMPEG), startSec, shquote(meetingPcmPath), endSec - startSec, shquote(windowPath)\n2470:            shquote(FFMPEG), startSec, shquote(meetingPcmPath), endSec - startSec, shquote(windowPath),\n2471:            shquote(WHISPER_BIN), shquote(model), shquote(windowPath), shquote(outPrefix)\n2478:    local function emitText(raw)\n2481:        local emit = stripOverlap(meetingLastEmittedText, text)\n2501:            task = transcribeViaAPI(windowPath, \"auto\", MEETING_WINDOW_TIMEOUT_SECONDS - 2, function(text)\n2521:            emitText(raw)\n2818:            runAudioHelper(\"set-default\", meetingPriorOutputUID)",
+        "is_error": false,
+        "tool_use_id": "toolu_01EWoCyN1ZpvjJiW9bwWD77K",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "1337febb-4b4b-433f-a099-6c7c9532ab10",
+  "promptId": "a651875f-fcbc-4b8f-85e0-3d18600f4667",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "1337febb-4b4b-433f-a099-6c7c9532ab10",
+  "timestamp": "2026-08-16T19:27:19.664Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "468:local function transcribeViaAPI(wavPath, lang, timeoutSecs, callback)\n1244:            transcribeViaAPI(batchWav, lang, 10, onPartialText)\n1496:                transcribeViaAPI(segWav, effectiveLang, 60, function(text, detected, errMsg)\n1912:local function runAudioHelper(...)\n1960:    local out, code = runAudioHelper(\"list\")\n1979:    local prior, code = runAudioHelper(\"default-uid\")\n1995:        runAudioHelper(\"set-default\", fallback)\n2000:    local aggUid, aggCode = runAudioHelper(\"recreate\")\n2007:    local _, setCode = runAudioHelper(\"set-default\", aggUid)\n2022:    local prior = runAudioHelper(\"default-uid\")\n2026:        runAudioHelper(\"set-default\", fallback)\n2036:    local _, code = runAudioHelper(\"set-default\", prior)\n2372:local function stripOverlap(prev, curr)\n2454:    -- done afterwards via transcribeViaAPI (remote OpenAI-compatible endpoint).\n2457:    local function shquote(s) return \"'\" .. s:gsub(\"'\", \"'\\\\''\") .. \"'\" end\n2463:            shquote(FFMPEG), startSec, shquote(meetingPcmPath), endSec - startSec, shquote(windowPath)\n2470:            shquote(FFMPEG), startSec, shquote(meetingPcmPath), endSec - startSec, shquote(windowPath),\n2471:            shquote(WHISPER_BIN), shquote(model), shquote(windowPath), shquote(outPrefix)\n2478:    local function emitText(raw)\n2481:        local emit = stripOverlap(meetingLastEmittedText, text)\n2501:            task = transcribeViaAPI(windowPath, \"auto\", MEETING_WINDOW_TIMEOUT_SECONDS - 2, function(text)\n2521:            emitText(raw)\n2818:            runAudioHelper(\"set-default\", meetingPriorOutputUID)"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "c65ab049-e6f6-49ca-ae3a-9d19feb0a366",
+  "version": "2.1.233"
+}

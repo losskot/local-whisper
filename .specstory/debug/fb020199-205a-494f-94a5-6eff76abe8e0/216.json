@@ -1,0 +1,51 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01NuR2jzP85AhCgtbTSy7kzd",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "289e71b0-a572-4f1d-b177-08de94ed4087",
+  "promptId": "a651875f-fcbc-4b8f-85e0-3d18600f4667",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "289e71b0-a572-4f1d-b177-08de94ed4087",
+  "timestamp": "2026-08-16T19:31:25.755Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+    "newString": "            playSound(\"Basso\")\n            hs.timer.doAfter(2.5, hideOverlay)",
+    "oldString": "            hs.sound.getByFile(\"/System/Library/Sounds/Basso.aiff\"):play()\n            hs.timer.doAfter(2.5, hideOverlay)",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          "             warmupAttempt = 0",
+          "             log(\"warmup: FAILED after \" .. WARMUP_MAX_ATTEMPTS .. \" attempts — audio device unresponsive\")",
+          "             setOverlayText(\"Микрофон недоступен\")",
+          "-            hs.sound.getByFile(\"/System/Library/Sounds/Basso.aiff\"):play()",
+          "+            playSound(\"Basso\")",
+          "             hs.timer.doAfter(2.5, hideOverlay)",
+          "         end",
+          "     end)"
+        ],
+        "newLines": 7,
+        "newStart": 1652,
+        "oldLines": 7,
+        "oldStart": 1652
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "f6f64163-a7dd-4638-a4b0-241994eb3d10",
+  "version": "2.1.233"
+}

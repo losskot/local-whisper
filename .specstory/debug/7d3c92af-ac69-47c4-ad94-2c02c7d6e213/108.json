@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "f934465 tests: cover the X button, re-press recovery, and progress bar",
+        "is_error": false,
+        "tool_use_id": "toolu_01RAVPXJqysbobnjjWwQ2QWU",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "234b376e-a9bb-4a8b-9cef-571626998977",
+  "promptId": "63032b1d-97b3-4f08-ae8f-b358bb0a478a",
+  "sessionId": "7d3c92af-ac69-47c4-ad94-2c02c7d6e213",
+  "sourceToolAssistantUUID": "234b376e-a9bb-4a8b-9cef-571626998977",
+  "timestamp": "2026-08-16T20:29:00.426Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "f934465 tests: cover the X button, re-press recovery, and progress bar"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "89838cbc-9d85-45ee-8ec7-4128e236e1cb",
+  "version": "2.1.233"
+}

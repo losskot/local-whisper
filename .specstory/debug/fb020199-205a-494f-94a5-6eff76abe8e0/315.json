@@ -1,0 +1,27 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "Exit code 7\ntest_refine.sh\n--- ollama:\n000",
+        "is_error": true,
+        "tool_use_id": "toolu_016ZcJUmw5pR9jBFQBFsrUFZ",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "95fe7ba5-e8b6-4e4a-ac62-e358ead45d58",
+  "promptId": "a651875f-fcbc-4b8f-85e0-3d18600f4667",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "95fe7ba5-e8b6-4e4a-ac62-e358ead45d58",
+  "timestamp": "2026-08-16T19:39:58.574Z",
+  "toolUseResult": "Error: Exit code 7\ntest_refine.sh\n--- ollama:\n000",
+  "type": "user",
+  "userType": "external",
+  "uuid": "b70a89f2-9475-4987-b4f6-fbbd31df597f",
+  "version": "2.1.233"
+}

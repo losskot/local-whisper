@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "9:hs.dockicon.hide()\n791:    -- 5: Progress bar background (gray track) — thin strip along the bottom edge\n798:    -- 6: Recording progress (red/orange) — total recorded duration\n805:    -- 7: Transcription progress (blue) — chases the red bar as segments finish\n833:                canvas:hide()\n834:                hs.timer.doAfter(0.01, function()\n837:                        emergencyStop()\n905:-- Progress bar state\n1090:        fn = function() emergencyStop() end,\n1106:-- Recording indicator (pulsing dot + timer + progress bar)\n1109:local function updateProgressBar()\n1124:local function hideProgressBar()\n1131:local function startRecordingIndicator()\n1144:    -- Show progress bar track\n1148:    updateProgressBar()\n1163:    -- Update elapsed time and recording progress every second\n1170:        updateProgressBar()\n1175:    -- Freeze the elapsed duration so the progress bar stops advancing during transcription.\n1190:function emergencyStop()\n1322:        hideProgressBar()\n1363:            hideProgressBar()\n1375:        if overlay then updateProgressBar() end\n1376:        hs.timer.doAfter(0.4, hideProgressBar)\n1414:                if overlay then updateProgressBar() end\n1433:                if overlay then updateProgressBar() end\n1467:                        if overlay then updateProgressBar() end\n1488:                        if overlay then updateProgressBar() end\n1568:    startRecordingIndicator()\n1671:local function startRecording()\n1763:            startRecording()",
+        "is_error": false,
+        "tool_use_id": "toolu_01ThWDw2W98ERfudQJ9ZUsHD",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "ede1689c-601c-440c-9ff2-386b8d68cbb7",
+  "promptId": "63032b1d-97b3-4f08-ae8f-b358bb0a478a",
+  "sessionId": "7d3c92af-ac69-47c4-ad94-2c02c7d6e213",
+  "sourceToolAssistantUUID": "ede1689c-601c-440c-9ff2-386b8d68cbb7",
+  "timestamp": "2026-08-16T20:16:32.551Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "9:hs.dockicon.hide()\n791:    -- 5: Progress bar background (gray track) — thin strip along the bottom edge\n798:    -- 6: Recording progress (red/orange) — total recorded duration\n805:    -- 7: Transcription progress (blue) — chases the red bar as segments finish\n833:                canvas:hide()\n834:                hs.timer.doAfter(0.01, function()\n837:                        emergencyStop()\n905:-- Progress bar state\n1090:        fn = function() emergencyStop() end,\n1106:-- Recording indicator (pulsing dot + timer + progress bar)\n1109:local function updateProgressBar()\n1124:local function hideProgressBar()\n1131:local function startRecordingIndicator()\n1144:    -- Show progress bar track\n1148:    updateProgressBar()\n1163:    -- Update elapsed time and recording progress every second\n1170:        updateProgressBar()\n1175:    -- Freeze the elapsed duration so the progress bar stops advancing during transcription.\n1190:function emergencyStop()\n1322:        hideProgressBar()\n1363:            hideProgressBar()\n1375:        if overlay then updateProgressBar() end\n1376:        hs.timer.doAfter(0.4, hideProgressBar)\n1414:                if overlay then updateProgressBar() end\n1433:                if overlay then updateProgressBar() end\n1467:                        if overlay then updateProgressBar() end\n1488:                        if overlay then updateProgressBar() end\n1568:    startRecordingIndicator()\n1671:local function startRecording()\n1763:            startRecording()"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "cc7d157b-70ea-4625-b758-2d2c4f94e087",
+  "version": "2.1.233"
+}

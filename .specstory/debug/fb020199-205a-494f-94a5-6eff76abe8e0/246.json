@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "--- default output:\n-- Loading extension: audiodevice\nДинамики MacBook Air | uid=BuiltInSpeakerDevice",
+        "is_error": false,
+        "tool_use_id": "toolu_017aWD33FiDQcEq5iGaCSViK",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "50f69776-3343-4310-a68a-865be9037e42",
+  "promptId": "a651875f-fcbc-4b8f-85e0-3d18600f4667",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "50f69776-3343-4310-a68a-865be9037e42",
+  "timestamp": "2026-08-16T19:33:03.307Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "--- default output:\n-- Loading extension: audiodevice\nДинамики MacBook Air | uid=BuiltInSpeakerDevice"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "54c0d877-e2f6-41b5-9e7f-b1ba75baa8db",
+  "version": "2.1.233"
+}

@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "FAIL\tstartRecording: re-press still starts the new recording (keypress not swallowed)\ttryWarmup() called 0 times, isWarmingUp = false\nFAIL\tstartRecording: the new recording shows the overlay\tshowOverlay=0 setOverlayText=0",
+        "is_error": false,
+        "tool_use_id": "toolu_01LyYRrokfGotQsFDxf5FAYr",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "fb842c7e-821f-4259-a808-d4305804fb12",
+  "promptId": "63032b1d-97b3-4f08-ae8f-b358bb0a478a",
+  "sessionId": "7d3c92af-ac69-47c4-ad94-2c02c7d6e213",
+  "sourceToolAssistantUUID": "fb842c7e-821f-4259-a808-d4305804fb12",
+  "timestamp": "2026-08-16T20:23:44.563Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "FAIL\tstartRecording: re-press still starts the new recording (keypress not swallowed)\ttryWarmup() called 0 times, isWarmingUp = false\nFAIL\tstartRecording: the new recording shows the overlay\tshowOverlay=0 setOverlayText=0"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "bf691077-c43c-4643-9fb1-d768bb10f911",
+  "version": "2.1.233"
+}

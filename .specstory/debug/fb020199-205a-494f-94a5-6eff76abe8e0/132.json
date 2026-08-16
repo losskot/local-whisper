@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "805:                        emergencyStop()\n859:local finalizationPending = false  -- true between stopRecording() and doFinalTranscription() actually starting\n1079:        fn = function() emergencyStop() end,\n1173:function emergencyStop()\n1362:local function doFinalTranscription()\n1735:        doFinalTranscription()\n1786:        doFinalTranscription()\n1794:        doFinalTranscription()\n1865:        doFinalTranscription()",
+        "is_error": false,
+        "tool_use_id": "toolu_01TosYFbJQzwkDt8o6Kj7yoW",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "161333b3-6e66-4f98-8c55-3ccb38c0160e",
+  "promptId": "a651875f-fcbc-4b8f-85e0-3d18600f4667",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "161333b3-6e66-4f98-8c55-3ccb38c0160e",
+  "timestamp": "2026-08-16T19:28:05.666Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "805:                        emergencyStop()\n859:local finalizationPending = false  -- true between stopRecording() and doFinalTranscription() actually starting\n1079:        fn = function() emergencyStop() end,\n1173:function emergencyStop()\n1362:local function doFinalTranscription()\n1735:        doFinalTranscription()\n1786:        doFinalTranscription()\n1794:        doFinalTranscription()\n1865:        doFinalTranscription()"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "e1b7b56c-eecd-4d32-943c-d78a94f68652",
+  "version": "2.1.233"
+}

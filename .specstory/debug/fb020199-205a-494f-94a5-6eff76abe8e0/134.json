@@ -1,0 +1,35 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "874\tlocal barMaxSecs = 180       -- current max duration displayed (expands at 90%)\n875\t\n876\t-- Undo state\n877\tlocal lastInsertedText = nil\n878\t\n879\t-- Recent dictations (newest first, max 10)\n880\tlocal MAX_RECENT = 10\n881\t\n882\tlocal recentDictations = {}\n883\t\n884\tlocal function loadRecentDictations()\n885\t    local f = io.open(RECENT_FILE, \"r\")\n886\t    if not f then return end\n887\t    local data = f:read(\"*a\"); f:close()\n888\t    local ok, result = pcall(hs.json.decode, data)\n889\t    if ok and type(result) == \"table\" then\n890\t        -- Clear and populate in-place (preserve table reference)\n891\t        for i = #recentDictations, 1, -1 do recentDictations[i] = nil end\n892\t        for i, entry in ipairs(result) do recentDictations[i] = entry end\n893\t    end\n894\tend\n895\t\n896\tlocal function saveRecentDictations()\n897\t    local ok, json = pcall(hs.json.encode, recentDictations)\n898\t    if not ok then return end\n899\t    local f = io.open(RECENT_FILE, \"w\")\n900\t    if f then f:write(json); f:close() end\n901\tend\n902\t\n903\tloadRecentDictations()\n904\t\n905\t-- Auto-stop state\n906\tlocal silentChunkCount = 0\n907\tlocal silenceTimer = nil\n908\tlocal lastCheckedChunk = 0\n909\t\n910\t--------------------------------------------------------------------------------\n911\t-- Menu bar status icon\n912\t--------------------------------------------------------------------------------\n913\t\n914\tlocal function makeWaveformIcon(color, asTemplate)\n915\t    local w, h = 18, 18\n916\t    local c = hs.canvas.new({ x = 0, y = 0, w = w, h = h })\n917\t    -- Bar heights (symmetric waveform: short-medium-tall-medium-short)\n918\t    local bars = { 0.3, 0.55, 1.0, 0.55, 0.3 }\n919\t    local barW = 2\n920\t    local gap = 1.5\n921\t    local totalW = #bars * barW + (#bars - 1) * gap\n922\t    local startX = (w - totalW) / 2\n923\t    for i, scale in ipairs(bars) do\n924\t        local barH = math.floor(h * 0.75 * scale)\n925\t        local x = startX + (i - 1) * (barW + gap)\n926\t        local y = (h - barH) / 2\n927\t        c:appendElements({\n928\t            type = \"rectangle\",\n929\t            frame = { x = x, y = y, w = barW, h = barH },\n930\t            fillColor = color,\n931\t            roundedRectRadii = { xRadius = 1, yRadius = 1 },\n932\t            action = \"fill\",\n933\t        })\n934\t    end\n935\t    local img = c:imageFromCanvas()\n936\t    c:delete()\n937\t    img:template(asTemplate)\n938\t    return img\n939\tend\n940\t\n941\tfunction updateMenuBar()\n942\t    if not menuBar then return end\n943\t    if isRecording then",
+        "tool_use_id": "toolu_01Ahdiw6wxTK2CFUzBvQQFEB",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "57e9edd3-9e18-46c7-8987-a1a8b002550c",
+  "promptId": "a651875f-fcbc-4b8f-85e0-3d18600f4667",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "57e9edd3-9e18-46c7-8987-a1a8b002550c",
+  "timestamp": "2026-08-16T19:28:06.924Z",
+  "toolUseResult": {
+    "file": {
+      "content": "local barMaxSecs = 180       -- current max duration displayed (expands at 90%)\n\n-- Undo state\nlocal lastInsertedText = nil\n\n-- Recent dictations (newest first, max 10)\nlocal MAX_RECENT = 10\n\nlocal recentDictations = {}\n\nlocal function loadRecentDictations()\n    local f = io.open(RECENT_FILE, \"r\")\n    if not f then return end\n    local data = f:read(\"*a\"); f:close()\n    local ok, result = pcall(hs.json.decode, data)\n    if ok and type(result) == \"table\" then\n        -- Clear and populate in-place (preserve table reference)\n        for i = #recentDictations, 1, -1 do recentDictations[i] = nil end\n        for i, entry in ipairs(result) do recentDictations[i] = entry end\n    end\nend\n\nlocal function saveRecentDictations()\n    local ok, json = pcall(hs.json.encode, recentDictations)\n    if not ok then return end\n    local f = io.open(RECENT_FILE, \"w\")\n    if f then f:write(json); f:close() end\nend\n\nloadRecentDictations()\n\n-- Auto-stop state\nlocal silentChunkCount = 0\nlocal silenceTimer = nil\nlocal lastCheckedChunk = 0\n\n--------------------------------------------------------------------------------\n-- Menu bar status icon\n--------------------------------------------------------------------------------\n\nlocal function makeWaveformIcon(color, asTemplate)\n    local w, h = 18, 18\n    local c = hs.canvas.new({ x = 0, y = 0, w = w, h = h })\n    -- Bar heights (symmetric waveform: short-medium-tall-medium-short)\n    local bars = { 0.3, 0.55, 1.0, 0.55, 0.3 }\n    local barW = 2\n    local gap = 1.5\n    local totalW = #bars * barW + (#bars - 1) * gap\n    local startX = (w - totalW) / 2\n    for i, scale in ipairs(bars) do\n        local barH = math.floor(h * 0.75 * scale)\n        local x = startX + (i - 1) * (barW + gap)\n        local y = (h - barH) / 2\n        c:appendElements({\n            type = \"rectangle\",\n            frame = { x = x, y = y, w = barW, h = barH },\n            fillColor = color,\n            roundedRectRadii = { xRadius = 1, yRadius = 1 },\n            action = \"fill\",\n        })\n    end\n    local img = c:imageFromCanvas()\n    c:delete()\n    img:template(asTemplate)\n    return img\nend\n\nfunction updateMenuBar()\n    if not menuBar then return end\n    if isRecording then",
+      "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+      "numLines": 70,
+      "startLine": 874,
+      "totalLines": 2842
+    },
+    "type": "text"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "a57c38c5-7121-4a63-a994-dd72da40adb2",
+  "version": "2.1.233"
+}

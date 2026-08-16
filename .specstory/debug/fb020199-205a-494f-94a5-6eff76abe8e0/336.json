@@ -1,0 +1,64 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "text": "No standalone Lua, so I'll run the suite through the `hs` CLI (same bridge AGENTS.md already uses for syntax checks). Writing the suite now:",
+        "type": "text"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce72bXQanqSNZruNy61di",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 1638,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 1638,
+      "cache_read_input_tokens": 137568,
+      "inference_geo": "not_available",
+      "input_tokens": 861,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1638,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 1638,
+          "cache_read_input_tokens": 137568,
+          "input_tokens": 861,
+          "output_tokens": 9146,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 9146,
+      "output_tokens_details": {
+        "thinking_tokens": 4119
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "963ffabf-38b5-48c5-b756-b0bbe049c474",
+  "requestId": "req_011Ce72bWFtDFUJxuJdbWJ5y",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "timestamp": "2026-08-16T20:06:24.259Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "3171ea79-8af4-4d8c-aee0-b34893c6076c",
+  "version": "2.1.233"
+}

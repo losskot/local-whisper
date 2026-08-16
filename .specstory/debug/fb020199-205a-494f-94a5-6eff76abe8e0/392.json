@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "fix/remove-meeting-mode-and-review-findings",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "fix/remove-meeting-mode-and-review-findings\nM  AGENTS.md\nM  hammerspoon/init.lua\nM  install.sh\nA  tests/test_init.lua\nA  tests/test_init.sh\nD  tools/aggregate-audio.swift\nD  tools/meeting-doctor.sh\nM  uninstall.sh",
+        "is_error": false,
+        "tool_use_id": "toolu_01EQBRb8uohZQ1ntmL6Pwn98",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "d25d3999-66b8-4d4a-9910-13def91c6de7",
+  "promptId": "bf6b9be6-e6cf-4e39-8634-328ab8e3b411",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "d25d3999-66b8-4d4a-9910-13def91c6de7",
+  "timestamp": "2026-08-16T20:11:11.111Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "fix/remove-meeting-mode-and-review-findings\nM  AGENTS.md\nM  hammerspoon/init.lua\nM  install.sh\nA  tests/test_init.lua\nA  tests/test_init.sh\nD  tools/aggregate-audio.swift\nD  tools/meeting-doctor.sh\nM  uninstall.sh"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "3d5910ad-08fe-488b-b3d2-b5b1e266b886",
+  "version": "2.1.233"
+}

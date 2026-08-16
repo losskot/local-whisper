@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "function updateMenuBar()\n    if not menuBar then return end\n    if isRecording then\n        local icon = makeWaveformIcon({ red = 1, green = 0.15, blue = 0.15, alpha = 1 }, false)\n        menuBar:setIcon(icon, false)\n    else\n        local icon = makeWaveformIcon({ red = 0, green = 0, blue = 0, alpha = 1 }, true)\n        menuBar:setIcon(icon, true)\n    end\nend\n\n-- Forward-declare meeting state and functions (defined in Meeting mode section below)\nlocal meetingRecording = false\nlocal meetingStartTime = nil\nlocal startMeeting, stopMeeting\n\nlocal function buildMenuBarMenu()\n    local items = {}\n\n    -- Current status\n            disabled = true,\n        })\n    end\n\n    -- Preferred langs\n    local preferred = table.concat(getPreferredLangs(), \", \")\n    table.insert(items, { title = \"Preferred: \" .. preferred, disabled = true })\n\n    table.insert(items, { title = \"-\" })\n\n    -- Meeting mode\n    if meetingRecording then\n        local elapsed = hs.timer.secondsSinceEpoch() - (meetingStartTime or 0)\n        local mins = math.floor(elapsed / 60)\n        table.insert(items, {\n            title = \"⏹ Stop Meeting Notes (\" .. mins .. \"m)\",\n            fn = function() stopMeeting() end,\n        })\n    else\n        table.insert(items, {\n            title = \"🎙 Start Meeting Notes\",\n            fn = function() startMeeting() end,\n        })\n    end\n\n    table.insert(items, { title = \"-\" })\n\n    -- Settings overlay\n    table.insert(items, {\n        title = \"Settings...\",\n        fn = function()",
+        "is_error": false,
+        "tool_use_id": "toolu_01QgPtiDpAsMCm9dAmQ9Bncv",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "6f793d8d-384a-445c-82b5-4b746e149af0",
+  "promptId": "a651875f-fcbc-4b8f-85e0-3d18600f4667",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "6f793d8d-384a-445c-82b5-4b746e149af0",
+  "timestamp": "2026-08-16T19:27:11.373Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "function updateMenuBar()\n    if not menuBar then return end\n    if isRecording then\n        local icon = makeWaveformIcon({ red = 1, green = 0.15, blue = 0.15, alpha = 1 }, false)\n        menuBar:setIcon(icon, false)\n    else\n        local icon = makeWaveformIcon({ red = 0, green = 0, blue = 0, alpha = 1 }, true)\n        menuBar:setIcon(icon, true)\n    end\nend\n\n-- Forward-declare meeting state and functions (defined in Meeting mode section below)\nlocal meetingRecording = false\nlocal meetingStartTime = nil\nlocal startMeeting, stopMeeting\n\nlocal function buildMenuBarMenu()\n    local items = {}\n\n    -- Current status\n            disabled = true,\n        })\n    end\n\n    -- Preferred langs\n    local preferred = table.concat(getPreferredLangs(), \", \")\n    table.insert(items, { title = \"Preferred: \" .. preferred, disabled = true })\n\n    table.insert(items, { title = \"-\" })\n\n    -- Meeting mode\n    if meetingRecording then\n        local elapsed = hs.timer.secondsSinceEpoch() - (meetingStartTime or 0)\n        local mins = math.floor(elapsed / 60)\n        table.insert(items, {\n            title = \"⏹ Stop Meeting Notes (\" .. mins .. \"m)\",\n            fn = function() stopMeeting() end,\n        })\n    else\n        table.insert(items, {\n            title = \"🎙 Start Meeting Notes\",\n            fn = function() startMeeting() end,\n        })\n    end\n\n    table.insert(items, { title = \"-\" })\n\n    -- Settings overlay\n    table.insert(items, {\n        title = \"Settings...\",\n        fn = function()"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "680d881f-52f8-4267-9298-533f6ead1586",
+  "version": "2.1.233"
+}

@@ -1,0 +1,50 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01PNQ3MbTcYfyhDZp2dXqWhn",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "99df8ce8-3a07-4f2d-9f7e-39aa33eea4b2",
+  "promptId": "a651875f-fcbc-4b8f-85e0-3d18600f4667",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "99df8ce8-3a07-4f2d-9f7e-39aa33eea4b2",
+  "timestamp": "2026-08-16T19:32:37.449Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+    "newString": "    recordingStartTime = hs.timer.secondsSinceEpoch()\n    recordedSecs = nil\n    transcribedSecs = 0\n    barMaxSecs = 180",
+    "oldString": "    recordingStartTime = hs.timer.secondsSinceEpoch()\n    transcribedSecs = 0\n    barMaxSecs = 180",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          " local function startRecordingIndicator()",
+          "     if not overlay then return end",
+          "     recordingStartTime = hs.timer.secondsSinceEpoch()",
+          "+    recordedSecs = nil",
+          "     transcribedSecs = 0",
+          "     barMaxSecs = 180",
+          "     pulseAlpha = 1.0"
+        ],
+        "newLines": 7,
+        "newStart": 1131,
+        "oldLines": 6,
+        "oldStart": 1131
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "de0ccde6-b58b-45a0-82dc-62a2dc833a56",
+  "version": "2.1.233"
+}

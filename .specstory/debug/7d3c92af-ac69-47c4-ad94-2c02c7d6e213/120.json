@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "* main                f934465 [origin/main] tests: cover the X button, re-press recovery, and progress bar\n  remotes/origin/HEAD -\u003e origin/main\n  remotes/origin/main f934465 tests: cover the X button, re-press recovery, and progress bar\n--- status ---\n## main...origin/main\n M .specstory/debug/fb020199-205a-494f-94a5-6eff76abe8e0/session-data.json\n M .specstory/history/2026-08-16_18-24-33Z-which-command-reviews-all.md\n--- unmerged? ---",
+        "is_error": false,
+        "tool_use_id": "toolu_012hYZiWErgeqKqMoboSZN76",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "8928497b-84ec-47a9-ac22-32e04606d7b5",
+  "promptId": "d1eb4684-ea53-46c0-81d7-d8a877df031a",
+  "sessionId": "7d3c92af-ac69-47c4-ad94-2c02c7d6e213",
+  "sourceToolAssistantUUID": "8928497b-84ec-47a9-ac22-32e04606d7b5",
+  "timestamp": "2026-08-16T20:31:35.937Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "* main                f934465 [origin/main] tests: cover the X button, re-press recovery, and progress bar\n  remotes/origin/HEAD -\u003e origin/main\n  remotes/origin/main f934465 tests: cover the X button, re-press recovery, and progress bar\n--- status ---\n## main...origin/main\n M .specstory/debug/fb020199-205a-494f-94a5-6eff76abe8e0/session-data.json\n M .specstory/history/2026-08-16_18-24-33Z-which-command-reviews-all.md\n--- unmerged? ---"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "a4697a52-9fac-4a23-8162-b5efcda7c701",
+  "version": "2.1.233"
+}

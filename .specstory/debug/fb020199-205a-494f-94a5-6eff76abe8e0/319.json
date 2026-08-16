@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "(eval):1: command not found: timeout\n=== exit: 0",
+        "is_error": false,
+        "tool_use_id": "toolu_019S2zTehysBjyVtQ8soBWY8",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "68f0a111-1323-476a-8f36-4abc76281198",
+  "promptId": "a651875f-fcbc-4b8f-85e0-3d18600f4667",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "68f0a111-1323-476a-8f36-4abc76281198",
+  "timestamp": "2026-08-16T19:40:12.017Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "(eval):1: command not found: timeout\n=== exit: 0"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "b9eafdc3-f80c-49b8-b02b-ce6cdd232813",
+  "version": "2.1.233"
+}

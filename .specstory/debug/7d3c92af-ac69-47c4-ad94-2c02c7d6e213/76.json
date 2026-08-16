@@ -1,0 +1,64 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "text": "Mutant 1 caught precisely. Now the remaining mutants:",
+        "type": "text"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce73zWpsHtkntgEibhed3",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 636,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 636,
+      "cache_read_input_tokens": 82256,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 636,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 636,
+          "cache_read_input_tokens": 82256,
+          "input_tokens": 2,
+          "output_tokens": 1070,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 1070,
+      "output_tokens_details": {
+        "thinking_tokens": 68
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "6b7f1b46-eb0d-4e79-a753-6053f2881416",
+  "requestId": "req_011Ce73zVuoTez5iPkoksm2i",
+  "sessionId": "7d3c92af-ac69-47c4-ad94-2c02c7d6e213",
+  "timestamp": "2026-08-16T20:23:48.224Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "f052e8b4-84d3-43c1-9260-2ec9101c11e6",
+  "version": "2.1.233"
+}

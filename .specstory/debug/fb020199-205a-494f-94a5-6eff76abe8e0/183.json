@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "=== 153-157\n  153|\n  154|-- Timing\n  155|local PARTIAL_INTERVAL = 2.0   -- seconds between partial transcriptions\n  156|local OVERLAY_LINGER = 0.5     -- seconds to show final text before closing\n  157|\n=== 408-418\n  408|\n  409|-- Pick fastest available model for live partial transcription\n  410|local function getPartialModelPath()\n  411|    local preferred = { \"tiny\", \"tiny.en\", \"base\", \"base.en\", \"small\", \"small.en\" }\n  412|    for _, name in ipairs(preferred) do\n  413|        local path = MODELS_DIR .. \"/ggml-\" .. name .. \".bin\"\n  414|        if hs.fs.attributes(path) then return path end\n  415|    end\n  416|    return getModelPath()  -- fall back to main model\n  417|end\n  418|\n=== 1155-1166\n 1155|function emergencyStop()\n 1156|    log(\"emergency stop\")\n 1157|    isRecording = false\n 1158|    if partialTimer then partialTimer:stop(); partialTimer = nil end\n 1159|    if silenceTimer then silenceTimer:stop(); silenceTimer = nil end\n 1160|    stopRecordingIndicator()\n 1161|    if ffmpegTask and ffmpegTask:isRunning() then ffmpegTask:interrupt() end\n 1162|    ffmpegTask = nil\n 1163|    partialBusy = false\n 1164|    silentChunkCount = 0\n 1165|    lastCheckedChunk = 0\n 1166|    forceHideOverlay()\n=== 1273-1277\n 1273|\n 1274|    -- ДИАГНОСТИКА: логируем все чанки и состояние\n 1275|    log(\"final: START — total chunks=\" .. #chunks .. \", partialBusy=\" .. tostring(part\n 1276|    if #chunks \u003e 0 then\n 1277|        local first = chunks[1]:match(\"([^/]+)$\") or chunks[1]\n=== 1544-1554\n 1544|    })\n 1545|    ffmpegTask:start()\n 1546|\n 1547|    lastChunkCount = 0\n 1548|    partialBusy = false\n 1549|    silentChunkCount = 0\n 1550|    lastCheckedChunk = 0\n 1551|    -- Partial transcription disabled: low quality, not useful\n 1552|    -- partialTimer = hs.timer.doEvery(PARTIAL_INTERVAL, doPartialTranscribe)\n 1553|\n 1554|    -- Poll until first chunk exists on disk → audio is truly flowing → play Pop\n=== 1668-1678\n 1668|    if not isRecording then return end\n 1669|    isRecording = false\n 1670|    log(\"recording: stop\")\n 1671|\n 1672|    if partialTimer then partialTimer:stop(); partialTimer = nil end\n 1673|    if silenceTimer then silenceTimer:stop(); silenceTimer = nil end\n 1674|    partialBusy = false\n 1675|    silentChunkCount = 0\n 1676|    lastCheckedChunk = 0\n 1677|\n 1678|    stopRecordingIndicator()",
+        "is_error": false,
+        "tool_use_id": "toolu_01J6RPwFXKre8aM1TwY6vLm7",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "069489fe-e0de-4e82-9761-6b43ed096cee",
+  "promptId": "a651875f-fcbc-4b8f-85e0-3d18600f4667",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "069489fe-e0de-4e82-9761-6b43ed096cee",
+  "timestamp": "2026-08-16T19:30:20.823Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "=== 153-157\n  153|\n  154|-- Timing\n  155|local PARTIAL_INTERVAL = 2.0   -- seconds between partial transcriptions\n  156|local OVERLAY_LINGER = 0.5     -- seconds to show final text before closing\n  157|\n=== 408-418\n  408|\n  409|-- Pick fastest available model for live partial transcription\n  410|local function getPartialModelPath()\n  411|    local preferred = { \"tiny\", \"tiny.en\", \"base\", \"base.en\", \"small\", \"small.en\" }\n  412|    for _, name in ipairs(preferred) do\n  413|        local path = MODELS_DIR .. \"/ggml-\" .. name .. \".bin\"\n  414|        if hs.fs.attributes(path) then return path end\n  415|    end\n  416|    return getModelPath()  -- fall back to main model\n  417|end\n  418|\n=== 1155-1166\n 1155|function emergencyStop()\n 1156|    log(\"emergency stop\")\n 1157|    isRecording = false\n 1158|    if partialTimer then partialTimer:stop(); partialTimer = nil end\n 1159|    if silenceTimer then silenceTimer:stop(); silenceTimer = nil end\n 1160|    stopRecordingIndicator()\n 1161|    if ffmpegTask and ffmpegTask:isRunning() then ffmpegTask:interrupt() end\n 1162|    ffmpegTask = nil\n 1163|    partialBusy = false\n 1164|    silentChunkCount = 0\n 1165|    lastCheckedChunk = 0\n 1166|    forceHideOverlay()\n=== 1273-1277\n 1273|\n 1274|    -- ДИАГНОСТИКА: логируем все чанки и состояние\n 1275|    log(\"final: START — total chunks=\" .. #chunks .. \", partialBusy=\" .. tostring(part\n 1276|    if #chunks \u003e 0 then\n 1277|        local first = chunks[1]:match(\"([^/]+)$\") or chunks[1]\n=== 1544-1554\n 1544|    })\n 1545|    ffmpegTask:start()\n 1546|\n 1547|    lastChunkCount = 0\n 1548|    partialBusy = false\n 1549|    silentChunkCount = 0\n 1550|    lastCheckedChunk = 0\n 1551|    -- Partial transcription disabled: low quality, not useful\n 1552|    -- partialTimer = hs.timer.doEvery(PARTIAL_INTERVAL, doPartialTranscribe)\n 1553|\n 1554|    -- Poll until first chunk exists on disk → audio is truly flowing → play Pop\n=== 1668-1678\n 1668|    if not isRecording then return end\n 1669|    isRecording = false\n 1670|    log(\"recording: stop\")\n 1671|\n 1672|    if partialTimer then partialTimer:stop(); partialTimer = nil end\n 1673|    if silenceTimer then silenceTimer:stop(); silenceTimer = nil end\n 1674|    partialBusy = false\n 1675|    silentChunkCount = 0\n 1676|    lastCheckedChunk = 0\n 1677|\n 1678|    stopRecordingIndicator()"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "dac0fe35-b83d-4708-9203-f3990bf96b2f",
+  "version": "2.1.233"
+}

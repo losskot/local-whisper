@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "\u001b[1mlocal-whisper init.lua test suite\u001b[0m\nTarget: \u001b[1mhammerspoon/init.lua\u001b[0m\n\n  \u001b[0;32mPASS\u001b[0m  syntax: file compiles\n  \u001b[0;32mPASS\u001b[0m  locals: top-level count within Lua's 200 ceiling\n  \u001b[0;32mPASS\u001b[0m  scope: no top-level local used before its declaration\n  \u001b[0;32mPASS\u001b[0m  sound: no unguarded getByFile():play()\n  \u001b[0;32mPASS\u001b[0m  meeting: no meeting-mode code remains\n  \u001b[0;32mPASS\u001b[0m  globals: no unintended top-level globals\n  \u001b[0;32mPASS\u001b[0m  sort: comparator is extractable from source\n  \u001b[0;32mPASS\u001b[0m  sort: comparator compiles\n  \u001b[0;32mPASS\u001b[0m  sort: chunks order numerically across the 999 boundary\n  \u001b[0;32mPASS\u001b[0m  sort: chunk 999 precedes chunk 1000 (lexicographic would not)\n  \u001b[0;32mPASS\u001b[0m  sort: ffmpeg output template and comparator pattern agree\n  \u001b[0;32mPASS\u001b[0m  emergencyStop: function body is locatable\n  \u001b[0;32mPASS\u001b[0m  emergencyStop: clears finalizationPending\n  \u001b[0;32mPASS\u001b[0m  emergencyStop: stops the finalization timers\n\n\u001b[0;32m\u001b[1mAll 14 checks passed.\u001b[0m",
+        "is_error": false,
+        "tool_use_id": "toolu_01VggCa9ygmVdCTrQCXn7MmZ",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "31104193-ad3f-4be7-9e79-90b0a9cd35dd",
+  "promptId": "eaaa32ad-5904-4856-b68d-d7aea6bbb94c",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "31104193-ad3f-4be7-9e79-90b0a9cd35dd",
+  "timestamp": "2026-08-16T20:08:52.112Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "\u001b[1mlocal-whisper init.lua test suite\u001b[0m\nTarget: \u001b[1mhammerspoon/init.lua\u001b[0m\n\n  \u001b[0;32mPASS\u001b[0m  syntax: file compiles\n  \u001b[0;32mPASS\u001b[0m  locals: top-level count within Lua's 200 ceiling\n  \u001b[0;32mPASS\u001b[0m  scope: no top-level local used before its declaration\n  \u001b[0;32mPASS\u001b[0m  sound: no unguarded getByFile():play()\n  \u001b[0;32mPASS\u001b[0m  meeting: no meeting-mode code remains\n  \u001b[0;32mPASS\u001b[0m  globals: no unintended top-level globals\n  \u001b[0;32mPASS\u001b[0m  sort: comparator is extractable from source\n  \u001b[0;32mPASS\u001b[0m  sort: comparator compiles\n  \u001b[0;32mPASS\u001b[0m  sort: chunks order numerically across the 999 boundary\n  \u001b[0;32mPASS\u001b[0m  sort: chunk 999 precedes chunk 1000 (lexicographic would not)\n  \u001b[0;32mPASS\u001b[0m  sort: ffmpeg output template and comparator pattern agree\n  \u001b[0;32mPASS\u001b[0m  emergencyStop: function body is locatable\n  \u001b[0;32mPASS\u001b[0m  emergencyStop: clears finalizationPending\n  \u001b[0;32mPASS\u001b[0m  emergencyStop: stops the finalization timers\n\n\u001b[0;32m\u001b[1mAll 14 checks passed.\u001b[0m"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "2eaf9831-685f-4841-93c4-2f17eeab9271",
+  "version": "2.1.233"
+}

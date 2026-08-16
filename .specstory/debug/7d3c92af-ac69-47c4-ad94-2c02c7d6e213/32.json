@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "--- X button (old) ---\n798:        if id == \"close\" then\n799-            if event == \"mouseDown\" then\n800-                log(\"overlay: X close\")\n801-                canvas:hide()\n802-                hs.timer.doAfter(0.01, function()\n803-                    overlayPinned = false\n804-                    if isRecording then\n805-                        emergencyStop()\n806-                    else\n807-                        if overlay then overlay:delete(); overlay = nil end\n808-                    end\n809-                end)\n810-            end\n--- startRecording (old) ---\n1117:local function startRecordingIndicator()\n1118-    if not overlay then return end\n1119-    recordingStartTime = hs.timer.secondsSinceEpoch()\n1120-    transcribedSecs = 0\n1121-    barMaxSecs = 180\n1122-    pulseAlpha = 1.0\n1123-    pulseFading = true\n1124-\n1125-    -- Show dot and timer\n1126-    overlay[EL.dot].fillColor = { red = 0.85, green = 0.1, blue = 0.1, alpha = 1.0 }\n1127-    overlay[EL.timer].textColor = { red = 0.75, green = 0.15, blue = 0.15, alpha = 1.0 }\n1128-\n1129-    -- Show progress bar track\n--\n1728:local function startRecording()\n1729-    if isRecording or isWarmingUp then return end\n1730-    if finalizationPending then\n1731-        finalizationPending = false\n1732-        if _whisperFinalize.timer then _whisperFinalize.timer:stop(); _whisperFinalize.timer = nil end\n1733-        if _whisperFinalize.watchdog then _whisperFinalize.watchdog:stop(); _whisperFinalize.watchdog = nil end\n1734-        log(\"recovery: resuming finalization before starting a new recording\")\n1735-        doFinalTranscription()\n1736-        return\n1737-    end\n1738-    isWarmingUp = true\n1739-    warmupAttempt = 0\n1740-    log(\"warmup: probing audio device...\")",
+        "is_error": false,
+        "tool_use_id": "toolu_014XGR6Q7ybp3NvDzY1soeEp",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "da596470-aaf2-4c0e-a747-dc1d63874a62",
+  "promptId": "63032b1d-97b3-4f08-ae8f-b358bb0a478a",
+  "sessionId": "7d3c92af-ac69-47c4-ad94-2c02c7d6e213",
+  "sourceToolAssistantUUID": "da596470-aaf2-4c0e-a747-dc1d63874a62",
+  "timestamp": "2026-08-16T20:17:25.202Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "--- X button (old) ---\n798:        if id == \"close\" then\n799-            if event == \"mouseDown\" then\n800-                log(\"overlay: X close\")\n801-                canvas:hide()\n802-                hs.timer.doAfter(0.01, function()\n803-                    overlayPinned = false\n804-                    if isRecording then\n805-                        emergencyStop()\n806-                    else\n807-                        if overlay then overlay:delete(); overlay = nil end\n808-                    end\n809-                end)\n810-            end\n--- startRecording (old) ---\n1117:local function startRecordingIndicator()\n1118-    if not overlay then return end\n1119-    recordingStartTime = hs.timer.secondsSinceEpoch()\n1120-    transcribedSecs = 0\n1121-    barMaxSecs = 180\n1122-    pulseAlpha = 1.0\n1123-    pulseFading = true\n1124-\n1125-    -- Show dot and timer\n1126-    overlay[EL.dot].fillColor = { red = 0.85, green = 0.1, blue = 0.1, alpha = 1.0 }\n1127-    overlay[EL.timer].textColor = { red = 0.75, green = 0.15, blue = 0.15, alpha = 1.0 }\n1128-\n1129-    -- Show progress bar track\n--\n1728:local function startRecording()\n1729-    if isRecording or isWarmingUp then return end\n1730-    if finalizationPending then\n1731-        finalizationPending = false\n1732-        if _whisperFinalize.timer then _whisperFinalize.timer:stop(); _whisperFinalize.timer = nil end\n1733-        if _whisperFinalize.watchdog then _whisperFinalize.watchdog:stop(); _whisperFinalize.watchdog = nil end\n1734-        log(\"recovery: resuming finalization before starting a new recording\")\n1735-        doFinalTranscription()\n1736-        return\n1737-    end\n1738-    isWarmingUp = true\n1739-    warmupAttempt = 0\n1740-    log(\"warmup: probing audio device...\")"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "176e6bef-5177-46f5-8959-945a79d9aa06",
+  "version": "2.1.233"
+}

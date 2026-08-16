@@ -1,0 +1,27 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "Exit code 128\nfatal: pathspec 'tools/aggregate-audio.swift' did not match any files",
+        "is_error": true,
+        "tool_use_id": "toolu_01JGrJqXwwLatA2u3M1XjM66",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "4c3fc441-7293-47fc-8e4c-fc92ed4affc8",
+  "promptId": "bf6b9be6-e6cf-4e39-8634-328ab8e3b411",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "4c3fc441-7293-47fc-8e4c-fc92ed4affc8",
+  "timestamp": "2026-08-16T20:11:05.843Z",
+  "toolUseResult": "Error: Exit code 128\nfatal: pathspec 'tools/aggregate-audio.swift' did not match any files",
+  "type": "user",
+  "userType": "external",
+  "uuid": "9a882ed8-f413-4463-b80e-8feda678f0ee",
+  "version": "2.1.233"
+}

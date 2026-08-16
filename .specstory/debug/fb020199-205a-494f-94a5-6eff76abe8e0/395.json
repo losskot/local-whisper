@@ -1,0 +1,72 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "fix/remove-meeting-mode-and-review-findings",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01JV6GgC9TBkrCwgG78v4vTt",
+        "input": {
+          "command": "git commit -q -F - \u003c\u003c'MSG'\nRemove meeting mode; fix code review findings; add init.lua test suite\n\nMeeting mode is removed entirely — the ~890-line section plus every hook\n(menu bar entries, forward declarations, meetingDoctor(), the startup\naggregate-recovery call, hs.shutdownCallback), the Swift aggregate-audio\nhelper, meeting-doctor.sh, and installer step 6. init.lua: 2841 -\u003e 1682\nlines. uninstall.sh keeps the aggregate-device cleanup, relabeled as\nlegacy, so installs predating this change aren't stranded on a phantom\nMulti-Output Device.\n\nFixes from the review:\n\n- Overlay scoping: overlayPinned, isRecording and a hideOverlay forward\n  declaration now sit above createOverlay, whose mouse callback closes\n  over all three. Declared further down, they compiled to nil globals —\n  the X button never called emergencyStop, unpinning threw, and menu-bar\n  pinning wrote a local nothing else read.\n- emergencyStop now clears finalizationPending and stops both timers, so\n  a pending transcript can't paste itself after the user hits stop.\n- Chunk files sort numerically; lexicographic order put chunk_1000 before\n  chunk_999, splicing the tail of any recording past ~16m40s into the\n  middle of the transcript.\n- One playSound() helper replaces four raw getByFile():play() calls; a\n  nil sound threw and aborted its callback, stranding the overlay.\n- hasOllama() gets --max-time 1 and a 30s cache. Hammerspoon is\n  single-threaded, so a wedged Ollama froze the app — and with it the\n  dictation trigger key — on every menu open.\n- startRecording flushes a pending finalization and continues instead of\n  returning, which silently swallowed the keypress.\n- The progress bar freezes elapsed time at stop, so it stops inflating\n  barMaxSecs during transcription and can reach 100%.\n- _whisperFinalize global -\u003e local finalizeTimers.\n\nRemoved as dead code: doPartialTranscribe and its state (~70 lines,\ndisabled at the call site, with a callback-arity bug and an unchecked\nio.open), plus getPartialModelPath and PARTIAL_INTERVAL.\n\ntests/test_init.sh runs tests/test_init.lua through the hs CLI, since\nthis stack has no standalone Lua. It guards bug classes rather than\nrestating the implementation, and the sort checks extract the real\ncomparator from the source under test so they can't drift from it. The\nsuite takes a path argument: run against HEAD~ and 8 of 11 checks fail,\npinpointing these bugs by line number.\n\nAGENTS.md: corrected the local count (~144/200), the counting command\n(^\\s*local also counts function-scoped locals, which don't hit the\nceiling), and dropped the PL/MC/barState table — those don't exist in\nthe file. Added the declaration-order rule and the new suite's docs.\n\nCo-Authored-By: Claude Opus 5 \u003cnoreply@anthropic.com\u003e\nMSG\ngit --no-pager log -1 --oneline --stat | head -12",
+          "description": "Commit the work"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce732yJmQ4zLwL1fAPJje",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 266,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 266,
+      "cache_read_input_tokens": 166824,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 266,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 266,
+          "cache_read_input_tokens": 166824,
+          "input_tokens": 2,
+          "output_tokens": 1289,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 1289,
+      "output_tokens_details": {
+        "thinking_tokens": 134
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "f2b351c8-e9df-426c-a7cc-49de08b1a15e",
+  "requestId": "req_011Ce732wyPpQ7wBQPXzTh6M",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "timestamp": "2026-08-16T20:11:29.080Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "7b6a6dd0-375b-46fd-a105-4ebfd085b582",
+  "version": "2.1.233"
+}

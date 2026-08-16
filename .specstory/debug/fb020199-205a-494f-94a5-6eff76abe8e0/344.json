@@ -1,0 +1,56 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/tests/test_init.sh has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01MiQ2UdWY1LJfoJgPhrMD21",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "bfcb3846-35e7-446b-a10a-c511f9c898ee",
+  "promptId": "eaaa32ad-5904-4856-b68d-d7aea6bbb94c",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "bfcb3846-35e7-446b-a10a-c511f9c898ee",
+  "timestamp": "2026-08-16T20:07:41.616Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/tests/test_init.sh",
+    "newString": "# hs evaluates in the running Hammerspoon process and does not inherit this shell's\n# environment, so pass the paths as globals rather than env vars.\n\"$HS_BIN\" -c \"_G.LW_TARGET='$TARGET'; _G.LW_OUT='$OUT'; dofile('$SCRIPT_DIR/test_init.lua')\" \u003e/dev/null 2\u003e\u00261",
+    "oldString": "# hs -c evaluates a single expression; pass config through the environment.\nLW_TARGET=\"$TARGET\" LW_OUT=\"$OUT\" \\\n    \"$HS_BIN\" -c \"os.setenv『PLACEHOLDER』\" \u003e/dev/null 2\u003e\u00261 || true\n\n# hs does not forward the caller's environment, so bake the paths into the call.\n\"$HS_BIN\" -c \"_G.LW_TARGET='$TARGET'; _G.LW_OUT='$OUT'; dofile('$SCRIPT_DIR/test_init.lua')\" \u003e/dev/null 2\u003e\u00261",
+    "originalFile": "#!/usr/bin/env bash\n# test_init.sh — structural and behavioral tests for hammerspoon/init.lua\n#\n# Runs tests/test_init.lua through the Hammerspoon `hs` CLI, since this stack has\n# no standalone Lua interpreter. Requires Hammerspoon to be running.\n#\n# Usage:\n#   ./tests/test_init.sh                 # test the repo's init.lua\n#   ./tests/test_init.sh path/to/init.lua  # test a specific file\nset -euo pipefail\n\nRED='\\033[0;31m'\nGREEN='\\033[0;32m'\nYELLOW='\\033[1;33m'\nBOLD='\\033[1m'\nNC='\\033[0m'\n\nSCRIPT_DIR=\"$(cd \"$(dirname \"${BASH_SOURCE[0]}\")\" \u0026\u0026 pwd)\"\nREPO_DIR=\"$(dirname \"$SCRIPT_DIR\")\"\n\nTARGET=\"${1:-$REPO_DIR/hammerspoon/init.lua}\"\n# hs runs as the Hammerspoon process, so paths must be absolute.\nTARGET=\"$(cd \"$(dirname \"$TARGET\")\" \u0026\u0026 pwd)/$(basename \"$TARGET\")\"\n\nHS_BIN=\"$(command -v hs || echo /Applications/Hammerspoon.app/Contents/Frameworks/hs/hs)\"\nif [[ ! -x \"$HS_BIN\" ]]; then\n    echo -e \"${RED}Error: the 'hs' CLI was not found.${NC}\"\n    echo \"Enable it from the Hammerspoon console: hs.ipc.cliInstall()\"\n    exit 1\nfi\n\nif ! pgrep -x Hammerspoon \u003e/dev/null 2\u003e\u00261; then\n    echo -e \"${RED}Error: Hammerspoon is not running.${NC}\"\n    echo \"These tests execute Lua through Hammerspoon's runtime. Start Hammerspoon and retry.\"\n    exit 1\nfi\n\nOUT=\"$(mktemp -t lw_test_init)\"\ntrap 'rm -f \"$OUT\"' EXIT\n\necho -e \"${BOLD}local-whisper init.lua test suite${NC}\"\necho -e \"Target: ${BOLD}${TARGET#\"$REPO_DIR\"/}${NC}\"\necho \"\"\n\n# hs -c evaluates a single expression; pass config through the environment.\nLW_TARGET=\"$TARGET\" LW_OUT=\"$OUT\" \\\n    \"$HS_BIN\" -c \"os.setenv『PLACEHOLDER』\" \u003e/dev/null 2\u003e\u00261 || true\n\n# hs does not forward the caller's environment, so bake the paths into the call.\n\"$HS_BIN\" -c \"_G.LW_TARGET='$TARGET'; _G.LW_OUT='$OUT'; dofile('$SCRIPT_DIR/test_init.lua')\" \u003e/dev/null 2\u003e\u00261\n\nif [[ ! -s \"$OUT\" ]]; then\n    echo -e \"${RED}Error: the test suite produced no output.${NC}\"\n    echo \"Check that $SCRIPT_DIR/test_init.lua loads cleanly.\"\n    exit 1\nfi\n\nPASS=0\nFAIL=0\nwhile IFS=$'\\t' read -r status name detail; do\n    [[ -z \"$status\" ]] \u0026\u0026 continue\n    if [[ \"$status\" == \"PASS\" ]]; then\n        PASS=$((PASS + 1))\n        echo -e \"  ${GREEN}PASS${NC}  $name\"\n    else\n        FAIL=$((FAIL + 1))\n        echo -e \"  ${RED}FAIL${NC}  $name\"\n        [[ -n \"$detail\" ]] \u0026\u0026 echo -e \"        ${YELLOW}$detail${NC}\"\n    fi\ndone \u003c \"$OUT\"\n\nTOTAL=$((PASS + FAIL))\necho \"\"\nif [[ $FAIL -eq 0 ]]; then\n    echo -e \"${GREEN}${BOLD}All $TOTAL checks passed.${NC}\"\n    exit 0\nelse\n    echo -e \"${RED}${BOLD}$FAIL of $TOTAL checks failed.${NC}\"\n    exit 1\nfi\n",
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          " echo -e \"Target: ${BOLD}${TARGET#\"$REPO_DIR\"/}${NC}\"",
+          " echo \"\"",
+          " ",
+          "-# hs -c evaluates a single expression; pass config through the environment.",
+          "-LW_TARGET=\"$TARGET\" LW_OUT=\"$OUT\" \\",
+          "-    \"$HS_BIN\" -c \"os.setenv『PLACEHOLDER』\" \u003e/dev/null 2\u003e\u00261 || true",
+          "-",
+          "-# hs does not forward the caller's environment, so bake the paths into the call.",
+          "+# hs evaluates in the running Hammerspoon process and does not inherit this shell's",
+          "+# environment, so pass the paths as globals rather than env vars.",
+          " \"$HS_BIN\" -c \"_G.LW_TARGET='$TARGET'; _G.LW_OUT='$OUT'; dofile('$SCRIPT_DIR/test_init.lua')\" \u003e/dev/null 2\u003e\u00261",
+          " ",
+          " if [[ ! -s \"$OUT\" ]]; then"
+        ],
+        "newLines": 8,
+        "newStart": 42,
+        "oldLines": 11,
+        "oldStart": 42
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "09a4bffd-7367-4b77-b1fc-fc3cb88bf816",
+  "version": "2.1.233"
+}

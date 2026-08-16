@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "-rw-r--r--@ 1 vitaliy  wheel  2800 Aug 16 22:23 /private/tmp/claude-502/-Users-vitaliy-Documents-GitHub-local-whisper/7d3c92af-ac69-47c4-ad94-2c02c7d6e213/scratchpad/out_xbutton_no_emergencystop.txt",
+        "is_error": false,
+        "tool_use_id": "toolu_01Q1Ji5cYa9gUBfBQkiWheRV",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "e7b5bf33-606d-4ce2-9164-914bc209bd6c",
+  "promptId": "63032b1d-97b3-4f08-ae8f-b358bb0a478a",
+  "sessionId": "7d3c92af-ac69-47c4-ad94-2c02c7d6e213",
+  "sourceToolAssistantUUID": "e7b5bf33-606d-4ce2-9164-914bc209bd6c",
+  "timestamp": "2026-08-16T20:27:13.180Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "-rw-r--r--@ 1 vitaliy  wheel  2800 Aug 16 22:23 /private/tmp/claude-502/-Users-vitaliy-Documents-GitHub-local-whisper/7d3c92af-ac69-47c4-ad94-2c02c7d6e213/scratchpad/out_xbutton_no_emergencystop.txt"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "72e59cd4-f333-47c0-92ff-dca5c29a2d7d",
+  "version": "2.1.233"
+}

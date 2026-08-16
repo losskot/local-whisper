@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "-rw-r--r--  1 vitaliy  wheel    423 Aug 16 22:20 m1.py\n-rw-r--r--  1 vitaliy  wheel  70867 Aug 16 22:20 mut_startrecording_early_return.lua\nShell cwd was reset to /Users/vitaliy/Documents/GitHub/local-whisper",
+        "is_error": false,
+        "tool_use_id": "toolu_01H8UNfEmpkAybSePW8sieg7",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "c047b6e8-f2b4-480a-a0e8-29ca4741e570",
+  "promptId": "63032b1d-97b3-4f08-ae8f-b358bb0a478a",
+  "sessionId": "7d3c92af-ac69-47c4-ad94-2c02c7d6e213",
+  "sourceToolAssistantUUID": "c047b6e8-f2b4-480a-a0e8-29ca4741e570",
+  "timestamp": "2026-08-16T20:23:30.226Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "\nShell cwd was reset to /Users/vitaliy/Documents/GitHub/local-whisper",
+    "stdout": "-rw-r--r--  1 vitaliy  wheel    423 Aug 16 22:20 m1.py\n-rw-r--r--  1 vitaliy  wheel  70867 Aug 16 22:20 mut_startrecording_early_return.lua"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "23535f5e-008e-435c-a148-f11694f978ea",
+  "version": "2.1.233"
+}

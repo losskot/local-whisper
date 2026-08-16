@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "145\n--- tail:\n 1796|    local ok, err = pcall(function()\n 1797|        local rawFlags = event:rawFlags()\n 1798|        local triggered = (rawFlags \u0026 triggerMask) \u003e 0\n 1799|\n 1800|        if triggered and not isRecording then\n 1801|            startRecording()\n 1802|            -- Poll for release since flagsChanged doesn't fire on key-up\n 1803|            if releasePoller then releasePoller:stop() end\n 1804|            releasePoller = hs.timer.doEvery(0.1, function()\n 1805|                local mods = hs.eventtap.checkKeyboardModifiers()\n 1806|                if not mods[genericMod] then\n 1807|                    releasePoller:stop()\n 1808|                    releasePoller = nil\n 1809|                    stopRecording()\n 1810|                end\n 1811|            end)\n 1812|        elseif not triggered and (isRecording or isWarmingUp) then\n 1813|            if releasePoller then releasePoller:stop(); releasePoller = nil end\n 1814|            stopRecording()\n 1815|        end",
+        "is_error": false,
+        "tool_use_id": "toolu_01HEBvW8KYxMx2xFaQEqfCea",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "9266ddde-e2fb-4cd5-b711-a3c4758bebef",
+  "promptId": "a651875f-fcbc-4b8f-85e0-3d18600f4667",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "9266ddde-e2fb-4cd5-b711-a3c4758bebef",
+  "timestamp": "2026-08-16T19:29:30.141Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "145\n--- tail:\n 1796|    local ok, err = pcall(function()\n 1797|        local rawFlags = event:rawFlags()\n 1798|        local triggered = (rawFlags \u0026 triggerMask) \u003e 0\n 1799|\n 1800|        if triggered and not isRecording then\n 1801|            startRecording()\n 1802|            -- Poll for release since flagsChanged doesn't fire on key-up\n 1803|            if releasePoller then releasePoller:stop() end\n 1804|            releasePoller = hs.timer.doEvery(0.1, function()\n 1805|                local mods = hs.eventtap.checkKeyboardModifiers()\n 1806|                if not mods[genericMod] then\n 1807|                    releasePoller:stop()\n 1808|                    releasePoller = nil\n 1809|                    stopRecording()\n 1810|                end\n 1811|            end)\n 1812|        elseif not triggered and (isRecording or isWarmingUp) then\n 1813|            if releasePoller then releasePoller:stop(); releasePoller = nil end\n 1814|            stopRecording()\n 1815|        end"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "ef382093-1aa2-4283-b8e3-df40196b8f8d",
+  "version": "2.1.233"
+}

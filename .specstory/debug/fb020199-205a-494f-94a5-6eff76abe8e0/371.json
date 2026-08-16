@@ -1,0 +1,74 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_0172B56mokkR1fnygdrq7uJX",
+        "input": {
+          "file_path": "/Users/vitaliy/Documents/GitHub/local-whisper/AGENTS.md",
+          "new_string": "### Running the refine eval suite\n```bash\n./tests/test_refine.sh\n```\nTests filler removal, list formatting, preamble prevention, and content preservation.\nRequires Ollama running locally — it calls the HTTP API directly and bails out otherwise.\n\n### Running the init.lua test suite\n```bash\n./tests/test_init.sh                    # test the repo's init.lua\n./tests/test_init.sh path/to/init.lua   # test a specific file\n```\nRequires Hammerspoon to be running — there is no standalone Lua interpreter in this\nstack, so `tests/test_init.lua` is executed through the `hs` CLI.\n\nGuards the bug classes that have actually bitten this file, rather than restating the\nimplementation:\n\n| Check | Catches |\n|-------|---------|\n| `syntax` | file no longer compiles |\n| `locals` | the Lua 200-per-function ceiling |\n| `scope` | a top-level local referenced by an earlier-defined function (reads as a nil global at runtime, with no load-time error) |\n| `sound` | unguarded `hs.sound.getByFile(...):play()`, which throws and aborts its callback |\n| `meeting` | meeting-mode code creeping back in |\n| `globals` | state leaked into Hammerspoon's shared `_ENV` |\n| `sort` | chunk files ordered as strings, which reorders audio past chunk 999 |\n| `emergencyStop` | emergency stop not cancelling a pending finalization |\n\nThe `sort` checks extract the real comparator out of the source under test and execute\nit, so they track the implementation instead of a copy that can drift.\n\nBecause the suite takes a path argument, you can point it at an older revision to\nconfirm a check actually fails on the bug it claims to guard:\n```bash\ngit show HEAD~1:hammerspoon/init.lua \u003e /tmp/before.lua \u0026\u0026 ./tests/test_init.sh /tmp/before.lua\n```",
+          "old_string": "### Running the refine eval suite\n```bash\n./tests/test_refine.sh\n```\nTests filler removal, list formatting, preamble prevention, and content preservation.",
+          "replace_all": false
+        },
+        "name": "Edit",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce72tZDwrCq7YacYXpkjS",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 1477,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 1477,
+      "cache_read_input_tokens": 160287,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1477,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 1477,
+          "cache_read_input_tokens": 160287,
+          "input_tokens": 2,
+          "output_tokens": 843,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 843,
+      "output_tokens_details": {
+        "thinking_tokens": 0
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "e7d9238d-ce74-47ea-a77e-0489db334499",
+  "requestId": "req_011Ce72tY12dqjoBJ9pC1zST",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "timestamp": "2026-08-16T20:09:28.205Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "1ae20cbf-79af-438b-b4fe-f0f113bf5b78",
+  "version": "2.1.233"
+}

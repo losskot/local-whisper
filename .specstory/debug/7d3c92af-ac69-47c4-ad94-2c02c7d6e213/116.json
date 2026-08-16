@@ -1,0 +1,64 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "text": "Done. All three previously-unguarded fixes now have automated coverage.\n\n## What I added\n\n`tests/test_init.lua` grew from 8 to 13 sections (26 → 47 checks). The new ones **lift the real functions out of the source under test** and run them against stubbed globals — same technique the existing sort-comparator check uses, so they track the implementation rather than a copy that drifts. A lifted function's upvalues resolve to the sandbox `_ENV`, which is what lets a test inject `isRecording = true` and then assert `overlayPinned == false` afterwards.\n\n**Overlay X button** ([test_init.lua](tests/test_init.lua)) — extracts the real `overlay:mouseCallback` and clicks it:\n- X mid-recording calls `emergencyStop()` (the actual bug: overlay vanished, ffmpeg kept running)\n- the canvas delete stays *deferred* — `hs.canvas` silently ignores a delete issued from inside its own mouse callback\n- X while idle deletes and clears the handle; `mouseUp` on the X doesn't fall through to the pin toggle\n- unpinning mid-recording does **not** hide the overlay\n\n**`startRecording` re-press recovery** — the regression was the early `return` that flushed the pending dictation and swallowed the keypress. The check asserts `tryWarmup()` still runs and both finalize timers are stopped and cleared.\n\n**Progress bar reaching 100%** — drives `updateProgressBar()` over a scripted timeline (100 s recorded, wall clock running on to 240 s while segments finish) and asserts the blue bar reaches the red bar, `barMaxSecs` stops expanding after the key is released, and auto-expand still works *during* a long recording.\n\nPlus two cheap invariants: the declaration order of `overlayPinned`/`isRecording`/`hideOverlay` above `createOverlay` (the X-button root cause, pinned by name), and `BAR_MAX` matching the `bar_bg` track width.\n\n## Verification\n\nRather than trust the checks, I mutation-tested each one against a one-line break of the *current* file. Every mutant was caught by exactly its intended check, with no collateral failures:\n\n| Mutation | Caught by |\n|---|---|\n| `return` after the finalization flush | re-press starts the new recording |\n| drop the `isRecording → emergencyStop` branch | X during recording stops the recording |\n| delete the canvas synchronously | X defers the canvas delete |\n| `updateProgressBar` back on the live clock | blue bar reaches red; scale stops expanding |\n| unpin always calls `hideOverlay()` | unpinning mid-recording keeps the overlay |\n\nThe pre-fix revision `1f546aa` also fails the progress-bar and declaration-order checks. I noted in AGENTS.md that a one-line mutation is the better negative control — an old revision fails for many unrelated reasons, and a lifted function whose helpers were since renamed fails by *erroring* rather than asserting. (I wrapped the sandbox calls in `pcall` so that reports as a test failure instead of aborting the suite.)\n\n`hammerspoon/init.lua` is untouched — this is test-only. Full suite: **47/47 pass**. Committed as `f934465` and pushed to `origin/main`.\n\nTwo things worth flagging:\n- **Still manual, unavoidably**: whether the canvas actually disappears on screen, whether macOS delivers the click to the X at all, and how the bars look during a real transcription. Documented in AGENTS.md as a manual pass after touching the overlay. The click-through test you described is still worth doing once.\n- **bd remains uninstalled**, so no issue was filed for this work or for the manual-verification follow-up. The 313 untracked `.specstory/` files are extension-generated transcripts of this session that rewrite themselves as I work — I left them alone rather than commit a snapshot that's stale on arrival.",
+        "type": "text"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce74R35TeMqcVLgkVjoSr",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "end_turn",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 824,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 824,
+      "cache_read_input_tokens": 92296,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 824,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 824,
+          "cache_read_input_tokens": 92296,
+          "input_tokens": 2,
+          "output_tokens": 1473,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 1473,
+      "output_tokens_details": {
+        "thinking_tokens": 160
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "f298c0e3-3a0d-4c38-bca8-d66c0eefa089",
+  "requestId": "req_011Ce74R1zUU9ecdsAczkFnw",
+  "sessionId": "7d3c92af-ac69-47c4-ad94-2c02c7d6e213",
+  "timestamp": "2026-08-16T20:29:38.414Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "55b1ff59-5b88-435c-90d7-f4e39c89feeb",
+  "version": "2.1.233"
+}

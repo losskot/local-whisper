@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "155:local PARTIAL_INTERVAL = 2.0   -- seconds between partial transcriptions\n410:local function getPartialModelPath()\n1158:    if partialTimer then partialTimer:stop(); partialTimer = nil end\n1163:    partialBusy = false\n1275:    log(\"final: START — total chunks=\" .. #chunks .. \", partialBusy=\" .. tostring(partialBusy))\n1547:    lastChunkCount = 0\n1548:    partialBusy = false\n1551:    -- Partial transcription disabled: low quality, not useful\n1552:    -- partialTimer = hs.timer.doEvery(PARTIAL_INTERVAL, doPartialTranscribe)\n1672:    if partialTimer then partialTimer:stop(); partialTimer = nil end\n1674:    partialBusy = false",
+        "is_error": false,
+        "tool_use_id": "toolu_01KfxrNwhebSaRRDpDMaLbcd",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "87782a8f-283b-47dc-bd87-c1eec59b94f7",
+  "promptId": "a651875f-fcbc-4b8f-85e0-3d18600f4667",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "87782a8f-283b-47dc-bd87-c1eec59b94f7",
+  "timestamp": "2026-08-16T19:30:11.211Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "155:local PARTIAL_INTERVAL = 2.0   -- seconds between partial transcriptions\n410:local function getPartialModelPath()\n1158:    if partialTimer then partialTimer:stop(); partialTimer = nil end\n1163:    partialBusy = false\n1275:    log(\"final: START — total chunks=\" .. #chunks .. \", partialBusy=\" .. tostring(partialBusy))\n1547:    lastChunkCount = 0\n1548:    partialBusy = false\n1551:    -- Partial transcription disabled: low quality, not useful\n1552:    -- partialTimer = hs.timer.doEvery(PARTIAL_INTERVAL, doPartialTranscribe)\n1672:    if partialTimer then partialTimer:stop(); partialTimer = nil end\n1674:    partialBusy = false"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "fbeb9c5a-d819-4d12-be82-92b6d698e698",
+  "version": "2.1.233"
+}

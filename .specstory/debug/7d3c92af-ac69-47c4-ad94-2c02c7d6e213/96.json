@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "122-Requires Hammerspoon to be running — there is no standalone Lua interpreter in this\n123-stack, so `tests/test_init.lua` is executed through the `hs` CLI.\n124-\n125-Guards the bug classes that have actually bitten this file, rather than restating the\n126-implementation:\n127-\n128:| Check | Catches |\n129-|-------|---------|\n130-| `syntax` | file no longer compiles |\n131-| `locals` | the Lua 200-per-function ceiling |\n132-| `scope` | a top-level local referenced by an earlier-defined function (reads as a nil global at runtime, with no load-time error) |\n133-| `sound` | unguarded `hs.sound.getByFile(...):play()`, which throws and aborts its callback |\n134-| `meeting` | meeting-mode code creeping back in |\n135-| `globals` | state leaked into Hammerspoon's shared `_ENV` |\n136-| `sort` | chunk files ordered as strings, which reorders audio past chunk 999 |\n137:| `emergencyStop` | emergency stop not cancelling a pending finalization |\n138-\n139:The `sort` checks extract the real comparator out of the source under test and execute\n140-it, so they track the implementation instead of a copy that can drift.\n141-\n142-Because the suite takes a path argument, you can point it at an older revision to\n143-confirm a check actually fails on the bug it claims to guard:\n144-```bash\n145-git show HEAD~1:hammerspoon/init.lua \u003e /tmp/before.lua \u0026\u0026 ./tests/test_init.sh /tmp/before.lua\n146-```\n147-\n148-### Common debug patterns\n149-- **Refine not working**: Check `refine: failed` in logs — common causes: Ollama not running, wrong model name, missing `$HOME` env\n150-- **Voice commands not matching**: Check `final (auto/...)` log line — whisper may have transcribed differently than expected\n151-- **X button not closing overlay**: `hs.canvas:delete()` inside its own mouse callback is silently ignored — must use `canvas:hide()` immediately then defer deletion with `hs.timer.doAfter(0.01, ...)`\n152-- **Recent dictations not persisting**: Lua upvalue scoping — never reassign a table variable that closures reference; populate in-place instead\n153-",
+        "is_error": false,
+        "tool_use_id": "toolu_01Gd2rH1YJUoNQAofG98yA6d",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "bc99711f-d6a0-4c89-b65b-2dba96a6102e",
+  "promptId": "63032b1d-97b3-4f08-ae8f-b358bb0a478a",
+  "sessionId": "7d3c92af-ac69-47c4-ad94-2c02c7d6e213",
+  "sourceToolAssistantUUID": "bc99711f-d6a0-4c89-b65b-2dba96a6102e",
+  "timestamp": "2026-08-16T20:28:11.606Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "122-Requires Hammerspoon to be running — there is no standalone Lua interpreter in this\n123-stack, so `tests/test_init.lua` is executed through the `hs` CLI.\n124-\n125-Guards the bug classes that have actually bitten this file, rather than restating the\n126-implementation:\n127-\n128:| Check | Catches |\n129-|-------|---------|\n130-| `syntax` | file no longer compiles |\n131-| `locals` | the Lua 200-per-function ceiling |\n132-| `scope` | a top-level local referenced by an earlier-defined function (reads as a nil global at runtime, with no load-time error) |\n133-| `sound` | unguarded `hs.sound.getByFile(...):play()`, which throws and aborts its callback |\n134-| `meeting` | meeting-mode code creeping back in |\n135-| `globals` | state leaked into Hammerspoon's shared `_ENV` |\n136-| `sort` | chunk files ordered as strings, which reorders audio past chunk 999 |\n137:| `emergencyStop` | emergency stop not cancelling a pending finalization |\n138-\n139:The `sort` checks extract the real comparator out of the source under test and execute\n140-it, so they track the implementation instead of a copy that can drift.\n141-\n142-Because the suite takes a path argument, you can point it at an older revision to\n143-confirm a check actually fails on the bug it claims to guard:\n144-```bash\n145-git show HEAD~1:hammerspoon/init.lua \u003e /tmp/before.lua \u0026\u0026 ./tests/test_init.sh /tmp/before.lua\n146-```\n147-\n148-### Common debug patterns\n149-- **Refine not working**: Check `refine: failed` in logs — common causes: Ollama not running, wrong model name, missing `$HOME` env\n150-- **Voice commands not matching**: Check `final (auto/...)` log line — whisper may have transcribed differently than expected\n151-- **X button not closing overlay**: `hs.canvas:delete()` inside its own mouse callback is silently ignored — must use `canvas:hide()` immediately then defer deletion with `hs.timer.doAfter(0.01, ...)`\n152-- **Recent dictations not persisting**: Lua upvalue scoping — never reassign a table variable that closures reference; populate in-place instead\n153-"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "cdf2c260-3f88-48af-9451-a64dd5553d8d",
+  "version": "2.1.233"
+}

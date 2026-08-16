@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "749:local EL = { text = 2, dot = 3, timer = 4, bar_bg = 5, bar_rec = 6, bar_txn = 7, close = 8 }\n750-\n751-local function createOverlay()\n752-    local screen = hs.screen.mainScreen()\n753-    local frame = screen:frame()  -- excludes menu bar, so y=frame.y sits right under it\n754-    local width, height = 420, 56\n755-    local padding = 20\n756-    local x = frame.x + (frame.w - width) / 2  -- centered under the menu bar\n757-    local y = frame.y + padding\n758-\n759-    overlay = hs.canvas.new({ x = x, y = y, w = width, h = height })\n760-\n761-    -- 1: Background (click to pin overlay open)\n762-    overlay:appendElements({\n763-        id = \"bg\",\n764-        type = \"rectangle\", action = \"fill\",",
+        "is_error": false,
+        "tool_use_id": "toolu_01KYPfCzZg2Ph8QSYEJBVPmk",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "e3e121dc-2971-44d4-bf76-55356fea61d5",
+  "promptId": "63032b1d-97b3-4f08-ae8f-b358bb0a478a",
+  "sessionId": "7d3c92af-ac69-47c4-ad94-2c02c7d6e213",
+  "sourceToolAssistantUUID": "e3e121dc-2971-44d4-bf76-55356fea61d5",
+  "timestamp": "2026-08-16T20:17:20.099Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "749:local EL = { text = 2, dot = 3, timer = 4, bar_bg = 5, bar_rec = 6, bar_txn = 7, close = 8 }\n750-\n751-local function createOverlay()\n752-    local screen = hs.screen.mainScreen()\n753-    local frame = screen:frame()  -- excludes menu bar, so y=frame.y sits right under it\n754-    local width, height = 420, 56\n755-    local padding = 20\n756-    local x = frame.x + (frame.w - width) / 2  -- centered under the menu bar\n757-    local y = frame.y + padding\n758-\n759-    overlay = hs.canvas.new({ x = x, y = y, w = width, h = height })\n760-\n761-    -- 1: Background (click to pin overlay open)\n762-    overlay:appendElements({\n763-        id = \"bg\",\n764-        type = \"rectangle\", action = \"fill\","
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "ad749bf2-55f8-400f-b867-fb1cd90461bb",
+  "version": "2.1.233"
+}

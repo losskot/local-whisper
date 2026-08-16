@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "    2841 hammerspoon/init.lua\n199\n(eval):1: command not found: bd",
+        "is_error": false,
+        "tool_use_id": "toolu_017zF62MaZu2k4fE6wLCrUH3",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "42e3bc8e-9d37-4943-a1c2-c90829c126d9",
+  "promptId": "a651875f-fcbc-4b8f-85e0-3d18600f4667",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "42e3bc8e-9d37-4943-a1c2-c90829c126d9",
+  "timestamp": "2026-08-16T19:26:56.056Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "    2841 hammerspoon/init.lua\n199\n(eval):1: command not found: bd"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "6baab395-e2ed-47fe-b9f5-0460375b8908",
+  "version": "2.1.233"
+}

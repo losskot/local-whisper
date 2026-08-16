@@ -1,0 +1,73 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01Q1Ji5cYa9gUBfBQkiWheRV",
+        "input": {
+          "command": "S=/private/tmp/claude-502/-Users-vitaliy-Documents-GitHub-local-whisper/7d3c92af-ac69-47c4-ad94-2c02c7d6e213/scratchpad\nR=/Users/vitaliy/Documents/GitHub/local-whisper\nls -la \"$S\"/out_*.txt 2\u003e\u00261 | head\nhs -c \"_G.LW_TARGET='$S/mut_xbutton_no_emergencystop.lua'; _G.LW_OUT='$S/out_x1.txt'; dofile('$R/tests/test_init.lua')\" 2\u003e\u00261 | head -3",
+          "description": "Retry single mutant run in foreground",
+          "timeout": 90000
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce74EnScSsSVVhZ82K32m",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 1160,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 1160,
+      "cache_read_input_tokens": 82892,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1160,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 1160,
+          "cache_read_input_tokens": 82892,
+          "input_tokens": 2,
+          "output_tokens": 800,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 800,
+      "output_tokens_details": {
+        "thinking_tokens": 483
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "04b98ded-2915-4d97-93d1-20fb4efff7c5",
+  "requestId": "req_011Ce74EmChZMbcuZwMBYfi3",
+  "sessionId": "7d3c92af-ac69-47c4-ad94-2c02c7d6e213",
+  "timestamp": "2026-08-16T20:27:10.451Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "e7b5bf33-606d-4ce2-9164-914bc209bd6c",
+  "version": "2.1.233"
+}

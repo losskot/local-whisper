@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "M  AGENTS.md\nM  tests/test_init.lua",
+        "is_error": false,
+        "tool_use_id": "toolu_01HrpJRosCDUaeocXGjfq2Wy",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "2eed7d21-533a-4983-8834-c49f1f3562a5",
+  "promptId": "63032b1d-97b3-4f08-ae8f-b358bb0a478a",
+  "sessionId": "7d3c92af-ac69-47c4-ad94-2c02c7d6e213",
+  "sourceToolAssistantUUID": "2eed7d21-533a-4983-8834-c49f1f3562a5",
+  "timestamp": "2026-08-16T20:28:49.157Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "M  AGENTS.md\nM  tests/test_init.lua"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "c9c9729c-9fcd-4cf3-a4f4-8f69ecbadc4c",
+  "version": "2.1.233"
+}

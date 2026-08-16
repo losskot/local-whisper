@@ -1,0 +1,28 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "text": "Я хочу убрать неиспользуемую функциональность. Сделай мне список всех функций приложения двухуровневой.",
+        "type": "text"
+      }
+    ],
+    "role": "user"
+  },
+  "origin": {
+    "kind": "human"
+  },
+  "parentUuid": null,
+  "permissionMode": "auto",
+  "promptId": "ce6a097e-2d74-458a-9872-d6b4d3ea53bd",
+  "promptSource": "sdk",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "timestamp": "2026-08-16T20:32:18.032Z",
+  "type": "user",
+  "userType": "external",
+  "uuid": "c77c6ca2-3a08-4325-9f57-f498c1bcb18a",
+  "version": "2.1.233"
+}

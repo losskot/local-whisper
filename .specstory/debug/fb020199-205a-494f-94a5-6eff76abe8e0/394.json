@@ -1,0 +1,64 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "fix/remove-meeting-mode-and-review-findings",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "text": "All staged correctly. Committing:",
+        "type": "text"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce732yJmQ4zLwL1fAPJje",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 266,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 266,
+      "cache_read_input_tokens": 166824,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 266,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 266,
+          "cache_read_input_tokens": 166824,
+          "input_tokens": 2,
+          "output_tokens": 1289,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 1289,
+      "output_tokens_details": {
+        "thinking_tokens": 134
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "27ee64fa-009e-41e7-b37f-5f82ba2e0569",
+  "requestId": "req_011Ce732wyPpQ7wBQPXzTh6M",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "timestamp": "2026-08-16T20:11:15.105Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "f2b351c8-e9df-426c-a7cc-49de08b1a15e",
+  "version": "2.1.233"
+}

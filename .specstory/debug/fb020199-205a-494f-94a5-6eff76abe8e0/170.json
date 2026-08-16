@@ -1,0 +1,51 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01E4UjNu8sVvcgEAAfarbXSZ",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "b041500f-f460-46de-9155-ccee62e79739",
+  "promptId": "a651875f-fcbc-4b8f-85e0-3d18600f4667",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "b041500f-f460-46de-9155-ccee62e79739",
+  "timestamp": "2026-08-16T19:29:51.748Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+    "newString": "hideOverlay = function()\n    if overlayPinned then return end  -- pinned overlay stays open\n    if overlay then overlay:delete(); overlay = nil end\nend",
+    "oldString": "local function hideOverlay()\n    if overlayPinned then return end  -- pinned overlay stays open\n    if overlay then overlay:delete(); overlay = nil end\nend",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          "     overlay:show()",
+          " end",
+          " ",
+          "-local function hideOverlay()",
+          "+hideOverlay = function()",
+          "     if overlayPinned then return end  -- pinned overlay stays open",
+          "     if overlay then overlay:delete(); overlay = nil end",
+          " end"
+        ],
+        "newLines": 7,
+        "newStart": 839,
+        "oldLines": 7,
+        "oldStart": 839
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "9f11a54b-87ac-44cd-bf6a-08e7fd2c45ec",
+  "version": "2.1.233"
+}

@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "76:**Current count: ~144/200** — comfortable headroom since meeting mode was removed. Only *top-level* locals count against the limit; locals inside a function body belong to that function's own budget, so match the start of the line exactly:\n93:- `/debug` — check logs, config state, Ollama status, and recent errors\n94:- `/test-refine` — run the LLM refinement eval suite\n226:For more details, see README.md and docs/VOICE_COMMANDS.md.",
+        "is_error": false,
+        "tool_use_id": "toolu_01WrFt25rxbmhwzaqKURUDip",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "46a6db5d-62c0-48dd-9bb6-14797c198166",
+  "promptId": "a651875f-fcbc-4b8f-85e0-3d18600f4667",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "46a6db5d-62c0-48dd-9bb6-14797c198166",
+  "timestamp": "2026-08-16T19:34:07.577Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "76:**Current count: ~144/200** — comfortable headroom since meeting mode was removed. Only *top-level* locals count against the limit; locals inside a function body belong to that function's own budget, so match the start of the line exactly:\n93:- `/debug` — check logs, config state, Ollama status, and recent errors\n94:- `/test-refine` — run the LLM refinement eval suite\n226:For more details, see README.md and docs/VOICE_COMMANDS.md."
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "f8c6d56c-f7f5-48ab-80eb-f8757fd84ced",
+  "version": "2.1.233"
+}

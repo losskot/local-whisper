@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "746:local hideOverlay  -- assigned below\n854:                if not isRecording then hideOverlay() end\n867:hideOverlay = function()\n1238:        hideOverlay()\n1277:    hs.timer.doAfter(OVERLAY_LINGER, hideOverlay)\n1283:        hideOverlay()\n1289:    if text == \"\" then hideOverlay(); return end\n1323:        hideOverlay()\n---\n744:local overlayPinned = false\n745:local isRecording = false\n746:local hideOverlay  -- assigned below\n751:local function createOverlay()",
+        "is_error": false,
+        "tool_use_id": "toolu_01FkfnoHB7ufEhcqnx65rmCw",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "a6e041dd-43b6-4a23-a0c8-525262ce636f",
+  "promptId": "63032b1d-97b3-4f08-ae8f-b358bb0a478a",
+  "sessionId": "7d3c92af-ac69-47c4-ad94-2c02c7d6e213",
+  "sourceToolAssistantUUID": "a6e041dd-43b6-4a23-a0c8-525262ce636f",
+  "timestamp": "2026-08-16T20:17:44.289Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "746:local hideOverlay  -- assigned below\n854:                if not isRecording then hideOverlay() end\n867:hideOverlay = function()\n1238:        hideOverlay()\n1277:    hs.timer.doAfter(OVERLAY_LINGER, hideOverlay)\n1283:        hideOverlay()\n1289:    if text == \"\" then hideOverlay(); return end\n1323:        hideOverlay()\n---\n744:local overlayPinned = false\n745:local isRecording = false\n746:local hideOverlay  -- assigned below\n751:local function createOverlay()"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "0b42c31e-fbf0-466e-8451-e886c2c2e5fc",
+  "version": "2.1.233"
+}

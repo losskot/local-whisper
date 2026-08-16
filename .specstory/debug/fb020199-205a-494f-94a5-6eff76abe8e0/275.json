@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "docs/TRANSCRIBE.md:119:./tools/transcribe.sh -p \"Technical meeting about software architecture.\" standup.m4a",
+        "is_error": false,
+        "tool_use_id": "toolu_018ut67XVuozrYPdae5vdybq",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "4d21f782-3a06-4d17-b389-d89aa61d9480",
+  "promptId": "a651875f-fcbc-4b8f-85e0-3d18600f4667",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "4d21f782-3a06-4d17-b389-d89aa61d9480",
+  "timestamp": "2026-08-16T19:34:08.158Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "docs/TRANSCRIBE.md:119:./tools/transcribe.sh -p \"Technical meeting about software architecture.\" standup.m4a"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "3683cae7-3bca-419d-be6f-4c3ec2a1b571",
+  "version": "2.1.233"
+}

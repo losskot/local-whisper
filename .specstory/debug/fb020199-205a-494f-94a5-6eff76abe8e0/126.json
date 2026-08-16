@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "    local f = io.open(REFINE_PROMPT_FILE, \"r\")\n    if f then\n        local content = f:read(\"*a\"); f:close()\n        content = content:gsub(\"^%s+\", \"\"):gsub(\"%s+$\", \"\")\n        if content ~= \"\" then return content end\n    end\n    return REFINE_DEFAULT_PROMPT\nend\n\nlocal function hasOllama()\n    -- Check if Ollama API is reachable\n    local ok = os.execute(\"curl -s -o /dev/null -w '' http://localhost:11434/api/tags 2\u003e/dev/null\")\n    if ok then return true end\n    -- Fallback: check if binary exists\n    return os.execute(\"command -v ollama \u003e/dev/null 2\u003e\u00261\")\nend\n\nlocal function getRefineMode()\n    local f = io.open(REFINE_FILE, \"r\")\n    if not f then return false end\n    local val = f:read(\"*a\"):gsub(\"%s+\", \"\"); f:close()\n    return val == \"on\"\nend\n\nlocal function setRefineMode(on)\n    local f = io.open(REFINE_FILE, \"w\")\n    local ok, iter, dir = pcall(hs.fs.dir, CHUNK_DIR)\n    if not ok then return chunks end\n    for file in iter, dir do\n        if file:match(\"^chunk_.*%.wav$\") then\n            table.insert(chunks, CHUNK_DIR .. \"/\" .. file)\n        end\n    end\n    table.sort(chunks)\n    return chunks\nend\n\n-- Cycle helpers\nlocal function cycleLang()\n    local cycle = { en = \"ru\", ru = \"uk\", uk = \"auto\", auto = \"en\" }\n    local next = cycle[getLang()] or \"en\"\n    writeFile(LANG_FILE, next)\n    return next\nend\n\nlocal function cycleModel()\n    local models = getAvailableModels()",
+        "is_error": false,
+        "tool_use_id": "toolu_01WnFi1xt2UhXhoqjk14p4b7",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "dd618f2d-dd4d-4bfd-9159-0fcb1d852706",
+  "promptId": "a651875f-fcbc-4b8f-85e0-3d18600f4667",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "dd618f2d-dd4d-4bfd-9159-0fcb1d852706",
+  "timestamp": "2026-08-16T19:27:47.689Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "    local f = io.open(REFINE_PROMPT_FILE, \"r\")\n    if f then\n        local content = f:read(\"*a\"); f:close()\n        content = content:gsub(\"^%s+\", \"\"):gsub(\"%s+$\", \"\")\n        if content ~= \"\" then return content end\n    end\n    return REFINE_DEFAULT_PROMPT\nend\n\nlocal function hasOllama()\n    -- Check if Ollama API is reachable\n    local ok = os.execute(\"curl -s -o /dev/null -w '' http://localhost:11434/api/tags 2\u003e/dev/null\")\n    if ok then return true end\n    -- Fallback: check if binary exists\n    return os.execute(\"command -v ollama \u003e/dev/null 2\u003e\u00261\")\nend\n\nlocal function getRefineMode()\n    local f = io.open(REFINE_FILE, \"r\")\n    if not f then return false end\n    local val = f:read(\"*a\"):gsub(\"%s+\", \"\"); f:close()\n    return val == \"on\"\nend\n\nlocal function setRefineMode(on)\n    local f = io.open(REFINE_FILE, \"w\")\n    local ok, iter, dir = pcall(hs.fs.dir, CHUNK_DIR)\n    if not ok then return chunks end\n    for file in iter, dir do\n        if file:match(\"^chunk_.*%.wav$\") then\n            table.insert(chunks, CHUNK_DIR .. \"/\" .. file)\n        end\n    end\n    table.sort(chunks)\n    return chunks\nend\n\n-- Cycle helpers\nlocal function cycleLang()\n    local cycle = { en = \"ru\", ru = \"uk\", uk = \"auto\", auto = \"en\" }\n    local next = cycle[getLang()] or \"en\"\n    writeFile(LANG_FILE, next)\n    return next\nend\n\nlocal function cycleModel()\n    local models = getAvailableModels()"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "6df9991b-21c1-4bc3-bb97-0a4834af3295",
+  "version": "2.1.233"
+}

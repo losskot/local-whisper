@@ -1,0 +1,52 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_012VQpVUtg6LjoWnjt79DoSR",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "8b4ce657-b7ee-4d4c-b0a6-5274079fe0b4",
+  "promptId": "a651875f-fcbc-4b8f-85e0-3d18600f4667",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "8b4ce657-b7ee-4d4c-b0a6-5274079fe0b4",
+  "timestamp": "2026-08-16T19:32:18.466Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+    "newString": "hideOverlay = function()\n    if overlayPinned then return end  -- pinned overlay stays open\n    -- Never tear down mid-dictation: a previous dictation's finalization can still be in\n    -- flight when a new recording starts, and its deferred hide would kill the live overlay.\n    if isRecording then return end\n    if overlay then overlay:delete(); overlay = nil end\nend",
+    "oldString": "hideOverlay = function()\n    if overlayPinned then return end  -- pinned overlay stays open\n    if overlay then overlay:delete(); overlay = nil end\nend",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          " ",
+          " hideOverlay = function()",
+          "     if overlayPinned then return end  -- pinned overlay stays open",
+          "+    -- Never tear down mid-dictation: a previous dictation's finalization can still be in",
+          "+    -- flight when a new recording starts, and its deferred hide would kill the live overlay.",
+          "+    if isRecording then return end",
+          "     if overlay then overlay:delete(); overlay = nil end",
+          " end",
+          " "
+        ],
+        "newLines": 9,
+        "newStart": 866,
+        "oldLines": 6,
+        "oldStart": 866
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "af4c2e48-028d-4d5c-bcbf-b50b212ef4f9",
+  "version": "2.1.233"
+}

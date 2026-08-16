@@ -1,0 +1,73 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01DChQ57tKXsBpFXXee72WQw",
+        "input": {
+          "command": "S=/private/tmp/claude-502/-Users-vitaliy-Documents-GitHub-local-whisper/7d3c92af-ac69-47c4-ad94-2c02c7d6e213/scratchpad\nR=/Users/vitaliy/Documents/GitHub/local-whisper\nhs -c \"_G.LW_TARGET='$S/mut_progress_live_clock.lua'; _G.LW_OUT='$S/out_x3.txt'; dofile('$R/tests/test_init.lua')\" \u003e/dev/null 2\u003e\u00261\necho \"=== live-clock progress mutant ===\"; grep \"^FAIL\" \"$S/out_x3.txt\" | cut -f2,3",
+          "description": "Mutation test: progress bar live clock",
+          "timeout": 90000
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce74HPw7F3omFgrPhj8kd",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 536,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 536,
+      "cache_read_input_tokens": 85751,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 536,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 536,
+          "cache_read_input_tokens": 85751,
+          "input_tokens": 2,
+          "output_tokens": 337,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 337,
+      "output_tokens_details": {
+        "thinking_tokens": 0
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "1ce87ff1-e344-4a08-ac56-ef677d4e1a9b",
+  "requestId": "req_011Ce74HLhdoT2ETYXayLWy2",
+  "sessionId": "7d3c92af-ac69-47c4-ad94-2c02c7d6e213",
+  "timestamp": "2026-08-16T20:27:38.634Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "7fe7bcc0-b38e-4cae-80a0-fb127ffb1644",
+  "version": "2.1.233"
+}

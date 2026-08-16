@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "Deleted branch fix/remove-meeting-mode-and-review-findings (was 3e41166).\n=== branches:\n* main\n  remotes/origin/HEAD -\u003e origin/main\n  remotes/origin/main\n=== stashes:\n0",
+        "is_error": false,
+        "tool_use_id": "toolu_01S2g3CERBYbFAoGzJvy25g8",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "c695cffa-d887-471e-b5a7-48ef1c87d844",
+  "promptId": "bf6b9be6-e6cf-4e39-8634-328ab8e3b411",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "c695cffa-d887-471e-b5a7-48ef1c87d844",
+  "timestamp": "2026-08-16T20:12:04.038Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "Deleted branch fix/remove-meeting-mode-and-review-findings (was 3e41166).\n=== branches:\n* main\n  remotes/origin/HEAD -\u003e origin/main\n  remotes/origin/main\n=== stashes:\n0"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "9a0e4144-162f-4474-9bfd-d68c6ea5e8e8",
+  "version": "2.1.233"
+}

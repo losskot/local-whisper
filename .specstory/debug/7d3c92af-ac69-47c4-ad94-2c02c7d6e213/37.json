@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "1098:local function updateProgressBar()\n1099-    if not overlay then return end\n1100-    local BAR_MAX = 386  -- px, matches bar_bg width in createOverlay\n1101-    local elapsed = hs.timer.secondsSinceEpoch() - recordingStartTime\n1102-    -- Auto-expand: when recording reaches 90% of max, extend by another 3 min\n1103-    if elapsed \u003e= barMaxSecs * 0.9 then barMaxSecs = barMaxSecs + 180 end\n1104-    local recFrac = math.min(elapsed / barMaxSecs, 1.0)\n1105-    local txnFrac = math.min(transcribedSecs / barMaxSecs, 1.0)\n1106-    overlay[EL.bar_rec].frame = { x = 17, y = 48, w = math.max(1, math.floor(recFrac * BAR_MAX)), h = 4 }\n1107-    overlay[EL.bar_txn].frame = { x = 17, y = 48, w = math.max(1, math.floor(txnFrac * BAR_MAX)), h = 4 }\n1108-end\n1109-\n1110-local function hideProgressBar()\n1111-    if not overlay then return end\n1112-    overlay[EL.bar_bg].fillColor  = { red = 0.3, green = 0.3, blue = 0.3, alpha = 0.0 }",
+        "is_error": false,
+        "tool_use_id": "toolu_01Y41c6tRHbA5CYqmtUboNAP",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "df8b3cb8-c321-42f9-835e-135bd82326bd",
+  "promptId": "63032b1d-97b3-4f08-ae8f-b358bb0a478a",
+  "sessionId": "7d3c92af-ac69-47c4-ad94-2c02c7d6e213",
+  "sourceToolAssistantUUID": "df8b3cb8-c321-42f9-835e-135bd82326bd",
+  "timestamp": "2026-08-16T20:17:45.121Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "1098:local function updateProgressBar()\n1099-    if not overlay then return end\n1100-    local BAR_MAX = 386  -- px, matches bar_bg width in createOverlay\n1101-    local elapsed = hs.timer.secondsSinceEpoch() - recordingStartTime\n1102-    -- Auto-expand: when recording reaches 90% of max, extend by another 3 min\n1103-    if elapsed \u003e= barMaxSecs * 0.9 then barMaxSecs = barMaxSecs + 180 end\n1104-    local recFrac = math.min(elapsed / barMaxSecs, 1.0)\n1105-    local txnFrac = math.min(transcribedSecs / barMaxSecs, 1.0)\n1106-    overlay[EL.bar_rec].frame = { x = 17, y = 48, w = math.max(1, math.floor(recFrac * BAR_MAX)), h = 4 }\n1107-    overlay[EL.bar_txn].frame = { x = 17, y = 48, w = math.max(1, math.floor(txnFrac * BAR_MAX)), h = 4 }\n1108-end\n1109-\n1110-local function hideProgressBar()\n1111-    if not overlay then return end\n1112-    overlay[EL.bar_bg].fillColor  = { red = 0.3, green = 0.3, blue = 0.3, alpha = 0.0 }"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "178960d1-3df0-4de4-96f6-dc64f4aa7be0",
+  "version": "2.1.233"
+}

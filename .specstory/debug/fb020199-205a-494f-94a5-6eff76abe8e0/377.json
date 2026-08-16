@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "hs ok, trigger=true\n=== files:\n M AGENTS.md\n M hammerspoon/init.lua\n M install.sh\nD  tools/aggregate-audio.swift\nD  tools/meeting-doctor.sh\n M uninstall.sh\n?? tests/test_init.lua\n?? tests/test_init.sh",
+        "is_error": false,
+        "tool_use_id": "toolu_01Au1P4spWVtccRmTBFtcwKj",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "1e731669-7e77-4c6b-9af1-0c0003ff468b",
+  "promptId": "eaaa32ad-5904-4856-b68d-d7aea6bbb94c",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "1e731669-7e77-4c6b-9af1-0c0003ff468b",
+  "timestamp": "2026-08-16T20:09:46.842Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "hs ok, trigger=true\n=== files:\n M AGENTS.md\n M hammerspoon/init.lua\n M install.sh\nD  tools/aggregate-audio.swift\nD  tools/meeting-doctor.sh\n M uninstall.sh\n?? tests/test_init.lua\n?? tests/test_init.sh"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "1e3a80b4-6ea6-421e-a84c-88ea4bf70103",
+  "version": "2.1.233"
+}

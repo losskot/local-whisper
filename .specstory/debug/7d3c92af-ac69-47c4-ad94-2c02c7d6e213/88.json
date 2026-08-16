@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "=== sync delete mutant ===\noverlay: X defers the canvas delete (deleting inside the callback is ignored)\noverlay: X while idle deletes the overlay and clears the handle",
+        "is_error": false,
+        "tool_use_id": "toolu_019UVgA2JfXeR6y6RrsZhgYr",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "d2c7f3b1-f1b2-4d57-9ee1-4770ec2e9903",
+  "promptId": "63032b1d-97b3-4f08-ae8f-b358bb0a478a",
+  "sessionId": "7d3c92af-ac69-47c4-ad94-2c02c7d6e213",
+  "sourceToolAssistantUUID": "d2c7f3b1-f1b2-4d57-9ee1-4770ec2e9903",
+  "timestamp": "2026-08-16T20:27:32.949Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "=== sync delete mutant ===\noverlay: X defers the canvas delete (deleting inside the callback is ignored)\noverlay: X while idle deletes the overlay and clears the handle"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "1ce87ff1-e344-4a08-ac56-ef677d4e1a9b",
+  "version": "2.1.233"
+}

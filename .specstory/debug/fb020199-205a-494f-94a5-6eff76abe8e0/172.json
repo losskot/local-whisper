@@ -1,0 +1,60 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_013Pp7YvnpUmivAtwRsv3WRn",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "eac4855d-6126-4e3c-b278-b249f5d2dbea",
+  "promptId": "a651875f-fcbc-4b8f-85e0-3d18600f4667",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "eac4855d-6126-4e3c-b278-b249f5d2dbea",
+  "timestamp": "2026-08-16T19:29:54.858Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+    "newString": "-- isRecording and overlayPinned are declared in the Overlay UI section above,\n-- because createOverlay's mouse callback captures them.\nlocal ffmpegTask = nil\nlocal finalizationPending = false  -- true between stopRecording() and doFinalTranscription() actually starting\nlocal finalizeTimers = { timer = nil, watchdog = nil }",
+    "oldString": "local isRecording = false\nlocal overlayPinned = false\nlocal ffmpegTask = nil\nlocal partialTimer = nil\nlocal partialBusy = false\nlocal lastChunkCount = 0\nlocal finalizationPending = false  -- true between stopRecording() and doFinalTranscription() actually starting\n_whisperFinalize = { timer = nil, watchdog = nil }",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          " -- State",
+          " --------------------------------------------------------------------------------",
+          " ",
+          "-local isRecording = false",
+          "-local overlayPinned = false",
+          "+-- isRecording and overlayPinned are declared in the Overlay UI section above,",
+          "+-- because createOverlay's mouse callback captures them.",
+          " local ffmpegTask = nil",
+          "-local partialTimer = nil",
+          "-local partialBusy = false",
+          "-local lastChunkCount = 0",
+          " local finalizationPending = false  -- true between stopRecording() and doFinalTranscription() actually starting",
+          "-_whisperFinalize = { timer = nil, watchdog = nil }",
+          "+local finalizeTimers = { timer = nil, watchdog = nil }",
+          " ",
+          " -- Menu bar",
+          " local menuBar = nil"
+        ],
+        "newLines": 11,
+        "newStart": 857,
+        "oldLines": 14,
+        "oldStart": 857
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "50f35a12-10d2-4708-b435-3527252ceeaf",
+  "version": "2.1.233"
+}

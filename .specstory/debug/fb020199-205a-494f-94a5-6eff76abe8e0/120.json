@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "     1\t    end\n     2\tend)\n     3\tsleepWatcher:start()\n     4\t\n     5\t--------------------------------------------------------------------------------\n     6\t-- Meeting mode\n     7\t--------------------------------------------------------------------------------\n     8\t\n     9\t        maybeFinalizeMeetingSave()\n    10\t    end)\n    11\t\n    12\t    updateMenuBar()\n    13\tend\n    14\t\n    15\t--------------------------------------------------------------------------------\n    16\t-- Startup\n    17\t--------------------------------------------------------------------------------\n    18\t\n    19\t-- Request mic permission (child processes via hs.task inherit it)",
+        "is_error": false,
+        "tool_use_id": "toolu_01EXnM8F8HmwpcLdjpwMKUGE",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "9d4a7b73-e119-449d-967d-c1d9b3538fec",
+  "promptId": "a651875f-fcbc-4b8f-85e0-3d18600f4667",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "9d4a7b73-e119-449d-967d-c1d9b3538fec",
+  "timestamp": "2026-08-16T19:27:20.248Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "     1\t    end\n     2\tend)\n     3\tsleepWatcher:start()\n     4\t\n     5\t--------------------------------------------------------------------------------\n     6\t-- Meeting mode\n     7\t--------------------------------------------------------------------------------\n     8\t\n     9\t        maybeFinalizeMeetingSave()\n    10\t    end)\n    11\t\n    12\t    updateMenuBar()\n    13\tend\n    14\t\n    15\t--------------------------------------------------------------------------------\n    16\t-- Startup\n    17\t--------------------------------------------------------------------------------\n    18\t\n    19\t-- Request mic permission (child processes via hs.task inherit it)"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "e0ab3c6a-c8cd-4c4a-96cb-1525612031b6",
+  "version": "2.1.233"
+}

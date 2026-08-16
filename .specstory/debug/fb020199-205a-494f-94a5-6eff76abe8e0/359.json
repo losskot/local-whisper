@@ -1,0 +1,74 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_013jRrhRkheBvgfdBEPESMFs",
+        "input": {
+          "file_path": "/Users/vitaliy/Documents/GitHub/local-whisper/tests/test_init.lua",
+          "new_string": "-- `decls` holds every top-level local, including forward declarations. Assigning to\n-- one of those (e.g. `hideOverlay = function() ... end`) writes the local, not a global.\nlocal leaked = {}\nfor i, s in ipairs(stripped) do\n    -- top-level `name = ...` (not local, not indented, not a comparison)\n    local name = s:match(\"^([%w_]+)%s*=[^=]\")\n    if name and not allowedGlobals[name] and not decls[name] then\n        leaked[#leaked + 1] = name .. \" (L\" .. i .. \")\"\n    end\n    local gfn = s:match(\"^function%s+([%w_]+)%s*%(\")\n    if gfn and not allowedGlobals[gfn] and not decls[gfn] then\n        leaked[#leaked + 1] = gfn .. \"() (L\" .. i .. \")\"\n    end\nend",
+          "old_string": "local leaked = {}\nfor i, s in ipairs(stripped) do\n    -- top-level `name = ...` (not local, not indented, not a comparison)\n    local name = s:match(\"^([%w_]+)%s*=[^=]\")\n    if name and not allowedGlobals[name] then\n        leaked[#leaked + 1] = name .. \" (L\" .. i .. \")\"\n    end\n    local gfn = s:match(\"^function%s+([%w_]+)%s*%(\")\n    if gfn and not allowedGlobals[gfn] then\n        leaked[#leaked + 1] = gfn .. \"() (L\" .. i .. \")\"\n    end\nend",
+          "replace_all": false
+        },
+        "name": "Edit",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce72qb6UdhL4rPYbz3P1s",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 2196,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 2196,
+      "cache_read_input_tokens": 154310,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 2196,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 2196,
+          "cache_read_input_tokens": 154310,
+          "input_tokens": 2,
+          "output_tokens": 952,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 952,
+      "output_tokens_details": {
+        "thinking_tokens": 0
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "0a13bef6-20f0-4e97-b58c-bb497029afec",
+  "requestId": "req_011Ce72qZdfpYQxTjt54o5xj",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "timestamp": "2026-08-16T20:08:46.104Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "d3a0a589-eda6-4946-aee9-a04021289d94",
+  "version": "2.1.233"
+}

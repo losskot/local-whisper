@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "72:### Lua 200-local-per-function hard ceiling\n76:**Current count: ~199/200** — effectively no headroom left. Before adding any new top-level `local`, check the count:\n87:| `MC`  | Meeting-mode constants (`MEETING_PAUSE_SECS`, `MEETING_MAX_GAP`, etc.) |",
+        "is_error": false,
+        "tool_use_id": "toolu_01TQCcuruGHZxhRtD71MiSaK",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "e84ece22-f5e5-4a60-ba82-22720e7ff282",
+  "promptId": "a651875f-fcbc-4b8f-85e0-3d18600f4667",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "e84ece22-f5e5-4a60-ba82-22720e7ff282",
+  "timestamp": "2026-08-16T19:33:28.499Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "72:### Lua 200-local-per-function hard ceiling\n76:**Current count: ~199/200** — effectively no headroom left. Before adding any new top-level `local`, check the count:\n87:| `MC`  | Meeting-mode constants (`MEETING_PAUSE_SECS`, `MEETING_MAX_GAP`, etc.) |"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "9e9d31f1-5a3b-458b-bb94-ba1317228267",
+  "version": "2.1.233"
+}

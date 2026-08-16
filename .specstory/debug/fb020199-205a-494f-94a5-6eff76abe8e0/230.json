@@ -1,0 +1,54 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01NwBBjKSMaDPzHDK85Pqca8",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "917206fb-42fa-44c5-8fc0-3bd9c1283aca",
+  "promptId": "a651875f-fcbc-4b8f-85e0-3d18600f4667",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "917206fb-42fa-44c5-8fc0-3bd9c1283aca",
+  "timestamp": "2026-08-16T19:32:31.889Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+    "newString": "    local BAR_MAX = 386  -- px, matches bar_bg width in createOverlay\n    -- Freeze at the final duration once recording stops. Left live, this keeps climbing\n    -- during transcription and re-trips the auto-expand below on every segment, so\n    -- barMaxSecs outruns transcribedSecs and the blue bar never reaches 100%.\n    local elapsed = recordedSecs or (hs.timer.secondsSinceEpoch() - recordingStartTime)\n    -- Auto-expand: when recording reaches 90% of max, extend by another 3 min\n    if elapsed \u003e= barMaxSecs * 0.9 then barMaxSecs = barMaxSecs + 180 end",
+    "oldString": "    local BAR_MAX = 386  -- px, matches bar_bg width in createOverlay\n    local elapsed = hs.timer.secondsSinceEpoch() - recordingStartTime\n    -- Auto-expand: when recording reaches 90% of max, extend by another 3 min\n    if elapsed \u003e= barMaxSecs * 0.9 then barMaxSecs = barMaxSecs + 180 end",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          " local function updateProgressBar()",
+          "     if not overlay then return end",
+          "     local BAR_MAX = 386  -- px, matches bar_bg width in createOverlay",
+          "-    local elapsed = hs.timer.secondsSinceEpoch() - recordingStartTime",
+          "+    -- Freeze at the final duration once recording stops. Left live, this keeps climbing",
+          "+    -- during transcription and re-trips the auto-expand below on every segment, so",
+          "+    -- barMaxSecs outruns transcribedSecs and the blue bar never reaches 100%.",
+          "+    local elapsed = recordedSecs or (hs.timer.secondsSinceEpoch() - recordingStartTime)",
+          "     -- Auto-expand: when recording reaches 90% of max, extend by another 3 min",
+          "     if elapsed \u003e= barMaxSecs * 0.9 then barMaxSecs = barMaxSecs + 180 end",
+          "     local recFrac = math.min(elapsed / barMaxSecs, 1.0)"
+        ],
+        "newLines": 10,
+        "newStart": 1109,
+        "oldLines": 7,
+        "oldStart": 1109
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "565f32f7-0a30-4971-9c7a-9043fa056c4d",
+  "version": "2.1.233"
+}

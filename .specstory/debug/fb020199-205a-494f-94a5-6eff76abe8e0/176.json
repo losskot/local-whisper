@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "155:local PARTIAL_INTERVAL = 2.0   -- seconds between partial transcriptions\n410:local function getPartialModelPath()\n1158:    if partialTimer then partialTimer:stop(); partialTimer = nil end\n1163:    partialBusy = false\n1176:local function doPartialTranscribe()\n1177:    if partialBusy or not isRecording then return end\n1184:    if completed \u003c= lastChunkCount then return end\n1186:    partialBusy = true\n1200:            partialBusy = false\n1208:            partialBusy = false\n1209:            lastChunkCount = completed\n1228:            local whisperArgs = { \"-m\", getPartialModelPath(), \"-f\", batchWav, \"-l\", lang, \"-nt\", \"--no-prints\" }\n1233:                    partialBusy = false\n1234:                    lastChunkCount = completed\n1348:    log(\"final: START — total chunks=\" .. #chunks .. \", partialBusy=\" .. tostring(partialBusy))\n1620:    lastChunkCount = 0\n1621:    partialBusy = false\n1625:    -- partialTimer = hs.timer.doEvery(PARTIAL_INTERVAL, doPartialTranscribe)\n1745:    if partialTimer then partialTimer:stop(); partialTimer = nil end\n1747:    partialBusy = false",
+        "is_error": false,
+        "tool_use_id": "toolu_01BmTbcJDNGHLhXmUrnPZvrh",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "646f6825-5e94-48a9-bfcd-968981f05c1b",
+  "promptId": "a651875f-fcbc-4b8f-85e0-3d18600f4667",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "sourceToolAssistantUUID": "646f6825-5e94-48a9-bfcd-968981f05c1b",
+  "timestamp": "2026-08-16T19:30:01.628Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "155:local PARTIAL_INTERVAL = 2.0   -- seconds between partial transcriptions\n410:local function getPartialModelPath()\n1158:    if partialTimer then partialTimer:stop(); partialTimer = nil end\n1163:    partialBusy = false\n1176:local function doPartialTranscribe()\n1177:    if partialBusy or not isRecording then return end\n1184:    if completed \u003c= lastChunkCount then return end\n1186:    partialBusy = true\n1200:            partialBusy = false\n1208:            partialBusy = false\n1209:            lastChunkCount = completed\n1228:            local whisperArgs = { \"-m\", getPartialModelPath(), \"-f\", batchWav, \"-l\", lang, \"-nt\", \"--no-prints\" }\n1233:                    partialBusy = false\n1234:                    lastChunkCount = completed\n1348:    log(\"final: START — total chunks=\" .. #chunks .. \", partialBusy=\" .. tostring(partialBusy))\n1620:    lastChunkCount = 0\n1621:    partialBusy = false\n1625:    -- partialTimer = hs.timer.doEvery(PARTIAL_INTERVAL, doPartialTranscribe)\n1745:    if partialTimer then partialTimer:stop(); partialTimer = nil end\n1747:    partialBusy = false"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "0a2ceabb-af3c-4e56-88d7-9f9252ead7b3",
+  "version": "2.1.233"
+}

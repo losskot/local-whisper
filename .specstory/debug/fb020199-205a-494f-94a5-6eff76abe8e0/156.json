@@ -1,0 +1,64 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "text": "All boundaries confirmed. Cutting meeting mode now.",
+        "type": "text"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce6yqChVDayBig9eMmm6x",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 967,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 967,
+      "cache_read_input_tokens": 90583,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 967,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 967,
+          "cache_read_input_tokens": 90583,
+          "input_tokens": 2,
+          "output_tokens": 721,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 721,
+      "output_tokens_details": {
+        "thinking_tokens": 405
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "15343f1a-319d-43bd-972c-9526b234326a",
+  "requestId": "req_011Ce6yqBkBpyeh6ZrEuUJxq",
+  "sessionId": "fb020199-205a-494f-94a5-6eff76abe8e0",
+  "timestamp": "2026-08-16T19:29:18.277Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "aeeef59d-5de8-4aa8-894a-e27f91fcb7ba",
+  "version": "2.1.233"
+}
