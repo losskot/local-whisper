@@ -12,7 +12,7 @@ explain how whisper cpp was built
 
 _**Agent (copilot/claude-sonnet-4.6)**_
 
-From the session log, whisper.cpp was built during the `install.sh` run:
+From the session log, `whisper.cpp` was built during the `install.sh` run:
 
 1. **Cloned** from GitHub into `~/whisper.cpp`
 2. **Configured** with CMake — detected Apple Clang, x86_64 arch (Intel Mac), enabled Metal GPU backend, BLAS (Accelerate framework), and CPU backend

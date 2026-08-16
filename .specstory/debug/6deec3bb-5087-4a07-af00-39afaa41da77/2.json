@@ -1,25 +1,35 @@
 {
   "attachment": {
-    "addedBlocks": [
-      "## claude.ai Airtable\nThe Airtable MCP Server provides tools to interact with Airtable bases.\n\nOne of the core workflows is to find and display records from a given table. For example, \"Show me projects on the roadmap shipping this week\".\n\nTo do this, you will need to call the tools in this order:\n1) search_bases → searches for bases by name. Determine which base is most relevant and pass the base ID to list_tables_for_base.\n2) list_tables_for_base(baseId) → fetches tableIds and their corresponding fields (fieldId, type). Use this to decide which tables and fields are relevant.\n3) get_table_schema(baseId, tables) → required when filtering on singleSelect/multipleSelects fields. Fetches detailed field schema including choice IDs and names. Call this before filtering to get the correct choice IDs. Each table entry must include tableId and fieldIds.\n4) (a) if available, use display_records_for_table(baseId, tableId, ...params) → displays records only from the relevant table(s). Use params to filter, sort, select fields, and paginate.\n   (b) otherwise, use list_records_for_table(baseId, tableId, ...params) → lists records only from the relevant table(s). Use params to filter, sort, select fields, and paginate.\n\nPlanning \u0026 selection:\n- If the user did not specify a base, call list_bases, rank likely candidates by base name/description, then run list_tables_for_base on the top candidate.\n\nInterfaces and pages:\n- If the user asks about interfaces, pages, or dashboards, use list_pages_for_base(baseId) to discover available interfaces and pages, then use list_records_for_page or get_record_for_page to read data through them.\n- Some bases may have permissionLevel \"none\", meaning the user has interface-only access (shared via specific interfaces, not as a full base collaborator). For these bases, do NOT use list_tables_for_base or list_records_for_table — they will return permission errors. Use the page-based tools above instead.\n\nID formats:\n- Always operate on Airtable internal IDs. Never substitute user-facing names for IDs.\n- Examples: base … [truncated]",
-      "## claude.ai Kiwi flights search\nFlight search for Kiwi.com. Use search-flight to find one-way and return flights between two locations for given dates and passengers. Use feedback-to-devs to forward user feedback, bug reports, or feature requests to the developers."
+    "addedLines": [
+      "- claude: Catch-all for any task that doesn't fit a more specific agent. FleetView's default when no agent name is typed. (Tools: *)",
+      "- claude-code-guide: Use this agent when the user asks questions (\"Can Claude...\", \"Does Claude...\", \"How do I...\") about: (1) Claude Code (the CLI tool) - features, hooks, slash commands, MCP servers, settings, IDE integrations, keyboard shortcuts; (2) Claude Agent SDK - building custom agents; (3) Claude API (formerly Anthropic API) - API usage, tool use, Anthropic SDK usage. **IMPORTANT:** Before spawning a new agent, check if there is already a running or recently completed claude-code-guide agent that you can continue via SendMessage. (Tools: Bash, Read, WebFetch, WebSearch)",
+      "- Explore: Read-only search agent for broad fan-out searches — when answering means sweeping many files, directories, or naming conventions and you only need the conclusion, not the file dumps. It reads excerpts rather than whole files, so it locates code; it doesn't review or audit it. Specify search breadth: \"medium\" for moderate exploration, \"very thorough\" for multiple locations and naming conventions. (Tools: All tools except Agent, Artifact, ExitPlanMode, Edit, Write, NotebookEdit)",
+      "- general-purpose: General-purpose agent for researching complex questions, searching for code, and executing multi-step tasks. When you are searching for a keyword or file and are not confident that you will find the right match in the first few tries use this agent to perform the search for you. (Tools: *)",
+      "- Plan: Software architect agent for designing implementation plans. Use this when you need to plan the implementation strategy for a task. Returns step-by-step plans, identifies critical files, and considers architectural trade-offs. (Tools: All tools except Agent, Artifact, ExitPlanMode, Edit, Write, NotebookEdit)",
+      "- statusline-setup: Use this agent to configure the user's Claude Code status line setting. (Tools: Read, Edit)"
     ],
-    "addedNames": [
-      "claude.ai Airtable",
-      "claude.ai Kiwi flights search"
+    "addedTypes": [
+      "claude",
+      "claude-code-guide",
+      "Explore",
+      "general-purpose",
+      "Plan",
+      "statusline-setup"
     ],
-    "removedNames": [],
-    "type": "mcp_instructions_delta"
+    "isInitial": true,
+    "removedTypes": [],
+    "showConcurrencyNote": false,
+    "type": "agent_listing_delta"
   },
   "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
   "entrypoint": "claude-vscode",
   "gitBranch": "main",
   "isSidechain": false,
-  "parentUuid": "59ac56ae-25e7-4dfa-a24c-b2bf334f1261",
+  "parentUuid": "65f7c919-003f-4e9d-9f1c-9e7222d4acba",
   "sessionId": "6deec3bb-5087-4a07-af00-39afaa41da77",
   "timestamp": "2026-07-03T17:24:41.815Z",
   "type": "attachment",
   "userType": "external",
-  "uuid": "863e2251-1691-4d6a-88f9-6ef6a4b04fd8",
+  "uuid": "59ac56ae-25e7-4dfa-a24c-b2bf334f1261",
   "version": "2.1.197"
 }

@@ -1,0 +1,41 @@
+{
+  "schemaVersion": "1.0",
+  "provider": {
+    "id": "copilotide",
+    "name": "VS Code Copilot IDE",
+    "version": "1.0"
+  },
+  "sessionId": "96570100-fe94-4ca5-a91e-14e8d276b9f1",
+  "createdAt": "2026-08-16T19:07:18+02:00",
+  "updatedAt": "2026-08-16T19:08:40+02:00",
+  "slug": "macos",
+  "workspaceRoot": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "exchanges": [
+    {
+      "exchangeId": "request_90afa8f9-3601-4d01-b08e-a1063195fbca",
+      "startTime": "2026-08-16T19:08:05+02:00",
+      "messages": [
+        {
+          "timestamp": "2026-08-16T19:08:05+02:00",
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "Напиши короткий план написания один в один функционала того, что есть в этом workspace под полностью нативное macOS приложение. Я не знаю, как описать его тип. Тот тип, который я устанавливаю через Homebrew."
+            }
+          ]
+        },
+        {
+          "role": "agent",
+          "model": "copilot/gpt-5.6-luna",
+          "content": [
+            {
+              "type": "text",
+              "text": "Homebrew — это способ установки, а не тип приложения. Для этого проекта правильная цель: **нативное macOS menu bar application**, написанное на Swift/SwiftUI, устанавливаемое через Homebrew Cask как `.app`.\n\nКороткий план:\n\n1. **Создать macOS Menu Bar App**\n   - Swift + SwiftUI/AppKit.\n   - Запуск без Dock-иконки через `LSUIElement`.\n   - Иконка и меню в menu bar.\n\n2. **Перенести глобальное управление**\n   - Перехват удержания и отпускания клавиши через `CGEventTap` или Carbon Hot Keys.\n   - Проверка разрешения Accessibility.\n   - Состояния: ожидание, запись, транскрибация, ошибка.\n\n3. **Заменить ffmpeg на нативную запись**\n   - `AVAudioEngine` или `AVAudioRecorder`.\n   - Запись микрофона в PCM/WAV.\n   - Разбиение записи на 1-секундные сегменты для частичной транскрибации.\n\n4. **Интегрировать `whisper.cpp`**\n   - Подключить `whisper.cpp` как C++/Objective-C++ framework или XCFramework.\n   - Маленькая модель для partial transcription.\n   - Выбранная пользователем модель для финального результата.\n   - Отдельная очередь транскрибации и отмена зависших задач.\n\n5. **Перенести постобработку**\n   - Удаление слов-паразитов.\n   - Капитализация с учетом текущего приложения.\n   - Финальная очистка текста.\n   - Опциональная локальная LLM-обработка через Ollama.\n\n6. **Нативная вставка текста**\n   - Основной вариант: `NSPasteboard` + `Cmd+V`.\n   - Резервный вариант: имитация клавиатурного ввода через Quartz Events.\n   - Восстановление прежнего содержимого буфера обмена.\n\n7. **Перенести voice actions**\n   - Swift-модель команд вместо Lua-файла.\n   - Голосовые команды: запуск приложений, создание заметок, специальные действия.\n   - Конфигурация команд в JSON или Swift-плагинах.\n\n8. **Сделать нативный overlay**\n   - `NSPanel`/SwiftUI окно поверх всех приложений.\n   - Индикация записи, уровня звука, прогресса, partial-текста и ошибок.\n   - Кнопки отмены и закрытия.\n\n9. **Перенести настройки и хранение состояния**\n   - `UserDefaults` или `AppStorage` для языка, модели и режима вставки.\n   - `Application Support/LocalWhisper` для моделей и истории.\n   - `os.Logger` вместо текстового Lua-лога.\n\n10. **Упаковать и распространять**\n    - Встроить модели или скачивать их отдельно.\n    - Подписать и notarize `.app`.\n    - Создать Homebrew Cask, который устанавливает приложение в `Applications`.\n    - Добавить Launch at Login через `SMAppService`.\n\nИтоговая структура будет такой:\n\n```text\nMenu bar app\n  -\u003e CGEventTap\n  -\u003e AVAudioEngine\n  -\u003e whisper.cpp\n  -\u003e post-processing\n  -\u003e voice actions\n  -\u003e NSPasteboard / keyboard events\n  -\u003e SwiftUI overlay and settings\n```\n\nТо есть Homebrew здесь должен устанавливать не «тип приложения», а готовый нативный `.app` через **Homebrew Cask**."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

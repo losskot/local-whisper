@@ -16,4 +16,328 @@ stack traceback:
 
 _**Agent (copilot/claude-sonnet-4.6)**_
 
-Let me look at the relevant code around line 867 in init.lua.
+<tool-use data-tool-type="read" data-tool-name="read_file"><details>
+<summary>Tool use: **read_file**</summary>
+
+Read `init.lua`, lines 835 to 875
+
+**Input:**
+
+- endLine: `875`
+- filePath: `/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua`
+- startLine: `835`
+
+**Result:**
+
+```
+    -- Map string IDs to numeric indices for element access
+    local idMap = { bg = 1, lang = EL.lang, output = EL.output, enter = EL.enter, model = EL.model, refine = EL.refine, close = EL.close }
+
+    -- Mouse handler: click bg to pin, click labels to cycle settings, X to close
+    overlay:canvasMouseEvents(true, true, true, false)  -- mouseDown + mouseUp + enterExit
+    overlay:mouseCallback(function(canvas, event, id, mx, my)
+        -- Close button — hide immediately, delete deferred
+        if id == "close" then
+            if event == "mouseDown" then
+                log("overlay: X close")
+                canvas:hide()
+                hs.timer.doAfter(0.01, function()
+                    overlayPinned = false
+                    if isRecording then
+                        emergencyStop()
+                    else
+                        if overlay then overlay:delete(); overlay = nil end
+                    end
+                end)
+            end
+            return
+        end
+
+        if event == "mouseUp" then
+            if id == "bg" then
+                overlayPinned = not overlayPinned
+                if overlayPinned then
+                    canvas[1].fillColor = { red = 0.15, green = 0.15, blue = 0.2, alpha = 0.92 }
+                    log("overlay pinned")
+                else
+                    canvas[1].fillColor = { red = 0.1, green = 0.1, blue = 0.1, alpha = 0.85 }
+                    log("overlay unpinned")
+                    if not isRecording then hideOverlay() end
+                end
+                return
+            end
+
+            if id == "lang" then cycleLang()
+            elseif id == "output" then cycleOutput()
+            elseif id == "enter" then cycleEnter()
+            elseif id == "model" then cycleModel()
+```
+</details></tool-use>
+
+_**Agent (copilot/claude-sonnet-4.6)**_
+
+The issue is clear: `hideOverlay()` is called at line 867 but it's defined later (or possibly under a different name). Let me check. 
+
+_**Agent (copilot/claude-sonnet-4.6)**_
+
+<tool-use data-tool-type="search" data-tool-name="grep_search"><details>
+<summary>Tool use: **grep_search**</summary>
+
+No matches found. Your search pattern might be excluded completely by either the search.exclude settings or .*ignore files.
+If you believe that it should have results, you can check into the .*ignore files and the exclude setting (here are some excluded patterns for reference:[**/node_modules,**/bower_components,**/*.code-search]).
+Then if you want to include those files you can call the tool again by setting "includeIgnoredFiles" to true.
+
+**Input:**
+
+- includePattern: `hammerspoon/init.lua`
+- isRegexp: `true`
+- query: `hideOverlay\|function hideOverlay`
+</details></tool-use>
+
+_**Agent (copilot/claude-sonnet-4.6)**_
+
+<tool-use data-tool-type="search" data-tool-name="grep_search"><details>
+<summary>Tool use: **grep_search**</summary>
+
+Searched for text `hideOverlay`, 83 results
+
+**Input:**
+
+- filePath: `/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua`
+- isRegexp: `false`
+- query: `hideOverlay`
+
+**Result:**
+
+```
+Found 83 matches in 20 files for "hideOverlay" (showing 20 matches in 20 files)
+
+.specstory/debug/2d125efe-df0d-4cfa-9dc2-b86ee9ffa227/raw-session.json
+511:4:                hs.timer.doAfter(0.01, function()\r\n826:                    if isRecording then\r\n845:                    if not isRecording then hideOverlay() end\r\n916:local isRecording = false\r\n937:local pulseTimer = nil\r\n940:local pulseAlpha = 1.0\r\n94 [match at col 508 · line truncated, 3,715 chars]
+... (6 more matches in this file)
+
+.specstory/debug/2d125efe-df0d-4cfa-9dc2-b86ee9ffa227/session-data.json
+375:}; overlay[EL.bar_rec].fillColor={red=1,green=0.35,blue=0.15,alpha=0}; overlay[EL.bar_txn].fillColor={red=0.2,green=0.75,blue=1,alpha=0} end\n        hideOverlay(); return\n    end\n    -- Show blue bar at 100% briefly before inserting\n    barState.txnSecs = barSta [match at col 302 · line truncated, 804 chars]
+... (2 more matches in this file)
+
+.specstory/debug/3e65aa28-ec73-40d3-a498-b67b9423b32b/raw-session.json
+1105:                                  "text": "        hideOverlay()\n",
+... (1 more match in this file)
+
+.specstory/debug/6deec3bb-5087-4a07-af00-39afaa41da77/194.json
+9:        "text": "Now items #2 (pcall) and #3 (watchdog) both live in this finalization path, so I'll do them together. Let me look at `hideOverlay`/`forceHideOverlay` — the watchdog must disarm there.",
+
+.specstory/debug/6deec3bb-5087-4a07-af00-39afaa41da77/205.json
+23:    "newString": "local overlay = nil\nlocal btnColor = { red = 0.5, green = 0.8, blue = 1.0, alpha = 1.0 }\nlocal btnHover = { red = 0.7, green = 0.9, blue = 1.0, alpha = 1.0 }\n\n-- Forward declaration: the streaming/finalization pipeline state table is\n-- populated in the State section below, but hideOverlay()/forceHideOverlay()\n-- (defined just after this) need to disarm PL.watchdog, so PL must be in scope\n-- here. Same forward-declare pattern as `overlay` above.\nlocal PL",
+... (1 more match in this file)
+
+.specstory/debug/6deec3bb-5087-4a07
+… (output truncated)
+```
+</details></tool-use>
+
+_**Agent (copilot/claude-sonnet-4.6)**_
+
+<tool-use data-tool-type="search" data-tool-name="grep_search"><details>
+<summary>Tool use: **grep_search**</summary>
+
+Searched for regex `function hideOverlay|hideOverlay\s*=`, 37 results
+
+**Input:**
+
+- filePath: `/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua`
+- isRegexp: `true`
+- query: `function hideOverlay|hideOverlay\s*=`
+
+**Result:**
+
+```
+Found 37 matches in 13 files for "function hideOverlay|hideOverlay\s*=" (showing 20 matches in 13 files)
+
+.specstory/debug/6deec3bb-5087-4a07-af00-39afaa41da77/195.json
+14:          "command": "cd /Users/vitaliy/Documents/GitHub/local-whisper; grep -n \"function hideOverlay\\|function forceHideOverlay\\|function setOverlayText\" hammerspoon/init.lua",
+
+.specstory/debug/6deec3bb-5087-4a07-af00-39afaa41da77/196.json
+9:        "content": "910:local function hideOverlay()\n915:local function forceHideOverlay()\n920:local function setOverlayText(text)",
+... (1 more match in this file)
+
+.specstory/debug/6deec3bb-5087-4a07-af00-39afaa41da77/198.json
+9:        "content": "908\tend\n909\t\n910\tlocal function hideOverlay()\n911\t    if overlayPinned then return end  -- pinned overlay stays open\n912\t    if overlay then ove [match at col 49 · line truncated, 968 chars]
+... (1 more match in this file)
+
+.specstory/debug/6deec3bb-5087-4a07-af00-39afaa41da77/209.json
+15:fter we've already finished.\nlocal function cancelWatchdog()\n    if PL and PL.watchdog then PL.watchdog:stop(); PL.watchdog = nil end\nend\n\nlocal function hideOverlay()\n    if overlayPinned then return end  -- pinned overlay stays open\n    cancelWatchdog()\n    if over [match at col 301 · line truncated, 624 chars]
+... (1 more match in this file)
+
+.specstory/debug/6deec3bb-5087-4a07-af00-39afaa41da77/210.json
+23:fter we've already finished.\nlocal function cancelWatchdog()\n    if PL and PL.watchdog then PL.watchdog:stop(); PL.watchdog = nil end\nend\n\nlocal function hideOverlay()\n    if overlayPinned then return end  -- pinned overlay stays open\n    cancelWatchdog()\n    if over [match at col 294 · line truncated, 617 chars]
+24:    "oldString": "local function hideOverlay()\n    if overlayPinned then return end  -- pinned overlay stays open\n    if overlay then overlay:delete(); overlay = nil end\nend\n\nlocal function forceHideOverlay()\n    overlayPinned = false\n    if overlay then overlay:delete(); 
+… (output truncated)
+```
+</details></tool-use>
+
+_**Agent (copilot/claude-sonnet-4.6)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file"><details>
+<summary>Tool use: **read_file**</summary>
+
+Read `init.lua`, lines 665 to 680
+
+**Input:**
+
+- endLine: `680`
+- filePath: `/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua`
+- startLine: `665`
+
+**Result:**
+
+```
+
+local overlay = nil
+local btnColor = { red = 0.5, green = 0.8, blue = 1.0, alpha = 1.0 }
+local btnHover = { red = 0.7, green = 0.9, blue = 1.0, alpha = 1.0 }
+
+-- Forward declaration: the streaming/finalization pipeline state table is
+-- populated in the State section below, but hideOverlay()/forceHideOverlay()
+-- (defined just after this) need to disarm PL.watchdog, so PL must be in scope
+-- here. Same forward-declare pattern as `overlay` above.
+local PL
+
+-- Element indices: 1=bg, 2=lang, 3=sep1, 4=output, 5=sep2, 6=enter, 7=sep3, 8=model, 9=sep4, 10=refine, 11=text, 12=dot, 13=timer, 14=close, 15=bar_bg, 16=bar_rec, 17=bar_txn
+local EL = { lang = 2, output = 4, enter = 6, model = 8, refine = 10, text = 11, dot = 12, timer = 13, close = 14, bar_bg = 15, bar_rec = 16, bar_txn = 17 }
+
+local CLR = {
+    enterOn  = { red = 0.3, green = 1.0, blue = 0.3, alpha = 1.0 },
+```
+</details></tool-use>
+
+_**Agent (copilot/claude-sonnet-4.6)**_
+
+<tool-use data-tool-type="read" data-tool-name="read_file"><details>
+<summary>Tool use: **read_file**</summary>
+
+Read `init.lua`, lines 918 to 932
+
+**Input:**
+
+- endLine: `932`
+- filePath: `/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua`
+- startLine: `918`
+
+**Result:**
+
+```
+local function cancelWatchdog()
+    if PL and PL.watchdog then PL.watchdog:stop(); PL.watchdog = nil end
+end
+
+local function hideOverlay()
+    if overlayPinned then return end  -- pinned overlay stays open
+    cancelWatchdog()
+    if overlay then overlay:delete(); overlay = nil end
+end
+
+local function forceHideOverlay()
+    overlayPinned = false
+    cancelWatchdog()
+    if overlay then overlay:delete(); overlay = nil end
+end
+```
+</details></tool-use>
+
+_**Agent (copilot/claude-sonnet-4.6)**_
+
+The problem: `hideOverlay` is defined at line 922, but `createOverlay`'s mouse callback (around line 867) calls it. Since it's a `local function`, closures defined *before* it captured `nil`. The fix is to forward-declare `hideOverlay` alongside `overlay` at line 665. 
+
+_**Agent (copilot/claude-sonnet-4.6)**_
+
+<tool-use data-tool-type="write" data-tool-name="textEditGroup"><details>
+<summary>Edit: **init.lua**</summary>
+
+@@ lines 674-674 @@
+
+```
+
+
+-- Forward declarations so createOverlay's mouse callback can reference these
+-- before their definitions (local functions are only visible after definition).
+local hideOverlay, forceHideOverlay
+```
+</details></tool-use>
+
+_**Agent (copilot/claude-sonnet-4.6)**_
+
+Now change the definitions at line ~922 from `local function` to assignments so they fill the forward-declared upvalues: 
+
+_**Agent (copilot/claude-sonnet-4.6)**_
+
+<tool-use data-tool-type="write" data-tool-name="textEditGroup"><details>
+<summary>Edit: **init.lua**</summary>
+
+@@ lines 926-932 @@
+
+```
+hideOverlay = function()
+    if overlayPinned then return end  -- pinned overlay stays open
+    cancelWatchdog()
+    if overlay then overlay:delete(); overlay = nil end
+end
+
+forceHideOverlay = function
+```
+</details></tool-use>
+
+_**Agent (copilot/claude-sonnet-4.6)**_
+
+Now commit and push: 
+
+_**Agent (copilot/claude-sonnet-4.6)**_
+
+<tool-use data-tool-type="generic" data-tool-name="run_in_terminal"><details>
+<summary>Tool use: **run_in_terminal**</summary>
+
+Running ` cd /Users/vitaliy/Documents/GitHub/local-whisper && git add hammerspoon/init...`
+
+Commit and push the forward-declaration fix
+
+```bash
+cd /Users/vitaliy/Documents/GitHub/local-whisper && git add hammerspoon/init.lua && git commit -m "fix: forward-declare hideOverlay/forceHideOverlay before createOverlay
+
+The mouse callback in createOverlay called hideOverlay() which was defined
+as a local function *after* createOverlay. Lua captures upvalues at
+definition time, so the callback captured nil. Fix: forward-declare both
+functions as locals before createOverlay, then assign (not re-declare) the
+bodies at their original location." && git push
+```
+
+**Result:**
+
+```
+vitaliy@MacBook-Air-2 local-whisper %  cd /Users/vitaliy/Documents/GitHub/local-
+whisper && git add hammerspoon/init.lua && git commit -m "fix: forward-declare h
+ideOverlay/forceHideOverlay before createOverlay
+
+The mouse callback in createOverlay called hideOverlay() which was defined
+as a local function *after* createOverlay. Lua captures upvalues at
+definition time, so the callback captured nil. Fix: forward-declare both
+functions as locals before createOverlay, then assign (not re-declare) the
+bodies at their original location." && git push
+[main c6a634c] fix: forward-declare hideOverlay/forceHideOverlay before createOv
+erlay
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+Enumerating objects: 7, done.
+Counting objects: 100% (7/7), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (4/4), done.
+Writing objects: 100% (4/4), 774 bytes | 774.00 KiB/s, done.
+Total 4 (delta 2), reused 0 (delta 0), pack-reused 0 (from 0)
+remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
+To https://github.com/losskot/local-whisper.git
+   3d895a2..c6a634c  main -> main
+vitaliy@MacBook-Air-2 local-whisper %
+```
+</details></tool-use>
+
+_**Agent (copilot/claude-sonnet-4.6)**_
+
+Root cause: `hideOverlay` and `forceHideOverlay` were `local function` declarations at line ~922, *after* `createOverlay`. Lua captures upvalues at definition time, so the mouse callback inside `createOverlay` captured `nil` for `hideOverlay`. Fixed by forward-declaring both as `local` variables before `createOverlay`, then assigning their bodies at the original location (same pattern already used for `PL` in this file).

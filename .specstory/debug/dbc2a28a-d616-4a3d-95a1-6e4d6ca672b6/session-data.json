@@ -7,7 +7,7 @@
   },
   "sessionId": "dbc2a28a-d616-4a3d-95a1-6e4d6ca672b6",
   "createdAt": "2026-07-11T16:51:17+02:00",
-  "updatedAt": "1970-01-01T01:00:00+01:00",
+  "updatedAt": "2026-08-16T18:36:58+02:00",
   "slug": "whisper-cpp-build-explanation",
   "workspaceRoot": "/Users/vitaliy/Documents/GitHub/local-whisper",
   "exchanges": [
@@ -31,7 +31,7 @@
           "content": [
             {
               "type": "text",
-              "text": "From the session log, whisper.cpp was built during the `install.sh` run:\n\n1. **Cloned** from GitHub into `~/whisper.cpp`\n2. **Configured** with CMake — detected Apple Clang, x86_64 arch (Intel Mac), enabled Metal GPU backend, BLAS (Accelerate framework), and CPU backend\n3. **Built** with `cmake --build` — compiled all targets including `whisper-cli`, `whisper-server`, `whisper-bench`, etc.\n\nKey details from the build output:\n- Compiler: AppleClang 21.0.0 (Xcode)\n- Backends enabled: **Metal** (GPU), **BLAS/Accelerate**, **CPU**\n- OpenMP: not found (minor, just means no CPU threading via OpenMP)\n- The binary landed at `~/whisper.cpp/build/bin/whisper-cli`\n\nThe install script essentially ran:\n```bash\ngit clone https://github.com/ggerganov/whisper.cpp ~/whisper.cpp\ncd ~/whisper.cpp\nmkdir build \u0026\u0026 cd build\ncmake .. \ncmake --build . --config Release\n```"
+              "text": "From the session log, `whisper.cpp` was built during the `install.sh` run:\n\n1. **Cloned** from GitHub into `~/whisper.cpp`\n2. **Configured** with CMake — detected Apple Clang, x86_64 arch (Intel Mac), enabled Metal GPU backend, BLAS (Accelerate framework), and CPU backend\n3. **Built** with `cmake --build` — compiled all targets including `whisper-cli`, `whisper-server`, `whisper-bench`, etc.\n\nKey details from the build output:\n- Compiler: AppleClang 21.0.0 (Xcode)\n- Backends enabled: **Metal** (GPU), **BLAS/Accelerate**, **CPU**\n- OpenMP: not found (minor, just means no CPU threading via OpenMP)\n- The binary landed at `~/whisper.cpp/build/bin/whisper-cli`\n\nThe install script essentially ran:\n```bash\ngit clone https://github.com/ggerganov/whisper.cpp ~/whisper.cpp\ncd ~/whisper.cpp\nmkdir build \u0026\u0026 cd build\ncmake .. \ncmake --build . --config Release\n```"
             }
           ]
         }

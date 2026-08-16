@@ -857,6 +857,7 @@ local partialTimer = nil
 local partialBusy = false
 local lastChunkCount = 0
 local finalizationPending = false  -- true between stopRecording() and doFinalTranscription() actually starting
+_whisperFinalize = { timer = nil, watchdog = nil }
 
 -- Menu bar
 local menuBar = nil
@@ -1664,7 +1665,7 @@ end
 local function cancelWarmup()
     if warmupTimer then warmupTimer:stop(); warmupTimer = nil end
     if warmupTask and warmupTask:isRunning() then
-        warmupTask:interrupt(); warmupTask = nil
+        warmupTask:terminate(); warmupTask = nil
     end
 end
 
@@ -1691,7 +1692,7 @@ tryWarmup = function()
             if stderr and stderr ~= "" and isWarmingUp then
                 log("warmup: device ready on attempt " .. warmupAttempt)
                 if warmupTimer then warmupTimer:stop(); warmupTimer = nil end
-                task:interrupt()
+                task:terminate()
                 startActualRecording()
             end
             return true
@@ -1707,7 +1708,7 @@ tryWarmup = function()
         warmupTimer = nil
         if not isWarmingUp then return end
         if warmupTask and warmupTask:isRunning() then
-            warmupTask:interrupt(); warmupTask = nil
+            warmupTask:terminate(); warmupTask = nil
         end
         if warmupAttempt < WARMUP_MAX_ATTEMPTS then
             log("warmup: no response, retrying...")
@@ -1726,6 +1727,14 @@ end
 
 local function startRecording()
     if isRecording or isWarmingUp then return end
+    if finalizationPending then
+        finalizationPending = false
+        if _whisperFinalize.timer then _whisperFinalize.timer:stop(); _whisperFinalize.timer = nil end
+        if _whisperFinalize.watchdog then _whisperFinalize.watchdog:stop(); _whisperFinalize.watchdog = nil end
+        log("recovery: resuming finalization before starting a new recording")
+        doFinalTranscription()
+        return
+    end
     isWarmingUp = true
     warmupAttempt = 0
     log("warmup: probing audio device...")
@@ -1765,15 +1774,29 @@ stopRecording = function()
     end
     ffmpegTask = nil
 
-    hs.sound.getByFile("/System/Library/Sounds/Tink.aiff"):play()
-
     -- Brief delay for ffmpeg to finalize last chunk. A short timer scheduled right as the
     -- system suspends can be silently dropped across sleep (see sleepWatcher below), so track
     -- pending state and recover on wake instead of just losing the recording silently.
     finalizationPending = true
-    hs.timer.doAfter(0.3, function()
+    _whisperFinalize.timer = hs.timer.doAfter(0.3, function()
+        _whisperFinalize.timer = nil
+        if not finalizationPending then return end
         finalizationPending = false
+        if _whisperFinalize.watchdog then _whisperFinalize.watchdog:stop(); _whisperFinalize.watchdog = nil end
         doFinalTranscription()
+    end)
+    _whisperFinalize.watchdog = hs.timer.doAfter(5, function()
+        _whisperFinalize.watchdog = nil
+        if not finalizationPending then return end
+        finalizationPending = false
+        if _whisperFinalize.timer then _whisperFinalize.timer:stop(); _whisperFinalize.timer = nil end
+        log("recovery: finalization timer delayed, starting directly")
+        doFinalTranscription()
+    end)
+
+    pcall(function()
+        local snd = hs.sound.getByFile("/System/Library/Sounds/Tink.aiff")
+        if snd then snd:play() end
     end)
 end
 
@@ -1836,6 +1859,8 @@ local sleepWatcher = hs.caffeinate.watcher.new(function(eventType)
     log("system: woke from sleep")
     if finalizationPending then
         finalizationPending = false
+        if _whisperFinalize.timer then _whisperFinalize.timer:stop(); _whisperFinalize.timer = nil end
+        if _whisperFinalize.watchdog then _whisperFinalize.watchdog:stop(); _whisperFinalize.watchdog = nil end
         log("system: finalization timer was lost across sleep, resuming now")
         doFinalTranscription()
     elseif isRecording then

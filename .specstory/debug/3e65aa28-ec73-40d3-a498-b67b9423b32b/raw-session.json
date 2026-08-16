@@ -8871,13 +8871,1429 @@
           "id": "thinking_0",
           "kind": "thinking",
           "value": "The user wants to document the new \"copy\" output mode and the sym"
+        },
+        {
+          "generatedTitle": "Reviewed existing markdown files and documented new output mode",
+          "id": "thinking_0",
+          "kind": "thinking",
+          "value": "The user wants to document the new \"copy\" output mode and the symlink change in the existing markdown files. Let me check what docs exist."
+        },
+        {
+          "id": "",
+          "kind": "thinking",
+          "metadata": {
+            "stopReason": "other",
+            "vscodeReasoningDone": true
+          },
+          "value": ""
+        },
+        {
+          "invocationMessage": {
+            "isTrusted": false,
+            "supportAlertSyntax": false,
+            "supportHtml": false,
+            "supportThemeIcons": false,
+            "value": "Running ` grep -n \"paste\\\\|type\\\\|output\\\\|mode\" /Users/vitaliy/Documents/GitHub/local-wh...`"
+          },
+          "isComplete": true,
+          "isConfirmed": {
+            "reason": "auto-approve-all",
+            "type": 1
+          },
+          "kind": "toolInvocationSerialized",
+          "source": {
+            "label": "Built-In",
+            "type": "internal"
+          },
+          "toolCallId": "toolu_bdrk_01H1MECqQScHREFZTQStczee",
+          "toolId": "run_in_terminal",
+          "toolSpecificData": {
+            "commandLine": {
+              "forDisplay": " grep -n \"paste\\|type\\|output\\|mode\" /Users/vitaliy/Documents/GitHub/local-whisper/README.md | head -30",
+              "isSandboxWrapped": false,
+              "original": "grep -n \"paste\\|type\\|output\\|mode\" /Users/vitaliy/Documents/GitHub/local-whisper/README.md | head -30",
+              "toolEdited": " grep -n \"paste\\|type\\|output\\|mode\" /Users/vitaliy/Documents/GitHub/local-whisper/README.md | head -30"
+            },
+            "confirmation": {
+              "commandLine": "grep -n \"paste\\|type\\|output\\|mode\" /Users/vitaliy/Documents/GitHub/local-whisper/README.md | head -30"
+            },
+            "cwd": {
+              "$mid": 1,
+              "external": "file:///Users/vitaliy/Documents/GitHub/local-whisper",
+              "fsPath": "/Users/vitaliy/Documents/GitHub/local-whisper",
+              "path": "/Users/vitaliy/Documents/GitHub/local-whisper",
+              "scheme": "file"
+            },
+            "isBackground": false,
+            "kind": "terminal",
+            "language": "sh",
+            "requestAllowNetwork": false,
+            "requestUnsandboxedExecution": false,
+            "terminalCommandId": "tool-2a37588a-6f62-47b2-ae0b-d7aea06c654f",
+            "terminalCommandOutput": {
+              "lineCount": 27,
+              "text": "23:- **Recent dictations**: View and re-paste your last 10 dictations from the menu bar\r\n36:| \"voice command paste\" | Fires Cmd+V |\r\n56:The installer handles everything: Homebrew dependencies, building whisper.cpp, downloading models, and setting up Hammerspoon. It then runs `setup.sh` which walks you through choosing your trigger key, microphone, and granting permissions.\r\n79:# 3. Download model (~1.5 GB)\r\n80:./models/download-ggml-model.sh medium\r\n82:# 4. Optional: download tiny model for faster live preview\r\n83:./models/download-ggml-model.sh tiny\r\n132:- See current language, model, output mode, enter mode, and LLM refine status\r\n134:- View and re-paste recent dictations\r\n156:2. Pull a model: `ollama pull gemma3:4b` (small, fast, good at text cleanup)\r\n167:| `~/.local-whisper/refine_model` | Ollama model to use (default: `gemma3:4b`) |\r\n172:By default, partial transcription uses the same model as final transcription. For faster live preview, download a smaller model:\r\n175:cd ~/whisper.cpp/models\r\n176:./download-ggml-model.sh tiny\r\n179:The system automatically picks the smallest available model (tiny \u003e base \u003e small) for partials while keeping your chosen model for the final transcription.\r\n246:  → Text inserted at cursor via paste (Cmd+V) or keystroke\r\n249:**Latency profile** (60s dictation, large-v3-turbo model, ~0.4× real-time):\r\n267:- **No transcription output**: Check `$TMPDIR/whisper-dictate/whisper-dictate.log` for errors (run `echo $TMPDIR` to find the path)\u001b[?2004h"
+            },
+            "terminalCommandState": {
+              "duration": 0,
+              "exitCode": 0,
+              "timestamp": 1782949113768
+            },
+            "terminalCommandUri": {
+              "$mid": 1,
+              "path": "/5b7c205e3ce7e5bb9442167850439dce/8",
+              "query": "command=tool-2a37588a-6f62-47b2-ae0b-d7aea06c654f",
+              "scheme": "vscode-terminal"
+            },
+            "terminalTheme": {
+              "background": "#ffffff",
+              "foreground": "#333333"
+            },
+            "terminalToolSessionId": "11fe8f06-272b-420e-9d3c-0362632665f5"
+          }
+        },
+        {
+          "invocationMessage": {
+            "supportAlertSyntax": false,
+            "supportHtml": false,
+            "supportThemeIcons": false,
+            "uris": {},
+            "value": "Searching for text `paste\\|output mode\\|type mode` (`**/README.md`)"
+          },
+          "isComplete": true,
+          "isConfirmed": {
+            "type": 1
+          },
+          "kind": "toolInvocationSerialized",
+          "pastTenseMessage": {
+            "supportAlertSyntax": false,
+            "supportHtml": false,
+            "supportThemeIcons": false,
+            "uris": {},
+            "value": "No matches found. Your search pattern might be excluded completely by either the search.exclude settings or .*ignore files.\nIf you believe that it should have results, you can check into the .*ignore files and the exclude setting (here are some excluded patterns for reference:[**/node_modules,**/bower_components,**/*.code-search]).\nThen if you want to include those files you can call the tool again by setting \"includeIgnoredFiles\" to true."
+          },
+          "source": {
+            "label": "Built-In",
+            "type": "internal"
+          },
+          "toolCallId": "toolu_bdrk_014i4akzEnJKFqeNGn4rraiP",
+          "toolId": "copilot_findTextInFiles"
+        },
+        {
+          "invocationMessage": {
+            "isTrusted": false,
+            "supportAlertSyntax": false,
+            "supportHtml": false,
+            "supportThemeIcons": false,
+            "value": "Running ` grep -n \"PASTE\\\\|TYPE\\\\|output mode\\\\|Output:\" /Users/vitaliy/Documents/GitHub/...`"
+          },
+          "isComplete": true,
+          "isConfirmed": {
+            "reason": "auto-approve-all",
+            "type": 1
+          },
+          "kind": "toolInvocationSerialized",
+          "source": {
+            "label": "Built-In",
+            "type": "internal"
+          },
+          "toolCallId": "toolu_bdrk_01D1F3fbBVpP1FQTUNk8kjKY",
+          "toolId": "run_in_terminal",
+          "toolSpecificData": {
+            "commandLine": {
+              "forDisplay": " grep -n \"PASTE\\|TYPE\\|output mode\\|Output:\" /Users/vitaliy/Documents/GitHub/local-whisper/README.md",
+              "isSandboxWrapped": false,
+              "original": "grep -n \"PASTE\\|TYPE\\|output mode\\|Output:\" /Users/vitaliy/Documents/GitHub/local-whisper/README.md",
+              "toolEdited": " grep -n \"PASTE\\|TYPE\\|output mode\\|Output:\" /Users/vitaliy/Documents/GitHub/local-whisper/README.md"
+            },
+            "confirmation": {
+              "commandLine": "grep -n \"PASTE\\|TYPE\\|output mode\\|Output:\" /Users/vitaliy/Documents/GitHub/local-whisper/README.md"
+            },
+            "cwd": {
+              "$mid": 1,
+              "path": "/Users/vitaliy/Documents/GitHub/local-whisper",
+              "scheme": "file"
+            },
+            "isBackground": false,
+            "kind": "terminal",
+            "language": "sh",
+            "requestAllowNetwork": false,
+            "requestUnsandboxedExecution": false,
+            "terminalCommandId": "tool-bf98df3c-a24d-4c8f-9167-f773eeafbe10",
+            "terminalCommandOutput": {
+              "lineCount": 2,
+              "text": "132:- See current language, model, output mode, enter mode, and LLM refine status\u001b[?2004h"
+            },
+            "terminalCommandState": {
+              "duration": 0,
+              "exitCode": 0,
+              "timestamp": 1782949121780
+            },
+            "terminalCommandUri": {
+              "$mid": 1,
+              "path": "/5b7c205e3ce7e5bb9442167850439dce/8",
+              "query": "command=tool-bf98df3c-a24d-4c8f-9167-f773eeafbe10",
+              "scheme": "vscode-terminal"
+            },
+            "terminalTheme": {
+              "background": "#ffffff",
+              "foreground": "#333333"
+            },
+            "terminalToolSessionId": "c41e8eb7-f9fc-417a-b989-2b2ff6fa0071"
+          }
+        },
+        {
+          "invocationMessage": {
+            "supportAlertSyntax": false,
+            "supportHtml": false,
+            "supportThemeIcons": false,
+            "uris": {
+              "file:///Users/vitaliy/Documents/GitHub/local-whisper/README.md#125-125": {
+                "$mid": 1,
+                "fragment": "125-125",
+                "path": "/Users/vitaliy/Documents/GitHub/local-whisper/README.md",
+                "scheme": "file"
+              }
+            },
+            "value": "Reading [](file:///Users/vitaliy/Documents/GitHub/local-whisper/README.md#125-125), lines 125 to 145"
+          },
+          "isComplete": true,
+          "isConfirmed": {
+            "type": 1
+          },
+          "kind": "toolInvocationSerialized",
+          "pastTenseMessage": {
+            "supportAlertSyntax": false,
+            "supportHtml": false,
+            "supportThemeIcons": false,
+            "uris": {
+              "file:///Users/vitaliy/Documents/GitHub/local-whisper/README.md#125-125": {
+                "$mid": 1,
+                "fragment": "125-125",
+                "path": "/Users/vitaliy/Documents/GitHub/local-whisper/README.md",
+                "scheme": "file"
+              }
+            },
+            "value": "Read [](file:///Users/vitaliy/Documents/GitHub/local-whisper/README.md#125-125), lines 125 to 145"
+          },
+          "source": {
+            "label": "Built-In",
+            "type": "internal"
+          },
+          "toolCallId": "toolu_bdrk_011ZaLczGmZqAWDCc76J5kuS",
+          "toolId": "copilot_readFile"
+        },
+        {
+          "invocationMessage": {
+            "supportAlertSyntax": false,
+            "supportHtml": false,
+            "supportThemeIcons": false,
+            "uris": {
+              "file:///Users/vitaliy/Documents/GitHub/local-whisper/README.md#240-240": {
+                "$mid": 1,
+                "fragment": "240-240",
+                "path": "/Users/vitaliy/Documents/GitHub/local-whisper/README.md",
+                "scheme": "file"
+              }
+            },
+            "value": "Reading [](file:///Users/vitaliy/Documents/GitHub/local-whisper/README.md#240-240), lines 240 to 260"
+          },
+          "isComplete": true,
+          "isConfirmed": {
+            "type": 1
+          },
+          "kind": "toolInvocationSerialized",
+          "pastTenseMessage": {
+            "supportAlertSyntax": false,
+            "supportHtml": false,
+            "supportThemeIcons": false,
+            "uris": {
+              "file:///Users/vitaliy/Documents/GitHub/local-whisper/README.md#240-240": {
+                "$mid": 1,
+                "fragment": "240-240",
+                "path": "/Users/vitaliy/Documents/GitHub/local-whisper/README.md",
+                "scheme": "file"
+              }
+            },
+            "value": "Read [](file:///Users/vitaliy/Documents/GitHub/local-whisper/README.md#240-240), lines 240 to 260"
+          },
+          "source": {
+            "label": "Built-In",
+            "type": "internal"
+          },
+          "toolCallId": "toolu_bdrk_01XoY8EoEJNfU1VynVFNgjfY",
+          "toolId": "copilot_readFile"
+        },
+        {
+          "invocationMessage": {
+            "supportAlertSyntax": false,
+            "supportHtml": false,
+            "supportThemeIcons": false,
+            "uris": {
+              "file:///Users/vitaliy/Documents/GitHub/local-whisper/README.md": {
+                "$mid": 1,
+                "path": "/Users/vitaliy/Documents/GitHub/local-whisper/README.md",
+                "scheme": "file"
+              }
+            },
+            "value": "Replacing 9 lines with 19 lines in [](file:///Users/vitaliy/Documents/GitHub/local-whisper/README.md)"
+          },
+          "isComplete": true,
+          "isConfirmed": {
+            "reason": "auto-approve-all",
+            "type": 1
+          },
+          "kind": "toolInvocationSerialized",
+          "presentation": "hidden",
+          "source": {
+            "label": "Built-In",
+            "type": "internal"
+          },
+          "toolCallId": "toolu_bdrk_019bChDhkf3MfuxULzA2bcUw",
+          "toolId": "copilot_multiReplaceString"
+        },
+        {
+          "supportAlertSyntax": false,
+          "supportHtml": false,
+          "supportThemeIcons": false,
+          "uris": {},
+          "value": "\n```\n"
+        },
+        {
+          "id": "0652a3bd-45e3-452a-ad90-a3f64d54877b",
+          "kind": "undoStop"
+        },
+        {
+          "isEdit": true,
+          "kind": "codeblockUri",
+          "uri": {
+            "$mid": 1,
+            "external": "file:///Users/vitaliy/Documents/GitHub/local-whisper/README.md",
+            "fsPath": "/Users/vitaliy/Documents/GitHub/local-whisper/README.md",
+            "path": "/Users/vitaliy/Documents/GitHub/local-whisper/README.md",
+            "scheme": "file"
+          }
+        },
+        {
+          "done": true,
+          "edits": [
+            [
+              {
+                "range": {
+                  "endColumn": 59,
+                  "endLineNumber": 246,
+                  "startColumn": 46,
+                  "startLineNumber": 246
+                },
+                "text": ", keystroke, or clipboard-only (COPY mode)"
+              }
+            ],
+            [
+              {
+                "range": {
+                  "endColumn": 78,
+                  "endLineNumber": 139,
+                  "startColumn": 78,
+                  "startLineNumber": 139
+                },
+                "text": "\n\n### Output modes\n\nClick **Output** in the menu bar to cycle through three modes:\n\n| Mode | Behaviour |\n|------|-----------|\n| **PASTE** | Writes text to clipboard via `pbcopy`, then sends `Cmd+V` automatically. Default for normal use. |\n| **TYPE** | Types text character-by-character using keystroke events. Works in apps that block paste. Note: Cyrillic/non-ASCII may not work correctly in some apps. |\n| **COPY** | Writes text to clipboard via `pbcopy` but does **not** send `Cmd+V`. Useful when working in **Microsoft Remote Desktop** or other remote-desktop/VM apps where clipboard sync to the guest OS is asynchronous — dictate, wait a moment for the clipboard to sync, then press `Ctrl+V` manually in the Windows window. |"
+              }
+            ],
+            []
+          ],
+          "kind": "textEditGroup",
+          "uri": {
+            "$mid": 1,
+            "external": "file:///Users/vitaliy/Documents/GitHub/local-whisper/README.md",
+            "fsPath": "/Users/vitaliy/Documents/GitHub/local-whisper/README.md",
+            "path": "/Users/vitaliy/Documents/GitHub/local-whisper/README.md",
+            "scheme": "file"
+          }
+        },
+        {
+          "supportAlertSyntax": false,
+          "supportHtml": false,
+          "supportThemeIcons": false,
+          "uris": {},
+          "value": "\n```\n"
+        },
+        {
+          "invocationMessage": {
+            "isTrusted": false,
+            "supportAlertSyntax": false,
+            "supportHtml": false,
+            "supportThemeIcons": false,
+            "value": "Running ` git add README.md \u0026\u0026 git commit -m \"docs: document three output modes \\(PASTE...`"
+          },
+          "isComplete": true,
+          "isConfirmed": {
+            "reason": "auto-approve-all",
+            "type": 1
+          },
+          "kind": "toolInvocationSerialized",
+          "source": {
+            "label": "Built-In",
+            "type": "internal"
+          },
+          "toolCallId": "toolu_bdrk_01TejmfjXFqnmeCaUS5a3XJa",
+          "toolId": "run_in_terminal",
+          "toolSpecificData": {
+            "commandLine": {
+              "forDisplay": " git add README.md \u0026\u0026 git commit -m \"docs: document three output modes (PASTE/TYPE/COPY) and remote desktop use case\" \u0026\u0026 git push",
+              "isSandboxWrapped": false,
+              "original": "cd /Users/vitaliy/Documents/GitHub/local-whisper \u0026\u0026 git add README.md \u0026\u0026 git commit -m \"docs: document three output modes (PASTE/TYPE/COPY) and remote desktop use case\" \u0026\u0026 git push",
+              "toolEdited": " git add README.md \u0026\u0026 git commit -m \"docs: document three output modes (PASTE/TYPE/COPY) and remote desktop use case\" \u0026\u0026 git push"
+            },
+            "confirmation": {
+              "commandLine": "git add README.md \u0026\u0026 git commit -m \"docs: document three output modes (PASTE/TYPE/COPY) and remote desktop use case\" \u0026\u0026 git push"
+            },
+            "cwd": {
+              "$mid": 1,
+              "fsPath": "/Users/vitaliy/Documents/GitHub/local-whisper",
+              "path": "/Users/vitaliy/Documents/GitHub/local-whisper",
+              "scheme": "file"
+            },
+            "isBackground": false,
+            "kind": "terminal",
+            "language": "sh",
+            "requestAllowNetwork": false,
+            "requestUnsandboxedExecution": false,
+            "terminalCommandId": "tool-982eaa2d-d0ff-4507-8551-79482e0a4612",
+            "terminalCommandOutput": {
+              "lineCount": 12,
+              "text": "[main 60c56aa] docs: document three output modes (PASTE/TYPE/COPY) and remote desktop use case\r\n 1 file changed, 11 insertions(+), 1 deletion(-)\r\nEnumerating objects: 5, done.\r\nCounting objects: 100% (5/5), done.\r\nDelta compression using up to 8 threads\r\nCompressing objects: 100% (3/3), done.\r\nWriting objects: 100% (3/3), 840 bytes | 840.00 KiB/s, done.\r\nTotal 3 (delta 2), reused 0 (delta 0), pack-reused 0 (from 0)\r\nremote: Resolving deltas: 100% (2/2), completed with 2 local objects.\r\nTo https://github.com/losskot/local-whisper.git\r\n   a06429e..60c56aa  main -\u003e main\u001b[?2004h"
+            },
+            "terminalCommandState": {
+              "duration": 2125,
+              "exitCode": 0,
+              "timestamp": 1782949147060
+            },
+            "terminalCommandUri": {
+              "$mid": 1,
+              "path": "/5b7c205e3ce7e5bb9442167850439dce/8",
+              "query": "command=tool-982eaa2d-d0ff-4507-8551-79482e0a4612",
+              "scheme": "vscode-terminal"
+            },
+            "terminalTheme": {
+              "background": "#ffffff",
+              "foreground": "#333333"
+            },
+            "terminalToolSessionId": "74fd5d95-c0f1-4fde-9d3d-aa435b41471b"
+          }
+        },
+        {
+          "baseUri": {
+            "$mid": 1,
+            "path": "/Users/vitaliy/Documents/GitHub/local-whisper/",
+            "scheme": "file"
+          },
+          "supportHtml": false,
+          "supportThemeIcons": false,
+          "value": "Готово. В "
+        },
+        {
+          "inlineReference": {
+            "$mid": 1,
+            "external": "file:///Users/vitaliy/Documents/GitHub/local-whisper/README.md",
+            "fsPath": "/Users/vitaliy/Documents/GitHub/local-whisper/README.md",
+            "path": "/Users/vitaliy/Documents/GitHub/local-whisper/README.md",
+            "scheme": "file"
+          },
+          "kind": "inlineReference",
+          "name": "README.md"
+        },
+        {
+          "baseUri": {
+            "$mid": 1,
+            "path": "/Users/vitaliy/Documents/GitHub/local-whisper/",
+            "scheme": "file"
+          },
+          "supportHtml": false,
+          "supportThemeIcons": false,
+          "value": " добавлена таблица с описанием трёх режимов в секции \"Menu bar → Output modes\":\n\n| Режим | Что делает |\n|-------|-----------|\n| **PASTE** | `pbcopy` + автоматический `Cmd+V` |\n| **TYPE** | посимвольный ввод клавишами |\n| **COPY** | только `pbcopy`, без `Cmd+V` — для Remote Desktop |"
         }
       ],
       "result": {
-        "metadata": {},
+        "metadata": {
+          "toolCallRounds": [
+            {
+              "response": "",
+              "toolCalls": [
+                {
+                  "id": "toolu_bdrk_01H1MECqQScHREFZTQStczee__vscode-1782945660330",
+                  "name": "run_in_terminal",
+                  "arguments": "{\"command\": \"grep -n \\\"paste\\\\|type\\\\|output\\\\|mode\\\" /Users/vitaliy/Documents/GitHub/local-whisper/README.md | head -30\", \"explanation\": \"Find relevant sections in README\", \"goal\": \"Locate docs to update\", \"mode\": \"sync\"}"
+                }
+              ]
+            },
+            {
+              "response": "",
+              "toolCalls": [
+                {
+                  "id": "toolu_bdrk_014i4akzEnJKFqeNGn4rraiP__vscode-1782945660333",
+                  "name": "grep_search",
+                  "arguments": "{\"isRegexp\": false, \"query\": \"paste\\\\|output mode\\\\|type mode\", \"includePattern\": \"README.md\"}"
+                }
+              ]
+            },
+            {
+              "response": "",
+              "toolCalls": [
+                {
+                  "id": "toolu_bdrk_01D1F3fbBVpP1FQTUNk8kjKY__vscode-1782945660336",
+                  "name": "run_in_terminal",
+                  "arguments": "{\"command\": \"grep -n \\\"PASTE\\\\|TYPE\\\\|output mode\\\\|Output:\\\" /Users/vitaliy/Documents/GitHub/local-whisper/README.md\", \"explanation\": \"Find output mode references in README\", \"goal\": \"Locate sections\", \"mode\": \"sync\"}"
+                }
+              ]
+            },
+            {
+              "response": "",
+              "toolCalls": [
+                {
+                  "id": "toolu_bdrk_011ZaLczGmZqAWDCc76J5kuS__vscode-1782945660337",
+                  "name": "read_file",
+                  "arguments": "{\"endLine\": 145, \"filePath\": \"/Users/vitaliy/Documents/GitHub/local-whisper/README.md\", \"startLine\": 125}"
+                }
+              ]
+            },
+            {
+              "response": "",
+              "toolCalls": [
+                {
+                  "id": "toolu_bdrk_01XoY8EoEJNfU1VynVFNgjfY__vscode-1782945660340",
+                  "name": "read_file",
+                  "arguments": "{\"endLine\": 260, \"filePath\": \"/Users/vitaliy/Documents/GitHub/local-whisper/README.md\", \"startLine\": 240}"
+                }
+              ]
+            },
+            {
+              "response": "",
+              "toolCalls": [
+                {
+                  "id": "toolu_bdrk_019bChDhkf3MfuxULzA2bcUw__vscode-1782945660343",
+                  "name": "multi_replace_string_in_file",
+                  "arguments": "{\"explanation\": \"Document the three output modes and the symlink deployment in README\", \"replacements\": [{\"filePath\":\"/Users/vitaliy/Documents/GitHub/local-whisper/README.md\",\"newString\":\"- See current language, model, output mode, enter mode, and LLM refine status\\n- Click any setting to cycle it\\n- View and re-paste recent dictations\\n- Open the settings overlay\\n- Reload voice commands\\n- Emergency stop\\n\\nAll settings are accessible from the menu bar — no keyboard shortcuts needed.\\n\\n### Output modes\\n\\nClick **Output** in the menu bar to cycle through three modes:\\n\\n| Mode | Behaviour |\\n|------|-----------|\\n| **PASTE** | Writes text to clipboard via `pbcopy`, then sends `Cmd+V` automatically. Default for normal use. |\\n| **TYPE** | Types text character-by-character using keystroke events. Works in apps that block paste. Note: Cyrillic/non-ASCII may not work correctly in some apps. |\\n| **COPY** | Writes text to clipboard via `pbcopy` but does **not** send `Cmd+V`. Useful when working in **Microsoft Remote Desktop** or other remote-desktop/VM apps where clipboard sync to the guest OS is asynchronous — dictate, wait a moment for the clipboard to sync, then press `Ctrl+V` manually in the Windows window. |\",\"oldString\":\"- See current language, model, output mode, enter mode, and LLM refine status\\n- Click any setting to cycle it\\n- View and re-paste recent dictations\\n- Open the settings overlay\\n- Reload voice commands\\n- Emergency stop\\n\\nAll settings are accessible from the menu bar — no keyboard shortcuts needed.\"},{\"filePath\":\"/Users/vitaliy/Documents/GitHub/local-whisper/README.md\",\"newString\":\"  → Text inserted at cursor via paste (Cmd+V), keystroke, or clipboard-only (COPY mode)\",\"oldString\":\"  → Text inserted at cursor via paste (Cmd+V) or keystroke\"}]}"
+                }
+              ]
+            },
+            {
+              "response": "",
+              "toolCalls": [
+                {
+                  "id": "toolu_bdrk_01TejmfjXFqnmeCaUS5a3XJa__vscode-1782945660344",
+                  "name": "run_in_terminal",
+                  "arguments": "{\"command\": \"cd /Users/vitaliy/Documents/GitHub/local-whisper \u0026\u0026 git add README.md \u0026\u0026 git commit -m \\\"docs: document three output modes (PASTE/TYPE/COPY) and remote desktop use case\\\" \u0026\u0026 git push\", \"explanation\": \"Commit and push docs\", \"goal\": \"Push\", \"mode\": \"sync\"}"
+                }
+              ]
+            },
+            {
+              "response": "Готово. В [README.md](README.md) добавлена таблица с описанием трёх режимов в секции \"Menu bar → Output modes\":\n\n| Режим | Что делает |\n|-------|-----------|\n| **PASTE** | `pbcopy` + автоматический `Cmd+V` |\n| **TYPE** | посимвольный ввод клавишами |\n| **COPY** | только `pbcopy`, без `Cmd+V` — для Remote Desktop |",
+              "toolCalls": []
+            }
+          ],
+          "toolCallResults": {
+            "toolu_bdrk_011ZaLczGmZqAWDCc76J5kuS__vscode-1782945660337": {
+              "content": [
+                {
+                  "value": {
+                    "node": {
+                      "children": [
+                        {
+                          "children": [
+                            {
+                              "children": [
+                                {
+                                  "lineBreakBefore": true,
+                                  "priority": 21,
+                                  "references": [
+                                    {
+                                      "anchor": {
+                                        "$mid": 1,
+                                        "external": "file:///Users/vitaliy/Documents/GitHub/local-whisper/README.md",
+                                        "fsPath": "/Users/vitaliy/Documents/GitHub/local-whisper/README.md",
+                                        "path": "/Users/vitaliy/Documents/GitHub/local-whisper/README.md",
+                                        "scheme": "file"
+                                      },
+                                      "options": {
+                                        "isFromTool": true
+                                      }
+                                    }
+                                  ],
+                                  "text": "\n",
+                                  "type": 2
+                                }
+                              ],
+                              "ctor": 2,
+                              "ctorName": "p6e",
+                              "props": {
+                                "priority": 21
+                              },
+                              "references": [],
+                              "type": 1
+                            },
+                            {
+                              "children": [
+                                {
+                                  "lineBreakBefore": true,
+                                  "priority": 20,
+                                  "references": [],
+                                  "text": "Then update `AUDIO_DEVICE` in `~/.hammerspoon/init.lua` (e.g., `:0`, `:1`).\n",
+                                  "type": 2
+                                }
+                              ],
+                              "ctor": 2,
+                              "ctorName": "p6e",
+                              "props": {
+                                "priority": 20
+                              },
+                              "references": [],
+                              "type": 1
+                            },
+                            {
+                              "children": [
+                                {
+                                  "lineBreakBefore": true,
+                                  "priority": 19,
+                                  "references": [],
+                                  "text": "\n",
+                                  "type": 2
+                                }
+                              ],
+                              "ctor": 2,
+                              "ctorName": "p6e",
+                              "props": {
+                                "priority": 19
+                              },
+                              "references": [],
+                              "type": 1
+                            },
+                            {
+                              "children": [
+                                {
+                                  "lineBreakBefore": true,
+                                  "priority": 18,
+                                  "references": [],
+                                  "text": "## Menu bar\n",
+                                  "type": 2
+                                }
+                              ],
+                              "ctor": 2,
+                              "ctorName": "p6e",
+                              "props": {
+                                "priority": 18
+                              },
+                              "references": [],
+                              "type": 1
+                            },
+                            {
+                              "children": [
+                                {
+                                  "lineBreakBefore": true,
+                                  "priority": 17,
+                                  "references": [],
+                                  "text": "\n",
+                                  "type": 2
+                                }
+                              ],
+                              "ctor": 2,
+                              "ctorName": "p6e",
+                              "props": {
+                                "priority": 17
+                              },
+                              "references": [],
+                              "type": 1
+                            },
+                            {
+                              "children": [
+                                {
+                                  "lineBreakBefore": true,
+                                  "priority": 16,
+                                  "references": [],
+                                  "text": "A waveform icon in the menu bar shows recording status (turns red when recording). Click it to:\n",
+                                  "type": 2
+                                }
+                              ],
+                              "ctor": 2,
+                              "ctorName": "p6e",
+                              "props": {
+                                "priority": 16
+                              },
+                              "references": [],
+                              "type": 1
+                            },
+                            {
+                              "children": [
+                                {
+                                  "lineBreakBefore": true,
+                                  "priority": 15,
+                                  "references": [],
+                                  "text": "\n",
+                                  "type": 2
+                                }
+                              ],
+                              "ctor": 2,
+                              "ctorName": "p6e",
+                              "props": {
+                                "priority": 15
+                              },
+                              "references": [],
+                              "type": 1
+                            },
+                            {
+                              "children": [
+                                {
+                                  "lineBreakBefore": true,
+                                  "priority": 14,
+                                  "references": [],
+                                  "text": "- See current language, model, output mode, enter mode, and LLM refine status\n",
+                                  "type": 2
+                                }
+                              ],
+                              "ctor": 2,
+                              "ctorName": "p6e",
+                              "props": {
+                                "priority": 14
+                              },
+                              "references": [],
+                              "type": 1
+                            },
+                            {
+                              "children": [
+                                {
+                                  "lineBreakBefore": true,
+                                  "priority": 13,
+                                  "references": [],
+                                  "text": "- Click any setting to cycle it\n",
+                                  "type": 2
+                                }
+                              ],
+                              "ctor": 2,
+                              "ctorName": "p6e",
+                              "props": {
+                                "priority": 13
+                              },
+                              "references": [],
+                              "type": 1
+                            },
+                            {
+                              "children": [
+                                {
+                                  "lineBreakBefore": true,
+                                  "priority": 12,
+                                  "references": [],
+                                  "text": "- View and re-paste recent dictations\n",
+                                  "type": 2
+                                }
+                              ],
+                              "ctor": 2,
+                              "ctorName": "p6e",
+                              "props": {
+                                "priority": 12
+                              },
+                              "references": [],
+                              "type": 1
+                            },
+                            {
+                              "children": [
+                                {
+                                  "lineBreakBefore": true,
+                                  "priority": 11,
+                                  "references": [],
+                                  "text": "- Open the settings overlay\n",
+                                  "type": 2
+                                }
+                              ],
+                              "ctor": 2,
+                              "ctorName": "p6e",
+                              "props": {
+                                "priority": 11
+                              },
+                              "references": [],
+                              "type": 1
+                            },
+                            {
+                              "children": [
+                                {
+                                  "lineBreakBefore": true,
+                                  "priority": 10,
+                                  "references": [],
+                                  "text": "- Reload voice commands\n",
+                                  "type": 2
+                                }
+                              ],
+                              "ctor": 2,
+                              "ctorName": "p6e",
+                              "props": {
+                                "priority": 10
+                              },
+                              "references": [],
+                              "type": 1
+                            },
+                            {
+                              "children": [
+                                {
+                                  "lineBreakBefore": true,
+                                  "priority": 9,
+                                  "references": [],
+                                  "text": "- Emergency stop\n",
+                                  "type": 2
+                                }
+                              ],
+                              "ctor": 2,
+                              "ctorName": "p6e",
+                              "props": {
+                                "priority": 9
+                              },
+                              "references": [],
+                              "type": 1
+                            },
+                            {
+                              "children": [
+                                {
+                                  "lineBreakBefore": true,
+                                  "priority": 8,
+                                  "references": [],
+                                  "text": "\n",
+                                  "type": 2
+                                }
+                              ],
+                              "ctor": 2,
+                              "ctorName": "p6e",
+                              "props": {
+                                "priority": 8
+                              },
+                              "references": [],
+                              "type": 1
+                            },
+                            {
+                              "children": [
+                                {
+                                  "lineBreakBefore": true,
+                                  "priority": 7,
+                                  "references": [],
+                                  "text": "All settings are accessible from the menu bar — no keyboard shortcuts needed.\n",
+                                  "type": 2
+                                }
+                              ],
+                              "ctor": 2,
+                              "ctorName": "p6e",
+                              "props": {
+                                "priority": 7
+                              },
+                              "references": [],
+                              "type": 1
+                            },
+                            {
+                              "children": [
+                                {
+                                  "lineBreakBefore": true,
+                                  "priority": 6,
+                                  "references": [],
+                                  "text": "\n",
+                                  "type": 2
+                                }
+                              ],
+                              "ctor": 2,
+                              "ctorName": "p6e",
+                              "props": {
+                                "priority": 6
+                              },
+                              "references": [],
+                              "type": 1
+                            },
+                            {
+                              "children": [
+                                {
+                                  "lineBreakBefore": true,
+                                  "priority": 5,
+                                  "references": [],
+                                  "text": "## Custom vocabulary prompt\n",
+                                  "type": 2
+                                }
+                              ],
+                              "ctor": 2,
+                              "ctorName": "p6e",
+                              "props": {
+                                "priority": 5
+                              },
+                              "references": [],
+                              "type": 1
+                            },
+                            {
+                              "children": [
+                                {
+                                  "lineBreakBefore": true,
+                                  "priority": 4,
+                                  "references": [],
+                                  "text": "\n",
+                                  "type": 2
+                                }
+                              ],
+                              "ctor": 2,
+                              "ctorName": "p6e",
+                              "props": {
+                                "priority": 4
+                              },
+                              "references": [],
+                              "type": 1
+                            },
+                            {
+                              "children": [
+                                {
+                                  "lineBreakBefore": true,
+                                  "priority": 3,
+                                  "references": [],
+                                  "text": "Create `~/.local-whisper/prompt` with terms whisper should recognize better:\n",
+                                  "type": 2
+                                }
+                              ],
+                              "ctor": 2,
+                              "ctorName": "p6e",
+                              "props": {
+                                "priority": 3
+                              },
+                              "references": [],
+                              "type": 1
+                            },
+                            {
+                              "children": [
+                                {
+                                  "lineBreakBefore": true,
+                                  "priority": 2,
+                                  "references": [],
+                                  "text": "\n",
+                                  "type": 2
+                                }
+                              ],
+                              "ctor": 2,
+                              "ctorName": "p6e",
+                              "props": {
+                                "priority": 2
+                              },
+                              "references": [],
+                              "type": 1
+                            },
+                            {
+                              "children": [
+                                {
+                                  "lineBreakBefore": true,
+                                  "priority": 21,
+                                  "references": [],
+                                  "text": "```",
+                                  "type": 2
+                                }
+                              ],
+                              "ctor": 2,
+                              "ctorName": "p6e",
+                              "props": {
+                                "priority": 21
+                              },
+                              "references": [],
+                              "type": 1
+                            }
+                          ],
+                          "ctor": 2,
+                          "ctorName": "In",
+                          "props": {},
+                          "references": [],
+                          "type": 1
+                        }
+                      ],
+                      "ctor": 2,
+                      "ctorName": "gFe",
+                      "props": {},
+                      "references": [],
+                      "type": 1
+                    }
+                  }
+                }
+              ]
+            },
+            "toolu_bdrk_014i4akzEnJKFqeNGn4rraiP__vscode-1782945660333": {},
+            "toolu_bdrk_019bChDhkf3MfuxULzA2bcUw__vscode-1782945660343": {
+              "content": [
+                {
+                  "value": {
+                    "node": {
+                      "children": [
+                        {
+                          "lineBreakBefore": false,
+                          "priority": 9007199254740991,
+                          "text": "The following files were successfully edited:",
+                          "type": 2
+                        },
+                        {
+                          "lineBreakBefore": false,
+                          "priority": 9007199254740991,
+                          "text": "\n",
+                          "type": 2
+                        },
+                        {
+                          "lineBreakBefore": false,
+                          "priority": 9007199254740991,
+                          "text": "/Users/vitaliy/Documents/GitHub/local-whisper/README.md",
+                          "type": 2
+                        },
+                        {
+                          "lineBreakBefore": false,
+                          "priority": 9007199254740991,
+                          "text": "\n",
+                          "type": 2
+                        }
+                      ],
+                      "ctor": 2,
+                      "ctorName": "xS",
+                      "props": {},
+                      "references": [],
+                      "type": 1
+                    }
+                  }
+                }
+              ]
+            },
+            "toolu_bdrk_01D1F3fbBVpP1FQTUNk8kjKY__vscode-1782945660336": {
+              "content": [
+                {
+                  "value": "132:- See current language, model, output mode, enter mode, and LLM refine statu\ns\nvitaliy@MacBook-Air-2 local-whisper % "
+                }
+              ]
+            },
+            "toolu_bdrk_01H1MECqQScHREFZTQStczee__vscode-1782945660330": {
+              "content": [
+                {
+                  "value": "23:- **Recent dictations**: View and re-paste your last 10 dictations from the m\nenu bar\n36:| \"voice command paste\" | Fires Cmd+V |\n56:The installer handles everything: Homebrew dependencies, building whisper.cpp\n, downloading models, and setting up Hammerspoon. It then runs `setup.sh` which\nwalks you through choosing your trigger key, microphone, and granting permission\ns.\n79:# 3. Download model (~1.5 GB)\n80:./models/download-ggml-model.sh medium\n82:# 4. Optional: download tiny model for faster live preview\n83:./models/download-ggml-model.sh tiny\n132:- See current language, model, output mode, enter mode, and LLM refine statu\ns\n134:- View and re-paste recent dictations\n156:2. Pull a model: `ollama pull gemma3:4b` (small, fast, good at text cleanup)\n167:| `~/.local-whisper/refine_model` | Ollama model to use (default: `gemma3:4b\n`) |\n172:By default, partial transcription uses the same model as final transcription\n. For faster live preview, download a smaller model:\n175:cd ~/whisper.cpp/models\n176:./download-ggml-model.sh tiny\n179:The system automatically picks the smallest available model (tiny \u003e base \u003e s\nmall) for partials while keeping your chosen model for the final transcription.\n246:  → Text inserted at cursor via paste (Cmd+V) or keystroke\n249:**Latency profile** (60s dictation, large-v3-turbo model, ~0.4× real-time):\n267:- **No transcription output**: Check `$TMPDIR/whisper-dictate/whisper-dictat\ne.log` for errors (run `echo $TMPDIR` to find the path)\nvitaliy@MacBook-Air-2 local-whisper % "
+                }
+              ]
+            },
+            "toolu_bdrk_01TejmfjXFqnmeCaUS5a3XJa__vscode-1782945660344": {
+              "content": [
+                {
+                  "value": "Note: The tool simplified the command to ` git add README.md \u0026\u0026 git commit -m \"docs: document three output modes (PASTE/TYPE/COPY) and remote desktop use case\" \u0026\u0026 git push` (terminal ID=1882aa05-5751-412c-b8c2-de876c87d3e8). This is the output of running that command instead:\n[main 60c56aa] docs: document three output modes (PASTE/TYPE/COPY) and remote de\nsktop use case\n 1 file changed, 11 insertions(+), 1 deletion(-)\nEnumerating objects: 5, done.\nCounting objects: 100% (5/5), done.\nDelta compression using up to 8 threads\nCompressing objects: 100% (3/3), done.\nWriting objects: 100% (3/3), 840 bytes | 840.00 KiB/s, done.\nTotal 3 (delta 2), reused 0 (delta 0), pack-reused 0 (from 0)\nremote: Resolving deltas: 100% (2/2), completed with 2 local objects.\nTo https://github.com/losskot/local-whisper.git\n   a06429e..60c56aa  main -\u003e main\nvitaliy@MacBook-Air-2 local-whisper % "
+                }
+              ]
+            },
+            "toolu_bdrk_01XoY8EoEJNfU1VynVFNgjfY__vscode-1782945660340": {
+              "content": [
+                {
+                  "value": {
+                    "node": {
+                      "children": [
+                        {
+                          "children": [
+                            {
+                              "children": [
+                                {
+                                  "lineBreakBefore": true,
+                                  "priority": 21,
+                                  "references": [
+                                    {
+                                      "anchor": {
+                                        "$mid": 1,
+                                        "external": "file:///Users/vitaliy/Documents/GitHub/local-whisper/README.md",
+                                        "fsPath": "/Users/vitaliy/Documents/GitHub/local-whisper/README.md",
+                                        "path": "/Users/vitaliy/Documents/GitHub/local-whisper/README.md",
+                                        "scheme": "file"
+                                      },
+                                      "options": {
+                                        "isFromTool": true
+                                      }
+                                    }
+                                  ],
+                                  "text": "  → doFinalTranscription(): dispatch only remaining unchunked audio\n",
+                                  "type": 2
+                                }
+                              ],
+                              "ctor": 2,
+                              "ctorName": "p6e",
+                              "props": {
+                                "priority": 21
+                              },
+                              "references": [],
+                              "type": 1
+                            },
+                            {
+                              "children": [
+                                {
+                                  "lineBreakBefore": true,
+                                  "priority": 20,
+                                  "references": [],
+                                  "text": "  → each segment uses --prompt from previous segment for semantic continuity\n",
+                                  "type": 2
+                                }
+                              ],
+                              "ctor": 2,
+                              "ctorName": "p6e",
+                              "props": {
+                                "priority": 20
+                              },
+                              "references": [],
+                              "type": 1
+                            },
+                            {
+                              "children": [
+                                {
+                                  "lineBreakBefore": true,
+                                  "priority": 19,
+                                  "references": [],
+                                  "text": "  → pipelineFinalize(): join results in order when all segments complete\n",
+                                  "type": 2
+                                }
+                              ],
+                              "ctor": 2,
+                              "ctorName": "p6e",
+                              "props": {
+                                "priority": 19
+                              },
+                              "references": [],
+                              "type": 1
+                            },
+                            {
+                              "children": [
+                                {
+                                  "lineBreakBefore": true,
+                                  "priority": 18,
+                                  "references": [],
+                                  "text": "  → Post-processing: remove fillers, capitalize, app-aware adjustments\n",
+                                  "type": 2
+                                }
+                              ],
+                              "ctor": 2,
+                              "ctorName": "p6e",
+                              "props": {
+                                "priority": 18
+                              },
+                              "references": [],
+                              "type": 1
+                            },
+                            {
+                              "children": [
+                                {
+                                  "lineBreakBefore": true,
+                                  "priority": 17,
+                                  "references": [],
+                                  "text": "  → Optional LLM refinement via Ollama (punctuation, formatting, cleanup)\n",
+                                  "type": 2
+                                }
+                              ],
+                              "ctor": 2,
+                              "ctorName": "p6e",
+                              "props": {
+                                "priority": 17
+                              },
+                              "references": [],
+                              "type": 1
+                            },
+                            {
+                              "children": [
+                                {
+                                  "lineBreakBefore": true,
+                                  "priority": 16,
+                                  "references": [],
+                                  "text": "  → Voice command hooks: beforeInsert → actions → text insertion → afterInsert\n",
+                                  "type": 2
+                                }
+                              ],
+                              "ctor": 2,
+                              "ctorName": "p6e",
+                              "props": {
+                                "priority": 16
+                              },
+                              "references": [],
+                              "type": 1
+                            },
+                            {
+                              "children": [
+                                {
+                                  "lineBreakBefore": true,
+                                  "priority": 15,
+                                  "references": [],
+                                  "text": "  → Text inserted at cursor via paste (Cmd+V) or keystroke\n",
+                                  "type": 2
+                                }
+                              ],
+                              "ctor": 2,
+                              "ctorName": "p6e",
+                              "props": {
+                                "priority": 15
+                              },
+                              "references": [],
+                              "type": 1
+                            },
+                            {
+                              "children": [
+                                {
+                                  "lineBreakBefore": true,
+                                  "priority": 14,
+                                  "references": [],
+                                  "text": "```\n",
+                                  "type": 2
+                                }
+                              ],
+                              "ctor": 2,
+                              "ctorName": "p6e",
+                              "props": {
+                                "priority": 14
+                              },
+                              "references": [],
+                              "type": 1
+                            },
+                            {
+                              "children": [
+                                {
+                                  "lineBreakBefore": true,
+                                  "priority": 13,
+                                  "references": [],
+                                  "text": "\n",
+                                  "type": 2
+                                }
+                              ],
+                              "ctor": 2,
+                              "ctorName": "p6e",
+                              "props": {
+                                "priority": 13
+                              },
+                              "references": [],
+                              "type": 1
+                            },
+                            {
+                              "children": [
+                                {
+                                  "lineBreakBefore": true,
+                                  "priority": 12,
+                                  "references": [],
+                                  "text": "**Latency profile** (60s dictation, large-v3-turbo model, ~0.4× real-time):\n",
+                                  "type": 2
+                                }
+                              ],
+                              "ctor": 2,
+                              "ctorName": "p6e",
+                              "props": {
+                                "priority": 12
+                              },
+                              "references": [],
+                              "type": 1
+                            },
+                            {
+                              "children": [
+                                {
+                                  "lineBreakBefore": true,
+                                  "priority": 11,
+                                  "references": [],
+                                  "text": "\n",
+                                  "type": 2
+                                }
+                              ],
+                              "ctor": 2,
+                              "ctorName": "p6e",
+                              "props": {
+                                "priority": 11
+                              },
+                              "references": [],
+                              "type": 1
+                            },
+                            {
+                              "children": [
+                                {
+                                  "lineBreakBefore": true,
+                                  "priority": 10,
+                                  "references": [],
+                                  "text": "| | Before | After |\n",
+                                  "type": 2
+                                }
+                              ],
+                              "ctor": 2,
+                              "ctorName": "p6e",
+                              "props": {
+                                "priority": 10
+                              },
+                              "references": [],
+                              "type": 1
+                            },
+                            {
+                              "children": [
+                                {
+                                  "lineBreakBefore": true,
+                                  "priority": 9,
+                                  "references": [],
+                                  "text": "|---|---|---|\n",
+                                  "type": 2
+                                }
+                              ],
+                              "ctor": 2,
+                              "ctorName": "p6e",
+                              "props": {
+                                "priority": 9
+                              },
+                              "references": [],
+                              "type": 1
+                            },
+                            {
+                              "children": [
+                                {
+                                  "lineBreakBefore": true,
+                                  "priority": 8,
+                                  "references": [],
+                                  "text": "| Post-stop wait | ~25 s | ~5 s |\n",
+                                  "type": 2
+                                }
+                              ],
+                              "ctor": 2,
+                              "ctorName": "p6e",
+                              "props": {
+                                "priority": 8
+                              },
+                              "references": [],
+                              "type": 1
+                            },
+                            {
+                              "children": [
+                                {
+                                  "lineBreakBefore": true,
+                                  "priority": 7,
+                                  "references": [],
+                                  "text": "| Why | All segments transcribed after stop | Only the short tail segment remains |\n",
+                                  "type": 2
+                                }
+                              ],
+                              "ctor": 2,
+                              "ctorName": "p6e",
+                              "props": {
+                                "priority": 7
+                              },
+                              "references": [],
+                              "type": 1
+                            },
+                            {
+                              "children": [
+                                {
+                                  "lineBreakBefore": true,
+                                  "priority": 6,
+                                  "references": [],
+                                  "text": "\n",
+                                  "type": 2
+                                }
+                              ],
+                              "ctor": 2,
+                              "ctorName": "p6e",
+                              "props": {
+                                "priority": 6
+                              },
+                              "references": [],
+                              "type": 1
+                            },
+                            {
+                              "children": [
+                                {
+                                  "lineBreakBefore": true,
+                                  "priority": 5,
+                                  "references": [],
+                                  "text": "## Auto-stop on silence\n",
+                                  "type": 2
+                                }
+                              ],
+                              "ctor": 2,
+                              "ctorName": "p6e",
+                              "props": {
+                                "priority": 5
+                              },
+                              "references": [],
+                              "type": 1
+                            },
+                            {
+                              "children": [
+                                {
+                                  "lineBreakBefore": true,
+                                  "priority": 4,
+                                  "references": [],
+                                  "text": "\n",
+                                  "type": 2
+                                }
+                              ],
+                              "ctor": 2,
+                              "ctorName": "p6e",
+                              "props": {
+                                "priority": 4
+                              },
+                              "references": [],
+                              "type": 1
+                            },
+                            {
+                              "children": [
+                                {
+                                  "lineBreakBefore": true,
+                                  "priority": 3,
+                                  "references": [],
+                                  "text": "Recording automatically stops after 3 consecutive seconds of silence (\u003c -40 dB). This is useful for hands-free dictation. Configure thresholds in `init.lua`:\n",
+                                  "type": 2
+                                }
+                              ],
+                              "ctor": 2,
+                              "ctorName": "p6e",
+                              "props": {
+                                "priority": 3
+                              },
+                              "references": [],
+                              "type": 1
+                            },
+                            {
+                              "children": [
+                                {
+                                  "lineBreakBefore": true,
+                                  "priority": 2,
+                                  "references": [],
+                                  "text": "\n",
+                                  "type": 2
+                                }
+                              ],
+                              "ctor": 2,
+                              "ctorName": "p6e",
+                              "props": {
+                                "priority": 2
+                              },
+                              "references": [],
+                              "type": 1
+                            },
+                            {
+                              "children": [
+                                {
+                                  "lineBreakBefore": true,
+                                  "priority": 21,
+                                  "references": [],
+                                  "text": "```lua",
+                                  "type": 2
+                                }
+                              ],
+                              "ctor": 2,
+                              "ctorName": "p6e",
+                              "props": {
+                                "priority": 21
+                              },
+                              "references": [],
+                              "type": 1
+                            }
+                          ],
+                          "ctor": 2,
+                          "ctorName": "In",
+                          "props": {},
+                          "references": [],
+                          "type": 1
+                        }
+                      ],
+                      "ctor": 2,
+                      "ctorName": "gFe",
+                      "props": {},
+                      "references": [],
+                      "type": 1
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
         "timings": {
-          "firstProgress": 0,
-          "totalElapsed": 0
+          "firstProgress": 5591,
+          "totalElapsed": 46390
         }
       },
       "modelId": "copilot/claude-sonnet-4.6"
