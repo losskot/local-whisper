@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "4aae4d0 chore: sync SpecStory session transcripts\n 483 files changed, 38617 insertions(+), 1435 deletions(-)",
+        "is_error": false,
+        "tool_use_id": "toolu_01KENtETDJo8gaHNdABruuV9",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "a1462696-36bb-4864-98ae-e38faa06b2a5",
+  "promptId": "5f55d23e-946d-4281-988b-ba7ecf86aadc",
+  "sessionId": "7d3c92af-ac69-47c4-ad94-2c02c7d6e213",
+  "sourceToolAssistantUUID": "a1462696-36bb-4864-98ae-e38faa06b2a5",
+  "timestamp": "2026-08-16T20:34:17.630Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "4aae4d0 chore: sync SpecStory session transcripts\n 483 files changed, 38617 insertions(+), 1435 deletions(-)"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "b3dcde6a-38c3-4c9b-8a2a-8945a98305a5",
+  "version": "2.1.233"
+}

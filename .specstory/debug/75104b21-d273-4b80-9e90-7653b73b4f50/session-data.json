@@ -12,7 +12,7 @@
     {
       "exchangeId": "75104b21-d273-4b80-9e90-7653b73b4f50:0",
       "startTime": "2026-08-16T20:32:18.032Z",
-      "endTime": "2026-08-16T20:33:59.622Z",
+      "endTime": "2026-08-16T20:34:55.019Z",
       "messages": [
         {
           "id": "c77c6ca2-3a08-4325-9f57-f498c1bcb18a",
@@ -382,6 +382,36 @@
             "outputTokens": 2228,
             "cacheCreationInputTokens": 1234,
             "cacheReadInputTokens": 80020
+          }
+        },
+        {
+          "id": "0f0fcb05-8f2c-471a-95b9-3c4e6071a397",
+          "timestamp": "2026-08-16T20:34:05.738Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 3754,
+            "cacheCreationInputTokens": 2577,
+            "cacheReadInputTokens": 81254
+          }
+        },
+        {
+          "id": "7a74abb7-6a51-44a7-acda-84b4364066fb",
+          "timestamp": "2026-08-16T20:34:55.019Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "content": [
+            {
+              "type": "text",
+              "text": "Прочитал весь [init.lua](hammerspoon/init.lua) (1841 строк) + конфиг в `~/.local-whisper/` и установленные хуки. Вот полный двухуровневый список.\n\nЛегенда: ✅ работает и используется · ⚠️ работает, но кандидат на удаление · ❌ мёртвый код (не вызывается)\n\n## 1. Запись аудио\n- ✅ Триггер — удержание правого Cmd (`eventtap` на `flagsChanged` + поллинг отпускания раз в 0.1 с), [init.lua:1756](hammerspoon/init.lua#L1756)\n- ✅ Warmup микрофона — до 10 попыток по 1 с, тик Tink перед каждой, при провале «Микрофон недоступен» + Basso, [init.lua:1620](hammerspoon/init.lua#L1620)\n- ✅ Чанкованная запись — ffmpeg/avfoundation, mono 16 kHz, сегменты по 1 с в `chunk_%03d.wav`\n- ✅ Звуковая обратная связь — Pop (первый чанк на диске), Tink (стоп), Glass (вставка), Basso (ошибка)\n- ✅ Emergency stop — сброс всего состояния + `killall whisper-cli`, [init.lua:1190](hammerspoon/init.lua#L1190)\n- ✅ Восстановление после сна системы — `caffeinate.watcher`, дожимает потерянную финализацию, [init.lua:1797](hammerspoon/init.lua#L1797)\n- ✅ Самолечение eventtap — реэнейбл каждые 5 с (secure input)\n- ❌ **Авто-стоп по тишине** — `checkSilence()` [init.lua:1511](hammerspoon/init.lua#L1511) определён, но не вызывается **ни разу**; `silenceTimer` только останавливается, никогда не создаётся. Вместе с ним мертвы `AUTO_STOP_SILENCE_SECONDS`, `AUTO_STOP_THRESHOLD_DB`, `silentChunkCount`, `lastCheckedChunk` (~45 строк)\n- ⚠️ Настройка `TRIGGER_KEY` / `AUDIO_DEVICE` — три варианта клавиши и автопочинка префикса `:`, но правится только в исходнике\n\n## 2. Транскрипция\n- ✅ Локальный whisper-cli выбранной моделью (сейчас `large-v3-turbo-q5_0`)\n- ⚠️ **Удалённое API** — OpenAI-совместимый эндпоинт с захардкоженным `192.168.0.13:13305` ([init.lua:31](hammerspoon/init.lua#L31)), плюс `transcribeViaAPI`, `curlErrorMessage` и таблица `normalizeApiLang` на ~100 языков ([init.lua:462](hammerspoon/init.lua#L462), 27 строк). Живёт только ради этого режима — если API не используешь, это ~110 строк\n- ✅ Нарезка на сегменты по 55 с + склейка через ffmpeg concat\n- ✅ Числовая сортировка чанков (защита от переполнения `%03d` после 999)\n- ✅ Языки en / ru / uk / auto, авто-детект на каждый сегмент (code-switching)\n- ✅ Фильтр галлюцинаций — список из 18 фраз + всё в скобках/квадратных скобках\n- ⚠️ Custom vocabulary prompt (`~/.local-whisper/prompt`) — файл пуст, UI для него нет вообще\n- ❌ **Preferred languages** — читается, пишется дефолт `en,pt` при старте, показывается в меню отключённым пунктом, но на транскрипцию **не влияет**: `local preferred` в [init.lua:1330](hammerspoon/init.lua#L1330) нигде не используется (логика ретрая удалена, см. комментарий на [init.lua:1474](hammerspoon/init.lua#L1474))\n- ❌ Партиалы на tiny-модели — описаны в AGENTS.md, в коде отсутствуют (документация врёт)\n\n## 3. Постобработка текста\n- ✅ Удаление филлеров — um / uh / hmm / «like,»\n- ✅ Авто-капитализация с исключением для терминалов и IDE (список из 9 bundle ID)\n- ✅ Нормализация пробелов\n- ✅ LLM-refine через Ollama — свой промпт и модель, порог 50 символов, срезание преамбул («Here is the cleaned text:» и т.п.), [init.lua:326](hammerspoon/init.lua#L326)\n- ✅ Кешированный пробинг Ollama (TTL 30 с, чтобы не вешать eventtap)\n- ⚠️ Refine выключен в конфиге (`refine=off`) — если не планируешь включать, это ~90 строк + пункт меню + eval-набор `tests/test_refine.sh`\n\n## 4. Вставка текста\n- ✅ Три режима вывода: paste (Cmd+V), type (посимвольно), copy (только буфер)\n- ✅ Enter после вставки (переключатель, не действует в режиме copy)\n- ❌ **Undo** — `lastInsertedText` присваивается в [init.lua:1244](hammerspoon/init.lua#L1244) и **больше нигде не читается**; хоткея на откат нет (во всём файле нет ни одного `hs.hotkey`)\n\n## 5. Action hooks / голосовые команды\n- ✅ Автозагрузка `~/.hammerspoon/local_whisper_actions.lua` с автоперезагрузкой по mtime\n- ✅ Три точки входа: `beforeInsert`, список `actions` (с `pattern`/`when`), `afterInsert`\n- ✅ API контекста: `setText`, `disableInsert`/`enableInsert`, `launchApp`, `appendToFile`, `runShell`, `keystroke`, `notify`, `log`\n- ✅ Поля контекста: text/textLower/originalText, lang, outputMode, appName/appBundleID, timestamp/isoTime, handled\n- ✅ Пропуск LLM-refine для фраз с «voice command»\n- ✅ Установленные у тебя команды: cancel, note, remind, open app, select all, copy, paste, undo\n- ⚠️ `ctx:runShell` — выполняет произвольный shell с текстом диктовки на stdin; единственное место, где голос граничит с исполнением кода\n\n## 6. Оверлей\n- ✅ Панель под меню-баром поверх всех спейсов и фуллскрина\n- ✅ Статусный текст: `...`, Refining…, Transcribing n/m, финальный текст + код языка\n- ✅ Пульсирующая красная точка + таймер записи\n- ✅ Двухцветный прогресс-бар: красный = записано, синий = распознано, авто-расширение шкалы на +3 мин\n- ✅ Пин по клику на фон (оверлей остаётся висеть)\n- ✅ Кнопка ✕ — прерывает запись или закрывает панель\n\n## 7. Меню-бар\n- ✅ Иконка-волна, красная во время записи, template-режим в покое\n- ✅ Переключатели по клику: Language, Model (циклом по `~/whisper.cpp/models` + API), Output, Enter, LLM Refine\n- ✅ Recent Dictations — последние 10, клик вставляет через буфер\n- ✅ Reload Actions, Emergency Stop\n- ❌ Пункт «Preferred: …» — disabled, чисто декоративный (см. п.2)\n- ⚠️ «Settings…» — открывает запиненный оверлей с текстом «use the menu bar to change settings», то есть ничего не настраивает, [init.lua:1039](hammerspoon/init.lua#L1039)\n\n## 8. Состояние и конфиг\n- ✅ `~/.local-whisper/`: lang, model, output, enter, refine, refine_model, refine_prompt, prompt, preferred_langs, recent.json\n- ✅ Лог в `$TMPDIR/whisper-dictate/whisper-dictate.log`\n- ✅ `hs.ipc` — управление через `hs -c` (нужно тестам и деплою)\n- ✅ Уведомления hs.notify при старте / стопе / перезагрузке хуков\n- ❌ Глобал `_whisper` — поле `recording` инициализируется `false` и никогда не обновляется, [init.lua:1754](hammerspoon/init.lua#L1754)\n- ❌ Каталог `~/.local-whisper/recovery/` — сирота от удалённого meeting mode, в коде не упоминается\n- ❌ `RECOVERED_18-54_dictation.txt` в корне репо — мусор\n\n## 9. Вне рантайма (репозиторий)\n- ✅ `install.sh`, `setup.sh`, `uninstall.sh`\n- ✅ `tests/test_init.sh` + `test_init.lua` (12 проверок), `tests/test_refine.sh`\n- ⚠️ `tools/transcribe.sh` — самостоятельный батч-CLI для файлов/папок, к диктовке отношения не имеет (11 KB)\n- ⚠️ `.specstory/` — сотни JSON-файлов истории в git (сейчас в `git status` их десятки незакоммиченных)\n\n---\n\n**Чистые кандидаты на удаление без потери функциональности** (всё подтверждено грепом, не догадки): авто-стоп по тишине, undo-переменная, preferred langs, `_whisper` глобал, каталог `recovery/`, `RECOVERED_*.txt`. Это ~80 строк из init.lua и минус 4-5 top-level локалов от текущих 144/200.\n\n**Решать тебе** (работает, но, возможно, не нужно): режим удалённого API (~110 строк), LLM-refine (~90 строк + eval-набор), пункт «Settings…», `tools/transcribe.sh`.\n\nСкажи, что из второй группы выкидываем — заведу bd-issue и вычищу всё за один проход с прогоном `tests/test_init.sh`."
+            }
+          ],
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 3754,
+            "cacheCreationInputTokens": 2577,
+            "cacheReadInputTokens": 81254
           }
         }
       ]
