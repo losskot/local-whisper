@@ -1,0 +1,73 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01LPos5tkL3mdjJPgARg9dke",
+        "input": {
+          "command": "git add -A \u0026\u0026 git commit -q -m \"specstory: session history for the cleanup + trigger fix\n\nCo-Authored-By: Claude Opus 5 \u003cnoreply@anthropic.com\u003e\" \u0026\u0026 git push -q 2\u003e\u00261 | tail -2; git status -sb | head -2",
+          "description": "Commit and push specstory churn",
+          "timeout": 180000
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce79t6zSDu2msezmGfWUu",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 366,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 366,
+      "cache_read_input_tokens": 214430,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 366,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 366,
+          "cache_read_input_tokens": 214430,
+          "input_tokens": 2,
+          "output_tokens": 460,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 460,
+      "output_tokens_details": {
+        "thinking_tokens": 270
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "7d5fc0a8-7cdb-467b-b6bb-dcbac43c65b7",
+  "requestId": "req_011Ce79t5hYkQkNeAVzMWTKt",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "timestamp": "2026-08-16T21:41:06.423Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "20cdc76c-021a-4393-9e4e-16723a29731d",
+  "version": "2.1.233"
+}
