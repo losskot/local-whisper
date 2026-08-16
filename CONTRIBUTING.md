@@ -6,7 +6,7 @@ Thanks for your interest in contributing! This project is small and focused — 
 
 1. Check the log file: `tail -50 $TMPDIR/whisper-dictate/whisper-dictate.log`
 2. Open an issue with:
-   - What you did (e.g., "held Right Cmd, said X")
+   - What you did (e.g., "held fn+left Ctrl, said X")
    - What happened vs. what you expected
    - Your macOS version and chip (Intel / Apple Silicon)
    - Relevant log output

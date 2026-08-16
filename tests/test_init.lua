@@ -9,6 +9,9 @@
 --   * the Lua 200-local-per-function ceiling
 --   * unguarded hs.sound.getByFile(...):play(), which throws and aborts its callback
 --   * chunk filenames sorted as strings, which reorders audio past chunk 999
+--   * a modifier-combo trigger matched with `flags & mask > 0`, which fires on half
+--     the combo -- every Ctrl-C would start a recording
+--   * removed subsystems (meeting mode, LLM refine, silence auto-stop, ...) creeping back
 --
 -- Config (set as globals by the runner; `hs` does not inherit the caller's environment):
 --   LW_TARGET  path to the init.lua under test (default: repo copy)
@@ -226,19 +229,39 @@ check("sound: no unguarded getByFile():play()",
       "unguarded playback at " .. table.concat(unguarded, ", "))
 
 --------------------------------------------------------------------------------
--- 5. Meeting mode stays removed
+-- 5. Deleted subsystems stay deleted
 --------------------------------------------------------------------------------
+-- Each of these was removed deliberately. Patterns run against the stripped source,
+-- so a mention in a comment or a string literal does not trip them -- only real code.
 
-local meetingHits = {}
-for i, s in ipairs(stripped) do
-    local low = s:lower()
-    if low:find("meeting") or low:find("blackhole") or low:find("aggregate") then
-        meetingHits[#meetingHits + 1] = "L" .. i
+local REMOVED = {
+    { name = "meeting",     what = "meeting-mode",
+      patterns = { "%f[%w]meeting", "blackhole", "aggregate" } },
+    { name = "refine",      what = "LLM refinement / Ollama",
+      patterns = { "%f[%w]refine", "ollama" } },
+    { name = "preferred",   what = "preferred-languages",
+      patterns = { "preferred" } },
+    { name = "autostop",    what = "silence auto-stop",
+      patterns = { "checksilence", "silentchunk", "silencetimer",
+                   "lastcheckedchunk", "auto_stop", "volumedetect" } },
+    { name = "undo",        what = "undo tracking",
+      patterns = { "lastinsertedtext" } },
+    { name = "whisperprobe", what = "_whisper state-probe global",
+      patterns = { "%f[%w_]_whisper%f[^%w_]" } },
+}
+
+for _, sub in ipairs(REMOVED) do
+    local hits = {}
+    for i, s in ipairs(stripped) do
+        local low = s:lower()
+        for _, pat in ipairs(sub.patterns) do
+            if low:find(pat) then hits[#hits + 1] = "L" .. i break end
+        end
     end
+    check(sub.name .. ": no " .. sub.what .. " code remains",
+          #hits == 0,
+          "found at " .. table.concat(hits, ", "))
 end
-check("meeting: no meeting-mode code remains",
-      #meetingHits == 0,
-      "found at " .. table.concat(meetingHits, ", "))
 
 --------------------------------------------------------------------------------
 -- 6. No unintended top-level globals
@@ -247,11 +270,9 @@ check("meeting: no meeting-mode code remains",
 -- or Spoon can collide with it. A short allowlist covers the deliberate ones.
 
 local allowedGlobals = {
-    _whisper       = true,  -- state probe for `hs -c`
     WhisperActions = true,  -- user-facing action-hook API
     emergencyStop  = true,  -- called from the overlay callback and the menu bar
     updateMenuBar  = true,
-    stopRecording  = true,
 }
 
 -- `decls` holds every top-level local, including forward declarations. Assigning to
@@ -657,6 +678,141 @@ if type(EL) == "table" then
     check("progress: BAR_MAX matches the bar_bg track width",
           barMax ~= nil and barMax == trackW,
           "BAR_MAX=" .. tostring(barMax) .. ", bar_bg w=" .. tostring(trackW))
+end
+
+--------------------------------------------------------------------------------
+-- 14. Trigger matching (behavioral -- runs the real triggerPressed/triggerHeld)
+--------------------------------------------------------------------------------
+-- The trigger is a modifier COMBO (fn + left Control), which opens two failure modes
+-- a single-modifier trigger never had:
+--   * `rawFlags & mask > 0` fires on half the combo -- plain Control would start a
+--     recording, i.e. every Ctrl-C in a terminal
+--   * polling the release through generic modifier names ("ctrl") cannot tell left
+--     Control from right Control, so the poller both over- and under-fires
+-- Both are exercised against the trigger actually configured in the source.
+
+local RAWFLAGS     = hs.eventtap.event.rawFlagMasks
+local triggerKey   = src:match('local%s+TRIGGER_KEY%s*=%s*"([%w_]+)"')
+local triggersSrc  = src:match("local%s+TRIGGERS%s*=%s*(%b{})")
+check("trigger: TRIGGER_KEY and the TRIGGERS table are extractable",
+      triggerKey ~= nil and triggersSrc ~= nil,
+      "TRIGGER_KEY=" .. tostring(triggerKey) .. ", TRIGGERS table found=" .. tostring(triggersSrc ~= nil))
+
+if triggerKey and triggersSrc then
+    local tEnv = baseEnv()
+    tEnv.RAWFLAGS = RAWFLAGS
+    local tFactory, tErr = loadIn("return " .. triggersSrc, tEnv, "TRIGGERS")
+    local TRIGGERS = tFactory and tFactory()
+    local trig = type(TRIGGERS) == "table" and TRIGGERS[triggerKey] or nil
+
+    check("trigger: TRIGGER_KEY names a defined trigger with a mask and a label",
+          type(trig) == "table" and type(trig.mask) == "number" and type(trig.label) == "string",
+          "TRIGGERS[" .. triggerKey .. "] = " .. tostring(trig) .. " " .. tostring(tErr))
+
+    if trig and type(trig.mask) == "number" then
+        -- Pin today's choice: hold fn + left Control to dictate.
+        check("trigger: the configured trigger is fn + left Control",
+              trig.mask == (RAWFLAGS.secondaryFn | RAWFLAGS.deviceLeftControl),
+              string.format("mask=0x%x, want 0x%x (fn|deviceLeftControl)",
+                            trig.mask, RAWFLAGS.secondaryFn | RAWFLAGS.deviceLeftControl))
+
+        local env = baseEnv()
+        env.trigger = trig
+        local pressed, pErr = liftFunction("triggerPressed", env)
+        check("trigger: triggerPressed is liftable and compiles", pressed ~= nil, tostring(pErr))
+
+        if pressed then
+            check("trigger: the full combo fires", pressed(trig.mask) == true,
+                  string.format("triggerPressed(0x%x) = false", trig.mask))
+            check("trigger: no modifiers at all does not fire", pressed(0) == false,
+                  "triggerPressed(0) = true")
+
+            -- Every individual bit of a combo mask must be insufficient on its own.
+            -- This is the `> 0` regression, expressed without hardcoding which combo.
+            local partials = {}
+            local bit = 1
+            local bitCount = 0
+            while bit <= trig.mask do
+                if (trig.mask & bit) ~= 0 then
+                    bitCount = bitCount + 1
+                    if bit ~= trig.mask and pressed(bit) then
+                        partials[#partials + 1] = string.format("0x%x", bit)
+                    end
+                end
+                bit = bit << 1
+            end
+            check("trigger: no single half of the combo fires on its own",
+                  #partials == 0,
+                  "these partial flag sets fired: " .. table.concat(partials, ", "))
+            check("trigger: the trigger is an actual combo (more than one modifier bit)",
+                  bitCount > 1, "mask has " .. bitCount .. " bit(s)")
+
+            -- Real events carry the generic bits too (control alongside deviceLeftControl),
+            -- plus whatever else the user happens to be holding.
+            local noise = RAWFLAGS.control | RAWFLAGS.shift | RAWFLAGS.deviceLeftShift | RAWFLAGS.nonCoalesced
+            check("trigger: unrelated modifiers held at the same time do not block it",
+                  pressed(trig.mask | noise) == true,
+                  string.format("triggerPressed(0x%x) = false", trig.mask | noise))
+
+            -- The mirror-image modifier must stay inert: right Control is not left Control.
+            local mirrored = (trig.mask & ~RAWFLAGS.deviceLeftControl) | RAWFLAGS.deviceRightControl | RAWFLAGS.control
+            check("trigger: the right-hand twin of the modifier does not fire",
+                  pressed(mirrored) == false,
+                  string.format("triggerPressed(0x%x) = true — right Control matched a left-Control trigger", mirrored))
+        end
+
+        -- triggerHeld() drives the release poller. It must read the raw device flags
+        -- through the same mask, not a generic modifier name.
+        local held, hErr = liftFunction("triggerHeld", baseEnv())
+        check("trigger: triggerHeld is liftable and compiles", held ~= nil, tostring(hErr))
+        if held and pressed then
+            local liveFlags, rawArg = 0, nil
+            local hEnv = baseEnv()
+            hEnv.trigger        = trig
+            hEnv.triggerPressed = pressed
+            hEnv.hs = { eventtap = { checkKeyboardModifiers = function(raw)
+                rawArg = raw
+                return { _raw = liveFlags }
+            end } }
+            held = liftFunction("triggerHeld", hEnv)
+
+            liveFlags = trig.mask
+            check("trigger: triggerHeld is true while the whole combo is down",
+                  held() == true, "held() = false with the full mask down")
+            check("trigger: triggerHeld asks for raw device flags",
+                  rawArg == true,
+                  "checkKeyboardModifiers() called with " .. tostring(rawArg) ..
+                  " — without raw flags it cannot tell left from right")
+
+            -- Releasing either half must end the recording.
+            local released = {}
+            local bit = 1
+            while bit <= trig.mask do
+                if (trig.mask & bit) ~= 0 and bit ~= trig.mask then
+                    liveFlags = trig.mask & ~bit
+                    if held() then released[#released + 1] = string.format("0x%x", bit) end
+                end
+                bit = bit << 1
+            end
+            check("trigger: releasing either modifier reads as released",
+                  #released == 0,
+                  "still held after releasing: " .. table.concat(released, ", "))
+
+            liveFlags = 0
+            check("trigger: nothing held reads as released", held() == false, "held() = true with no modifiers")
+        end
+    end
+
+    -- Wiring: both paths must go through the helpers above rather than re-deriving
+    -- the match inline, which is how the two failure modes got in last time.
+    check("trigger: the eventtap matches through triggerPressed(event:rawFlags())",
+          src:find("triggerPressed%s*%(%s*event:rawFlags%s*%(%s*%)%s*%)") ~= nil,
+          "the flagsChanged handler does not call triggerPressed(event:rawFlags())")
+
+    local pollSrc = src:match("releasePoller%s*=%s*hs%.timer%.doEvery%s*(%b())")
+    check("trigger: the release poller re-checks the trigger through triggerHeld()",
+          pollSrc ~= nil and pollSrc:find("triggerHeld") ~= nil,
+          "release poller body: " .. tostring(pollSrc and pollSrc:sub(1, 120)))
 end
 
 --------------------------------------------------------------------------------

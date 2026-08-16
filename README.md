@@ -2,23 +2,21 @@
 
 A fast, fully-local speech-to-text dictation tool for macOS with voice commands, powered by [whisper.cpp](https://github.com/ggml-org/whisper.cpp). No subscriptions, no cloud — just local transcription optimized for Apple Silicon.
 
-Hold **Right Cmd**, speak, release — text appears at your cursor.
+Hold **fn + left Control**, speak, release — text appears at your cursor.
 
 ## Features
 
-- **Hold-to-dictate**: Hold a modifier key to record, release to transcribe and insert
-- **Streaming transcription pipeline**: Long recordings are split into segments and transcribed live *during* recording — when you release the key, only the short tail segment remains, dramatically reducing post-stop latency
-- **Silence-aware splitting**: Segments are cut at natural pauses (lowest-RMS 1s chunk near each boundary) so words and sentences are never split mid-way
-- **Semantic continuity**: Each segment receives the previous segment's transcribed text as `--prompt` context so Whisper's decoder doesn't lose meaning, capitalization, or word choice at boundaries
+- **Hold-to-dictate**: Hold the trigger combo to record, release to transcribe and insert
+- **Segmented transcription**: Recordings are cut into 55-second segments and transcribed one after another, keeping each whisper call inside the model's sweet spot no matter how long you talk
+- **Progress bar**: A two-colour strip shows recorded audio (red) against transcribed audio (blue), so long dictations report real progress
 - **Voice commands**: Say "voice command note buy coffee" to save a note, "voice command open app Safari" to launch apps, and more — fully customizable
 - **Recording indicator**: Pulsing red dot and elapsed timer in the overlay
-- **Multi-language**: English, Russian, Ukrainian, and auto-detect
+- **Multi-language**: English, Russian, Ukrainian, and auto-detect (per segment, so mixed-language speech is not "translated")
 - **App-aware processing**: Auto-capitalizes in most apps, skips in terminals and code editors
-- **LLM refinement** (optional): Clean up dictated text with a local LLM via [Ollama](https://ollama.com) — fixes punctuation, removes filler words, formats numbered lists
 - **Text post-processing**: Remove filler words (um, uh, hmm), clean whitespace
 - **Custom vocabulary**: Provide a prompt file to improve recognition of domain-specific terms
-- **Auto-stop on silence**: Automatically stops recording after 3 seconds of silence
 - **Warmup probe**: Before every recording, a short ffmpeg probe warms up the audio device; if the device never produces audio within 10 seconds, recording aborts with an error sound
+- **Sleep recovery**: A dictation interrupted by system sleep is finalized on wake instead of being silently lost
 - **Menu bar**: Waveform icon shows recording status (turns red), click for settings and recent dictations
 - **Recent dictations**: View and re-paste your last 10 dictations from the menu bar
 - **Fully local**: All processing on-device via whisper.cpp — nothing leaves your machine
@@ -79,10 +77,7 @@ cmake --build build -j --config Release
 # 3. Download model (~1.5 GB)
 ./models/download-ggml-model.sh medium
 
-# 4. Optional: download tiny model for faster live preview
-./models/download-ggml-model.sh tiny
-
-# 5. Copy Hammerspoon config
+# 4. Copy Hammerspoon config
 cp hammerspoon/init.lua ~/.hammerspoon/init.lua
 ```
 
@@ -129,10 +124,9 @@ Then update `AUDIO_DEVICE` in `~/.hammerspoon/init.lua` (e.g., `:0`, `:1`).
 
 A waveform icon in the menu bar shows recording status (turns red when recording). Click it to:
 
-- See current language, model, output mode, enter mode, and LLM refine status
+- See current language, model, output mode, and enter mode
 - Click any setting to cycle it
 - View and re-paste recent dictations
-- Open the settings overlay
 - Reload voice commands
 - Emergency stop
 
@@ -156,37 +150,7 @@ Create `~/.local-whisper/prompt` with terms whisper should recognize better:
 Claude, Hammerspoon, whisper.cpp, ffmpeg, macOS, Lua, Anthropic
 ```
 
-This text is passed as `--prompt` to whisper-cli for the first segment of each recording. For subsequent segments the prompt is automatically chained: the previous segment's transcribed text is appended, giving the decoder full sentence context across boundaries. Adding your voice command trigger words here also improves recognition.
-
-## LLM refinement (optional)
-
-If you have [Ollama](https://ollama.com) installed, you can enable LLM-powered text cleanup. After transcription, the text is sent to a local LLM that fixes punctuation, removes filler words, and formats numbered lists — all on-device.
-
-1. Install Ollama: `brew install ollama`
-2. Pull a model: `ollama pull gemma3:4b` (small, fast, good at text cleanup)
-3. Start Ollama: `ollama serve` (or `brew services start ollama`)
-4. Toggle in the menu bar or click **refine** in the overlay
-
-Refinement only runs on text longer than 50 characters. Short dictations are inserted as-is.
-
-### Customizing refinement
-
-| File | What it does |
-|------|-------------|
-| `~/.local-whisper/refine` | ON/OFF state (also togglable from menu bar / overlay) |
-| `~/.local-whisper/refine_model` | Ollama model to use (default: `gemma3:4b`) |
-| `~/.local-whisper/refine_prompt` | Custom instructions for the LLM |
-
-## Faster live preview
-
-By default, partial transcription uses the same model as final transcription. For faster live preview, download a smaller model:
-
-```bash
-cd ~/whisper.cpp/models
-./download-ggml-model.sh tiny
-```
-
-The system automatically picks the smallest available model (tiny > base > small) for partials while keeping your chosen model for the final transcription.
+This text is passed as `--prompt` to whisper-cli for every segment of the recording. Adding your voice command trigger words here also improves recognition.
 
 ## App-aware text processing
 
@@ -237,39 +201,17 @@ The config auto-reloads when you save the file. For more patterns and examples, 
 ## How it works
 
 ```
-Modifier key hold/release (detected by Hammerspoon eventtap)
+Trigger combo hold/release (detected by Hammerspoon eventtap on raw device flags)
   → warmup probe: short ffmpeg run to open the audio device before committing
   → ffmpeg records chunked WAV segments (1s each) via avfoundation
-  ↓
-  ┌─ every 3s during recording ──────────────────────────────────────────────┐
-  │  streamCheckAndDispatch(): if ≥25s of chunks ready →                     │
-  │    splitAtSilence(): find quietest 1s chunk near boundary (8s lookback)  │
-  │    dispatchSegment(N): concat → whisper-cli (async, runs while recording) │
-  └──────────────────────────────────────────────────────────────────────────┘
   ↓  (key released)
-  → doFinalTranscription(): dispatch only remaining unchunked audio
-  → each segment uses --prompt from previous segment for semantic continuity
-  → pipelineFinalize(): join results in order when all segments complete
+  → doFinalTranscription(): group the 1s chunks into 55s segments
+  → per segment: ffmpeg concat → whisper-cli (or the remote API), in order
+  → progress bar tracks transcribed seconds against recorded seconds
+  → join the segment texts, drop whisper's known silence hallucinations
   → Post-processing: remove fillers, capitalize, app-aware adjustments
-  → Optional LLM refinement via Ollama (punctuation, formatting, cleanup)
   → Voice command hooks: beforeInsert → actions → text insertion → afterInsert
   → Text inserted at cursor via paste (Cmd+V), keystroke, or clipboard-only (COPY mode)
-```
-
-**Latency profile** (60s dictation, large-v3-turbo model, ~0.4× real-time):
-
-| | Before | After |
-|---|---|---|
-| Post-stop wait | ~25 s | ~5 s |
-| Why | All segments transcribed after stop | Only the short tail segment remains |
-
-## Auto-stop on silence
-
-Recording automatically stops after 3 consecutive seconds of silence (< -40 dB). This is useful for hands-free dictation. Configure thresholds in `init.lua`:
-
-```lua
-local AUTO_STOP_SILENCE_SECONDS = 3
-local AUTO_STOP_THRESHOLD_DB = -40
 ```
 
 ## Troubleshooting
@@ -278,7 +220,7 @@ local AUTO_STOP_THRESHOLD_DB = -40
 - **ffmpeg exits immediately (code 251)**: `AUDIO_DEVICE` is missing the colon prefix — use `:0` not `0`. The `:` tells avfoundation it's an audio device.
 - **Wrong microphone**: Run `ffmpeg -f avfoundation -list_devices true -i ""` and update `AUDIO_DEVICE` in init.lua (or use `:default`)
 - **Trigger key does nothing**: Accessibility permission may need toggling. Go to System Settings > Privacy & Security > Accessibility, toggle Hammerspoon **OFF then ON**, then run `hs.reload()` in the Hammerspoon console
-- **External keyboard mapping**: Some keyboards (e.g., Logitech MX Keys) send non-standard modifier flags. Try different `TRIGGER_KEY` values (`rightAlt`, `rightCmd`, `rightCtrl`) in init.lua
+- **External keyboard mapping**: Some keyboards (e.g., Logitech MX Keys) send non-standard modifier flags, and most non-Apple keyboards have no `fn` key at all. Pick a different `TRIGGER_KEY` in init.lua — `fnLeftCtrl` (default), `rightCmd`, `rightAlt`, or `rightCtrl` — or add your own entry to the `TRIGGERS` table
 - **`hs` command not found**: Run `hs.ipc.cliInstall()` in Hammerspoon console
 - **Voice commands not triggering**: Check the log to see what whisper transcribed — add command words to `~/.local-whisper/prompt`
 - **Overlay not appearing**: Hammerspoon may need Accessibility permission re-granted after updates

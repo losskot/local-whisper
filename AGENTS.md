@@ -2,19 +2,23 @@
 
 ## Project overview
 
-local-whisper is a fully-local macOS dictation tool. Hold a modifier key to record, release to transcribe and insert text at cursor. Powered by whisper.cpp (C/C++, no Python) and Hammerspoon.
+local-whisper is a fully-local macOS dictation tool. Hold **fn + left Control** to record, release to transcribe and insert text at cursor. Powered by whisper.cpp (C/C++, no Python) and Hammerspoon.
 
 ## Architecture
 
 ```
-Hammerspoon eventtap (modifier key hold/release)
+Hammerspoon eventtap (trigger combo hold/release, matched on raw device flags)
   → ffmpeg (chunked WAV recording, 1s segments)
-  → whisper-cli (transcription — tiny model for partials, chosen model for final)
+  → whisper-cli (transcription, 55s segments, chosen model — or the remote API)
   → Post-processing (filler removal, app-aware capitalize)
   → Action hooks (voice commands, note-taking, app launching)
   → Text insertion at cursor (paste or keystroke)
   → Overlay + menu bar updates
 ```
+
+Transcription is not streamed: nothing is transcribed until the key is released. Older
+docs describing live partials, silence-aware splitting, or chained segment prompts
+describe code that no longer exists.
 
 Everything runs inside `~/.hammerspoon/init.lua` — no external bash scripts at runtime.
 
@@ -24,7 +28,7 @@ Everything runs inside `~/.hammerspoon/init.lua` — no external bash scripts at
 - `~/.hammerspoon/local_whisper_actions.lua` — user voice commands (optional, auto-reloads)
 - `~/.local-whisper/` — all user settings (lang, model, output, prompt, recent dictations)
 - `~/whisper.cpp/build/bin/whisper-cli` — transcription binary
-- `~/whisper.cpp/models/` — whisper models (medium, tiny, etc.)
+- `~/whisper.cpp/models/` — whisper models (medium, large-v3-turbo, etc.)
 - `$TMPDIR/whisper-dictate/` — all temp state (per-user private dir on macOS)
 - `$TMPDIR/whisper-dictate/chunks/` — recording segments (ephemeral)
 - `$TMPDIR/whisper-dictate/whisper-dictate.log` — debug log
@@ -73,13 +77,13 @@ Expected output includes `"Message port invalidated."` — this is **normal**; t
 
 Lua 5.4 (Hammerspoon's runtime) enforces a **hard limit of 200 locals per function**. The top-level chunk of `init.lua` counts as one function. This limit is a compiler error — exceeding it prevents the file from loading at all.
 
-**Current count: ~144/200** — comfortable headroom since meeting mode was removed. Only *top-level* locals count against the limit; locals inside a function body belong to that function's own budget, so match the start of the line exactly:
+**Current count: ~121/200** — comfortable headroom after meeting mode, LLM refine, silence auto-stop and preferred languages were removed. Only *top-level* locals count against the limit; locals inside a function body belong to that function's own budget, so match the start of the line exactly:
 
 ```bash
 grep -c '^local ' hammerspoon/init.lua
 ```
 
-**Rule**: Never add a new top-level `local` without first verifying the count stays ≤ 200. If the count climbs back toward the ceiling, group related state into a single table rather than adding bare locals — `finalizeTimers` (`{ timer, watchdog }`) and `ollamaProbe` (`{ value, at }`) are the existing examples of that pattern.
+**Rule**: Never add a new top-level `local` without first verifying the count stays ≤ 200. If the count climbs back toward the ceiling, group related state into a single table rather than adding bare locals — `finalizeTimers` (`{ timer, watchdog }`) and `TRIGGERS` (per-trigger `{ mask, label }`) are the existing examples of that pattern.
 
 ### Declaration order matters as much as the count
 
@@ -87,32 +91,27 @@ A `local` is only in scope for code that appears *after* its declaration. A func
 
 `overlayPinned`, `isRecording`, and the `hideOverlay` forward declaration therefore sit **above** `createOverlay`, whose mouse callback closes over all three. When adding state that a callback touches, declare it above every function that references it.
 
-## Testing & debugging
+### The trigger is a modifier combo
 
-### Slash commands
-- `/debug` — check logs, config state, Ollama status, and recent errors
-- `/test-refine` — run the LLM refinement eval suite
+`TRIGGER_KEY` selects an entry from the `TRIGGERS` table; the default `fnLeftCtrl` ORs
+`secondaryFn` with `deviceLeftControl`. Two rules follow from it being a *combo* rather
+than a single modifier:
+
+- Match with `(rawFlags & mask) == mask`, never `> 0` — the latter fires on either half,
+  so plain Control would start a recording on every Ctrl-C.
+- Poll the release through `triggerHeld()`, which re-reads
+  `hs.eventtap.checkKeyboardModifiers(true)._raw` and applies the same mask. Generic
+  modifier names (`mods.ctrl`) cannot tell left Control from right Control.
+
+Both rules are covered by the `trigger` checks in the test suite.
+
+## Testing & debugging
 
 ### Reading logs
 ```bash
 TMPDIR_REAL=$(getconf DARWIN_USER_TEMP_DIR) && tail -30 "${TMPDIR_REAL}whisper-dictate/whisper-dictate.log"
 ```
 Note: `$TMPDIR` inside a sandbox may differ from the real user TMPDIR. Always use `getconf DARWIN_USER_TEMP_DIR` for reliable access.
-
-### Testing Ollama refinement without dictating
-```bash
-curl -s http://localhost:11434/api/generate \
-  -d '{"model":"gemma3:4b","prompt":"<prompt>\n\n<test input>","stream":false}' \
-  | python3 -c "import sys,json; print(json.load(sys.stdin)['response'])"
-```
-This lets you iterate on prompt wording without reloading Hammerspoon or dictating.
-
-### Running the refine eval suite
-```bash
-./tests/test_refine.sh
-```
-Tests filler removal, list formatting, preamble prevention, and content preservation.
-Requires Ollama running locally — it calls the HTTP API directly and bails out otherwise.
 
 ### Running the init.lua test suite
 ```bash
@@ -131,7 +130,8 @@ implementation:
 | `locals` | the Lua 200-per-function ceiling |
 | `scope` | a top-level local referenced by an earlier-defined function (reads as a nil global at runtime, with no load-time error) |
 | `sound` | unguarded `hs.sound.getByFile(...):play()`, which throws and aborts its callback |
-| `meeting` | meeting-mode code creeping back in |
+| `meeting`, `refine`, `preferred`, `autostop`, `undo`, `whisperprobe` | a deleted subsystem creeping back in (meeting mode, LLM refine/Ollama, preferred languages, silence auto-stop, undo tracking, the `_whisper` global) |
+| `trigger` | a combo trigger matched with `> 0` so half of it fires; a release poller that cannot tell left Control from right Control |
 | `globals` | state leaked into Hammerspoon's shared `_ENV` |
 | `sort` | chunk files ordered as strings, which reorders audio past chunk 999 |
 | `emergencyStop` | emergency stop not cancelling a pending finalization |
@@ -140,7 +140,8 @@ implementation:
 | `progress` | the blue transcription bar never catching the red recording bar, because a live clock re-trips the 90% auto-expand after recording stops |
 
 The behavioral checks lift the real function out of the source under test — the sort
-comparator, the overlay mouse callback, `startRecording()`, `updateProgressBar()` — and
+comparator, the overlay mouse callback, `startRecording()`, `updateProgressBar()`,
+`triggerPressed()`/`triggerHeld()` — and
 execute it against stubbed globals, so they track the implementation instead of a copy
 that can drift. A lifted function's upvalues resolve to the sandbox `_ENV`, which is what
 lets a test both inject state (`isRecording = true`) and assert on it afterwards
@@ -160,7 +161,7 @@ specific guard: an old revision fails for many unrelated reasons at once, and a 
 function whose helpers were since renamed fails by erroring rather than by asserting.
 
 ### Common debug patterns
-- **Refine not working**: Check `refine: failed` in logs — common causes: Ollama not running, wrong model name, missing `$HOME` env
+- **Trigger does nothing**: the log shows no `warmup:` line at all — check that the keyboard actually has an `fn` key and that Hammerspoon still holds Accessibility permission
 - **Voice commands not matching**: Check `final (auto/...)` log line — whisper may have transcribed differently than expected
 - **X button not closing overlay**: `hs.canvas:delete()` inside its own mouse callback is silently ignored — must use `canvas:hide()` immediately then defer deletion with `hs.timer.doAfter(0.01, ...)`
 - **Recent dictations not persisting**: Lua upvalue scoping — never reassign a table variable that closures reference; populate in-place instead

@@ -80,13 +80,12 @@ if AUDIO_DEVICE ~= ":default" and not AUDIO_DEVICE:match("^:") then
     AUDIO_DEVICE = ":" .. AUDIO_DEVICE
 end
 
--- Trigger key: "rightAlt", "rightCmd", "rightCtrl"
-local TRIGGER_KEY = "rightCmd"
+-- Trigger: which modifier(s) must be held down to record. See TRIGGERS below.
+local TRIGGER_KEY = "fnLeftCtrl"
 
 -- User preference files (all in CONFIG_DIR)
 local LANG_FILE = CONFIG_DIR .. "/lang"
 local OUTPUT_FILE = CONFIG_DIR .. "/output"
-local PREFERRED_LANGS_FILE = CONFIG_DIR .. "/preferred_langs"
 local ENTER_FILE = CONFIG_DIR .. "/enter"
 local PROMPT_FILE = CONFIG_DIR .. "/prompt"
 local RECENT_FILE = CONFIG_DIR .. "/recent.json"
@@ -94,77 +93,6 @@ local LOG_FILE = WHISPER_TMP .. "/whisper-dictate.log"
 
 -- Action hooks config
 local ACTIONS_FILE = HOME .. "/.hammerspoon/local_whisper_actions.lua"
-
--- Auto-stop on silence
-local AUTO_STOP_SILENCE_SECONDS = 3
-local AUTO_STOP_THRESHOLD_DB = -40
-
--- LLM refinement (requires Ollama)
-local REFINE_FILE = CONFIG_DIR .. "/refine"
-local REFINE_PROMPT_FILE = CONFIG_DIR .. "/refine_prompt"
-local REFINE_MODEL_FILE = CONFIG_DIR .. "/refine_model"
-local REFINE_DEFAULT_MODEL = "gemma3:4b"
-local REFINE_MIN_CHARS = 50  -- skip refinement for short text
-local REFINE_DEFAULT_PROMPT = "You are a text cleanup tool. Output ONLY the cleaned text, nothing else. Fix punctuation and capitalization. Remove ONLY filler words like um, uh, you know, I mean. Do NOT remove sentences or meaningful content. When the text lists sequential items using first/second/third or one/two/three, convert them into a numbered list with each item on a new line. NEVER add commentary or preamble. Just output the cleaned text."
-
-local function getRefineModel()
-    local f = io.open(REFINE_MODEL_FILE, "r")
-    if f then
-        local val = f:read("*a"):gsub("%s+", ""); f:close()
-        if val ~= "" then return val end
-    end
-    return REFINE_DEFAULT_MODEL
-end
-
-local function getRefinePrompt()
-    local f = io.open(REFINE_PROMPT_FILE, "r")
-    if f then
-        local content = f:read("*a"); f:close()
-        content = content:gsub("^%s+", ""):gsub("%s+$", "")
-        if content ~= "" then return content end
-    end
-    return REFINE_DEFAULT_PROMPT
-end
-
--- Cached so the menu bar doesn't reprobe on every open. Hammerspoon is single-threaded,
--- so a synchronous curl here blocks the eventtap too — hence both --max-time and the cache.
-local ollamaProbe = { value = nil, at = 0 }
-local OLLAMA_PROBE_TTL = 30  -- seconds
-
-local function hasOllama()
-    local now = hs.timer.secondsSinceEpoch()
-    if ollamaProbe.value ~= nil and (now - ollamaProbe.at) < OLLAMA_PROBE_TTL then
-        return ollamaProbe.value
-    end
-    -- Check if Ollama API is reachable. --max-time is mandatory: a wedged Ollama (loading a
-    -- large model, or a stopped process) would otherwise freeze the whole app, killing the
-    -- dictation trigger key until curl gave up on its own.
-    local ok = os.execute("curl -s --max-time 1 -o /dev/null -w '' http://localhost:11434/api/tags 2>/dev/null")
-    if not ok then
-        -- Fallback: check if binary exists
-        ok = os.execute("command -v ollama >/dev/null 2>&1")
-    end
-    ollamaProbe.value = ok and true or false
-    ollamaProbe.at = now
-    return ollamaProbe.value
-end
-
-local function getRefineMode()
-    local f = io.open(REFINE_FILE, "r")
-    if not f then return false end
-    local val = f:read("*a"):gsub("%s+", ""); f:close()
-    return val == "on"
-end
-
-local function setRefineMode(on)
-    local f = io.open(REFINE_FILE, "w")
-    if f then f:write(on and "on" or "off"); f:close() end
-end
-
-local function cycleRefine()
-    local current = getRefineMode()
-    setRefineMode(not current)
-end
 
 -- Timing
 local OVERLAY_LINGER = 0.5     -- seconds to show final text before closing
@@ -183,16 +111,36 @@ local HALLUCINATIONS = {
 -- Trigger key mapping
 --------------------------------------------------------------------------------
 
-local TRIGGER_MASKS = {
-    rightAlt  = hs.eventtap.event.rawFlagMasks["deviceRightAlternate"],
-    rightCmd  = hs.eventtap.event.rawFlagMasks["deviceRightCommand"],
-    rightCtrl = hs.eventtap.event.rawFlagMasks["deviceRightControl"],
+local RAWFLAGS = hs.eventtap.event.rawFlagMasks
+
+-- Device-specific bits (deviceLeftControl, not the generic control bit), so the left and
+-- right halves of the same modifier stay distinguishable — both when the flagsChanged
+-- event arrives and when the release poller re-reads the keyboard.
+local TRIGGERS = {
+    rightAlt   = { mask = RAWFLAGS.deviceRightAlternate, label = "right Option" },
+    rightCmd   = { mask = RAWFLAGS.deviceRightCommand,   label = "right Command" },
+    rightCtrl  = { mask = RAWFLAGS.deviceRightControl,   label = "right Control" },
+    fnLeftCtrl = { mask = RAWFLAGS.secondaryFn | RAWFLAGS.deviceLeftControl, label = "fn + left Control" },
 }
 
-local triggerMask = TRIGGER_MASKS[TRIGGER_KEY]
-if not triggerMask then
+local trigger = TRIGGERS[TRIGGER_KEY]
+if not trigger then
     hs.notify.new({ title = "local-whisper", informativeText = "ERROR: Invalid TRIGGER_KEY: " .. TRIGGER_KEY }):send()
     return
+end
+
+-- Every bit of the mask must be set. A combo trigger (fn + left Control) must not fire on
+-- Control alone, which is exactly what a `> 0` test would do — and it would then start a
+-- recording on every Ctrl-C the user types.
+local function triggerPressed(rawFlags)
+    return (rawFlags & trigger.mask) == trigger.mask
+end
+
+-- flagsChanged does not fire on key-up for every modifier, so the release is polled by
+-- re-reading the live keyboard state through the same mask.
+local function triggerHeld()
+    local mods = hs.eventtap.checkKeyboardModifiers(true)
+    return triggerPressed(mods._raw or 0)
 end
 
 --------------------------------------------------------------------------------
@@ -248,17 +196,6 @@ local function getOutputMode()
     if mode == "type" then return "type" end
     if mode == "copy" then return "copy" end
     return "paste"
-end
-
-local function getPreferredLangs()
-    local content = readFile(PREFERRED_LANGS_FILE):gsub("%s+$", "")
-    if content == "" then return {"en"} end
-    local langs = {}
-    for lang in content:gmatch("[^,]+") do
-        lang = lang:match("^%s*(.-)%s*$")
-        if lang ~= "" then table.insert(langs, lang) end
-    end
-    return #langs > 0 and langs or {"en"}
 end
 
 local function getEnterMode()
@@ -321,53 +258,6 @@ local function postProcess(text, appBundleID)
         text = text:gsub("^%l", string.upper)
     end
     return text
-end
-
-local function refineWithOllama(text, callback)
-    if not getRefineMode() or not hasOllama() or #text < REFINE_MIN_CHARS then
-        callback(text)
-        return
-    end
-    log("refine: sending to Ollama API (" .. #text .. " chars)")
-    local prompt = getRefinePrompt() .. "\n\n" .. text
-    local model = getRefineModel()
-    -- Use Ollama HTTP API (more reliable than CLI, avoids version mismatch issues)
-    local jsonPayload = hs.json.encode({
-        model = model,
-        prompt = prompt,
-        stream = false,
-    })
-    local tmpPayload = WHISPER_TMP .. "/refine_payload.json"
-    local f = io.open(tmpPayload, "w")
-    if f then f:write(jsonPayload); f:close() end
-    local task = hs.task.new("/usr/bin/curl", function(code, stdout, stderr)
-        if code == 0 and stdout and #stdout > 0 then
-            local ok, result = pcall(hs.json.decode, stdout)
-            if ok and result and result.response then
-                local refined = result.response:gsub("^%s+", ""):gsub("%s+$", "")
-                -- Strip common LLM preamble
-                refined = refined:gsub("^[Hh]ere%s+is%s+the%s+cleaned%s+text:%s*\n?", "")
-                refined = refined:gsub("^[Hh]ere'?s?%s+the%s+cleaned[%-]?%s*text:%s*\n?", "")
-                refined = refined:gsub("^[Hh]ere%s+is%s+the%s+refined%s+text:%s*\n?", "")
-                refined = refined:gsub("^[Ss]ure[,!]?%s*[Hh]?e?r?e?'?s?%s*t?h?e?%s*", "")
-                refined = refined:gsub("^%s+", "")
-                if refined ~= "" then
-                    log("refine: success (" .. #refined .. " chars)")
-                    callback(refined)
-                    return
-                end
-            end
-        end
-        log("refine: failed (code=" .. tostring(code) .. "), using original")
-        callback(text)
-    end, {
-        "-s", "-X", "POST",
-        "http://localhost:11434/api/generate",
-        "-H", "Content-Type: application/json",
-        "-d", "@" .. tmpPayload,
-    })
-    task:setEnvironment({ HOME = HOME, PATH = "/usr/bin:/bin" })
-    task:start()
 end
 
 local function isHallucination(text)
@@ -458,7 +348,7 @@ end
 
 -- Full language name -> ISO-639-1 code, matching whisper.cpp's g_lang table (src/whisper.cpp).
 -- The remote API returns names like "english"/"russian" in verbose_json; the rest of this
--- app (getLang/getPreferredLangs/action hooks) works in short codes like "en"/"ru".
+-- app (getLang/action hooks) works in short codes like "en"/"ru".
 local function normalizeApiLang(lang)
     if not lang then return nil end
     local nameToCode = {
@@ -906,9 +796,6 @@ local pulseFading = true
 local transcribedSecs = 0   -- seconds of audio fully transcribed so far
 local barMaxSecs = 180       -- current max duration displayed (expands at 90%)
 
--- Undo state
-local lastInsertedText = nil
-
 -- Recent dictations (newest first, max 10)
 local MAX_RECENT = 10
 
@@ -934,11 +821,6 @@ local function saveRecentDictations()
 end
 
 loadRecentDictations()
-
--- Auto-stop state
-local silentChunkCount = 0
-local silenceTimer = nil
-local lastCheckedChunk = 0
 
 --------------------------------------------------------------------------------
 -- Menu bar status icon
@@ -1013,41 +895,6 @@ local function buildMenuBarMenu()
     table.insert(items, {
         title = "Enter after insert: " .. enterState,
         fn = function() cycleEnter(); updateMenuBar() end,
-    })
-
-    -- LLM refinement
-    if hasOllama() then
-        local refineState = getRefineMode() and "ON" or "OFF"
-        table.insert(items, {
-            title = "LLM Refine: " .. refineState .. " (" .. getRefineModel() .. ")",
-            fn = function() cycleRefine(); updateMenuBar() end,
-        })
-    else
-        table.insert(items, {
-            title = "LLM Refine (install ollama.com)",
-            disabled = true,
-        })
-    end
-
-    -- Preferred langs
-    local preferred = table.concat(getPreferredLangs(), ", ")
-    table.insert(items, { title = "Preferred: " .. preferred, disabled = true })
-
-    table.insert(items, { title = "-" })
-
-    -- Settings overlay
-    table.insert(items, {
-        title = "Settings...",
-        fn = function()
-            if overlay then
-                forceHideOverlay()
-            else
-                showOverlay()
-                overlayPinned = true
-                overlay[1].fillColor = { red = 0.85, green = 0.89, blue = 0.97, alpha = 0.95 }
-                setOverlayText("Status — use the menu bar to change settings")
-            end
-        end,
     })
 
     -- Recent dictations
@@ -1195,12 +1042,9 @@ function emergencyStop()
     finalizationPending = false
     if finalizeTimers.timer then finalizeTimers.timer:stop(); finalizeTimers.timer = nil end
     if finalizeTimers.watchdog then finalizeTimers.watchdog:stop(); finalizeTimers.watchdog = nil end
-    if silenceTimer then silenceTimer:stop(); silenceTimer = nil end
     stopRecordingIndicator()
     if ffmpegTask and ffmpegTask:isRunning() then ffmpegTask:interrupt() end
     ffmpegTask = nil
-    silentChunkCount = 0
-    lastCheckedChunk = 0
     forceHideOverlay()
     updateMenuBar()
     os.execute("killall whisper-cli 2>/dev/null")
@@ -1226,7 +1070,7 @@ local function insertTextAtCursor(text, mode)
     end
 end
 
--- Finish insertion after all processing (post-process, refine, hooks)
+-- Finish insertion after all processing (post-process, hooks)
 local function finishInsertion(text, detectedLang)
     -- Build action context and run pre-insert hooks
     local ctx = buildActionContext(normalizeText(text), detectedLang or getLang(), getOutputMode())
@@ -1240,8 +1084,6 @@ local function finishInsertion(text, detectedLang)
     end
 
     if ctx.insert then
-        -- Track for undo
-        lastInsertedText = finalText
         insertTextAtCursor(finalText, ctx.outputMode)
         ctx.inserted = true
 
@@ -1277,7 +1119,7 @@ local function finishInsertion(text, detectedLang)
     hs.timer.doAfter(OVERLAY_LINGER, hideOverlay)
 end
 
--- Insert transcribed text at cursor, with post-processing, optional LLM refinement, and action hooks
+-- Insert transcribed text at cursor, with post-processing and action hooks
 local function insertTranscribedText(text, detectedLang)
     if text == "" or isHallucination(text) then
         hideOverlay()
@@ -1288,18 +1130,7 @@ local function insertTranscribedText(text, detectedLang)
     text = postProcess(text, capturedAppBundleID)
     if text == "" then hideOverlay(); return end
 
-    -- Skip LLM refinement for voice commands (refine would strip the prefix)
-    local isVoiceCommand = text:lower():match("voice%s+command")
-
-    -- Optional LLM refinement (async, skips short text and voice commands)
-    if not isVoiceCommand and getRefineMode() and #text >= REFINE_MIN_CHARS then
-        setOverlayText("Refining...")
-        refineWithOllama(text, function(refined)
-            finishInsertion(refined, detectedLang)
-        end)
-    else
-        finishInsertion(text, detectedLang)
-    end
+    finishInsertion(text, detectedLang)
 end
 
 -- Max seconds per whisper call — keeps each segment within whisper's sweet spot
@@ -1327,7 +1158,6 @@ local function doFinalTranscription()
     setOverlayText("Transcribing...")
 
     local lang = getLang()
-    local preferred = getPreferredLangs()
     local promptArgs = getPromptArgs()
 
     -- Split 1-second chunks into groups of FINAL_SEGMENT_SECS
@@ -1471,8 +1301,8 @@ local function doFinalTranscription()
                     local detected = (err2 or ""):match("auto%-detected language:%s*(%w+)")
                     log("seg " .. n .. " auto-detected: " .. tostring(detected))
 
-                    -- Accept whatever language auto-detected — forcing a retry with preferred[1]
-                    -- would cause "translation" of mixed-language content (surzhyk, English terms, etc.)
+                    -- Accept whatever language auto-detected — forcing a retry with a fixed
+                    -- language would "translate" mixed-language content (surzhyk, English terms, etc.)
                     local text = (out2 or ""):gsub("^%s+", ""):gsub("%s+$", ""):gsub("%s+", " ")
                     onSegmentText(text, detected)
                 end, autoArgs)
@@ -1500,44 +1330,6 @@ local function doFinalTranscription()
     end
 
     transcribeNextSegment()
-end
-
---------------------------------------------------------------------------------
--- Auto-stop on silence
---------------------------------------------------------------------------------
-
-local stopRecording -- forward declaration (defined below in Start/stop section)
-
-local function checkSilence()
-    if not isRecording then return end
-    local chunks = getChunkFiles()
-    local numChunks = #chunks
-    -- Only check completed chunks (not the one being written)
-    local completed = numChunks - 1
-    if completed <= lastCheckedChunk then return end
-
-    -- Check the latest completed chunk
-    local chunkPath = chunks[completed]
-    lastCheckedChunk = completed
-
-    local volTask = hs.task.new(FFMPEG, function(code, out, err)
-        if code ~= 0 or not isRecording then return end
-        local maxVol = (err or ""):match("max_volume:%s*([-%.%d]+)")
-        if maxVol then
-            maxVol = tonumber(maxVol)
-            if maxVol and maxVol < AUTO_STOP_THRESHOLD_DB then
-                silentChunkCount = silentChunkCount + 1
-                log("silence: chunk " .. completed .. " vol=" .. maxVol .. "dB (count=" .. silentChunkCount .. ")")
-                if silentChunkCount >= AUTO_STOP_SILENCE_SECONDS then
-                    log("auto-stop: " .. AUTO_STOP_SILENCE_SECONDS .. "s of silence")
-                    stopRecording()
-                end
-            else
-                silentChunkCount = 0
-            end
-        end
-    end, { "-i", chunkPath, "-af", "volumedetect", "-f", "null", "-" })
-    volTask:start()
 end
 
 --------------------------------------------------------------------------------
@@ -1581,9 +1373,6 @@ local function startActualRecording()
         CHUNK_DIR .. "/chunk_%03d.wav"
     })
     ffmpegTask:start()
-
-    silentChunkCount = 0
-    lastCheckedChunk = 0
 
     -- Poll until first chunk exists on disk → audio is truly flowing → play Pop
     -- Uses recursive doAfter (not doEvery) to avoid stop-within-callback issues.
@@ -1690,7 +1479,7 @@ local function startRecording()
     tryWarmup()
 end
 
-stopRecording = function()
+local function stopRecording()
     -- Cancel warmup if key released before device was ready
     if isWarmingUp then
         isWarmingUp = false
@@ -1704,10 +1493,6 @@ stopRecording = function()
     if not isRecording then return end
     isRecording = false
     log("recording: stop")
-
-    if silenceTimer then silenceTimer:stop(); silenceTimer = nil end
-    silentChunkCount = 0
-    lastCheckedChunk = 0
 
     stopRecordingIndicator()
     updateMenuBar()
@@ -1744,28 +1529,19 @@ end
 -- Key detection (replaces Karabiner)
 --------------------------------------------------------------------------------
 
--- Map trigger key to generic modifier name for polling
-local GENERIC_MOD = { rightAlt = "alt", rightCmd = "cmd", rightCtrl = "ctrl" }
-local genericMod = GENERIC_MOD[TRIGGER_KEY]
-
 local releasePoller = nil
-
--- Global so we can inspect state via hs -c
-_whisper = { modTap = nil, recording = false }
 
 local modTap = hs.eventtap.new({ hs.eventtap.event.types.flagsChanged }, function(event)
     -- Wrap in pcall so errors don't kill the eventtap
     local ok, err = pcall(function()
-        local rawFlags = event:rawFlags()
-        local triggered = (rawFlags & triggerMask) > 0
+        local triggered = triggerPressed(event:rawFlags())
 
         if triggered and not isRecording then
             startRecording()
             -- Poll for release since flagsChanged doesn't fire on key-up
             if releasePoller then releasePoller:stop() end
             releasePoller = hs.timer.doEvery(0.1, function()
-                local mods = hs.eventtap.checkKeyboardModifiers()
-                if not mods[genericMod] then
+                if not triggerHeld() then
                     releasePoller:stop()
                     releasePoller = nil
                     stopRecording()
@@ -1781,7 +1557,6 @@ local modTap = hs.eventtap.new({ hs.eventtap.event.types.flagsChanged }, functio
     return false
 end)
 modTap:start()
-_whisper.modTap = modTap
 
 -- Re-enable eventtap if it gets disabled (e.g. by secure input)
 hs.timer.doEvery(5, function()
@@ -1820,11 +1595,6 @@ if type(hs.microphoneState) == "function" and not hs.microphoneState() then
     hs.microphoneState(true)
 end
 
--- Create default preferred langs file if it doesn't exist
-if readFile(PREFERRED_LANGS_FILE) == "" then
-    writeFile(PREFERRED_LANGS_FILE, "en,pt")
-end
-
 -- Create menu bar icon
 createMenuBar()
 
@@ -1834,8 +1604,8 @@ log("actions: " .. (actionsEnabled and "enabled" or "disabled"))
 
 local enterStatus = getEnterMode() and "⏎" or ""
 local actionsFlag = actionsEnabled and " +actions" or ""
-log("loaded (trigger=" .. TRIGGER_KEY .. ", lang=" .. getLang() .. ", output=" .. getOutputMode() .. ", model=" .. getModelName() .. ", preferred=" .. table.concat(getPreferredLangs(), ",") .. ")")
+log("loaded (trigger=" .. TRIGGER_KEY .. ", lang=" .. getLang() .. ", output=" .. getOutputMode() .. ", model=" .. getModelName() .. ")")
 hs.notify.new({
     title = "local-whisper",
-    informativeText = "Loaded (" .. getLang():upper() .. " / " .. getOutputMode():upper() .. enterStatus .. " / " .. getModelName() .. actionsFlag .. ") — hold " .. TRIGGER_KEY
+    informativeText = "Loaded (" .. getLang():upper() .. " / " .. getOutputMode():upper() .. enterStatus .. " / " .. getModelName() .. actionsFlag .. ") — hold " .. trigger.label
 }):send()

@@ -124,23 +124,6 @@ else
     fi
 fi
 
-# Also download tiny model for faster live preview (~75 MB)
-TINY_MODEL="$WHISPER_CPP_DIR/models/ggml-tiny.bin"
-if [[ -f "$TINY_MODEL" ]]; then
-    ok "Tiny model already downloaded (used for fast live preview)"
-else
-    info "Downloading ggml-tiny.bin for faster live preview (~75 MB)..."
-    cd "$WHISPER_CPP_DIR"
-    bash ./models/download-ggml-model.sh tiny
-    cd "$SCRIPT_DIR"
-
-    if [[ -f "$TINY_MODEL" ]]; then
-        ok "Tiny model downloaded"
-    else
-        warn "Tiny model download failed — live preview will use main model (slower but works)"
-    fi
-fi
-
 # ─── Step 4: Install Hammerspoon config ─────────────────────────────────────
 echo ""
 info "Step 4/5: Setting up Hammerspoon..."

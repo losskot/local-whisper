@@ -38,16 +38,18 @@ echo ""
 CURRENT_KEY=$(grep -m1 'local TRIGGER_KEY' "$INIT_LUA" | sed 's/.*"\(.*\)".*/\1/')
 echo -e "  Current: ${BOLD}${CURRENT_KEY}${NC}"
 echo ""
-echo "  1) rightCmd     (Right Command)      — recommended"
-echo "  2) rightAlt     (Right Option / Alt)"
-echo "  3) rightCtrl    (Right Control)"
+echo "  1) fnLeftCtrl   (fn + Left Control)  — recommended"
+echo "  2) rightCmd     (Right Command)"
+echo "  3) rightAlt     (Right Option / Alt)"
+echo "  4) rightCtrl    (Right Control)"
 echo ""
 read -r -p "Choice [keep current]: " KEY_CHOICE
 
 case "$KEY_CHOICE" in
-    1) NEW_KEY="rightCmd";  KEY_LABEL="Right Command" ;;
-    2) NEW_KEY="rightAlt";  KEY_LABEL="Right Option" ;;
-    3) NEW_KEY="rightCtrl"; KEY_LABEL="Right Control" ;;
+    1) NEW_KEY="fnLeftCtrl"; KEY_LABEL="fn + Left Control" ;;
+    2) NEW_KEY="rightCmd";   KEY_LABEL="Right Command" ;;
+    3) NEW_KEY="rightAlt";   KEY_LABEL="Right Option" ;;
+    4) NEW_KEY="rightCtrl";  KEY_LABEL="Right Control" ;;
     *) NEW_KEY="$CURRENT_KEY"; KEY_LABEL="$CURRENT_KEY (unchanged)" ;;
 esac
 
