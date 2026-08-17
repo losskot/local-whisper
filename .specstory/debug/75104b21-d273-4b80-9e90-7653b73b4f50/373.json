@@ -1,0 +1,34 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "File created successfully at: /Users/vitaliy/.claude/projects/-Users-vitaliy-Documents-GitHub-local-whisper/memory/prefers-community-sources.md",
+        "tool_use_id": "toolu_01YJSkoZtHa2jQWP8ownhBbn",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "014fd59b-639b-4b1c-b8f6-c11c33f11f06",
+  "promptId": "ec4c4131-68cd-43c3-be0f-e3052e52c118",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "014fd59b-639b-4b1c-b8f6-c11c33f11f06",
+  "timestamp": "2026-08-17T01:25:24.507Z",
+  "toolUseResult": {
+    "content": "---\nname: prefers-community-sources\ndescription: \"When the user reports something broken or unknown, dig into community/human accounts before official vendor docs\"\nmetadata: \n  node_type: memory\n  type: feedback\n  originSessionId: 75104b21-d273-4b80-9e90-7653b73b4f50\n  modified: 2026-08-17T01:25:23.431Z\n---\n\nWhen the user says something is not working, or something needs figuring out, look for\ncommunity and human accounts — forum threads, issue trackers, blog posts, people describing\nwhat actually happened to them — rather than leading with official vendor documentation.\n\n**Why:** in the user's value system that kind of knowledge ranks well above corporate\ninformation, which they consider unreliable and self-serving.\n\n**How to apply:** when diagnosing, weight a matching real-world report above a doc page that\nmerely describes intended behaviour. Say plainly when the official docs and the field reports\ndisagree. Stated by the user on 2026-08-16, dictated while this project's dictation tool was\nrecording. Complements the empirical habit in [[verify-in-runtime-not-by-reading]].\n",
+    "filePath": "/Users/vitaliy/.claude/projects/-Users-vitaliy-Documents-GitHub-local-whisper/memory/prefers-community-sources.md",
+    "memdirStamped": true,
+    "originalFile": null,
+    "structuredPatch": [],
+    "type": "create",
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "b39dbb0d-59b0-4998-ae3c-30fbd7200f38",
+  "version": "2.1.233"
+}

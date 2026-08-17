@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "File created successfully at: /Users/vitaliy/.claude/projects/-Users-vitaliy-Documents-GitHub-local-whisper/memory/MEMORY.md (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01PrqcmzhXz6ZBVqhUDfXS9c",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "a7ea5f66-a981-49db-9a60-5c4d11b52a5a",
+  "promptId": "ec4c4131-68cd-43c3-be0f-e3052e52c118",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "a7ea5f66-a981-49db-9a60-5c4d11b52a5a",
+  "timestamp": "2026-08-17T01:25:44.940Z",
+  "toolUseResult": {
+    "content": "- [Community sources over official docs](prefers-community-sources.md) — when something breaks, human accounts outrank vendor documentation\n- [Verify in the runtime, not by reading](verify-in-runtime-not-by-reading.md) — `hs -c` and the log are the evidence; source-reading twice produced confident wrong calls\n",
+    "filePath": "/Users/vitaliy/.claude/projects/-Users-vitaliy-Documents-GitHub-local-whisper/memory/MEMORY.md",
+    "originalFile": null,
+    "structuredPatch": [],
+    "type": "create",
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "47c76088-afb3-46a4-bb03-a66b7d0c4dde",
+  "version": "2.1.233"
+}

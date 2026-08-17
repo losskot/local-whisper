@@ -4610,7 +4610,7 @@
     {
       "exchangeId": "75104b21-d273-4b80-9e90-7653b73b4f50:3",
       "startTime": "2026-08-16T21:41:37.409Z",
-      "endTime": "2026-08-16T21:47:12.694Z",
+      "endTime": "2026-08-16T21:47:52.481Z",
       "messages": [
         {
           "id": "6466ee4e-8918-4eef-8026-257380a95e35",
@@ -5216,7 +5216,7 @@
         },
         {
           "id": "0c2ab949-a055-4240-9514-863ab4fe3a07",
-          "timestamp": "2026-08-16T21:47:12.694Z",
+          "timestamp": "2026-08-16T21:47:18.639Z",
           "role": "agent",
           "model": "claude-opus-5",
           "tool": {
@@ -5229,13 +5229,354 @@
               "description": "Commit the GC-root fix",
               "timeout": 120000
             },
-            "formattedMarkdown": "Commit the GC-root fix\n\n```bash\ngit add -A \u0026\u0026 git commit -q -F - \u003c\u003c'EOF'\nRoot the eventtap against the GC — deleting _whisper silently killed the trigger\n\n_whisper was removed as dead state because its `recording` field was never\nupdated. It was not dead: `_whisper.modTap = modTap` was the only strong reference\nto the trigger eventtap. Hammerspoon collects eventtaps, repeating timers and\nwatchers that nothing in Lua references, and collecting one unregisters it from\nthe system — no error, no log line, isEnabled() true right up to the collection.\n\ninit.lua's top-level locals are not a root: after the chunk returns a local lives\nonly while a reachable closure captures it, and the only closure holding modTap\nwas the 5s watchdog timer, whose own handle was discarded. So the whole chain was\ncollectible, and the trigger worked for a couple of minutes after each reload and\nthen went dead — the press produced nothing at all, not even the overlay.\n\nLong-lived objects now live in a LocalWhisper table: the tap, its watchdog, and\nthe sleep watcher (which had the same problem and would have quietly stopped\nrecovering dictations interrupted by sleep).\n\nThe suite gains a `lifetime` group: no top-level constructor may discard its\nresult, and every top-level local holding an eventtap/watcher/repeating timer must\nbe stored into the root table. Stripping the root from the current file fails all\nthree checks. Verified live by forcing two full GC cycles and posting a synthetic\npress — the tap still answers. 75 checks pass.\n\nCo-Authored-By: Claude Opus 5 \u003cnoreply@anthropic.com\u003e\nEOF\ngit log --oneline -1\n```\n"
+            "output": {
+              "content": "75187bc Root the eventtap against the GC — deleting _whisper silently killed the trigger",
+              "is_error": false
+            },
+            "formattedMarkdown": "Commit the GC-root fix\n\n```bash\ngit add -A \u0026\u0026 git commit -q -F - \u003c\u003c'EOF'\nRoot the eventtap against the GC — deleting _whisper silently killed the trigger\n\n_whisper was removed as dead state because its `recording` field was never\nupdated. It was not dead: `_whisper.modTap = modTap` was the only strong reference\nto the trigger eventtap. Hammerspoon collects eventtaps, repeating timers and\nwatchers that nothing in Lua references, and collecting one unregisters it from\nthe system — no error, no log line, isEnabled() true right up to the collection.\n\ninit.lua's top-level locals are not a root: after the chunk returns a local lives\nonly while a reachable closure captures it, and the only closure holding modTap\nwas the 5s watchdog timer, whose own handle was discarded. So the whole chain was\ncollectible, and the trigger worked for a couple of minutes after each reload and\nthen went dead — the press produced nothing at all, not even the overlay.\n\nLong-lived objects now live in a LocalWhisper table: the tap, its watchdog, and\nthe sleep watcher (which had the same problem and would have quietly stopped\nrecovering dictations interrupted by sleep).\n\nThe suite gains a `lifetime` group: no top-level constructor may discard its\nresult, and every top-level local holding an eventtap/watcher/repeating timer must\nbe stored into the root table. Stripping the root from the current file fails all\nthree checks. Verified live by forcing two full GC cycles and posting a synthetic\npress — the tap still answers. 75 checks pass.\n\nCo-Authored-By: Claude Opus 5 \u003cnoreply@anthropic.com\u003e\nEOF\ngit log --oneline -1\n```\n\n```text\n75187bc Root the eventtap against the GC — deleting _whisper silently killed the trigger\n```\n"
           },
           "usage": {
             "inputTokens": 2,
             "outputTokens": 647,
             "cacheCreationInputTokens": 347,
             "cacheReadInputTokens": 234063
+          }
+        },
+        {
+          "id": "b1b2325d-e8a5-47a4-8e98-ed1fdb47042c",
+          "timestamp": "2026-08-16T21:47:27.764Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "tool": {
+            "name": "Bash",
+            "type": "shell",
+            "useId": "toolu_01SxAAqyp818ETVQRoPnLwBa",
+            "input": {
+              "_cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+              "command": "git push 2\u003e\u00261 | tail -2; git rev-parse HEAD origin/main; TMPDIR_REAL=$(getconf DARWIN_USER_TEMP_DIR); tail -2 \"${TMPDIR_REAL}whisper-dictate/whisper-dictate.log\"",
+              "description": "Push and check log",
+              "timeout": 180000
+            },
+            "output": {
+              "content": "To https://github.com/losskot/local-whisper.git\n   d0d3356..75187bc  main -\u003e main\n75187bc1dfe8f8327d00d850e292bd19b832e6a0\n75187bc1dfe8f8327d00d850e292bd19b832e6a0\n[23:46:10] warmup: attempt 1/10\n[23:46:11] warmup: cancelled (key released before device ready)",
+              "is_error": false
+            },
+            "formattedMarkdown": "Push and check log\n\n`git push 2\u003e\u00261 | tail -2; git rev-parse HEAD origin/main; TMPDIR_REAL=$(getconf DARWIN_USER_TEMP_DIR); tail -2 \"${TMPDIR_REAL}whisper-dictate/whisper-dictate.log\"`\n\n```text\nTo https://github.com/losskot/local-whisper.git\n   d0d3356..75187bc  main -\u003e main\n75187bc1dfe8f8327d00d850e292bd19b832e6a0\n75187bc1dfe8f8327d00d850e292bd19b832e6a0\n[23:46:10] warmup: attempt 1/10\n[23:46:11] warmup: cancelled (key released before device ready)\n```\n"
+          },
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 194,
+            "cacheCreationInputTokens": 683,
+            "cacheReadInputTokens": 234410
+          }
+        },
+        {
+          "id": "0f72b25a-0728-4ca3-9c3c-7bc2d464c199",
+          "timestamp": "2026-08-16T21:47:52.481Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "content": [
+            {
+              "type": "text",
+              "text": "Запушено (`75187bc`). Попробуй нажать сейчас — конфиг перезагружен с фиксом.\n\n## Что было на самом деле\n\nВиноват не биндинг. **Eventtap собрал сборщик мусора.**\n\nПроверил по шагам: секьюрный ввод выключен, Accessibility есть, свежесозданный tap события получает — а наш нет. То есть tap не «отключился», его больше не существует.\n\nПричина — я. `_whisper` я удалил как мёртвое состояние, потому что поле `recording` никогда не обновлялось. Но строка `_whisper.modTap = modTap` была **единственной сильной ссылкой на eventtap**. Hammerspoon удаляет eventtap'ы, повторяющиеся таймеры и вотчеры, на которые из Lua никто не ссылается, и удаление снимает их регистрацию в системе: ни ошибки, ни строчки в логе, `isEnabled()` до последнего возвращает `true`.\n\nЛокалы верхнего уровня корнем **не являются** — после того как чанк отработал, локал живёт только пока его захватывает достижимое замыкание. `modTap` держало лишь замыкание сторожевого таймера, а его собственный хэндл никуда не сохранялся. Вся цепочка оказалась собираемой — поэтому триггер работал пару минут после каждого релоада (23:36 и 23:37 диктовки прошли), а к 23:42 умер.\n\nСюда же попал `sleepWatcher` — он тоже был не закреплён и тихо перестал бы восстанавливать диктовки, прерванные сном.\n\n## Фикс\n\nВсе долгоживущие объекты теперь в таблице `LocalWhisper`: `modTap`, `tapWatchdog`, `sleepWatcher`.\n\n**Проверка живьём**: перезагрузил, прогнал два полных `collectgarbage(\"collect\")` — то, что раньше убивало tap, — и после этого синтетическое нажатие дало `warmup: probing audio device...`. Tap пережил GC.\n\n**Тест**: новая группа `lifetime` — ни один конструктор верхнего уровня не смеет выбрасывать результат, и каждый top-level локал с eventtap/watcher/`doEvery` обязан быть записан в корневую таблицу. Снял корень в копии текущего файла — упали все три проверки. Всего 75 зелёных.\n\n## Честно про два прокола подряд\n\nОба — мои, и оба одного сорта: я объявил мёртвым то, чего не проверил в рантайме.\n\n1. `triggerHeld` — тест кормил стаб значением `_raw`, которого настоящий API не отдаёт. Тест был согласован сам с собой, а не с системой.\n2. `_whisper` — я посмотрел на поле `recording`, увидел, что его никто не пишет, и не заметил, что рядом лежит ссылка, держащая объект живым.\n\nВ AGENTS.md записал оба гочи с командами для проверки: как убедиться, что `checkKeyboardModifiers` теряет device-биты, и как форсировать GC и убедиться, что tap выжил.\n\nЕсли сейчас снова не заработает — скажи, и я повешу диагностический tap, который запишет сырые флаги твоего физического нажатия: тогда будет видно, что именно шлёт клавиатура, а не что я предполагаю."
+            }
+          ],
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 1150,
+            "cacheCreationInputTokens": 333,
+            "cacheReadInputTokens": 235093
+          }
+        }
+      ]
+    },
+    {
+      "exchangeId": "75104b21-d273-4b80-9e90-7653b73b4f50:4",
+      "startTime": "2026-08-17T01:24:21.875Z",
+      "endTime": "2026-08-17T01:25:49.206Z",
+      "messages": [
+        {
+          "id": "39ba342e-5133-460b-98f4-d3e040137656",
+          "timestamp": "2026-08-17T01:24:21.875Z",
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "Все MD файлы обновлены. Можно закрывать этот чат или что-то куда-то хочешь дописать?"
+            }
+          ]
+        },
+        {
+          "id": "c0f0c1ad-2b28-47a8-a6b3-2a6ed7eb3e57",
+          "timestamp": "2026-08-17T01:24:45.604Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 1521,
+            "cacheCreationInputTokens": 214019,
+            "cacheReadInputTokens": 22642
+          }
+        },
+        {
+          "id": "6b239226-28d3-4ba0-9155-4cf3c8296347",
+          "timestamp": "2026-08-17T01:24:46.307Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "content": [
+            {
+              "type": "text",
+              "text": "Перед закрытием — проверю состояние и одну вещь допишу."
+            }
+          ],
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 1521,
+            "cacheCreationInputTokens": 214019,
+            "cacheReadInputTokens": 22642
+          }
+        },
+        {
+          "id": "038551c1-9079-4c5b-bcd3-1f0e3801dbf5",
+          "timestamp": "2026-08-17T01:24:51.257Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "tool": {
+            "name": "Bash",
+            "type": "shell",
+            "useId": "toolu_016z9wU6MSskGy6Y3WW6nj7q",
+            "input": {
+              "_cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+              "command": "TMPDIR_REAL=$(getconf DARWIN_USER_TEMP_DIR); echo \"=== активность после фикса (23:46+):\"; grep -E \"recording: start|recording: stop|inserted|warmup: probing\" \"${TMPDIR_REAL}whisper-dictate/whisper-dictate.log\" | tail -8; echo \"=== git:\"; git status --porcelain | head -5; git status -sb | head -1; echo \"=== memory:\"; ls /Users/vitaliy/.claude/projects/-Users-vitaliy-Documents-GitHub-local-whisper/memory/ 2\u003e/dev/null | head",
+              "description": "Check post-fix activity, git state, memory dir"
+            },
+            "output": {
+              "content": "=== активность после фикса (23:46+):\n=== git:\n M .specstory/debug/75104b21-d273-4b80-9e90-7653b73b4f50/session-data.json\n M .specstory/history/2026-08-16_20-32-18Z.md\n M .specstory/statistics.json\n?? .specstory/debug/75104b21-d273-4b80-9e90-7653b73b4f50/357.json\n?? .specstory/debug/75104b21-d273-4b80-9e90-7653b73b4f50/358.json\n## main...origin/main\n=== memory:",
+              "is_error": false
+            },
+            "formattedMarkdown": "Check post-fix activity, git state, memory dir\n\n`TMPDIR_REAL=$(getconf DARWIN_USER_TEMP_DIR); echo \"=== активность после фикса (23:46+):\"; grep -E \"recording: start|recording: stop|inserted|warmup: probing\" \"${TMPDIR_REAL}whisper-dictate/whisper-dictate.log\" | tail -8; echo \"=== git:\"; git status --porcelain | head -5; git status -sb | head -1; echo \"=== memory:\"; ls /Users/vitaliy/.claude/projects/-Users-vitaliy-Documents-GitHub-local-whisper/memory/ 2\u003e/dev/null | head`\n\n```text\n=== активность после фикса (23:46+):\n=== git:\n M .specstory/debug/75104b21-d273-4b80-9e90-7653b73b4f50/session-data.json\n M .specstory/history/2026-08-16_20-32-18Z.md\n M .specstory/statistics.json\n?? .specstory/debug/75104b21-d273-4b80-9e90-7653b73b4f50/357.json\n?? .specstory/debug/75104b21-d273-4b80-9e90-7653b73b4f50/358.json\n## main...origin/main\n=== memory:\n```\n"
+          },
+          "pathHints": [
+            "/dev/null"
+          ],
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 1521,
+            "cacheCreationInputTokens": 214019,
+            "cacheReadInputTokens": 22642
+          }
+        },
+        {
+          "id": "84fccca5-3110-4cda-91f6-a7cfe59410f6",
+          "timestamp": "2026-08-17T01:24:58.399Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 526,
+            "cacheCreationInputTokens": 1717,
+            "cacheReadInputTokens": 236661
+          }
+        },
+        {
+          "id": "381cc01b-9f47-43bd-8e50-608deff49238",
+          "timestamp": "2026-08-17T01:25:01.580Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "tool": {
+            "name": "Bash",
+            "type": "shell",
+            "useId": "toolu_01UHGmt7R43jGuu24hQBZrUv",
+            "input": {
+              "_cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+              "command": "TMPDIR_REAL=$(getconf DARWIN_USER_TEMP_DIR); LOG=\"${TMPDIR_REAL}whisper-dictate/whisper-dictate.log\"; ls -l \"$LOG\"; echo \"--- последние 6 строк:\"; tail -6 \"$LOG\"; date \"+сейчас %H:%M\"",
+              "description": "Direct log tail"
+            },
+            "output": {
+              "content": "-rw-r--r--@ 1 vitaliy  staff  330019 Aug 17 03:24 /var/folders/ph/3yv4hw8567g12wy09lntpvt40000gp/T/whisper-dictate/whisper-dictate.log\n--- последние 6 строк:\n[03:24:15] action: inserted [Code]: Все MD файлы обновлены. Можно закрывать этот чат или что-то куда-то хочешь дописать.\n[03:24:27] warmup: probing audio device...\n[03:24:27] warmup: attempt 1/10\n[03:24:27] warmup: device ready on attempt 1\n[03:24:27] recording: start\n[03:24:27] recording: app=Code (com.microsoft.VSCode)\nсейчас 03:25",
+              "is_error": false
+            },
+            "formattedMarkdown": "Direct log tail\n\n`TMPDIR_REAL=$(getconf DARWIN_USER_TEMP_DIR); LOG=\"${TMPDIR_REAL}whisper-dictate/whisper-dictate.log\"; ls -l \"$LOG\"; echo \"--- последние 6 строк:\"; tail -6 \"$LOG\"; date \"+сейчас %H:%M\"`\n\n```text\n-rw-r--r--@ 1 vitaliy  staff  330019 Aug 17 03:24 /var/folders/ph/3yv4hw8567g12wy09lntpvt40000gp/T/whisper-dictate/whisper-dictate.log\n--- последние 6 строк:\n[03:24:15] action: inserted [Code]: Все MD файлы обновлены. Можно закрывать этот чат или что-то куда-то хочешь дописать.\n[03:24:27] warmup: probing audio device...\n[03:24:27] warmup: attempt 1/10\n[03:24:27] warmup: device ready on attempt 1\n[03:24:27] recording: start\n[03:24:27] recording: app=Code (com.microsoft.VSCode)\nсейчас 03:25\n```\n"
+          },
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 526,
+            "cacheCreationInputTokens": 1717,
+            "cacheReadInputTokens": 236661
+          }
+        },
+        {
+          "id": "49f3c999-b23b-4d55-a79a-07e4666cfd13",
+          "timestamp": "2026-08-17T01:25:16.197Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 1292,
+            "cacheCreationInputTokens": 792,
+            "cacheReadInputTokens": 238378
+          }
+        },
+        {
+          "id": "f2770d32-60f3-40d2-995f-ddbdb1c82acf",
+          "timestamp": "2026-08-17T01:25:17.693Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "content": [
+            {
+              "type": "text",
+              "text": "Триггер работает — твоё последнее сообщение продиктовано в 03:24 через него же (в лог видно вставку в VS Code). Дописываю два места:"
+            }
+          ],
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 1292,
+            "cacheCreationInputTokens": 792,
+            "cacheReadInputTokens": 238378
+          }
+        },
+        {
+          "id": "014fd59b-639b-4b1c-b8f6-c11c33f11f06",
+          "timestamp": "2026-08-17T01:25:24.507Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "tool": {
+            "name": "Write",
+            "type": "write",
+            "useId": "toolu_01YJSkoZtHa2jQWP8ownhBbn",
+            "input": {
+              "_cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+              "content": "---\nname: prefers-community-sources\ndescription: When the user reports something broken or unknown, dig into community/human accounts before official vendor docs\nmetadata:\n  type: feedback\n---\n\nWhen the user says something is not working, or something needs figuring out, look for\ncommunity and human accounts — forum threads, issue trackers, blog posts, people describing\nwhat actually happened to them — rather than leading with official vendor documentation.\n\n**Why:** in the user's value system that kind of knowledge ranks well above corporate\ninformation, which they consider unreliable and self-serving.\n\n**How to apply:** when diagnosing, weight a matching real-world report above a doc page that\nmerely describes intended behaviour. Say plainly when the official docs and the field reports\ndisagree. Stated by the user on 2026-08-16, dictated while this project's dictation tool was\nrecording. Complements the empirical habit in [[verify-in-runtime-not-by-reading]].\n",
+              "file_path": "/Users/vitaliy/.claude/projects/-Users-vitaliy-Documents-GitHub-local-whisper/memory/prefers-community-sources.md"
+            },
+            "output": {
+              "content": "File created successfully at: /Users/vitaliy/.claude/projects/-Users-vitaliy-Documents-GitHub-local-whisper/memory/prefers-community-sources.md",
+              "is_error": false
+            },
+            "formattedMarkdown": "\n```md\n---\nname: prefers-community-sources\ndescription: When the user reports something broken or unknown, dig into community/human accounts before official vendor docs\nmetadata:\n  type: feedback\n---\n\nWhen the user says something is not working, or something needs figuring out, look for\ncommunity and human accounts — forum threads, issue trackers, blog posts, people describing\nwhat actually happened to them — rather than leading with official vendor documentation.\n\n**Why:** in the user's value system that kind of knowledge ranks well above corporate\ninformation, which they consider unreliable and self-serving.\n\n**How to apply:** when diagnosing, weight a matching real-world report above a doc page that\nmerely describes intended behaviour. Say plainly when the official docs and the field reports\ndisagree. Stated by the user on 2026-08-16, dictated while this project's dictation tool was\nrecording. Complements the empirical habit in [[verify-in-runtime-not-by-reading]].\n\n```\n\n```text\nFile created successfully at: /Users/vitaliy/.claude/projects/-Users-vitaliy-Documents-GitHub-local-whisper/memory/prefers-community-sources.md\n```\n"
+          },
+          "pathHints": [
+            "/Users/vitaliy/.claude/projects/-Users-vitaliy-Documents-GitHub-local-whisper/memory/prefers-community-sources.md"
+          ],
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 1292,
+            "cacheCreationInputTokens": 792,
+            "cacheReadInputTokens": 238378
+          }
+        },
+        {
+          "id": "7036e1e5-2127-4ab2-b398-aace97803e66",
+          "timestamp": "2026-08-17T01:25:34.411Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "tool": {
+            "name": "Write",
+            "type": "write",
+            "useId": "toolu_01XxvDrDkdroQX2toL2267yt",
+            "input": {
+              "_cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+              "content": "---\nname: verify-in-runtime-not-by-reading\ndescription: In this Hammerspoon codebase, never declare something dead or correct from reading alone — probe the live runtime via `hs -c`\nmetadata:\n  type: feedback\n---\n\nBefore calling code dead, or a fix correct, exercise it in the running Hammerspoon process\nwith `hs -c` and read the log. Reading the source is not evidence here.\n\n**Why:** two failures in one session, both from reasoning instead of probing. `_whisper` looked\nlike dead state because its `recording` field was never written — it was actually the only GC\nroot keeping the trigger eventtap alive, and deleting it killed the trigger a few minutes after\nevery reload. And a unit test passed on a broken `triggerHeld` because the stub fed it a flag\nword that `checkKeyboardModifiers` never actually returns.\n\n**How to apply:** post synthetic events, force `collectgarbage(\"collect\")`, read\n`$TMPDIR/whisper-dictate/whisper-dictate.log` — the recipes are in AGENTS.md. When writing a\ntest with a stubbed API, first check what that API returns in the real runtime. See also\n[[prefers-community-sources]].\n",
+              "file_path": "/Users/vitaliy/.claude/projects/-Users-vitaliy-Documents-GitHub-local-whisper/memory/verify-in-runtime-not-by-reading.md"
+            },
+            "output": {
+              "content": "File created successfully at: /Users/vitaliy/.claude/projects/-Users-vitaliy-Documents-GitHub-local-whisper/memory/verify-in-runtime-not-by-reading.md",
+              "is_error": false
+            },
+            "formattedMarkdown": "\n```md\n---\nname: verify-in-runtime-not-by-reading\ndescription: In this Hammerspoon codebase, never declare something dead or correct from reading alone — probe the live runtime via `hs -c`\nmetadata:\n  type: feedback\n---\n\nBefore calling code dead, or a fix correct, exercise it in the running Hammerspoon process\nwith `hs -c` and read the log. Reading the source is not evidence here.\n\n**Why:** two failures in one session, both from reasoning instead of probing. `_whisper` looked\nlike dead state because its `recording` field was never written — it was actually the only GC\nroot keeping the trigger eventtap alive, and deleting it killed the trigger a few minutes after\nevery reload. And a unit test passed on a broken `triggerHeld` because the stub fed it a flag\nword that `checkKeyboardModifiers` never actually returns.\n\n**How to apply:** post synthetic events, force `collectgarbage(\"collect\")`, read\n`$TMPDIR/whisper-dictate/whisper-dictate.log` — the recipes are in AGENTS.md. When writing a\ntest with a stubbed API, first check what that API returns in the real runtime. See also\n[[prefers-community-sources]].\n\n```\n\n```text\nFile created successfully at: /Users/vitaliy/.claude/projects/-Users-vitaliy-Documents-GitHub-local-whisper/memory/verify-in-runtime-not-by-reading.md\n```\n"
+          },
+          "pathHints": [
+            "/Users/vitaliy/.claude/projects/-Users-vitaliy-Documents-GitHub-local-whisper/memory/verify-in-runtime-not-by-reading.md"
+          ],
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 526,
+            "cacheCreationInputTokens": 1359,
+            "cacheReadInputTokens": 239170
+          }
+        },
+        {
+          "id": "3495addb-d16d-4230-8e4a-070349a9b431",
+          "timestamp": "2026-08-17T01:25:39.846Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "tool": {
+            "name": "Bash",
+            "type": "shell",
+            "useId": "toolu_01AhK4hWtugGzXMEGKozFBt6",
+            "input": {
+              "_cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+              "command": "M=/Users/vitaliy/.claude/projects/-Users-vitaliy-Documents-GitHub-local-whisper/memory/MEMORY.md; [ -f \"$M\" ] \u0026\u0026 cat \"$M\" || echo \"(нет MEMORY.md)\"",
+              "description": "Check existing MEMORY.md"
+            },
+            "output": {
+              "content": "(нет MEMORY.md)",
+              "is_error": false
+            },
+            "formattedMarkdown": "Check existing MEMORY.md\n\n`M=/Users/vitaliy/.claude/projects/-Users-vitaliy-Documents-GitHub-local-whisper/memory/MEMORY.md; [ -f \"$M\" ] \u0026\u0026 cat \"$M\" || echo \"(нет MEMORY.md)\"`\n\n```text\n(нет MEMORY.md)\n```\n"
+          },
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 165,
+            "cacheCreationInputTokens": 600,
+            "cacheReadInputTokens": 240529
+          }
+        },
+        {
+          "id": "a7ea5f66-a981-49db-9a60-5c4d11b52a5a",
+          "timestamp": "2026-08-17T01:25:44.940Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "tool": {
+            "name": "Write",
+            "type": "write",
+            "useId": "toolu_01PrqcmzhXz6ZBVqhUDfXS9c",
+            "input": {
+              "_cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+              "content": "- [Community sources over official docs](prefers-community-sources.md) — when something breaks, human accounts outrank vendor documentation\n- [Verify in the runtime, not by reading](verify-in-runtime-not-by-reading.md) — `hs -c` and the log are the evidence; source-reading twice produced confident wrong calls\n",
+              "file_path": "/Users/vitaliy/.claude/projects/-Users-vitaliy-Documents-GitHub-local-whisper/memory/MEMORY.md"
+            },
+            "output": {
+              "content": "File created successfully at: /Users/vitaliy/.claude/projects/-Users-vitaliy-Documents-GitHub-local-whisper/memory/MEMORY.md (file state is current in your context — no need to Read it back)",
+              "is_error": false
+            },
+            "formattedMarkdown": "\n```md\n- [Community sources over official docs](prefers-community-sources.md) — when something breaks, human accounts outrank vendor documentation\n- [Verify in the runtime, not by reading](verify-in-runtime-not-by-reading.md) — `hs -c` and the log are the evidence; source-reading twice produced confident wrong calls\n\n```\n\n```text\nFile created successfully at: /Users/vitaliy/.claude/projects/-Users-vitaliy-Documents-GitHub-local-whisper/memory/MEMORY.md (file state is current in your context — no need to Read it back)\n```\n"
+          },
+          "pathHints": [
+            "/Users/vitaliy/.claude/projects/-Users-vitaliy-Documents-GitHub-local-whisper/memory/MEMORY.md"
+          ],
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 228,
+            "cacheCreationInputTokens": 181,
+            "cacheReadInputTokens": 241129
+          }
+        },
+        {
+          "id": "9d5474ab-e53f-442f-a4cc-7a2c23f9c491",
+          "timestamp": "2026-08-17T01:25:49.206Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "tool": {
+            "name": "Bash",
+            "type": "shell",
+            "useId": "toolu_016ehdcBT67bC21xjCCa9Jfy",
+            "input": {
+              "_cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+              "command": "git add -A \u0026\u0026 git commit -q -m \"specstory: session history for the GC-root fix\n\nCo-Authored-By: Claude Opus 5 \u003cnoreply@anthropic.com\u003e\" \u0026\u0026 git push 2\u003e\u00261 | tail -2; git status -sb | head -1; git log --oneline -4",
+              "description": "Commit and push remaining specstory",
+              "timeout": 180000
+            },
+            "formattedMarkdown": "Commit and push remaining specstory\n\n```bash\ngit add -A \u0026\u0026 git commit -q -m \"specstory: session history for the GC-root fix\n\nCo-Authored-By: Claude Opus 5 \u003cnoreply@anthropic.com\u003e\" \u0026\u0026 git push 2\u003e\u00261 | tail -2; git status -sb | head -1; git log --oneline -4\n```\n"
+          },
+          "pathHints": [
+            " \u0026\u0026 git push 2\u003e\u00261 | tail -2; git status -sb | head -1; git log --oneline -4"
+          ],
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 193,
+            "cacheCreationInputTokens": 309,
+            "cacheReadInputTokens": 241310
           }
         }
       ]

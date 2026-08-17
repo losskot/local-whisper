@@ -1,0 +1,34 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "File created successfully at: /Users/vitaliy/.claude/projects/-Users-vitaliy-Documents-GitHub-local-whisper/memory/verify-in-runtime-not-by-reading.md",
+        "tool_use_id": "toolu_01XxvDrDkdroQX2toL2267yt",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "7036e1e5-2127-4ab2-b398-aace97803e66",
+  "promptId": "ec4c4131-68cd-43c3-be0f-e3052e52c118",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "7036e1e5-2127-4ab2-b398-aace97803e66",
+  "timestamp": "2026-08-17T01:25:34.411Z",
+  "toolUseResult": {
+    "content": "---\nname: verify-in-runtime-not-by-reading\ndescription: \"In this Hammerspoon codebase, never declare something dead or correct from reading alone — probe the live runtime via `hs -c`\"\nmetadata: \n  node_type: memory\n  type: feedback\n  originSessionId: 75104b21-d273-4b80-9e90-7653b73b4f50\n  modified: 2026-08-17T01:25:33.393Z\n---\n\nBefore calling code dead, or a fix correct, exercise it in the running Hammerspoon process\nwith `hs -c` and read the log. Reading the source is not evidence here.\n\n**Why:** two failures in one session, both from reasoning instead of probing. `_whisper` looked\nlike dead state because its `recording` field was never written — it was actually the only GC\nroot keeping the trigger eventtap alive, and deleting it killed the trigger a few minutes after\nevery reload. And a unit test passed on a broken `triggerHeld` because the stub fed it a flag\nword that `checkKeyboardModifiers` never actually returns.\n\n**How to apply:** post synthetic events, force `collectgarbage(\"collect\")`, read\n`$TMPDIR/whisper-dictate/whisper-dictate.log` — the recipes are in AGENTS.md. When writing a\ntest with a stubbed API, first check what that API returns in the real runtime. See also\n[[prefers-community-sources]].\n",
+    "filePath": "/Users/vitaliy/.claude/projects/-Users-vitaliy-Documents-GitHub-local-whisper/memory/verify-in-runtime-not-by-reading.md",
+    "memdirStamped": true,
+    "originalFile": null,
+    "structuredPatch": [],
+    "type": "create",
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "0258145f-0da0-40c1-af62-032ba7054a3a",
+  "version": "2.1.233"
+}

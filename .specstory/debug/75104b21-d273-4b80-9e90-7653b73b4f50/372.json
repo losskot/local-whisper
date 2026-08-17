@@ -1,0 +1,72 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01YJSkoZtHa2jQWP8ownhBbn",
+        "input": {
+          "content": "---\nname: prefers-community-sources\ndescription: When the user reports something broken or unknown, dig into community/human accounts before official vendor docs\nmetadata:\n  type: feedback\n---\n\nWhen the user says something is not working, or something needs figuring out, look for\ncommunity and human accounts — forum threads, issue trackers, blog posts, people describing\nwhat actually happened to them — rather than leading with official vendor documentation.\n\n**Why:** in the user's value system that kind of knowledge ranks well above corporate\ninformation, which they consider unreliable and self-serving.\n\n**How to apply:** when diagnosing, weight a matching real-world report above a doc page that\nmerely describes intended behaviour. Say plainly when the official docs and the field reports\ndisagree. Stated by the user on 2026-08-16, dictated while this project's dictation tool was\nrecording. Complements the empirical habit in [[verify-in-runtime-not-by-reading]].\n",
+          "file_path": "/Users/vitaliy/.claude/projects/-Users-vitaliy-Documents-GitHub-local-whisper/memory/prefers-community-sources.md"
+        },
+        "name": "Write",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce7Sy4efniCFM9i7aUQyi",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 792,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 792,
+      "cache_read_input_tokens": 238378,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 792,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 792,
+          "cache_read_input_tokens": 238378,
+          "input_tokens": 2,
+          "output_tokens": 1292,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 1292,
+      "output_tokens_details": {
+        "thinking_tokens": 817
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "f2770d32-60f3-40d2-995f-ddbdb1c82acf",
+  "requestId": "req_011Ce7Sy2CKzUca9YnJgEZMw",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "timestamp": "2026-08-17T01:25:23.247Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "014fd59b-639b-4b1c-b8f6-c11c33f11f06",
+  "version": "2.1.233"
+}

@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "-rw-r--r--@ 1 vitaliy  staff  330019 Aug 17 03:24 /var/folders/ph/3yv4hw8567g12wy09lntpvt40000gp/T/whisper-dictate/whisper-dictate.log\n--- последние 6 строк:\n[03:24:15] action: inserted [Code]: Все MD файлы обновлены. Можно закрывать этот чат или что-то куда-то хочешь дописать.\n[03:24:27] warmup: probing audio device...\n[03:24:27] warmup: attempt 1/10\n[03:24:27] warmup: device ready on attempt 1\n[03:24:27] recording: start\n[03:24:27] recording: app=Code (com.microsoft.VSCode)\nсейчас 03:25",
+        "is_error": false,
+        "tool_use_id": "toolu_01UHGmt7R43jGuu24hQBZrUv",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "381cc01b-9f47-43bd-8e50-608deff49238",
+  "promptId": "ec4c4131-68cd-43c3-be0f-e3052e52c118",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "381cc01b-9f47-43bd-8e50-608deff49238",
+  "timestamp": "2026-08-17T01:25:01.580Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "-rw-r--r--@ 1 vitaliy  staff  330019 Aug 17 03:24 /var/folders/ph/3yv4hw8567g12wy09lntpvt40000gp/T/whisper-dictate/whisper-dictate.log\n--- последние 6 строк:\n[03:24:15] action: inserted [Code]: Все MD файлы обновлены. Можно закрывать этот чат или что-то куда-то хочешь дописать.\n[03:24:27] warmup: probing audio device...\n[03:24:27] warmup: attempt 1/10\n[03:24:27] warmup: device ready on attempt 1\n[03:24:27] recording: start\n[03:24:27] recording: app=Code (com.microsoft.VSCode)\nсейчас 03:25"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "3085b2ad-ebec-47f6-b1da-a42ce24048e4",
+  "version": "2.1.233"
+}

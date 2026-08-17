@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "75187bc Root the eventtap against the GC — deleting _whisper silently killed the trigger",
+        "is_error": false,
+        "tool_use_id": "toolu_01Gj9tG3DsveP8hcTdUFPPkK",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "0c2ab949-a055-4240-9514-863ab4fe3a07",
+  "promptId": "f827976e-140e-4169-af22-bb5944b08f41",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "0c2ab949-a055-4240-9514-863ab4fe3a07",
+  "timestamp": "2026-08-16T21:47:18.639Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "75187bc Root the eventtap against the GC — deleting _whisper silently killed the trigger"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "fb1b7ea5-a893-4c32-be26-e21a3c65dd8e",
+  "version": "2.1.233"
+}

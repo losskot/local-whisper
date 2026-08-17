@@ -1,0 +1,64 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "text": "Запушено (`75187bc`). Попробуй нажать сейчас — конфиг перезагружен с фиксом.\n\n## Что было на самом деле\n\nВиноват не биндинг. **Eventtap собрал сборщик мусора.**\n\nПроверил по шагам: секьюрный ввод выключен, Accessibility есть, свежесозданный tap события получает — а наш нет. То есть tap не «отключился», его больше не существует.\n\nПричина — я. `_whisper` я удалил как мёртвое состояние, потому что поле `recording` никогда не обновлялось. Но строка `_whisper.modTap = modTap` была **единственной сильной ссылкой на eventtap**. Hammerspoon удаляет eventtap'ы, повторяющиеся таймеры и вотчеры, на которые из Lua никто не ссылается, и удаление снимает их регистрацию в системе: ни ошибки, ни строчки в логе, `isEnabled()` до последнего возвращает `true`.\n\nЛокалы верхнего уровня корнем **не являются** — после того как чанк отработал, локал живёт только пока его захватывает достижимое замыкание. `modTap` держало лишь замыкание сторожевого таймера, а его собственный хэндл никуда не сохранялся. Вся цепочка оказалась собираемой — поэтому триггер работал пару минут после каждого релоада (23:36 и 23:37 диктовки прошли), а к 23:42 умер.\n\nСюда же попал `sleepWatcher` — он тоже был не закреплён и тихо перестал бы восстанавливать диктовки, прерванные сном.\n\n## Фикс\n\nВсе долгоживущие объекты теперь в таблице `LocalWhisper`: `modTap`, `tapWatchdog`, `sleepWatcher`.\n\n**Проверка живьём**: перезагрузил, прогнал два полных `collectgarbage(\"collect\")` — то, что раньше убивало tap, — и после этого синтетическое нажатие дало `warmup: probing audio device...`. Tap пережил GC.\n\n**Тест**: новая группа `lifetime` — ни один конструктор верхнего уровня не смеет выбрасывать результат, и каждый top-level локал с eventtap/watcher/`doEvery` обязан быть записан в корневую таблицу. Снял корень в копии текущего файла — упали все три проверки. Всего 75 зелёных.\n\n## Честно про два прокола подряд\n\nОба — мои, и оба одного сорта: я объявил мёртвым то, чего не проверил в рантайме.\n\n1. `triggerHeld` — тест кормил стаб значением `_raw`, которого настоящий API не отдаёт. Тест был согласован сам с собой, а не с системой.\n2. `_whisper` — я посмотрел на поле `recording`, увидел, что его никто не пишет, и не заметил, что рядом лежит ссылка, держащая объект живым.\n\nВ AGENTS.md записал оба гочи с командами для проверки: как убедиться, что `checkKeyboardModifiers` теряет device-биты, и как форсировать GC и убедиться, что tap выжил.\n\nЕсли сейчас снова не заработает — скажи, и я повешу диагностический tap, который запишет сырые флаги твоего физического нажатия: тогда будет видно, что именно шлёт клавиатура, а не что я предполагаю.",
+        "type": "text"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce7ANq8FyvCFz6EEyhM8t",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "end_turn",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 333,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 333,
+      "cache_read_input_tokens": 235093,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 333,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 333,
+          "cache_read_input_tokens": 235093,
+          "input_tokens": 2,
+          "output_tokens": 1150,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 1150,
+      "output_tokens_details": {
+        "thinking_tokens": 0
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "15f76dba-e6ca-4213-95ba-580f41502ba0",
+  "requestId": "req_011Ce7ANnJ6wKc39dwyNHon7",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "timestamp": "2026-08-16T21:47:52.481Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "0f72b25a-0728-4ca3-9c3c-7bc2d464c199",
+  "version": "2.1.233"
+}

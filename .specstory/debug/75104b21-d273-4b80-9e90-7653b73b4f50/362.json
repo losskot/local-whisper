@@ -1,0 +1,28 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "text": "Все MD файлы обновлены. Можно закрывать этот чат или что-то куда-то хочешь дописать?",
+        "type": "text"
+      }
+    ],
+    "role": "user"
+  },
+  "origin": {
+    "kind": "human"
+  },
+  "parentUuid": "0f72b25a-0728-4ca3-9c3c-7bc2d464c199",
+  "permissionMode": "auto",
+  "promptId": "ec4c4131-68cd-43c3-be0f-e3052e52c118",
+  "promptSource": "sdk",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "timestamp": "2026-08-17T01:24:21.875Z",
+  "type": "user",
+  "userType": "external",
+  "uuid": "39ba342e-5133-460b-98f4-d3e040137656",
+  "version": "2.1.233"
+}

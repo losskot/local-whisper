@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "(нет MEMORY.md)",
+        "is_error": false,
+        "tool_use_id": "toolu_01AhK4hWtugGzXMEGKozFBt6",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "3495addb-d16d-4230-8e4a-070349a9b431",
+  "promptId": "ec4c4131-68cd-43c3-be0f-e3052e52c118",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "3495addb-d16d-4230-8e4a-070349a9b431",
+  "timestamp": "2026-08-17T01:25:39.846Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "(нет MEMORY.md)"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "b976bf71-b681-4b7c-92fc-2c149a733f5b",
+  "version": "2.1.233"
+}

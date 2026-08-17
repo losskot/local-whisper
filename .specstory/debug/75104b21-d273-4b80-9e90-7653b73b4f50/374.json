@@ -1,0 +1,72 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01XxvDrDkdroQX2toL2267yt",
+        "input": {
+          "content": "---\nname: verify-in-runtime-not-by-reading\ndescription: In this Hammerspoon codebase, never declare something dead or correct from reading alone — probe the live runtime via `hs -c`\nmetadata:\n  type: feedback\n---\n\nBefore calling code dead, or a fix correct, exercise it in the running Hammerspoon process\nwith `hs -c` and read the log. Reading the source is not evidence here.\n\n**Why:** two failures in one session, both from reasoning instead of probing. `_whisper` looked\nlike dead state because its `recording` field was never written — it was actually the only GC\nroot keeping the trigger eventtap alive, and deleting it killed the trigger a few minutes after\nevery reload. And a unit test passed on a broken `triggerHeld` because the stub fed it a flag\nword that `checkKeyboardModifiers` never actually returns.\n\n**How to apply:** post synthetic events, force `collectgarbage(\"collect\")`, read\n`$TMPDIR/whisper-dictate/whisper-dictate.log` — the recipes are in AGENTS.md. When writing a\ntest with a stubbed API, first check what that API returns in the real runtime. See also\n[[prefers-community-sources]].\n",
+          "file_path": "/Users/vitaliy/.claude/projects/-Users-vitaliy-Documents-GitHub-local-whisper/memory/verify-in-runtime-not-by-reading.md"
+        },
+        "name": "Write",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce7SzjkvUeXhvcMbSY4Kv",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 1359,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 1359,
+      "cache_read_input_tokens": 239170,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1359,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 1359,
+          "cache_read_input_tokens": 239170,
+          "input_tokens": 2,
+          "output_tokens": 526,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 526,
+      "output_tokens_details": {
+        "thinking_tokens": 0
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "b39dbb0d-59b0-4998-ae3c-30fbd7200f38",
+  "requestId": "req_011Ce7Szhx2V7K8GrpeGDMiX",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "timestamp": "2026-08-17T01:25:33.371Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "7036e1e5-2127-4ab2-b398-aace97803e66",
+  "version": "2.1.233"
+}
