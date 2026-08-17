@@ -1,0 +1,35 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "\u003csystem-reminder\u003eWarning: the file exists but the contents are empty.\u003c/system-reminder\u003e",
+        "tool_use_id": "toolu_01FrCrsYvGkWTnoGp4gvUgdw",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "76350d84-6a03-405b-8511-6b38790a9a35",
+  "promptId": "8f0f702b-2395-43e1-b2eb-25eda16d6812",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "76350d84-6a03-405b-8511-6b38790a9a35",
+  "timestamp": "2026-08-17T02:54:51.540Z",
+  "toolUseResult": {
+    "file": {
+      "content": "",
+      "filePath": "/private/tmp/claude-502/-Users-vitaliy-Documents-GitHub-local-whisper/881e21dc-c26e-4f4f-865e-0d78e8553961/tasks/b8rodgdzx.output",
+      "numLines": 1,
+      "startLine": 1,
+      "totalLines": 1
+    },
+    "type": "text"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "4166766b-dc5e-4a89-8325-fb402421daec",
+  "version": "2.1.233"
+}

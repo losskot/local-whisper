@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "=== recording spanned 04:47:09 -\u003e 04:48:49 = 100s wall ===\nchunks=101  audio=100.20s\n=== per-chunk durations (sample) ===\n  chunk_000: 1.000000\n  chunk_025: 1.000000\n  chunk_050: 1.000000\n  chunk_075: 1.000000\n  chunk_099: 1.000000\n  chunk_100: 0.199625\n=== seg wav durations ===\n  seg_1: 48.000000\n  seg_2: 52.199625",
+        "is_error": false,
+        "tool_use_id": "toolu_01CuCYzkqA7GV8EyPL195qTg",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "a3fe01d2-70d5-4180-9f4b-8146e4d577f0",
+  "promptId": "8f0f702b-2395-43e1-b2eb-25eda16d6812",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "a3fe01d2-70d5-4180-9f4b-8146e4d577f0",
+  "timestamp": "2026-08-17T02:50:12.090Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "=== recording spanned 04:47:09 -\u003e 04:48:49 = 100s wall ===\nchunks=101  audio=100.20s\n=== per-chunk durations (sample) ===\n  chunk_000: 1.000000\n  chunk_025: 1.000000\n  chunk_050: 1.000000\n  chunk_075: 1.000000\n  chunk_099: 1.000000\n  chunk_100: 0.199625\n=== seg wav durations ===\n  seg_1: 48.000000\n  seg_2: 52.199625"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "6b42fd19-d966-4175-a7e9-e011e85f19d1",
+  "version": "2.1.233"
+}

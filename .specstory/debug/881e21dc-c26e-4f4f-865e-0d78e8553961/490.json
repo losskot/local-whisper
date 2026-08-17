@@ -1,0 +1,34 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "Command running in background with ID: b3nk9ashh. Output is being written to: /private/tmp/claude-502/-Users-vitaliy-Documents-GitHub-local-whisper/881e21dc-c26e-4f4f-865e-0d78e8553961/tasks/b3nk9ashh.output. You will be notified when it completes. To check interim output, use Read on that file path.",
+        "is_error": false,
+        "tool_use_id": "toolu_01EyAjBjfkKjSFmZCfv2eXSb",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "a0f0e6f5-379f-4a8e-8342-4ea8475bad4a",
+  "promptId": "8f0f702b-2395-43e1-b2eb-25eda16d6812",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "a0f0e6f5-379f-4a8e-8342-4ea8475bad4a",
+  "timestamp": "2026-08-17T02:54:40.662Z",
+  "toolUseResult": {
+    "backgroundTaskId": "b3nk9ashh",
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": ""
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "6c2796df-a32b-450e-8581-d88658bfe101",
+  "version": "2.1.233"
+}

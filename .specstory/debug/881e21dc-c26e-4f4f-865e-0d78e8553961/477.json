@@ -1,0 +1,27 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "\u003ctool_use_error\u003eBlocked: sleep 85 followed by: echo \"chunks: $(ls /tmp/lw100/*.wav | wc -l)\" hs -c 'return \"streamCalls=\"..tostring(LWN2)'. To wait for a condition, use Monitor with an until-loop (e.g. `until \u003ccheck\u003e; do sleep 2; done`). To wait for a command you started, use run_in_background: true. Do not chain shorter sleeps to work around this block.\u003c/tool_use_error\u003e",
+        "is_error": true,
+        "tool_use_id": "toolu_01KUJy6PP5vPVBsrqHFs4hwG",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "68ede736-c4f1-4bf9-b0d1-fe446b15acc9",
+  "promptId": "8f0f702b-2395-43e1-b2eb-25eda16d6812",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "68ede736-c4f1-4bf9-b0d1-fe446b15acc9",
+  "timestamp": "2026-08-17T02:53:44.634Z",
+  "toolUseResult": "Error: Blocked: sleep 85 followed by: echo \"chunks: $(ls /tmp/lw100/*.wav | wc -l)\" hs -c 'return \"streamCalls=\"..tostring(LWN2)'. To wait for a condition, use Monitor with an until-loop (e.g. `until \u003ccheck\u003e; do sleep 2; done`). To wait for a command you started, use run_in_background: true. Do not chain shorter sleeps to work around this block.",
+  "type": "user",
+  "userType": "external",
+  "uuid": "4bb57f19-e17b-424d-97e4-c82cb45aa7ec",
+  "version": "2.1.233"
+}

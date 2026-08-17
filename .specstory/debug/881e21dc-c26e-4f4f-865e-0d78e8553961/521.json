@@ -1,0 +1,52 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01AG6s5y8cp8LPSKNCDbr8Hj",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "9e794191-0b45-4394-8161-fcd8ab139a20",
+  "promptId": "8f0f702b-2395-43e1-b2eb-25eda16d6812",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "9e794191-0b45-4394-8161-fcd8ab139a20",
+  "timestamp": "2026-08-17T02:56:09.783Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+    "newString": "            if recorderTask ~= thisTask then return true end\n            if stdout then\n                if isWarmingUp and stdout:find(\"READY\", 1, true) then\n                    log(\"warmup: device ready on attempt \" .. warmupAttempt)\n                    onRecorderReady()\n                end\n                stdoutTail = (stdoutTail .. stdout):sub(-200)\n                local c = tonumber(stdoutTail:match(\"CAPTURED%s+([%d%.]+)\"))\n                if c then recorderCaptured = c end\n            end\n            return true",
+    "oldString": "            if recorderTask ~= thisTask then return true end\n            if stdout then\n                if isWarmingUp and stdout:find(\"READY\", 1, true) then\n                    log(\"warmup: device ready on attempt \" .. warmupAttempt)\n                    onRecorderReady()\n                end\n                local c = tonumber(stdout:match(\"CAPTURED%s+([%d%.]+)\"))\n                if c then recorderCaptured = c end\n            end\n            return true",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          "                     log(\"warmup: device ready on attempt \" .. warmupAttempt)",
+          "                     onRecorderReady()",
+          "                 end",
+          "-                local c = tonumber(stdout:match(\"CAPTURED%s+([%d%.]+)\"))",
+          "+                stdoutTail = (stdoutTail .. stdout):sub(-200)",
+          "+                local c = tonumber(stdoutTail:match(\"CAPTURED%s+([%d%.]+)\"))",
+          "                 if c then recorderCaptured = c end",
+          "             end",
+          "             return true"
+        ],
+        "newLines": 8,
+        "newStart": 1594,
+        "oldLines": 7,
+        "oldStart": 1594
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "d1e3c53b-1d6c-4d73-9eb2-7657ecd7510a",
+  "version": "2.1.233"
+}

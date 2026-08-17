@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "3023911 specstory: session history for the capture fix\n## main...origin/main\n M .specstory/debug/881e21dc-c26e-4f4f-865e-0d78e8553961/session-data.json\n M .specstory/history/2026-08-17_01-25-52Z.md",
+        "is_error": false,
+        "tool_use_id": "toolu_01NBMsMWuR48w32e7xjmSvPQ",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "75178109-f96e-4172-9939-1285e9349274",
+  "promptId": "8f0f702b-2395-43e1-b2eb-25eda16d6812",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "75178109-f96e-4172-9939-1285e9349274",
+  "timestamp": "2026-08-17T02:59:27.433Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "3023911 specstory: session history for the capture fix\n## main...origin/main\n M .specstory/debug/881e21dc-c26e-4f4f-865e-0d78e8553961/session-data.json\n M .specstory/history/2026-08-17_01-25-52Z.md"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "51a40eef-9b53-4422-a1c5-aa775fcb7765",
+  "version": "2.1.233"
+}

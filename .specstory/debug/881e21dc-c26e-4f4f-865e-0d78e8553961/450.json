@@ -1,0 +1,35 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "1543\t    -- capture regression shows up in the log as a gap against the wall clock instead of\n1544\t    -- silently shortening words. ffmpeg lost ~10% here and nothing recorded it.\n1545\t    recordStartedAt = hs.timer.secondsSinceEpoch()\n1546\t    recorderCaptured = nil\n1547\t\n1548\t    -- Captured so the callback can tell whether it is still the current recorder: a slow\n1549\t    -- exit from the previous dictation must not clear the handle of the one now running.\n1550\t    local thisTask\n1551\t    thisTask = hs.task.new(RECORDER_BIN,\n1552\t        function(code, out, err)  -- termination callback\n1553\t            local isCurrent = (recorderTask == thisTask)\n1554\t            if isCurrent then recorderTask = nil end\n1555\t            log(\"recording: recorder exited \" .. tostring(code))\n1556\t            if not isCurrent then return end   -- superseded: its counters belong to a newer run\n1557\t            if code ~= 0 and not recorderCaptured then\n1558\t                log(\"recording: ERROR — lw-record failed: \" .. tostring(err))\n1559\t                return\n1560\t            end\n1561\t            if recorderCaptured and recordStartedAt then\n1562\t                local wall = hs.timer.secondsSinceEpoch() - recordStartedAt\n1563\t                log(string.format(\"recording: captured %.2fs of %.2fs wall (%.0f%%)\",\n1564\t                    recorderCaptured, wall, wall \u003e 0 and (recorderCaptured / wall * 100) or 0))\n1565\t            end\n1566\t        end,\n1567\t        function(task, stdout, stderr)  -- streaming: READY, then the final CAPTURED total\n1568\t            -- Ignore a superseded recorder's output entirely: its READY would start a\n1569\t            -- recording the user already released, and its CAPTURED would overwrite the\n1570\t            -- health check of the run now in progress.\n1571\t            if recorderTask ~= thisTask then return true end\n1572\t            if stdout then\n1573\t                if isWarmingUp and stdout:find(\"READY\", 1, true) then\n1574\t                    log(\"warmup: device ready on attempt \" .. warmupAttempt)\n1575\t                    onRecorderReady()\n1576\t                end\n1577\t                local c = tonumber(stdout:match(\"CAPTURED%s+([%d%.]+)\"))\n1578\t                if c then recorderCaptured = c end\n1579\t            end\n1580\t            return true\n1581\t        end,\n1582\t        { CHUNK_DIR, \"1\", \"16000\" })\n1583\t    recorderTask = thisTask\n1584\t    recorderTask:start()",
+        "tool_use_id": "toolu_01Tf74YoZgFrwVRWwL8aBzqm",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "0f3c653b-0cb0-4276-ad29-217058d44173",
+  "promptId": "8f0f702b-2395-43e1-b2eb-25eda16d6812",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "0f3c653b-0cb0-4276-ad29-217058d44173",
+  "timestamp": "2026-08-17T02:51:00.829Z",
+  "toolUseResult": {
+    "file": {
+      "content": "    -- capture regression shows up in the log as a gap against the wall clock instead of\n    -- silently shortening words. ffmpeg lost ~10% here and nothing recorded it.\n    recordStartedAt = hs.timer.secondsSinceEpoch()\n    recorderCaptured = nil\n\n    -- Captured so the callback can tell whether it is still the current recorder: a slow\n    -- exit from the previous dictation must not clear the handle of the one now running.\n    local thisTask\n    thisTask = hs.task.new(RECORDER_BIN,\n        function(code, out, err)  -- termination callback\n            local isCurrent = (recorderTask == thisTask)\n            if isCurrent then recorderTask = nil end\n            log(\"recording: recorder exited \" .. tostring(code))\n            if not isCurrent then return end   -- superseded: its counters belong to a newer run\n            if code ~= 0 and not recorderCaptured then\n                log(\"recording: ERROR — lw-record failed: \" .. tostring(err))\n                return\n            end\n            if recorderCaptured and recordStartedAt then\n                local wall = hs.timer.secondsSinceEpoch() - recordStartedAt\n                log(string.format(\"recording: captured %.2fs of %.2fs wall (%.0f%%)\",\n                    recorderCaptured, wall, wall \u003e 0 and (recorderCaptured / wall * 100) or 0))\n            end\n        end,\n        function(task, stdout, stderr)  -- streaming: READY, then the final CAPTURED total\n            -- Ignore a superseded recorder's output entirely: its READY would start a\n            -- recording the user already released, and its CAPTURED would overwrite the\n            -- health check of the run now in progress.\n            if recorderTask ~= thisTask then return true end\n            if stdout then\n                if isWarmingUp and stdout:find(\"READY\", 1, true) then\n                    log(\"warmup: device ready on attempt \" .. warmupAttempt)\n                    onRecorderReady()\n                end\n                local c = tonumber(stdout:match(\"CAPTURED%s+([%d%.]+)\"))\n                if c then recorderCaptured = c end\n            end\n            return true\n        end,\n        { CHUNK_DIR, \"1\", \"16000\" })\n    recorderTask = thisTask\n    recorderTask:start()",
+      "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+      "numLines": 42,
+      "startLine": 1543,
+      "totalLines": 1774
+    },
+    "type": "text"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "cf9be016-17e3-4d67-a237-94f2bc9401fc",
+  "version": "2.1.233"
+}

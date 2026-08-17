@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "local function stopRecording()\n    -- Cancel warmup if key released before device was ready\n    if isWarmingUp then\n        isWarmingUp = false\n        warmupAttempt = 0\n        cancelWarmup()\n        log(\"warmup: cancelled (key released before device ready)\")\n        hideOverlay()\n        return\n    end\n\n    if not isRecording then return end\n    isRecording = false\n    log(\"recording: stop\")\n\n    stopRecordingIndicator()\n    updateMenuBar()\n\n    if recorderTask and recorderTask:isRunning() then\n        recorderTask:interrupt()   -- SIGINT: lw-record flushes its partial final chunk, then exits 0\n    end\n    -- Deliberately keep the handle: the process is still flushing. Its termination callback\n    -- clears it, and until then tryWarmup() needs it to detect and kill a slow predecessor\n    -- before wiping CHUNK_DIR out from under it.\n\n    -- Brief delay for the recorder to finalize last chunk. A short timer scheduled right as the\n    -- system suspends can be silently dropped across sleep (see sleepWatcher below), so track\n    -- pending state and recover on wake instead of just losing the recording silently.\n    finalizationPending = true\n    finalizeTimers.timer = hs.timer.doAfter(0.3, function()",
+        "is_error": false,
+        "tool_use_id": "toolu_01Vg2YNK4My7bmCnE7v8h6n5",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "e39ef2f1-6c5e-4c02-9dde-f5b2a6900ef9",
+  "promptId": "8f0f702b-2395-43e1-b2eb-25eda16d6812",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "e39ef2f1-6c5e-4c02-9dde-f5b2a6900ef9",
+  "timestamp": "2026-08-17T02:51:25.501Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "local function stopRecording()\n    -- Cancel warmup if key released before device was ready\n    if isWarmingUp then\n        isWarmingUp = false\n        warmupAttempt = 0\n        cancelWarmup()\n        log(\"warmup: cancelled (key released before device ready)\")\n        hideOverlay()\n        return\n    end\n\n    if not isRecording then return end\n    isRecording = false\n    log(\"recording: stop\")\n\n    stopRecordingIndicator()\n    updateMenuBar()\n\n    if recorderTask and recorderTask:isRunning() then\n        recorderTask:interrupt()   -- SIGINT: lw-record flushes its partial final chunk, then exits 0\n    end\n    -- Deliberately keep the handle: the process is still flushing. Its termination callback\n    -- clears it, and until then tryWarmup() needs it to detect and kill a slow predecessor\n    -- before wiping CHUNK_DIR out from under it.\n\n    -- Brief delay for the recorder to finalize last chunk. A short timer scheduled right as the\n    -- system suspends can be silently dropped across sleep (see sleepWatcher below), so track\n    -- pending state and recover on wake instead of just losing the recording silently.\n    finalizationPending = true\n    finalizeTimers.timer = hs.timer.doAfter(0.3, function()"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "1db05e5b-b309-4164-82f9-720a3d115230",
+  "version": "2.1.233"
+}

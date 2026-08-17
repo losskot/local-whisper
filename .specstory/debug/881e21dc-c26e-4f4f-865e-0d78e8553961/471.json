@@ -1,0 +1,70 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_011wDvrYhkbcg8tJC5py9VEH",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "bb64d11f-9271-4c38-944e-6512a0e04d47",
+  "promptId": "8f0f702b-2395-43e1-b2eb-25eda16d6812",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "bb64d11f-9271-4c38-944e-6512a0e04d47",
+  "timestamp": "2026-08-17T02:53:31.337Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+    "newString": "        function(code, out, err)  -- termination callback\n            local isCurrent = (recorderTask == thisTask)\n            if isCurrent then recorderTask = nil end\n            log(\"recording: recorder exited \" .. tostring(code))\n            if not isCurrent then return end   -- superseded: its counters belong to a newer run\n            if code ~= 0 and not recorderCaptured then\n                log(\"recording: ERROR — lw-record failed: \" .. tostring(err))\n                return\n            end\n            -- hs.task normally routes stdout to the streaming callback and leaves `out`\n            -- empty, but take it from either source: the health check going quiet is how a\n            -- capture regression would slip past unnoticed a second time.\n            local captured = recorderCaptured or tonumber((out or \"\"):match(\"CAPTURED%s+([%d%.]+)\"))\n            if captured and recordStartedAt then\n                local wall = hs.timer.secondsSinceEpoch() - recordStartedAt\n                log(string.format(\"recording: captured %.2fs of %.2fs wall (%.0f%%)\",\n                    captured, wall, wall \u003e 0 and (captured / wall * 100) or 0))\n            else\n                -- Never fail silently here. Fall back to measuring the chunks on disk, which\n                -- is the same number the transcription is about to be built from.\n                local secs = 0\n                for _, p in ipairs(getChunkFiles()) do\n                    local a = hs.fs.attributes(p)\n                    if a and a.size then secs = secs + (a.size - 44) / 32000 end\n                end\n                local wall = recordStartedAt and (hs.timer.secondsSinceEpoch() - recordStartedAt) or 0\n                log(string.format(\"recording: no CAPTURED line — chunks on disk hold %.2fs of %.2fs wall (%.0f%%)\",\n                    secs, wall, wall \u003e 0 and (secs / wall * 100) or 0))\n            end\n        end,",
+    "oldString": "        function(code, out, err)  -- termination callback\n            local isCurrent = (recorderTask == thisTask)\n            if isCurrent then recorderTask = nil end\n            log(\"recording: recorder exited \" .. tostring(code))\n            if not isCurrent then return end   -- superseded: its counters belong to a newer run\n            if code ~= 0 and not recorderCaptured then\n                log(\"recording: ERROR — lw-record failed: \" .. tostring(err))\n                return\n            end\n            if recorderCaptured and recordStartedAt then\n                local wall = hs.timer.secondsSinceEpoch() - recordStartedAt\n                log(string.format(\"recording: captured %.2fs of %.2fs wall (%.0f%%)\",\n                    recorderCaptured, wall, wall \u003e 0 and (recorderCaptured / wall * 100) or 0))\n            end\n        end,",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          "                 log(\"recording: ERROR — lw-record failed: \" .. tostring(err))",
+          "                 return",
+          "             end",
+          "-            if recorderCaptured and recordStartedAt then",
+          "+            -- hs.task normally routes stdout to the streaming callback and leaves `out`",
+          "+            -- empty, but take it from either source: the health check going quiet is how a",
+          "+            -- capture regression would slip past unnoticed a second time.",
+          "+            local captured = recorderCaptured or tonumber((out or \"\"):match(\"CAPTURED%s+([%d%.]+)\"))",
+          "+            if captured and recordStartedAt then",
+          "                 local wall = hs.timer.secondsSinceEpoch() - recordStartedAt",
+          "                 log(string.format(\"recording: captured %.2fs of %.2fs wall (%.0f%%)\",",
+          "-                    recorderCaptured, wall, wall \u003e 0 and (recorderCaptured / wall * 100) or 0))",
+          "+                    captured, wall, wall \u003e 0 and (captured / wall * 100) or 0))",
+          "+            else",
+          "+                -- Never fail silently here. Fall back to measuring the chunks on disk, which",
+          "+                -- is the same number the transcription is about to be built from.",
+          "+                local secs = 0",
+          "+                for _, p in ipairs(getChunkFiles()) do",
+          "+                    local a = hs.fs.attributes(p)",
+          "+                    if a and a.size then secs = secs + (a.size - 44) / 32000 end",
+          "+                end",
+          "+                local wall = recordStartedAt and (hs.timer.secondsSinceEpoch() - recordStartedAt) or 0",
+          "+                log(string.format(\"recording: no CAPTURED line — chunks on disk hold %.2fs of %.2fs wall (%.0f%%)\",",
+          "+                    secs, wall, wall \u003e 0 and (secs / wall * 100) or 0))",
+          "             end",
+          "         end,",
+          "         function(task, stdout, stderr)  -- streaming: READY, then the final CAPTURED total"
+        ],
+        "newLines": 25,
+        "newStart": 1558,
+        "oldLines": 10,
+        "oldStart": 1558
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "29a92e39-ee21-4659-8d34-a44cc242466b",
+  "version": "2.1.233"
+}

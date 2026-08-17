@@ -1548,6 +1548,11 @@ tryWarmup = function()
     -- Captured so the callback can tell whether it is still the current recorder: a slow
     -- exit from the previous dictation must not clear the handle of the one now running.
     local thisTask
+    -- Rolling tail of this recorder's stdout. hs.task delivers whatever happened to be in
+    -- the pipe, so the final "CAPTURED 100.199" can land split across two calls ("CAPTU" +
+    -- "RED 100.199"), matching neither. Matching against the joined tail is immune to that.
+    -- 200 chars is far more than the line needs and cannot grow with recording length.
+    local stdoutTail = ""
     thisTask = hs.task.new(RECORDER_BIN,
         function(code, out, err)  -- termination callback
             local isCurrent = (recorderTask == thisTask)
@@ -1558,10 +1563,25 @@ tryWarmup = function()
                 log("recording: ERROR — lw-record failed: " .. tostring(err))
                 return
             end
-            if recorderCaptured and recordStartedAt then
+            -- hs.task normally routes stdout to the streaming callback and leaves `out`
+            -- empty, but take it from either source: the health check going quiet is how a
+            -- capture regression would slip past unnoticed a second time.
+            local captured = recorderCaptured or tonumber((out or ""):match("CAPTURED%s+([%d%.]+)"))
+            if captured and recordStartedAt then
                 local wall = hs.timer.secondsSinceEpoch() - recordStartedAt
                 log(string.format("recording: captured %.2fs of %.2fs wall (%.0f%%)",
-                    recorderCaptured, wall, wall > 0 and (recorderCaptured / wall * 100) or 0))
+                    captured, wall, wall > 0 and (captured / wall * 100) or 0))
+            else
+                -- Never fail silently here. Fall back to measuring the chunks on disk, which
+                -- is the same number the transcription is about to be built from.
+                local secs = 0
+                for _, p in ipairs(getChunkFiles()) do
+                    local a = hs.fs.attributes(p)
+                    if a and a.size then secs = secs + (a.size - 44) / 32000 end
+                end
+                local wall = recordStartedAt and (hs.timer.secondsSinceEpoch() - recordStartedAt) or 0
+                log(string.format("recording: no CAPTURED line — chunks on disk hold %.2fs of %.2fs wall (%.0f%%)",
+                    secs, wall, wall > 0 and (secs / wall * 100) or 0))
             end
         end,
         function(task, stdout, stderr)  -- streaming: READY, then the final CAPTURED total
@@ -1574,7 +1594,8 @@ tryWarmup = function()
                     log("warmup: device ready on attempt " .. warmupAttempt)
                     onRecorderReady()
                 end
-                local c = tonumber(stdout:match("CAPTURED%s+([%d%.]+)"))
+                stdoutTail = (stdoutTail .. stdout):sub(-200)
+                local c = tonumber(stdoutTail:match("CAPTURED%s+([%d%.]+)"))
                 if c then recorderCaptured = c end
             end
             return true

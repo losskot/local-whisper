@@ -1,0 +1,34 @@
+{
+  "classifierMetaLines": "{\"meta\":{\"gitStatus\":{\"staged\":0,\"modified\":3,\"untracked\":11}}}\n",
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "started\ninterrupted\nSTREAM got CAPTURED, guard passes=true | TERMINATION (guard would now be: true)",
+        "is_error": false,
+        "tool_use_id": "toolu_01FogGrrRJsRhcoSjELnE3FS",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "19d7ff12-0f39-49e2-b60e-6eee6c38c9e4",
+  "promptId": "8f0f702b-2395-43e1-b2eb-25eda16d6812",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "19d7ff12-0f39-49e2-b60e-6eee6c38c9e4",
+  "timestamp": "2026-08-17T02:50:38.903Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "started\ninterrupted\nSTREAM got CAPTURED, guard passes=true | TERMINATION (guard would now be: true)"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "781bbe96-8f4a-4e4e-bc6d-95beb508e787",
+  "version": "2.1.233"
+}

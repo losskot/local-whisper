@@ -1,0 +1,64 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "text": "The mutation left the declaration line, so the guard didn't trip. Mutating properly:",
+        "type": "text"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce7ZybbpZByzrTiErCeLd",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 329,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 329,
+      "cache_read_input_tokens": 262253,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 329,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 329,
+          "cache_read_input_tokens": 262253,
+          "input_tokens": 2,
+          "output_tokens": 614,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 614,
+      "output_tokens_details": {
+        "thinking_tokens": 102
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "b77d7065-38b4-489c-9b29-7612ccdec3ee",
+  "requestId": "req_011Ce7ZyXcTaKD8jN3wRUb7T",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "timestamp": "2026-08-17T02:57:01.131Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "464f70c1-baac-441a-a93d-b6d22330b141",
+  "version": "2.1.233"
+}

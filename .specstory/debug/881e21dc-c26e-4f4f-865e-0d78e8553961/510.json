@@ -1,0 +1,35 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "1\tinterrupted at 105+ chunks\n2\tstreamCalls=113  CAPTURED=108.685  term: code=0 outlen=0\n3\t     109\n4\t\n5\t[exited with code 0]\n6\t",
+        "tool_use_id": "toolu_01P6Z96qsdx99p3U3Fc4Y7U9",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "8e955aed-2b5a-4edb-83f1-2792bd55b3a6",
+  "promptId": "8f0f702b-2395-43e1-b2eb-25eda16d6812",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "8e955aed-2b5a-4edb-83f1-2792bd55b3a6",
+  "timestamp": "2026-08-17T02:55:14.319Z",
+  "toolUseResult": {
+    "file": {
+      "content": "interrupted at 105+ chunks\nstreamCalls=113  CAPTURED=108.685  term: code=0 outlen=0\n     109\n\n[exited with code 0]\n",
+      "filePath": "/private/tmp/claude-502/-Users-vitaliy-Documents-GitHub-local-whisper/881e21dc-c26e-4f4f-865e-0d78e8553961/tasks/b3nk9ashh.output",
+      "numLines": 6,
+      "startLine": 1,
+      "totalLines": 6
+    },
+    "type": "text"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "51d6c2f4-9782-4689-8af8-5bdf7fbce836",
+  "version": "2.1.233"
+}

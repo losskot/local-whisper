@@ -1,0 +1,74 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01PQexupe3czUV4HXseSU5n4",
+        "input": {
+          "file_path": "/Users/vitaliy/Documents/GitHub/local-whisper/tests/test_init.lua",
+          "new_string": "-- hs.task hands stdout to the streaming callback when one is registered and leaves the\n-- termination callback's `out` empty, so parsing CAPTURED *only* at termination reads nil\n-- forever and the health check silently never fires. It must be parsed in the stream.\ndo\n    local streamStart = src:find(\"streaming: READY\", 1, true)\n    local capturedInStream = streamStart and src:find(\"CAPTURED%%s%+\", streamStart, false)\n    check(\"capture: CAPTURED is parsed in the streaming callback\",\n          capturedInStream ~= nil,\n          \"hs.task leaves the termination callback's stdout empty once a streaming callback exists\")\n\n    -- hs.task delivers whatever is in the pipe, so the final line can arrive split across\n    -- two callbacks (\"CAPTU\" + \"RED 100.199\") and match neither half. Verified: feeding\n    -- those two halves separately yields nil twice; matching a joined tail recovers it.\n    check(\"capture: the CAPTURED match runs against an accumulated tail, not one delivery\",\n          src:find(\"stdoutTail\", 1, true) ~= nil,\n          \"a split read would silently lose the health check again\")\n\n    -- And when it goes missing anyway, say so rather than logging nothing at all.\n    check(\"capture: a missing CAPTURED line still logs a measurement\",\n          src:find(\"no CAPTURED line\", 1, true) ~= nil,\n          \"silence here is exactly how the original ~10% loss stayed invisible\")\nend",
+          "old_string": "-- hs.task hands stdout to the streaming callback when one is registered and leaves the\n-- termination callback's `out` empty, so parsing CAPTURED there reads nil forever and the\n-- health check silently never fires. Keep the parse in the streaming callback.\ndo\n    local streamStart = src:find(\"streaming: READY\", 1, true)\n    local capturedPos = src:find(\"CAPTURED%%s%+\", 1, false)\n    check(\"capture: CAPTURED is parsed in the streaming callback, not at termination\",\n          streamStart ~= nil and capturedPos ~= nil and capturedPos \u003e streamStart,\n          \"hs.task leaves the termination callback's stdout empty once a streaming callback exists\")\nend",
+          "replace_all": false
+        },
+        "name": "Edit",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce7Zvox8wRLXPBr55nPbi",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 688,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 688,
+      "cache_read_input_tokens": 259284,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 688,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 688,
+          "cache_read_input_tokens": 259284,
+          "input_tokens": 2,
+          "output_tokens": 1531,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 1531,
+      "output_tokens_details": {
+        "thinking_tokens": 575
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "3c983a69-43ea-4d4a-ba60-75fcd9bd893f",
+  "requestId": "req_011Ce7Zvnb3ALiNLfKj2smKs",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "timestamp": "2026-08-17T02:56:38.526Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "2ab69f08-3912-4bb3-a959-0e6830abfbfa",
+  "version": "2.1.233"
+}

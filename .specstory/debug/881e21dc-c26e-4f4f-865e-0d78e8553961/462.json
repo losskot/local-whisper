@@ -1,0 +1,72 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01MwiZvj6SXkiXkNDxCjFskD",
+        "input": {
+          "command": "cd /Users/vitaliy/Documents/GitHub/local-whisper\ngrep -n \"recorderCaptured\\|recordStartedAt\" hammerspoon/init.lua\necho \"=== Hammerspoon console errors during that window? ===\"\nhs -c 'return hs.console.getConsole():sub(-1500)' 2\u003e/dev/null | tail -25",
+          "description": "Check for shadowing and console errors"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce7ZctGqZAow1xcbqW8wN",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 997,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 997,
+      "cache_read_input_tokens": 236792,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 997,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 997,
+          "cache_read_input_tokens": 236792,
+          "input_tokens": 2,
+          "output_tokens": 2567,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 2567,
+      "output_tokens_details": {
+        "thinking_tokens": 2312
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "dd31a6f9-1edc-42b6-a975-6cf21c038d48",
+  "requestId": "req_011Ce7ZcrxiEFCVMWXRVSyUq",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "timestamp": "2026-08-17T02:52:52.391Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "44c6308f-28bb-4773-a8ae-e3617f240039",
+  "version": "2.1.233"
+}

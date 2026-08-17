@@ -393,14 +393,26 @@ check("capture: the recorder reports captured seconds for the health check",
       "the CAPTURED handshake is how a future capture regression becomes visible in the log")
 
 -- hs.task hands stdout to the streaming callback when one is registered and leaves the
--- termination callback's `out` empty, so parsing CAPTURED there reads nil forever and the
--- health check silently never fires. Keep the parse in the streaming callback.
+-- termination callback's `out` empty, so parsing CAPTURED *only* at termination reads nil
+-- forever and the health check silently never fires. It must be parsed in the stream.
 do
     local streamStart = src:find("streaming: READY", 1, true)
-    local capturedPos = src:find("CAPTURED%%s%+", 1, false)
-    check("capture: CAPTURED is parsed in the streaming callback, not at termination",
-          streamStart ~= nil and capturedPos ~= nil and capturedPos > streamStart,
+    local capturedInStream = streamStart and src:find("CAPTURED%%s%+", streamStart, false)
+    check("capture: CAPTURED is parsed in the streaming callback",
+          capturedInStream ~= nil,
           "hs.task leaves the termination callback's stdout empty once a streaming callback exists")
+
+    -- hs.task delivers whatever is in the pipe, so the final line can arrive split across
+    -- two callbacks ("CAPTU" + "RED 100.199") and match neither half. Verified: feeding
+    -- those two halves separately yields nil twice; matching a joined tail recovers it.
+    check("capture: the CAPTURED match runs against an accumulated tail, not one delivery",
+          src:find("stdoutTail", 1, true) ~= nil,
+          "a split read would silently lose the health check again")
+
+    -- And when it goes missing anyway, say so rather than logging nothing at all.
+    check("capture: a missing CAPTURED line still logs a measurement",
+          src:find("no CAPTURED line", 1, true) ~= nil,
+          "silence here is exactly how the original ~10% loss stayed invisible")
 end
 
 --------------------------------------------------------------------------------

@@ -1,0 +1,64 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "text": "Capture is **100.20 s of audio in a 100 s window — 100%**. Every chunk exactly `1.000000`. Under the old ffmpeg roughly 10 seconds of that monologue would simply not exist.\n\nThe silence split also did its job: cut at chunk 48 (RMS 334) instead of the hard 55, landing on a clean sentence boundary — `...ничего самим не делать.` | `У меня работа сплошная...`\n\nBut the health line never fired. Let me confirm why before fixing:",
+        "type": "text"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce7ZTnBDvPC4sgZLsyLVB",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 4140,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 4140,
+      "cache_read_input_tokens": 226488,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 4140,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 4140,
+          "cache_read_input_tokens": 226488,
+          "input_tokens": 2,
+          "output_tokens": 1129,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 1129,
+      "output_tokens_details": {
+        "thinking_tokens": 511
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "2a00df10-ff64-4429-a758-10749fc1bd25",
+  "requestId": "req_011Ce7ZTjVzjHigPU4hHD2QT",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "timestamp": "2026-08-17T02:50:24.033Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "4198ded6-fa6b-4c80-8f37-0e00fe14e183",
+  "version": "2.1.233"
+}

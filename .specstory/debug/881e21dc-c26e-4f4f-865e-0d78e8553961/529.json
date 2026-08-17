@@ -1,0 +1,34 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "  \u001b[0;32mPASS\u001b[0m  capture: init.lua does not capture through ffmpeg's avfoundation input\n  \u001b[0;32mPASS\u001b[0m  capture: the native recorder binary is invoked\n  \u001b[0;32mPASS\u001b[0m  capture: the recorder reports captured seconds for the health check\n  \u001b[0;32mPASS\u001b[0m  capture: CAPTURED is parsed in the streaming callback\n  \u001b[0;32mPASS\u001b[0m  capture: the CAPTURED match runs against an accumulated tail, not one delivery\n  \u001b[0;32mPASS\u001b[0m  capture: a missing CAPTURED line still logs a measurement\n  \u001b[0;32mPASS\u001b[0m  overlay: X while idle does not call emergencyStop\n  \u001b[0;32mPASS\u001b[0m  trigger: no modifiers at all does not fire\n\u001b[0;32m\u001b[1mAll 87 checks passed.\u001b[0m\n=== verify the new guards fail on their bugs ===",
+        "is_error": false,
+        "tool_use_id": "toolu_01Me7zuBPSakuLnbzTTn93kt",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "4a00602d-ee69-450f-9e8c-89064e9e8a9b",
+  "promptId": "8f0f702b-2395-43e1-b2eb-25eda16d6812",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "4a00602d-ee69-450f-9e8c-89064e9e8a9b",
+  "timestamp": "2026-08-17T02:56:49.204Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "returnCodeInterpretation": "No matches found",
+    "stderr": "",
+    "stdout": "  \u001b[0;32mPASS\u001b[0m  capture: init.lua does not capture through ffmpeg's avfoundation input\n  \u001b[0;32mPASS\u001b[0m  capture: the native recorder binary is invoked\n  \u001b[0;32mPASS\u001b[0m  capture: the recorder reports captured seconds for the health check\n  \u001b[0;32mPASS\u001b[0m  capture: CAPTURED is parsed in the streaming callback\n  \u001b[0;32mPASS\u001b[0m  capture: the CAPTURED match runs against an accumulated tail, not one delivery\n  \u001b[0;32mPASS\u001b[0m  capture: a missing CAPTURED line still logs a measurement\n  \u001b[0;32mPASS\u001b[0m  overlay: X while idle does not call emergencyStop\n  \u001b[0;32mPASS\u001b[0m  trigger: no modifiers at all does not fire\n\u001b[0;32m\u001b[1mAll 87 checks passed.\u001b[0m\n=== verify the new guards fail on their bugs ==="
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "74f0d92b-b074-4143-b122-650c16e88c0f",
+  "version": "2.1.233"
+}

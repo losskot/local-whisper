@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "func finish() -\u003e Never {\n    // Idempotent: SIGINT and SIGTERM can both arrive.\n    stateLock.lock()\n    if finishing { stateLock.unlock(); sleep(2); exit(0) }\n    finishing = true\n    stateLock.unlock()\n\n    engine.inputNode.removeTap(onBus: 0)\n    engine.stop()\n\n    stateLock.lock()\n    let tail = pending\n    let idx = chunkIndex\n    let captured = totalFrames\n    pending = []\n    stateLock.unlock()\n\n    if !tail.isEmpty {\n        writerQueue.sync { writeChunk(index: idx, samples: tail) }\n    }\n    writerQueue.sync {}  // drain anything still queued from the tap\n\n    let secs = Double(captured) / sampleRate\n    FileHandle.standardError.write(String(format: \"lw-record: captured %.3fs (%d frames)\\n\", secs, captured).data(using: .utf8)!)\n    print(String(format: \"CAPTURED %.3f\", secs))\n    fflush(stdout)\n    exit(0)\n}",
+        "is_error": false,
+        "tool_use_id": "toolu_0148CuvaDwrDUeg71V7UdxAB",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "b83b885d-9809-4af7-82ce-f4bfcea1def9",
+  "promptId": "8f0f702b-2395-43e1-b2eb-25eda16d6812",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "b83b885d-9809-4af7-82ce-f4bfcea1def9",
+  "timestamp": "2026-08-17T02:54:23.159Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "func finish() -\u003e Never {\n    // Idempotent: SIGINT and SIGTERM can both arrive.\n    stateLock.lock()\n    if finishing { stateLock.unlock(); sleep(2); exit(0) }\n    finishing = true\n    stateLock.unlock()\n\n    engine.inputNode.removeTap(onBus: 0)\n    engine.stop()\n\n    stateLock.lock()\n    let tail = pending\n    let idx = chunkIndex\n    let captured = totalFrames\n    pending = []\n    stateLock.unlock()\n\n    if !tail.isEmpty {\n        writerQueue.sync { writeChunk(index: idx, samples: tail) }\n    }\n    writerQueue.sync {}  // drain anything still queued from the tap\n\n    let secs = Double(captured) / sampleRate\n    FileHandle.standardError.write(String(format: \"lw-record: captured %.3fs (%d frames)\\n\", secs, captured).data(using: .utf8)!)\n    print(String(format: \"CAPTURED %.3f\", secs))\n    fflush(stdout)\n    exit(0)\n}"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "780c6c4a-16dd-4c7e-87eb-ad58b5d49cd2",
+  "version": "2.1.233"
+}

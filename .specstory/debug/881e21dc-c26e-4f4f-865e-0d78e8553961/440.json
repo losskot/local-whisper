@@ -1,0 +1,64 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "text": "Good news and one real bug. First, let me measure the capture directly since the health line is missing:",
+        "type": "text"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce7ZPqbjzjYe2SBq8kC2v",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 2309,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 2309,
+      "cache_read_input_tokens": 224179,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 2309,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 2309,
+          "cache_read_input_tokens": 224179,
+          "input_tokens": 2,
+          "output_tokens": 3961,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 3961,
+      "output_tokens_details": {
+        "thinking_tokens": 3489
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "34527a02-5f2b-4457-9e43-ef717964b714",
+  "requestId": "req_011Ce7ZPp5iMx2juFmgBzWkg",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "timestamp": "2026-08-17T02:50:04.789Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "3a0eb660-8e40-4817-a4bc-b5fcfd078f6d",
+  "version": "2.1.233"
+}

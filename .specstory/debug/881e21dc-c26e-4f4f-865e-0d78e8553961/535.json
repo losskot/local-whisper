@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "stdoutTail refs left: 0\n  \u001b[0;31mFAIL\u001b[0m  capture: the CAPTURED match runs against an accumulated tail, not one delivery\n  \u001b[0;32mPASS\u001b[0m  overlay: X while idle does not call emergencyStop\n  \u001b[0;32mPASS\u001b[0m  trigger: no modifiers at all does not fire\n\u001b[0;31m\u001b[1m1 of 87 checks failed.\u001b[0m\n--- and removing the missing-line fallback ---\n  \u001b[0;31mFAIL\u001b[0m  capture: a missing CAPTURED line still logs a measurement\n  \u001b[0;32mPASS\u001b[0m  overlay: X while idle does not call emergencyStop\n  \u001b[0;32mPASS\u001b[0m  trigger: no modifiers at all does not fire\n\u001b[0;31m\u001b[1m1 of 87 checks failed.\u001b[0m",
+        "is_error": false,
+        "tool_use_id": "toolu_013dcNMJXn3YGtpwLet7MopH",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "c09ba151-a16d-4ea9-a6d0-4289415b0a84",
+  "promptId": "8f0f702b-2395-43e1-b2eb-25eda16d6812",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "c09ba151-a16d-4ea9-a6d0-4289415b0a84",
+  "timestamp": "2026-08-17T02:57:07.819Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "stdoutTail refs left: 0\n  \u001b[0;31mFAIL\u001b[0m  capture: the CAPTURED match runs against an accumulated tail, not one delivery\n  \u001b[0;32mPASS\u001b[0m  overlay: X while idle does not call emergencyStop\n  \u001b[0;32mPASS\u001b[0m  trigger: no modifiers at all does not fire\n\u001b[0;31m\u001b[1m1 of 87 checks failed.\u001b[0m\n--- and removing the missing-line fallback ---\n  \u001b[0;31mFAIL\u001b[0m  capture: a missing CAPTURED line still logs a measurement\n  \u001b[0;32mPASS\u001b[0m  overlay: X while idle does not call emergencyStop\n  \u001b[0;32mPASS\u001b[0m  trigger: no modifiers at all does not fire\n\u001b[0;31m\u001b[1m1 of 87 checks failed.\u001b[0m"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "1136435b-c517-4f77-b29b-d61dc2413ed6",
+  "version": "2.1.233"
+}

@@ -1,0 +1,34 @@
+{
+  "classifierMetaLines": "{\"meta\":{\"gitStatus\":{\"staged\":0,\"modified\":3,\"untracked\":27}}}\n",
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "started 30s run\ninterrupted\nstreamCalls=33  CAPTURED=28.970  termination: code=0 outlen=0 out=\n      29",
+        "is_error": false,
+        "tool_use_id": "toolu_018TwHA5ZRDBYRTYJst4wcNf",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "609ec909-3ab5-47da-808d-cb8b6b231d42",
+  "promptId": "8f0f702b-2395-43e1-b2eb-25eda16d6812",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "609ec909-3ab5-47da-808d-cb8b6b231d42",
+  "timestamp": "2026-08-17T02:52:15.993Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "started 30s run\ninterrupted\nstreamCalls=33  CAPTURED=28.970  termination: code=0 outlen=0 out=\n      29"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "2ca5b2f5-5101-4ce9-a49c-85acc1db8a63",
+  "version": "2.1.233"
+}

@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "SYNTAX OK\n=== split-read simulation: does the tail approach recover a split CAPTURED? ===\nafter split part1=nil  part2=100.199  old-approach=nil\n  \u001b[0;31mFAIL\u001b[0m  capture: CAPTURED is parsed in the streaming callback, not at termination\n  \u001b[0;32mPASS\u001b[0m  overlay: X while idle does not call emergencyStop\n  \u001b[0;32mPASS\u001b[0m  trigger: no modifiers at all does not fire\n\u001b[0;31m\u001b[1m1 of 85 checks failed.\u001b[0m",
+        "is_error": false,
+        "tool_use_id": "toolu_01JYQDo3pyJdTuxXej53eD6b",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "01b6d0e7-91f8-4aea-86ea-bcb6c016c39a",
+  "promptId": "8f0f702b-2395-43e1-b2eb-25eda16d6812",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "01b6d0e7-91f8-4aea-86ea-bcb6c016c39a",
+  "timestamp": "2026-08-17T02:56:19.225Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "SYNTAX OK\n=== split-read simulation: does the tail approach recover a split CAPTURED? ===\nafter split part1=nil  part2=100.199  old-approach=nil\n  \u001b[0;31mFAIL\u001b[0m  capture: CAPTURED is parsed in the streaming callback, not at termination\n  \u001b[0;32mPASS\u001b[0m  overlay: X while idle does not call emergencyStop\n  \u001b[0;32mPASS\u001b[0m  trigger: no modifiers at all does not fire\n\u001b[0;31m\u001b[1m1 of 85 checks failed.\u001b[0m"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "ae889012-4e62-4d6d-b05c-2a9345580958",
+  "version": "2.1.233"
+}

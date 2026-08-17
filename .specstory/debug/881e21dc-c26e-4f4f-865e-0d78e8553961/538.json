@@ -1,0 +1,28 @@
+{
+  "classifierMetaLines": "{\"meta\":{\"repoVisibility\":{\"remote\":\"losskot/local-whisper\",\"branch\":\"main\",\"visibility\":\"public\"}}}\n",
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "Exit code 143\nCommand timed out after 2m 0s",
+        "is_error": true,
+        "tool_use_id": "toolu_01QzUFCSZo77HasvmZh5iNdS",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "db66291f-e9bd-4569-bda3-07c964a857c8",
+  "promptId": "8f0f702b-2395-43e1-b2eb-25eda16d6812",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "db66291f-e9bd-4569-bda3-07c964a857c8",
+  "timestamp": "2026-08-17T02:59:22.850Z",
+  "toolUseResult": "Error: Exit code 143\nCommand timed out after 2m 0s",
+  "type": "user",
+  "userType": "external",
+  "uuid": "4f61ceb0-20f7-45a3-b6da-43b79d07d294",
+  "version": "2.1.233"
+}

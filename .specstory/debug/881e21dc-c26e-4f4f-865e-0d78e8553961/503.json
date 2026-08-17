@@ -1,0 +1,73 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_016y1C78ndYqCj9CKHdJ8SEk",
+        "input": {
+          "command": "until grep -q \"streamCalls\" /private/tmp/claude-502/-Users-vitaliy-Documents-GitHub-local-whisper/881e21dc-c26e-4f4f-865e-0d78e8553961/tasks/b3nk9ashh.output 2\u003e/dev/null; do sleep 3; done\ncat /private/tmp/claude-502/-Users-vitaliy-Documents-GitHub-local-whisper/881e21dc-c26e-4f4f-865e-0d78e8553961/tasks/b3nk9ashh.output",
+          "description": "Wait for reproduction result",
+          "run_in_background": true
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce7ZpnQhdd5pHzKwviNUJ",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 284,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 284,
+      "cache_read_input_tokens": 252363,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 284,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 284,
+          "cache_read_input_tokens": 252363,
+          "input_tokens": 2,
+          "output_tokens": 637,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 637,
+      "output_tokens_details": {
+        "thinking_tokens": 314
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "5689d60a-6783-43e6-9f95-5de9b4994539",
+  "requestId": "req_011Ce7ZpmAHxrWAACyqAwndn",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "timestamp": "2026-08-17T02:55:06.743Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "ce0c2cbc-8fcf-48ba-9c89-437f5e77fc6b",
+  "version": "2.1.233"
+}

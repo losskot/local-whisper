@@ -1,0 +1,65 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "signature": "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",
+        "thinking": "",
+        "type": "thinking"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce7ZTnBDvPC4sgZLsyLVB",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 4140,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 4140,
+      "cache_read_input_tokens": 226488,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 4140,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 4140,
+          "cache_read_input_tokens": 226488,
+          "input_tokens": 2,
+          "output_tokens": 1129,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 1129,
+      "output_tokens_details": {
+        "thinking_tokens": 511
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "6b42fd19-d966-4175-a7e9-e011e85f19d1",
+  "requestId": "req_011Ce7ZTjVzjHigPU4hHD2QT",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "timestamp": "2026-08-17T02:50:22.054Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "2a00df10-ff64-4429-a758-10749fc1bd25",
+  "version": "2.1.233"
+}

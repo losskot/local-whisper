@@ -1,0 +1,54 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01FrXXNXEu4NeCwE2AsFXCkU",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "9187bc12-72c9-4ebb-8799-3f0638ed044b",
+  "promptId": "8f0f702b-2395-43e1-b2eb-25eda16d6812",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "9187bc12-72c9-4ebb-8799-3f0638ed044b",
+  "timestamp": "2026-08-17T02:56:02.165Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+    "newString": "    -- Captured so the callback can tell whether it is still the current recorder: a slow\n    -- exit from the previous dictation must not clear the handle of the one now running.\n    local thisTask\n    -- Rolling tail of this recorder's stdout. hs.task delivers whatever happened to be in\n    -- the pipe, so the final \"CAPTURED 100.199\" can land split across two calls (\"CAPTU\" +\n    -- \"RED 100.199\"), matching neither. Matching against the joined tail is immune to that.\n    -- 200 chars is far more than the line needs and cannot grow with recording length.\n    local stdoutTail = \"\"\n    thisTask = hs.task.new(RECORDER_BIN,",
+    "oldString": "    -- Captured so the callback can tell whether it is still the current recorder: a slow\n    -- exit from the previous dictation must not clear the handle of the one now running.\n    local thisTask\n    thisTask = hs.task.new(RECORDER_BIN,",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          "     -- Captured so the callback can tell whether it is still the current recorder: a slow",
+          "     -- exit from the previous dictation must not clear the handle of the one now running.",
+          "     local thisTask",
+          "+    -- Rolling tail of this recorder's stdout. hs.task delivers whatever happened to be in",
+          "+    -- the pipe, so the final \"CAPTURED 100.199\" can land split across two calls (\"CAPTU\" +",
+          "+    -- \"RED 100.199\"), matching neither. Matching against the joined tail is immune to that.",
+          "+    -- 200 chars is far more than the line needs and cannot grow with recording length.",
+          "+    local stdoutTail = \"\"",
+          "     thisTask = hs.task.new(RECORDER_BIN,",
+          "         function(code, out, err)  -- termination callback",
+          "             local isCurrent = (recorderTask == thisTask)"
+        ],
+        "newLines": 11,
+        "newStart": 1548,
+        "oldLines": 6,
+        "oldStart": 1548
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "7d11ffdc-e31f-4fd0-8579-dc162a35b86a",
+  "version": "2.1.233"
+}
