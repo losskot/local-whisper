@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "### E: -thread_queue_size 4096 ###\n   E: samples=7.818688s  ffmpeg_timeline=time=00:00:08.73\n### F: -use_wallclock_as_timestamps 1 ###\n   F: samples=8.618688s  ffmpeg_timeline=time=00:00:09.64\n### G: explicit device index :0 ###\n   G: samples=8.757313s  ffmpeg_timeline=time=00:00:09.66\n### avfoundation options in this build ###\nDemuxer avfoundation [AVFoundation input device]:\nAVFoundation indev AVOptions:\n  -list_devices      \u003cboolean\u003e    .D......... list available devices (default false)\n  -video_device_index \u003cint\u003e        .D......... select video device by index for devices with same name (starts at 0) (from -1 to INT_MAX) (default -1)\n  -audio_device_index \u003cint\u003e        .D......... select audio device by index for devices with same name (starts at 0) (from -1 to INT_MAX) (default -1)\n  -pixel_format      \u003cpix_fmt\u003e    .D......... set pixel format (default yuv420p)\n  -framerate         \u003cvideo_rate\u003e .D......... set frame rate (default \"ntsc\")\n  -video_size        \u003cimage_size\u003e .D......... set video size\n  -capture_cursor    \u003cboolean\u003e    .D......... capture the screen cursor (default false)\n  -capture_mouse_clicks \u003cboolean\u003e    .D......... capture the screen mouse clicks (default false)\n  -capture_raw_data  \u003cboolean\u003e    .D......... capture the raw data from device connection (default false)\n  -drop_late_frames  \u003cboolean\u003e    .D......... drop frames that are available later than expected (default true)\n\n\nExiting with exit code 0\n### alternatives installed? ###\nsox not found\nrec not found\nparec not found\nlrwxr-xr-x  1 vitaliy  admin  33 May 28 03:40 /usr/local/bin/ffmpeg -\u003e ../Cellar/ffmpeg/8.1.1/bin/ffmpeg\nffmpeg version 8.1.1 Copyright (c) 2000-2026 the FFmpeg developers\nbuilt with Apple clang version 16.0.0 (clang-1600.0.26.6)",
+        "is_error": false,
+        "tool_use_id": "toolu_0176nfGUdmvYDCC283buSqgR",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "d8bcf8b5-ba6c-4610-86a8-75a5047b83cf",
+  "promptId": "853ca6f7-97d8-4bf6-8abc-86466ddb0eda",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "d8bcf8b5-ba6c-4610-86a8-75a5047b83cf",
+  "timestamp": "2026-08-17T01:30:42.189Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "### E: -thread_queue_size 4096 ###\n   E: samples=7.818688s  ffmpeg_timeline=time=00:00:08.73\n### F: -use_wallclock_as_timestamps 1 ###\n   F: samples=8.618688s  ffmpeg_timeline=time=00:00:09.64\n### G: explicit device index :0 ###\n   G: samples=8.757313s  ffmpeg_timeline=time=00:00:09.66\n### avfoundation options in this build ###\nDemuxer avfoundation [AVFoundation input device]:\nAVFoundation indev AVOptions:\n  -list_devices      \u003cboolean\u003e    .D......... list available devices (default false)\n  -video_device_index \u003cint\u003e        .D......... select video device by index for devices with same name (starts at 0) (from -1 to INT_MAX) (default -1)\n  -audio_device_index \u003cint\u003e        .D......... select audio device by index for devices with same name (starts at 0) (from -1 to INT_MAX) (default -1)\n  -pixel_format      \u003cpix_fmt\u003e    .D......... set pixel format (default yuv420p)\n  -framerate         \u003cvideo_rate\u003e .D......... set frame rate (default \"ntsc\")\n  -video_size        \u003cimage_size\u003e .D......... set video size\n  -capture_cursor    \u003cboolean\u003e    .D......... capture the screen cursor (default false)\n  -capture_mouse_clicks \u003cboolean\u003e    .D......... capture the screen mouse clicks (default false)\n  -capture_raw_data  \u003cboolean\u003e    .D......... capture the raw data from device connection (default false)\n  -drop_late_frames  \u003cboolean\u003e    .D......... drop frames that are available later than expected (default true)\n\n\nExiting with exit code 0\n### alternatives installed? ###\nsox not found\nrec not found\nparec not found\nlrwxr-xr-x  1 vitaliy  admin  33 May 28 03:40 /usr/local/bin/ffmpeg -\u003e ../Cellar/ffmpeg/8.1.1/bin/ffmpeg\nffmpeg version 8.1.1 Copyright (c) 2000-2026 the FFmpeg developers\nbuilt with Apple clang version 16.0.0 (clang-1600.0.26.6)"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "fe9ccbc7-0b58-4bd1-8cf7-db776db13b4a",
+  "version": "2.1.233"
+}

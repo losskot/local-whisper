@@ -1,0 +1,74 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01KMB9t7T1UisBxgRrLVkdyB",
+        "input": {
+          "file_path": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+          "new_string": "    -- Health check: lw-record reports exactly how much audio it captured, so a future\n    -- capture regression shows up in the log as a gap against the wall clock instead of\n    -- silently shortening words. ffmpeg used to lose ~10% here and nothing recorded it.\n    recordStartedAt = hs.timer.secondsSinceEpoch()\n\n    recorderTask = hs.task.new(RECORDER_BIN, function(code, out, err)\n        log(\"recording: recorder exited \" .. tostring(code))\n        if code ~= 0 then\n            log(\"recording: ERROR — lw-record failed. \" .. tostring(err))\n            return\n        end\n        local captured = tonumber((out or \"\"):match(\"CAPTURED%s+([%d%.]+)\"))\n        if captured and recordStartedAt then\n            local wall = hs.timer.secondsSinceEpoch() - recordStartedAt\n            log(string.format(\"recording: captured %.2fs of %.2fs wall (%.0f%%)\",\n                captured, wall, wall \u003e 0 and (captured / wall * 100) or 0))\n        end\n    end, { CHUNK_DIR, \"1\", \"16000\" })\n    recorderTask:start()",
+          "old_string": "    ffmpegTask = hs.task.new(FFMPEG, function(code, out, err)\n        log(\"recording: ffmpeg exited \" .. tostring(code))\n        if code == 251 or code == 1 then\n            log(\"recording: ERROR — ffmpeg failed to open audio device '\" .. AUDIO_DEVICE .. \"'. Check device format (should be :default, :0, :1) and microphone permissions.\")\n        end\n    end, {\n        \"-f\", \"avfoundation\", \"-i\", AUDIO_DEVICE,\n        \"-ac\", \"1\", \"-ar\", \"16000\",\n        \"-f\", \"segment\", \"-segment_time\", \"1\", \"-segment_format\", \"wav\",\n        CHUNK_DIR .. \"/chunk_%03d.wav\"\n    })\n    ffmpegTask:start()",
+          "replace_all": false
+        },
+        "name": "Edit",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce7WK4jY6EanDpq3EMyLL",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 674,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 674,
+      "cache_read_input_tokens": 115740,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 674,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 674,
+          "cache_read_input_tokens": 115740,
+          "input_tokens": 2,
+          "output_tokens": 829,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 829,
+      "output_tokens_details": {
+        "thinking_tokens": 0
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "29c8a204-38f6-4c47-8fed-6d8d10489145",
+  "requestId": "req_011Ce7WK3jGBBM1GacRDjqFU",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "timestamp": "2026-08-17T02:09:03.764Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "33835e68-a521-4acd-a907-ef2dd06ac93f",
+  "version": "2.1.233"
+}

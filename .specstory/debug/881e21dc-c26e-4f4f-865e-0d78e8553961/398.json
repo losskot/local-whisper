@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "README.md updated\n18:- **Lossless capture**: A native AVAudioEngine recorder (`lw-record`) opens the microphone. ffmpeg's avfoundation input silently dropped ~10% of every recording, which swallowed whole words; the recorder logs captured-vs-wall-clock seconds after every dictation so a regression is visible",
+        "is_error": false,
+        "tool_use_id": "toolu_01Uokgj8TCXwPBUfrWwbHTVf",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "5dd3ef0d-008c-4de3-836f-5c98fe5b600f",
+  "promptId": "b1c3dd4b-bdb6-4805-8c6e-1e76cb9b10ed",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "5dd3ef0d-008c-4de3-836f-5c98fe5b600f",
+  "timestamp": "2026-08-17T02:34:11.275Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "README.md updated\n18:- **Lossless capture**: A native AVAudioEngine recorder (`lw-record`) opens the microphone. ffmpeg's avfoundation input silently dropped ~10% of every recording, which swallowed whole words; the recorder logs captured-vs-wall-clock seconds after every dictation so a regression is visible"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "44ad6624-ee63-4085-b81c-f83a8ab3a455",
+  "version": "2.1.233"
+}

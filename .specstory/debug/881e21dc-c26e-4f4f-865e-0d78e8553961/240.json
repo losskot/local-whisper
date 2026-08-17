@@ -1,0 +1,53 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01Bc5jCgsTgdCcoXKyBVemxB",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "f49cb33b-92cf-4758-9b99-00bdc7abc848",
+  "promptId": "b1c3dd4b-bdb6-4805-8c6e-1e76cb9b10ed",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "f49cb33b-92cf-4758-9b99-00bdc7abc848",
+  "timestamp": "2026-08-17T02:17:27.328Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+    "newString": "local recorderTask = nil\nlocal recordStartedAt = nil\n-- Seconds lw-record says it captured. Parsed in the streaming callback, not the termination\n-- one: hs.task routes stdout to the streaming callback when there is one, and hands the\n-- termination callback an empty string — so reading it there silently never fires.\nlocal recorderCaptured = nil",
+    "oldString": "local recorderTask = nil\nlocal recordStartedAt = nil",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          " -- because createOverlay's mouse callback captures them.",
+          " local recorderTask = nil",
+          " local recordStartedAt = nil",
+          "+-- Seconds lw-record says it captured. Parsed in the streaming callback, not the termination",
+          "+-- one: hs.task routes stdout to the streaming callback when there is one, and hands the",
+          "+-- termination callback an empty string — so reading it there silently never fires.",
+          "+local recorderCaptured = nil",
+          " local finalizationPending = false  -- true between stopRecording() and doFinalTranscription() actually starting",
+          " local finalizeTimers = { timer = nil, watchdog = nil }",
+          " "
+        ],
+        "newLines": 10,
+        "newStart": 916,
+        "oldLines": 6,
+        "oldStart": 916
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "cafab60b-8ebf-4019-8fd4-546a91955630",
+  "version": "2.1.233"
+}

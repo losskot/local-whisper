@@ -1,0 +1,64 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "text": "Now updating the docs. AGENTS.md first — it's the agent contract:",
+        "type": "text"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce7Y6QJ94HP2j9KNwWyz5",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 436,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 436,
+      "cache_read_input_tokens": 201075,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 436,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 436,
+          "cache_read_input_tokens": 201075,
+          "input_tokens": 2,
+          "output_tokens": 149,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 149,
+      "output_tokens_details": {
+        "thinking_tokens": 0
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "837312b1-bf66-46f7-9067-9672a4b4f51f",
+  "requestId": "req_011Ce7Y6PEtVTtR4CeWnDcZm",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "timestamp": "2026-08-17T02:32:18.147Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "f8ca81f2-032e-413f-a8b4-30d2f1cc46cd",
+  "version": "2.1.233"
+}

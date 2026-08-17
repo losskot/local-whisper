@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "SYNTAX OK\n--- leftover refs ---\n27:-- Native mic recorder (tools/lw-record.swift). ffmpeg's avfoundation input drops ~10% of\n80:-- Note: avfoundation requires colon prefix for audio-only (\":0\" not \"0\")\n81:local AUDIO_DEVICE = \":default\"\n84:if AUDIO_DEVICE ~= \":default\" and not AUDIO_DEVICE:match(\"^:\") then\n85:    AUDIO_DEVICE = \":\" .. AUDIO_DEVICE\n1475:local warmupTask = nil",
+        "is_error": false,
+        "tool_use_id": "toolu_016rr45c4oEbaBEcUXNTgqRY",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "9d0af8b8-4dfb-401c-ad57-34a6635c2a64",
+  "promptId": "b1c3dd4b-bdb6-4805-8c6e-1e76cb9b10ed",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "9d0af8b8-4dfb-401c-ad57-34a6635c2a64",
+  "timestamp": "2026-08-17T02:14:02.037Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "SYNTAX OK\n--- leftover refs ---\n27:-- Native mic recorder (tools/lw-record.swift). ffmpeg's avfoundation input drops ~10% of\n80:-- Note: avfoundation requires colon prefix for audio-only (\":0\" not \"0\")\n81:local AUDIO_DEVICE = \":default\"\n84:if AUDIO_DEVICE ~= \":default\" and not AUDIO_DEVICE:match(\"^:\") then\n85:    AUDIO_DEVICE = \":\" .. AUDIO_DEVICE\n1475:local warmupTask = nil"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "17b03799-c8d3-48a2-9885-6a605f6aebf7",
+  "version": "2.1.233"
+}

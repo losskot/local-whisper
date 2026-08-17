@@ -1,0 +1,64 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "text": "Now the mixed-language work. Let me check the exact whisper-cli flags available:",
+        "type": "text"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce7WPfa98WFvzJUsp52v6",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 500,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 500,
+      "cache_read_input_tokens": 121268,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 500,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 500,
+          "cache_read_input_tokens": 121268,
+          "input_tokens": 2,
+          "output_tokens": 1064,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 1064,
+      "output_tokens_details": {
+        "thinking_tokens": 883
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "366d2c90-61e7-4bd6-95bf-201205905585",
+  "requestId": "req_011Ce7WPeVf2jTPpSQjYKTC7",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "timestamp": "2026-08-17T02:10:10.926Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "8737eae6-a09c-4dfb-97bd-fa7a24812a68",
+  "version": "2.1.233"
+}

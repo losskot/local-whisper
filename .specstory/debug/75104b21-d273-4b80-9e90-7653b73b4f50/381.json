@@ -1,0 +1,39 @@
+{
+  "classifierMetaLines": "{\"meta\":{\"repoVisibility\":{\"remote\":\"losskot/local-whisper\",\"branch\":\"main\",\"visibility\":\"public\"}}}\n",
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "To https://github.com/losskot/local-whisper.git\n   75187bc..279fc1f  main -\u003e main\n## main...origin/main\n279fc1f specstory: session history for the GC-root fix\n75187bc Root the eventtap against the GC — deleting _whisper silently killed the trigger\nd0d3356 specstory: session history for the cleanup + trigger fix\ncbc1a98 Fix the fn+Control binding: poll the release through generic modifier bits",
+        "is_error": false,
+        "tool_use_id": "toolu_016ehdcBT67bC21xjCCa9Jfy",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "9d5474ab-e53f-442f-a4cc-7a2c23f9c491",
+  "promptId": "ec4c4131-68cd-43c3-be0f-e3052e52c118",
+  "sessionId": "75104b21-d273-4b80-9e90-7653b73b4f50",
+  "sourceToolAssistantUUID": "9d5474ab-e53f-442f-a4cc-7a2c23f9c491",
+  "timestamp": "2026-08-17T01:25:54.190Z",
+  "toolUseResult": {
+    "gitOperation": {
+      "push": {
+        "branch": "main"
+      }
+    },
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "To https://github.com/losskot/local-whisper.git\n   75187bc..279fc1f  main -\u003e main\n## main...origin/main\n279fc1f specstory: session history for the GC-root fix\n75187bc Root the eventtap against the GC — deleting _whisper silently killed the trigger\nd0d3356 specstory: session history for the cleanup + trigger fix\ncbc1a98 Fix the fn+Control binding: poll the release through generic modifier bits"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "591ddab4-31cf-460d-b3a5-84249316c95b",
+  "version": "2.1.233"
+}

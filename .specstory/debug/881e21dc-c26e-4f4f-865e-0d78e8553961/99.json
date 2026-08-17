@@ -1,0 +1,72 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_014vYq63fhGAmydMS7Br7cmH",
+        "input": {
+          "command": "S=/private/tmp/claude-502/-Users-vitaliy-Documents-GitHub-local-whisper/881e21dc-c26e-4f4f-865e-0d78e8553961/scratchpad\nrm -rf \"$S/nat\"; mkdir -p \"$S/nat\"\nT0=$(python3 -c 'import time;print(time.time())')\n~/.local-whisper/bin/lw-record \"$S/nat\" 1 16000 \u003e \"$S/nat.out\" 2\u003e \"$S/nat.err\" \u0026\nP=$!\nsleep 20\nkill -INT $P; wait $P 2\u003e/dev/null\nT1=$(python3 -c 'import time;print(time.time())')\npython3 -c \"print(f'   wall clock (incl. device open) = {$T1-$T0:.2f} s')\"\necho \"--- stderr ---\"; cat \"$S/nat.err\"\necho \"--- stdout head/tail ---\"; head -2 \"$S/nat.out\"; tail -2 \"$S/nat.out\"\necho \"--- chunks ---\"\nls -l \"$S/nat\"/*.wav | awk '{s+=$5;n++} END {printf \"   files=%d  totalAudio=%.3f s\\n\", n, (s-n*44)/32000}'\necho \"--- per-chunk durations (first 8) ---\"\nfor f in $(ls \"$S/nat\"/*.wav | head -8); do printf \"   %s \" $(basename $f); /usr/local/bin/ffprobe -v error -show_entries format=duration -of csv=p=0 \"$f\"; done",
+          "description": "Test native recorder capture fidelity"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce7W9gjhaLnAZMy6Jt6b7",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 675,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 675,
+      "cache_read_input_tokens": 103428,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 675,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 675,
+          "cache_read_input_tokens": 103428,
+          "input_tokens": 2,
+          "output_tokens": 719,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 719,
+      "output_tokens_details": {
+        "thinking_tokens": 90
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "03f83b21-8d79-42f1-a838-d00f33004f76",
+  "requestId": "req_011Ce7W9fmf25SaHb7DLZBCA",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "timestamp": "2026-08-17T02:06:56.195Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "758008d3-5d13-4c3a-9642-eec3b3389b75",
+  "version": "2.1.233"
+}

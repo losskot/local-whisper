@@ -1,0 +1,61 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01W5nhwRAa5nz5xiUCBeGsmC",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "704e0781-b630-4c28-b8b3-7324022559f5",
+  "promptId": "b1c3dd4b-bdb6-4805-8c6e-1e76cb9b10ed",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "704e0781-b630-4c28-b8b3-7324022559f5",
+  "timestamp": "2026-08-17T02:14:15.753Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+    "newString": "-- Audio device: lw-record captures from the system default input (AVAudioEngine's input\n-- node). The old AUDIO_DEVICE constant selected an ffmpeg avfoundation index and was\n-- hardcoded to \":default\", so nothing is lost by dropping it.\n\n-- Trigger: which modifier(s) must be held down to record. See TRIGGERS below.",
+    "oldString": "-- Audio device: \":default\" for system default, \":0\", \":1\" etc. for specific\n-- Note: avfoundation requires colon prefix for audio-only (\":0\" not \"0\")\nlocal AUDIO_DEVICE = \":default\"\n\n-- Auto-fix missing colon prefix (common setup mistake)\nif AUDIO_DEVICE ~= \":default\" and not AUDIO_DEVICE:match(\"^:\") then\n    AUDIO_DEVICE = \":\" .. AUDIO_DEVICE\nend\n\n-- Trigger: which modifier(s) must be held down to record. See TRIGGERS below.",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          "     return MODELS_DIR .. \"/ggml-\" .. getModelName() .. \".bin\"",
+          " end",
+          " ",
+          "--- Audio device: \":default\" for system default, \":0\", \":1\" etc. for specific",
+          "--- Note: avfoundation requires colon prefix for audio-only (\":0\" not \"0\")",
+          "-local AUDIO_DEVICE = \":default\"",
+          "+-- Audio device: lw-record captures from the system default input (AVAudioEngine's input",
+          "+-- node). The old AUDIO_DEVICE constant selected an ffmpeg avfoundation index and was",
+          "+-- hardcoded to \":default\", so nothing is lost by dropping it.",
+          " ",
+          "--- Auto-fix missing colon prefix (common setup mistake)",
+          "-if AUDIO_DEVICE ~= \":default\" and not AUDIO_DEVICE:match(\"^:\") then",
+          "-    AUDIO_DEVICE = \":\" .. AUDIO_DEVICE",
+          "-end",
+          "-",
+          " -- Trigger: which modifier(s) must be held down to record. See TRIGGERS below.",
+          " local TRIGGER_KEY = \"fnLeftCtrl\"",
+          " "
+        ],
+        "newLines": 10,
+        "newStart": 76,
+        "oldLines": 15,
+        "oldStart": 76
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "d9f3bfb2-0f2a-4252-b378-7221370c5c67",
+  "version": "2.1.233"
+}

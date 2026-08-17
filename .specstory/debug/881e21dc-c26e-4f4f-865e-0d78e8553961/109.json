@@ -1,0 +1,35 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "1491\tlocal function stopRecording()\n1492\t    -- Cancel warmup if key released before device was ready\n1493\t    if isWarmingUp then\n1494\t        isWarmingUp = false\n1495\t        warmupAttempt = 0\n1496\t        cancelWarmup()\n1497\t        log(\"warmup: cancelled (key released before device ready)\")\n1498\t        hideOverlay()\n1499\t        return\n1500\t    end\n1501\t\n1502\t    if not isRecording then return end\n1503\t    isRecording = false\n1504\t    log(\"recording: stop\")\n1505\t\n1506\t    stopRecordingIndicator()\n1507\t    updateMenuBar()\n1508\t\n1509\t    if ffmpegTask and ffmpegTask:isRunning() then\n1510\t        ffmpegTask:interrupt()\n1511\t    end\n1512\t    ffmpegTask = nil\n1513\t\n1514\t    -- Brief delay for ffmpeg to finalize last chunk. A short timer scheduled right as the\n1515\t    -- system suspends can be silently dropped across sleep (see sleepWatcher below), so track\n1516\t    -- pending state and recover on wake instead of just losing the recording silently.\n1517\t    finalizationPending = true\n1518\t    finalizeTimers.timer = hs.timer.doAfter(0.3, function()\n1519\t        finalizeTimers.timer = nil\n1520\t        if not finalizationPending then return end\n1521\t        finalizationPending = false\n1522\t        if finalizeTimers.watchdog then finalizeTimers.watchdog:stop(); finalizeTimers.watchdog = nil end\n1523\t        doFinalTranscription()\n1524\t    end)\n1525\t    finalizeTimers.watchdog = hs.timer.doAfter(5, function()\n1526\t        finalizeTimers.watchdog = nil\n1527\t        if not finalizationPending then return end\n1528\t        finalizationPending = false\n1529\t        if finalizeTimers.timer then finalizeTimers.timer:stop(); finalizeTimers.timer = nil end\n1530\t        log(\"recovery: finalization timer delayed, starting directly\")\n1531\t        doFinalTranscription()\n1532\t    end)\n1533\t\n1534\t    playSound(\"Tink\")\n1535\tend",
+        "tool_use_id": "toolu_013Y3XbBAxEvHc3Zw4LKwu85",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "ea774e1a-55aa-486f-a385-14532237d207",
+  "promptId": "b1c3dd4b-bdb6-4805-8c6e-1e76cb9b10ed",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "ea774e1a-55aa-486f-a385-14532237d207",
+  "timestamp": "2026-08-17T02:08:05.478Z",
+  "toolUseResult": {
+    "file": {
+      "content": "local function stopRecording()\n    -- Cancel warmup if key released before device was ready\n    if isWarmingUp then\n        isWarmingUp = false\n        warmupAttempt = 0\n        cancelWarmup()\n        log(\"warmup: cancelled (key released before device ready)\")\n        hideOverlay()\n        return\n    end\n\n    if not isRecording then return end\n    isRecording = false\n    log(\"recording: stop\")\n\n    stopRecordingIndicator()\n    updateMenuBar()\n\n    if ffmpegTask and ffmpegTask:isRunning() then\n        ffmpegTask:interrupt()\n    end\n    ffmpegTask = nil\n\n    -- Brief delay for ffmpeg to finalize last chunk. A short timer scheduled right as the\n    -- system suspends can be silently dropped across sleep (see sleepWatcher below), so track\n    -- pending state and recover on wake instead of just losing the recording silently.\n    finalizationPending = true\n    finalizeTimers.timer = hs.timer.doAfter(0.3, function()\n        finalizeTimers.timer = nil\n        if not finalizationPending then return end\n        finalizationPending = false\n        if finalizeTimers.watchdog then finalizeTimers.watchdog:stop(); finalizeTimers.watchdog = nil end\n        doFinalTranscription()\n    end)\n    finalizeTimers.watchdog = hs.timer.doAfter(5, function()\n        finalizeTimers.watchdog = nil\n        if not finalizationPending then return end\n        finalizationPending = false\n        if finalizeTimers.timer then finalizeTimers.timer:stop(); finalizeTimers.timer = nil end\n        log(\"recovery: finalization timer delayed, starting directly\")\n        doFinalTranscription()\n    end)\n\n    playSound(\"Tink\")\nend",
+      "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+      "numLines": 45,
+      "startLine": 1491,
+      "totalLines": 1633
+    },
+    "type": "text"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "69833589-e90e-4d60-bc98-1783b61f36cb",
+  "version": "2.1.233"
+}

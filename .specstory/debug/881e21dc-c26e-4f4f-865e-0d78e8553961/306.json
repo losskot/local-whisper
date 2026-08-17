@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "150:local function triggerHeld()\n1140:    pulseTimer = hs.timer.doEvery(0.05, function()\n1658:local releasePoller = nil\n1668:            if releasePoller then releasePoller:stop() end\n1669:            releasePoller = hs.timer.doEvery(0.1, function()\n1670:                if not triggerHeld() then\n1671:                    releasePoller:stop()\n1672:                    releasePoller = nil\n1677:            if releasePoller then releasePoller:stop(); releasePoller = nil end",
+        "is_error": false,
+        "tool_use_id": "toolu_01RcWXcz5EXhnLXXqdovadC8",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "db6ac405-7e78-41ca-8168-ac0129bc42a1",
+  "promptId": "b1c3dd4b-bdb6-4805-8c6e-1e76cb9b10ed",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "db6ac405-7e78-41ca-8168-ac0129bc42a1",
+  "timestamp": "2026-08-17T02:25:36.347Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "150:local function triggerHeld()\n1140:    pulseTimer = hs.timer.doEvery(0.05, function()\n1658:local releasePoller = nil\n1668:            if releasePoller then releasePoller:stop() end\n1669:            releasePoller = hs.timer.doEvery(0.1, function()\n1670:                if not triggerHeld() then\n1671:                    releasePoller:stop()\n1672:                    releasePoller = nil\n1677:            if releasePoller then releasePoller:stop(); releasePoller = nil end"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "6bb03451-12c3-4cdf-a6dd-a97e3e51b01e",
+  "version": "2.1.233"
+}

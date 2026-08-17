@@ -1,0 +1,35 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "44\t--------------------------------------------------------------------------------\n45\t\n46\tlocal function readSource(path)\n47\t    local f = io.open(path, \"r\")\n48\t    if not f then return nil end\n49\t    local src = f:read(\"*a\")\n50\t    f:close()\n51\t    return src\n52\tend\n53\t\n54\tlocal src = readSource(TARGET)\n55\tif not src then",
+        "tool_use_id": "toolu_01UbkKnsdo8geXNkgesR6ddH",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "7e8835aa-e2d1-49ea-8a82-4787a0d4e2a5",
+  "promptId": "b1c3dd4b-bdb6-4805-8c6e-1e76cb9b10ed",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "7e8835aa-e2d1-49ea-8a82-4787a0d4e2a5",
+  "timestamp": "2026-08-17T02:12:13.897Z",
+  "toolUseResult": {
+    "file": {
+      "content": "--------------------------------------------------------------------------------\n\nlocal function readSource(path)\n    local f = io.open(path, \"r\")\n    if not f then return nil end\n    local src = f:read(\"*a\")\n    f:close()\n    return src\nend\n\nlocal src = readSource(TARGET)\nif not src then",
+      "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/tests/test_init.lua",
+      "numLines": 12,
+      "startLine": 44,
+      "totalLines": 911
+    },
+    "type": "text"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "6a1468b9-8e6e-4b1d-9a33-bc10e41d43f2",
+  "version": "2.1.233"
+}

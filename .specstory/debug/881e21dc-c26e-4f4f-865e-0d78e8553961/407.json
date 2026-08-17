@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "install.sh: SYNTAX OK\nsetup.sh: SYNTAX OK\ntranscribe.sh: SYNTAX OK (unchanged)\ninit.lua: SYNTAX OK\n  \u001b[0;32mPASS\u001b[0m  overlay: X while idle does not call emergencyStop\n  \u001b[0;32mPASS\u001b[0m  trigger: no modifiers at all does not fire\n\u001b[0;32m\u001b[1mAll 85 checks passed.\u001b[0m\n=== batch tool untouched? ===",
+        "is_error": false,
+        "tool_use_id": "toolu_01Rn63AFDoPG7r1sRuzxT1XV",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "9bf9a5cb-b29e-4d90-a789-aa9c10997694",
+  "promptId": "b1c3dd4b-bdb6-4805-8c6e-1e76cb9b10ed",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "9bf9a5cb-b29e-4d90-a789-aa9c10997694",
+  "timestamp": "2026-08-17T02:34:42.297Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "install.sh: SYNTAX OK\nsetup.sh: SYNTAX OK\ntranscribe.sh: SYNTAX OK (unchanged)\ninit.lua: SYNTAX OK\n  \u001b[0;32mPASS\u001b[0m  overlay: X while idle does not call emergencyStop\n  \u001b[0;32mPASS\u001b[0m  trigger: no modifiers at all does not fire\n\u001b[0;32m\u001b[1mAll 85 checks passed.\u001b[0m\n=== batch tool untouched? ==="
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "bec5e9f5-7644-4845-aa0d-310355510e49",
+  "version": "2.1.233"
+}

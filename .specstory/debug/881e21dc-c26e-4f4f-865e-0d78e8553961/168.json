@@ -1,0 +1,75 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_018AsihNeeJUKJ5RTfK6vNmk",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "06d1ded9-02d1-4b63-9cac-857c900c701c",
+  "promptId": "b1c3dd4b-bdb6-4805-8c6e-1e76cb9b10ed",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "06d1ded9-02d1-4b63-9cac-857c900c701c",
+  "timestamp": "2026-08-17T02:11:42.580Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+    "newString": "-- Whisper decodes each window into exactly one language — there is no \"mixed\" mode. Left to\n-- itself it picks the dominant one and normalises everything else into it, which rewrites\n-- Ukrainian words as Russian and transliterates English terms. The initial prompt is the only\n-- real lever: whisper continues in whatever style the prompt establishes, so a prompt that is\n-- itself a sample of the mix biases it to reproduce the mix. Edit ~/.local-whisper/prompt to\n-- match how you actually speak — it is a writing sample, not an instruction.\n--\n-- Declared above transcribeViaAPI on purpose: a local is only in scope for code that appears\n-- after it, so a function defined earlier would silently read nil at runtime.\nlocal PROMPT_DEFAULT =\n    \"Ок, давай подивимось: треба задеплоїти цей pull request, потім перевірити логи на сервері. \" ..\n    \"Я говорю суржиком — українська, русский и English терміни впереміш, наприклад: \" ..\n    \"закоміть зміни, зроби rebase, подивись у Slack, потом отправь в прод. Пиши саме так, як звучить.\"\n\nlocal function readPrompt()\n    return readFile(PROMPT_FILE):gsub(\"%s+$\", \"\")\nend\n\nlocal function ensurePromptFile()\n    if hs.fs.attributes(PROMPT_FILE) then return end\n    local f = io.open(PROMPT_FILE, \"w\")\n    if f then f:write(PROMPT_DEFAULT .. \"\\n\"); f:close() end\nend\n\nensurePromptFile()\n\n-- Transcribe a WAV file via the remote OpenAI-compatible API instead of local whisper-cli.\n-- Returns the hs.task so callers can terminate it on timeout if needed.\n-- callback(text, detectedLang, errMsg) — errMsg is set (and text empty) on failure.\nlocal function transcribeViaAPI(wavPath, lang, timeoutSecs, callback)",
+    "oldString": "-- Transcribe a WAV file via the remote OpenAI-compatible API instead of local whisper-cli.\n-- Returns the hs.task so callers can terminate it on timeout if needed.\n-- callback(text, detectedLang, errMsg) — errMsg is set (and text empty) on failure.\nlocal function transcribeViaAPI(wavPath, lang, timeoutSecs, callback)",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          "     return nameToCode[lang] or lang",
+          " end",
+          " ",
+          "+-- Whisper decodes each window into exactly one language — there is no \"mixed\" mode. Left to",
+          "+-- itself it picks the dominant one and normalises everything else into it, which rewrites",
+          "+-- Ukrainian words as Russian and transliterates English terms. The initial prompt is the only",
+          "+-- real lever: whisper continues in whatever style the prompt establishes, so a prompt that is",
+          "+-- itself a sample of the mix biases it to reproduce the mix. Edit ~/.local-whisper/prompt to",
+          "+-- match how you actually speak — it is a writing sample, not an instruction.",
+          "+--",
+          "+-- Declared above transcribeViaAPI on purpose: a local is only in scope for code that appears",
+          "+-- after it, so a function defined earlier would silently read nil at runtime.",
+          "+local PROMPT_DEFAULT =",
+          "+    \"Ок, давай подивимось: треба задеплоїти цей pull request, потім перевірити логи на сервері. \" ..",
+          "+    \"Я говорю суржиком — українська, русский и English терміни впереміш, наприклад: \" ..",
+          "+    \"закоміть зміни, зроби rebase, подивись у Slack, потом отправь в прод. Пиши саме так, як звучить.\"",
+          "+",
+          "+local function readPrompt()",
+          "+    return readFile(PROMPT_FILE):gsub(\"%s+$\", \"\")",
+          "+end",
+          "+",
+          "+local function ensurePromptFile()",
+          "+    if hs.fs.attributes(PROMPT_FILE) then return end",
+          "+    local f = io.open(PROMPT_FILE, \"w\")",
+          "+    if f then f:write(PROMPT_DEFAULT .. \"\\n\"); f:close() end",
+          "+end",
+          "+",
+          "+ensurePromptFile()",
+          "+",
+          " -- Transcribe a WAV file via the remote OpenAI-compatible API instead of local whisper-cli.",
+          " -- Returns the hs.task so callers can terminate it on timeout if needed.",
+          " -- callback(text, detectedLang, errMsg) — errMsg is set (and text empty) on failure."
+        ],
+        "newLines": 32,
+        "newStart": 478,
+        "oldLines": 6,
+        "oldStart": 478
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "4e79adc4-c175-47a7-b2a1-931ec1763fbb",
+  "version": "2.1.233"
+}

@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "264:| Check | Catches |\n266:| `syntax` | file no longer compiles |\n267:| `locals` | the Lua 200-per-function ceiling |\n270:| `meeting`, `refine`, `preferred`, `autostop`, `undo`, `whisperprobe` | a deleted subsystem creeping back in (meeting mode, LLM refine/Ollama, preferred languages, silence auto-stop, undo tracking, the `_whisper` global) |\n271:| `trigger` | a combo trigger matched with `\u003e 0` so half of it fires; a release poller polling bits the poll API never reports |\n274:| `sort` | chunk files ordered as strings, which reorders audio past chunk 999 |\n278:| `progress` | the blue transcription bar never catching the red recording bar, because a live clock re-trips the 90% auto-expand after recording stops |",
+        "is_error": false,
+        "tool_use_id": "toolu_017tEanUYp19xUL7MW4jN4Ni",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "a675358b-2f7d-4247-b505-d537134f6d75",
+  "promptId": "b1c3dd4b-bdb6-4805-8c6e-1e76cb9b10ed",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "a675358b-2f7d-4247-b505-d537134f6d75",
+  "timestamp": "2026-08-17T02:33:27.101Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "264:| Check | Catches |\n266:| `syntax` | file no longer compiles |\n267:| `locals` | the Lua 200-per-function ceiling |\n270:| `meeting`, `refine`, `preferred`, `autostop`, `undo`, `whisperprobe` | a deleted subsystem creeping back in (meeting mode, LLM refine/Ollama, preferred languages, silence auto-stop, undo tracking, the `_whisper` global) |\n271:| `trigger` | a combo trigger matched with `\u003e 0` so half of it fires; a release poller polling bits the poll API never reports |\n274:| `sort` | chunk files ordered as strings, which reorders audio past chunk 999 |\n278:| `progress` | the blue transcription bar never catching the red recording bar, because a live clock re-trips the 90% auto-expand after recording stops |"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "86b34cd6-e780-4117-8786-661c622c9285",
+  "version": "2.1.233"
+}

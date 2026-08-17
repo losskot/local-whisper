@@ -1,0 +1,72 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_014UKq3TMBMgppn5ZE9tB49D",
+        "input": {
+          "command": "hs -c 'local e=hs.eventtap.event.newEvent(); e:setType(hs.eventtap.event.types.flagsChanged)\n       e:rawFlags(0x840001); e:post()\n       return string.format(\"immediately after post: 0x%x\", hs.eventtap.checkKeyboardModifiers(true)._raw)'\nsleep 1\nhs -c 'return string.format(\"1s later, from a new hs process: 0x%x\", hs.eventtap.checkKeyboardModifiers(true)._raw)'\nhs -c 'return \"heldMask = \" .. string.format(\"0x%x\", (function() for k,v in pairs(LocalWhisper or {}) do end return 0 end)())' 2\u003e/dev/null\ngrep -n \"heldMask\" hammerspoon/init.lua | head -5",
+          "description": "Verify synthetic flag persistence"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce7WrEpd2e2TApFjcqFZw",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 2043,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 2043,
+      "cache_read_input_tokens": 150464,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 2043,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 2043,
+          "cache_read_input_tokens": 150464,
+          "input_tokens": 2,
+          "output_tokens": 1461,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 1461,
+      "output_tokens_details": {
+        "thinking_tokens": 1067
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "18d32407-a876-489a-a6c9-bba305765bac",
+  "requestId": "req_011Ce7WrDn7eemCP2KxRFpYG",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "timestamp": "2026-08-17T02:16:16.248Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "70999685-da71-448d-a643-f14c509b4388",
+  "version": "2.1.233"
+}

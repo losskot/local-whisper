@@ -24,6 +24,11 @@ os.execute("mkdir -p '" .. CONFIG_DIR .. "'")
 -- External binaries (absolute paths, with ARM/Intel fallback)
 local FFMPEG = hs.fs.attributes("/opt/homebrew/bin/ffmpeg") and "/opt/homebrew/bin/ffmpeg" or "/usr/local/bin/ffmpeg"
 local WHISPER_BIN = HOME .. "/whisper.cpp/build/bin/whisper-cli"
+-- Native mic recorder (tools/lw-record.swift). ffmpeg's avfoundation input drops ~10% of
+-- the samples it captures — see the comment at the top of that file. ffmpeg still does the
+-- segment concat here and all format conversion in tools/transcribe.sh; only the microphone
+-- is opened by this binary.
+local RECORDER_BIN = CONFIG_DIR .. "/bin/lw-record"
 local MODELS_DIR = HOME .. "/whisper.cpp/models"
 local MODEL_FILE = CONFIG_DIR .. "/model"
 
@@ -71,14 +76,9 @@ local function getModelPath()
     return MODELS_DIR .. "/ggml-" .. getModelName() .. ".bin"
 end
 
--- Audio device: ":default" for system default, ":0", ":1" etc. for specific
--- Note: avfoundation requires colon prefix for audio-only (":0" not "0")
-local AUDIO_DEVICE = ":default"
-
--- Auto-fix missing colon prefix (common setup mistake)
-if AUDIO_DEVICE ~= ":default" and not AUDIO_DEVICE:match("^:") then
-    AUDIO_DEVICE = ":" .. AUDIO_DEVICE
-end
+-- Audio device: lw-record captures from the system default input (AVAudioEngine's input
+-- node). The old AUDIO_DEVICE constant selected an ffmpeg avfoundation index and was
+-- hardcoded to ":default", so nothing is lost by dropping it.
 
 -- Trigger: which modifier(s) must be held down to record. See TRIGGERS below.
 local TRIGGER_KEY = "fnLeftCtrl"
@@ -165,6 +165,33 @@ local function log(msg)
         f:close()
     end
 end
+
+-- Compile tools/lw-record.swift → RECORDER_BIN if it is missing or older than its source.
+-- Runs at load time, never on a keypress, so a rebuild can't delay a recording. The repo
+-- lives wherever this file's symlink points, so resolve it rather than hardcoding a path.
+local function ensureRecorder()
+    local this = debug.getinfo(1, "S").source:match("^@(.*)$")
+    if not this then return end
+    local real = hs.fs.symlinkAttributes(this, "target") or this
+    local src = real:match("^(.*)/hammerspoon/init%.lua$")
+    if not src then return end
+    src = src .. "/tools/lw-record.swift"
+
+    local srcAttr = hs.fs.attributes(src)
+    if not srcAttr then
+        log("recorder: source missing at " .. src)
+        return
+    end
+    local binAttr = hs.fs.attributes(RECORDER_BIN)
+    if binAttr and binAttr.modification >= srcAttr.modification then return end
+
+    log("recorder: building " .. RECORDER_BIN)
+    os.execute("mkdir -p '" .. CONFIG_DIR .. "/bin'")
+    local ok = os.execute("/usr/bin/swiftc -O -o '" .. RECORDER_BIN .. "' '" .. src .. "' 2>>'" .. LOG_FILE .. "'")
+    log("recorder: build " .. (ok and "OK" or "FAILED — recording will not work"))
+end
+
+ensureRecorder()
 
 -- Play a system sound by name. getByFile returns nil if the file is missing or AudioToolbox
 -- fails to load it, and indexing that nil throws — which previously aborted whichever
@@ -290,8 +317,8 @@ local function getChunkFiles()
             table.insert(chunks, CHUNK_DIR .. "/" .. file)
         end
     end
-    -- Sort by the numeric index, not lexicographically: ffmpeg's %03d overflows past 999
-    -- ("chunk_1000.wav" sorts before "chunk_999.wav" as a string), which would splice the
+    -- Sort by the numeric index, not lexicographically: the recorder's %03d overflows past
+    -- 999 ("chunk_1000.wav" sorts before "chunk_999.wav" as a string), which would splice the
     -- tail of any recording longer than ~16m40s into the middle of the transcript.
     table.sort(chunks, function(a, b)
         local ia = tonumber(a:match("chunk_(%d+)%.wav$")) or 0
@@ -300,6 +327,66 @@ local function getChunkFiles()
         return ia < ib
     end)
     return chunks
+end
+
+-- RMS of a 16-bit mono WAV, read directly in Lua (no subprocess — this runs once per
+-- candidate chunk while the user waits for their text).
+local function getWavRMS(wavPath)
+    local f = io.open(wavPath, "rb")
+    if not f then return math.huge end
+    f:seek("set", 44)  -- skip standard WAV header
+    local data = f:read("*all")
+    f:close()
+    if not data or #data < 2 then return math.huge end
+    local sum = 0
+    local n = math.floor(#data / 2)
+    for i = 1, n * 2 - 1, 2 do
+        local lo = data:byte(i)
+        local hi = data:byte(i + 1)
+        local s = hi * 256 + lo
+        if s >= 32768 then s = s - 65536 end
+        sum = sum + s * s
+    end
+    return n > 0 and math.sqrt(sum / n) or math.huge
+end
+
+-- Split the chunk list into groups no longer than maxSecs, breaking at the quietest
+-- 1-second chunk within the last lookbackSecs of each window rather than at a fixed
+-- index. A hard cut lands mid-word: the two halves are transcribed independently, so
+-- the word is mangled or duplicated across the seam ("...передавали." / "давали...").
+local function splitAtSilence(chunks, maxSecs, lookbackSecs)
+    lookbackSecs = lookbackSecs or 8
+    local groups = {}
+    local i = 1
+    while i <= #chunks do
+        if #chunks - i + 1 <= maxSecs then
+            local group = {}
+            for j = i, #chunks do table.insert(group, chunks[j]) end
+            table.insert(groups, group)
+            break
+        end
+        -- Scan back from the hard boundary for the quietest chunk, but never move the
+        -- boundary earlier than halfway through the window — otherwise a long unbroken
+        -- passage would shrink every segment down to maxSecs/2.
+        local hardEnd   = i + maxSecs - 1
+        local scanStart = math.max(i + math.floor(maxSecs / 2), hardEnd - lookbackSecs + 1)
+        local bestIdx   = hardEnd
+        local bestRMS   = math.huge
+        for j = hardEnd, scanStart, -1 do
+            local rms = getWavRMS(chunks[j])
+            if rms < bestRMS then
+                bestRMS = rms
+                bestIdx = j
+                if rms < 300 then break end  -- near-silence found, good enough
+            end
+        end
+        local group = {}
+        for j = i, bestIdx do table.insert(group, chunks[j]) end
+        table.insert(groups, group)
+        log("split: seg ends at chunk " .. bestIdx .. " (RMS=" .. math.floor(bestRMS) .. ", hard=" .. hardEnd .. ")")
+        i = bestIdx + 1
+    end
+    return groups
 end
 
 -- Cycle helpers
@@ -386,6 +473,32 @@ local function normalizeApiLang(lang)
     return nameToCode[lang] or lang
 end
 
+-- Whisper decodes each window into exactly one language — there is no "mixed" mode. Left to
+-- itself it picks the dominant one and normalises everything else into it, which rewrites
+-- Ukrainian words as Russian and transliterates English terms. The initial prompt is the only
+-- real lever: whisper continues in whatever style the prompt establishes, so a prompt that is
+-- itself a sample of the mix biases it to reproduce the mix. Edit ~/.local-whisper/prompt to
+-- match how you actually speak — it is a writing sample, not an instruction.
+--
+-- Declared above transcribeViaAPI on purpose: a local is only in scope for code that appears
+-- after it, so a function defined earlier would silently read nil at runtime.
+local PROMPT_DEFAULT =
+    "Ок, давай подивимось: треба задеплоїти цей pull request, потім перевірити логи на сервері. " ..
+    "Я говорю суржиком — українська, русский и English терміни впереміш, наприклад: " ..
+    "закоміть зміни, зроби rebase, подивись у Slack, потом отправь в прод. Пиши саме так, як звучить."
+
+local function readPrompt()
+    return readFile(PROMPT_FILE):gsub("%s+$", "")
+end
+
+local function ensurePromptFile()
+    if hs.fs.attributes(PROMPT_FILE) then return end
+    local f = io.open(PROMPT_FILE, "w")
+    if f then f:write(PROMPT_DEFAULT .. "\n"); f:close() end
+end
+
+ensurePromptFile()
+
 -- Transcribe a WAV file via the remote OpenAI-compatible API instead of local whisper-cli.
 -- Returns the hs.task so callers can terminate it on timeout if needed.
 -- callback(text, detectedLang, errMsg) — errMsg is set (and text empty) on failure.
@@ -398,7 +511,19 @@ local function transcribeViaAPI(wavPath, lang, timeoutSecs, callback)
         -- Server translates to English if 'language' is omitted entirely (even with
         -- task=transcribe) — always send it, "auto" included, to force transcription.
         "-F", "language=" .. (lang or "auto"),
+        -- temperature=0 is the OpenAI-API equivalent of pinning the decoder: the server
+        -- won't climb its fallback ladder and start paraphrasing on a hard passage.
+        "-F", "temperature=0",
     }
+    -- Same mixed-language anchor as the local path. The OpenAI transcription API takes the
+    -- style sample as 'prompt'; without it the remote model normalises the mix exactly as
+    -- whisper-cli did. There is no --carry-initial-prompt equivalent over the wire, which is
+    -- another reason segments are kept short.
+    local promptText = readPrompt()
+    if promptText ~= "" then
+        table.insert(args, "-F")
+        table.insert(args, "prompt=" .. promptText)
+    end
     table.insert(args, API.URL)
 
     local task = hs.task.new(API.CURL_BIN, function(code, out, err)
@@ -422,8 +547,11 @@ end
 
 -- Read custom vocabulary prompt for whisper
 local function getPromptArgs()
-    local content = readFile(PROMPT_FILE):gsub("%s+$", "")
-    if content ~= "" then return { "--prompt", content } end
+    local content = readPrompt()
+    -- --carry-initial-prompt re-prepends the prompt to every 30s window whisper decodes
+    -- internally. Without it the style anchor only applies to the first window, so a long
+    -- segment drifts back to single-language output partway through.
+    if content ~= "" then return { "--prompt", content, "--carry-initial-prompt" } end
     return {}
 end
 
@@ -786,7 +914,12 @@ end
 
 -- isRecording and overlayPinned are declared in the Overlay UI section above,
 -- because createOverlay's mouse callback captures them.
-local ffmpegTask = nil
+local recorderTask = nil
+local recordStartedAt = nil
+-- Seconds lw-record says it captured. Parsed in the streaming callback, not the termination
+-- one: hs.task routes stdout to the streaming callback when there is one, and hands the
+-- termination callback an empty string — so reading it there silently never fires.
+local recorderCaptured = nil
 local finalizationPending = false  -- true between stopRecording() and doFinalTranscription() actually starting
 local finalizeTimers = { timer = nil, watchdog = nil }
 
@@ -1052,8 +1185,10 @@ function emergencyStop()
     if finalizeTimers.timer then finalizeTimers.timer:stop(); finalizeTimers.timer = nil end
     if finalizeTimers.watchdog then finalizeTimers.watchdog:stop(); finalizeTimers.watchdog = nil end
     stopRecordingIndicator()
-    if ffmpegTask and ffmpegTask:isRunning() then ffmpegTask:interrupt() end
-    ffmpegTask = nil
+    -- terminate(), not interrupt(): emergency stop throws the audio away, so there is no
+    -- reason to let the recorder flush a final chunk first. The handle is left for the
+    -- termination callback to clear, so a re-press can still detect a slow exit.
+    if recorderTask and recorderTask:isRunning() then recorderTask:terminate() end
     forceHideOverlay()
     updateMenuBar()
     os.execute("killall whisper-cli 2>/dev/null")
@@ -1169,17 +1304,9 @@ local function doFinalTranscription()
     local lang = getLang()
     local promptArgs = getPromptArgs()
 
-    -- Split 1-second chunks into groups of FINAL_SEGMENT_SECS
-    local segmentGroups = {}
-    local i = 1
-    while i <= #chunks do
-        local group = {}
-        for j = i, math.min(i + FINAL_SEGMENT_SECS - 1, #chunks) do
-            table.insert(group, chunks[j])
-        end
-        table.insert(segmentGroups, group)
-        i = i + FINAL_SEGMENT_SECS
-    end
+    -- Group chunks into segments, cutting at a pause near FINAL_SEGMENT_SECS instead of
+    -- at a fixed index, so a word never straddles two independent whisper calls.
+    local segmentGroups = splitAtSilence(chunks, FINAL_SEGMENT_SECS)
 
     local totalSegs = #segmentGroups
     log("final: segments=" .. totalSegs .. " (FINAL_SEGMENT_SECS=" .. FINAL_SEGMENT_SECS .. ")")
@@ -1346,67 +1473,31 @@ end
 --------------------------------------------------------------------------------
 
 -- Warmup state
-local warmupTask = nil
 local warmupTimer = nil
 local isWarmingUp = false
 local warmupAttempt = 0
 local WARMUP_ATTEMPT_SECS = 1.0   -- timeout per attempt
 local WARMUP_MAX_ATTEMPTS = 10    -- give up after this many retries
 
-local function startActualRecording()
+-- Called once lw-record reports its engine is running and audio is flowing.
+local function onRecorderReady()
+    if not isWarmingUp then return end   -- key already released, or a retry raced us
     isWarmingUp = false
     warmupAttempt = 0
     isRecording = true
-    log("recording: start")
-
-    os.execute("rm -rf '" .. CHUNK_DIR .. "'")
-    os.execute("mkdir -p '" .. CHUNK_DIR .. "'")
-
-    captureActiveApp()
-    log("recording: app=" .. tostring(capturedAppName) .. " (" .. tostring(capturedAppBundleID) .. ")")
+    if warmupTimer then warmupTimer:stop(); warmupTimer = nil end
+    log("recording: start (audio flowing)")
 
     setOverlayText("")
     startRecordingIndicator()
     updateMenuBar()
-    -- Pop is played once the first chunk appears on disk (audio is truly flowing)
-
-    ffmpegTask = hs.task.new(FFMPEG, function(code, out, err)
-        log("recording: ffmpeg exited " .. tostring(code))
-        if code == 251 or code == 1 then
-            log("recording: ERROR — ffmpeg failed to open audio device '" .. AUDIO_DEVICE .. "'. Check device format (should be :default, :0, :1) and microphone permissions.")
-        end
-    end, {
-        "-f", "avfoundation", "-i", AUDIO_DEVICE,
-        "-ac", "1", "-ar", "16000",
-        "-f", "segment", "-segment_time", "1", "-segment_format", "wav",
-        CHUNK_DIR .. "/chunk_%03d.wav"
-    })
-    ffmpegTask:start()
-
-    -- Poll until first chunk exists on disk → audio is truly flowing → play Pop
-    -- Uses recursive doAfter (not doEvery) to avoid stop-within-callback issues.
-    local function pollForFirstChunk(attempt)
-        if not isRecording then return end  -- recording already stopped, don't play Pop
-        local firstChunk = CHUNK_DIR .. "/chunk_000.wav"
-        local attr = hs.fs.attributes(firstChunk)
-        if (attr and attr.size and attr.size > 200) or attempt >= 60 then
-            if attr then
-                log("recording: first chunk ready after " .. (attempt * 0.05) .. "s — audio flowing")
-            else
-                log("recording: first chunk timeout, playing Pop anyway")
-            end
-            playSound("Pop")
-        else
-            hs.timer.doAfter(0.05, function() pollForFirstChunk(attempt + 1) end)
-        end
-    end
-    pollForFirstChunk(0)
+    playSound("Pop")
 end
 
 local function cancelWarmup()
     if warmupTimer then warmupTimer:stop(); warmupTimer = nil end
-    if warmupTask and warmupTask:isRunning() then
-        warmupTask:terminate(); warmupTask = nil
+    if recorderTask and recorderTask:isRunning() then
+        recorderTask:terminate(); recorderTask = nil
     end
 end
 
@@ -1415,6 +1506,11 @@ local tryWarmup  -- forward declaration for recursion
 local warmupTick = hs.sound.getByFile("/System/Library/Sounds/Tink.aiff")
 if warmupTick then warmupTick:volume(0.15) end
 
+-- The recorder IS the warmup probe. It used to be a throwaway `ffmpeg -f null` open followed
+-- by a second open for the real recording, which meant two device opens per dictation and
+-- every word spoken during the probe was captured into /dev/null. lw-record prints READY the
+-- moment its engine is actually running, and it has been recording since before that line —
+-- so the lead-in is kept instead of discarded, and the retry loop still guards a dead device.
 tryWarmup = function()
     if not isWarmingUp then return end
 
@@ -1425,31 +1521,74 @@ tryWarmup = function()
     if warmupTick then warmupTick:play() end
     setOverlayText("... " .. warmupAttempt .. "/" .. WARMUP_MAX_ATTEMPTS)
 
-    warmupTask = hs.task.new(FFMPEG,
-        function(code)  -- termination callback
-            warmupTask = nil
+    -- A recorder from the previous dictation can still be alive here: stopRecording() only
+    -- sends SIGINT, and lw-record then takes a moment to flush its final chunk. If it is
+    -- still writing when we clear CHUNK_DIR, its tail lands in the new recording's directory
+    -- and gets spliced onto the front of the next transcript. Kill it before clearing.
+    if recorderTask and recorderTask:isRunning() then
+        log("warmup: terminating a still-running recorder from the previous dictation")
+        recorderTask:terminate()
+    end
+    recorderTask = nil
+
+    -- Each attempt records from scratch: a stale chunk from a failed attempt would be
+    -- concatenated into the front of the transcript.
+    os.execute("rm -rf '" .. CHUNK_DIR .. "'")
+    os.execute("mkdir -p '" .. CHUNK_DIR .. "'")
+
+    captureActiveApp()
+    log("recording: app=" .. tostring(capturedAppName) .. " (" .. tostring(capturedAppBundleID) .. ")")
+
+    -- Health check: lw-record reports exactly how much audio it captured, so a future
+    -- capture regression shows up in the log as a gap against the wall clock instead of
+    -- silently shortening words. ffmpeg lost ~10% here and nothing recorded it.
+    recordStartedAt = hs.timer.secondsSinceEpoch()
+    recorderCaptured = nil
+
+    -- Captured so the callback can tell whether it is still the current recorder: a slow
+    -- exit from the previous dictation must not clear the handle of the one now running.
+    local thisTask
+    thisTask = hs.task.new(RECORDER_BIN,
+        function(code, out, err)  -- termination callback
+            local isCurrent = (recorderTask == thisTask)
+            if isCurrent then recorderTask = nil end
+            log("recording: recorder exited " .. tostring(code))
+            if not isCurrent then return end   -- superseded: its counters belong to a newer run
+            if code ~= 0 and not recorderCaptured then
+                log("recording: ERROR — lw-record failed: " .. tostring(err))
+                return
+            end
+            if recorderCaptured and recordStartedAt then
+                local wall = hs.timer.secondsSinceEpoch() - recordStartedAt
+                log(string.format("recording: captured %.2fs of %.2fs wall (%.0f%%)",
+                    recorderCaptured, wall, wall > 0 and (recorderCaptured / wall * 100) or 0))
+            end
         end,
-        function(task, stdout, stderr)  -- streaming callback: ffmpeg writes to stderr once device is open
-            if stderr and stderr ~= "" and isWarmingUp then
-                log("warmup: device ready on attempt " .. warmupAttempt)
-                if warmupTimer then warmupTimer:stop(); warmupTimer = nil end
-                task:terminate()
-                startActualRecording()
+        function(task, stdout, stderr)  -- streaming: READY, then the final CAPTURED total
+            -- Ignore a superseded recorder's output entirely: its READY would start a
+            -- recording the user already released, and its CAPTURED would overwrite the
+            -- health check of the run now in progress.
+            if recorderTask ~= thisTask then return true end
+            if stdout then
+                if isWarmingUp and stdout:find("READY", 1, true) then
+                    log("warmup: device ready on attempt " .. warmupAttempt)
+                    onRecorderReady()
+                end
+                local c = tonumber(stdout:match("CAPTURED%s+([%d%.]+)"))
+                if c then recorderCaptured = c end
             end
             return true
         end,
-        { "-f", "avfoundation", "-i", AUDIO_DEVICE,
-          "-ac", "1", "-ar", "16000",
-          "-f", "null", "-" }
-    )
-    warmupTask:start()
+        { CHUNK_DIR, "1", "16000" })
+    recorderTask = thisTask
+    recorderTask:start()
 
-    -- If no response within 1s, kill and retry (up to max)
+    -- If no READY within 1s, kill and retry (up to max)
     warmupTimer = hs.timer.doAfter(WARMUP_ATTEMPT_SECS, function()
         warmupTimer = nil
         if not isWarmingUp then return end
-        if warmupTask and warmupTask:isRunning() then
-            warmupTask:terminate(); warmupTask = nil
+        if recorderTask and recorderTask:isRunning() then
+            recorderTask:terminate(); recorderTask = nil
         end
         if warmupAttempt < WARMUP_MAX_ATTEMPTS then
             log("warmup: no response, retrying...")
@@ -1506,12 +1645,14 @@ local function stopRecording()
     stopRecordingIndicator()
     updateMenuBar()
 
-    if ffmpegTask and ffmpegTask:isRunning() then
-        ffmpegTask:interrupt()
+    if recorderTask and recorderTask:isRunning() then
+        recorderTask:interrupt()   -- SIGINT: lw-record flushes its partial final chunk, then exits 0
     end
-    ffmpegTask = nil
+    -- Deliberately keep the handle: the process is still flushing. Its termination callback
+    -- clears it, and until then tryWarmup() needs it to detect and kill a slow predecessor
+    -- before wiping CHUNK_DIR out from under it.
 
-    -- Brief delay for ffmpeg to finalize last chunk. A short timer scheduled right as the
+    -- Brief delay for the recorder to finalize last chunk. A short timer scheduled right as the
     -- system suspends can be silently dropped across sleep (see sleepWatcher below), so track
     -- pending state and recover on wake instead of just losing the recording silently.
     finalizationPending = true

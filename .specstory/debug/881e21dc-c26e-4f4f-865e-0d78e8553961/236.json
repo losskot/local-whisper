@@ -1,0 +1,34 @@
+{
+  "classifierMetaLines": "{\"meta\":{\"gitStatus\":{\"staged\":0,\"modified\":5,\"untracked\":5}}}\n",
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "started pid=60696\ninterrupted\n=== result ===\nexit=0\nout=\nerr=\n=== chunks ===\nfiles=8 totalAudio=7.541s\n  chunk_000.wav 1.000000\n  chunk_001.wav 1.000000\n  chunk_002.wav 1.000000",
+        "is_error": false,
+        "tool_use_id": "toolu_013UWxp5SHVRGxUbvu5pnEBk",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "c89cf14e-9edc-4d80-9970-da8b9a5f3478",
+  "promptId": "b1c3dd4b-bdb6-4805-8c6e-1e76cb9b10ed",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "c89cf14e-9edc-4d80-9970-da8b9a5f3478",
+  "timestamp": "2026-08-17T02:17:07.620Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "started pid=60696\ninterrupted\n=== result ===\nexit=0\nout=\nerr=\n=== chunks ===\nfiles=8 totalAudio=7.541s\n  chunk_000.wav 1.000000\n  chunk_001.wav 1.000000\n  chunk_002.wav 1.000000"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "69ebb2ab-d6f7-4782-8e04-27df3719d850",
+  "version": "2.1.233"
+}

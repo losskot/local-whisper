@@ -1,0 +1,74 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01KSJ8UDLXHASQCiXAH8hCaT",
+        "input": {
+          "file_path": "/Users/vitaliy/Documents/GitHub/local-whisper/AGENTS.md",
+          "new_string": "```\nHammerspoon eventtap (trigger combo hold/release, matched on raw device flags)\n  → lw-record (native AVAudioEngine capture, 1s WAV chunks)\n  → ffmpeg concat → whisper-cli (55s segments, chosen model — or the remote API)\n  → Post-processing (filler removal, app-aware capitalize)\n  → Action hooks (voice commands, note-taking, app launching)\n  → Text insertion at cursor (paste or keystroke)\n  → Overlay + menu bar updates\n```\n\nTranscription is not streamed: nothing is transcribed until the key is released. Older\ndocs describing live partials or chained segment prompts describe code that no longer\nexists. Silence-aware splitting, however, **is** back — see the segmenting section below.\n\nEverything runs inside `~/.hammerspoon/init.lua` — no external bash scripts at runtime.\nThe one compiled helper is `lw-record`; init.lua builds it on load when it is missing or\nolder than its source, so there is still no install step.\n\n## Key paths\n\n- `~/.hammerspoon/init.lua` — main config (overlay, recording, insertion, hotkeys, menu bar)\n- `~/.hammerspoon/local_whisper_actions.lua` — user voice commands (optional, auto-reloads)\n- `tools/lw-record.swift` — native mic recorder source (the only thing that opens the mic)\n- `~/.local-whisper/bin/lw-record` — the compiled recorder, built by init.lua on load\n- `~/.local-whisper/` — all user settings (lang, model, output, prompt, recent dictations)\n- `~/.local-whisper/prompt` — mixed-language style anchor; seeded with a default on first run\n- `~/whisper.cpp/build/bin/whisper-cli` — transcription binary\n- `~/whisper.cpp/models/` — whisper models (medium, large-v3-turbo, etc.)\n- `$TMPDIR/whisper-dictate/` — all temp state (per-user private dir on macOS)\n- `$TMPDIR/whisper-dictate/chunks/` — recording segments (ephemeral)\n- `$TMPDIR/whisper-dictate/whisper-dictate.log` — debug log\n\n## Audio capture: never go back to ffmpeg for the microphone\n\nffmpeg's avfoundation **input device** hands over roughly 90% of what it captures. Measured\nwith a fixed output duration: a `-t 20` run took 21.11s of wall clock, ffmpeg reported a\n20.00s timeline, and the file held **18.04s** of PCM. Every 1-second chunk it wrote came out\n0.885–0.917s long, so the loss is spread evenly — about 100ms missing from every second.\nThat swallows short words whole and clips longer ones, and because whisper is generative it\npapers over the gaps with fluent invented text. The transcript reads *better* than the truth\nwhile missing words, which is exactly what makes it hard to notice.\n\nNone of these changed it: `-thread_queue_size`, `-drop_late_frames false`,\n`-use_wallclock_as_timestamps 1`, `-capture_raw_data true`, `-audio_device_index`, `:0` vs\n`:default`, dropping the segment muxer, or dropping the resampler (native 48kHz loses the\nsame). It is inside the indev.\n\n`tools/lw-record.swift` taps AVAudioEngine's input node instead and loses nothing: chunks\ncome out at exactly `1.000000` s. ffmpeg is still correct — and still used — for segment\nconcat here and for all format conversion in `tools/transcribe.sh`. **Only the microphone\nmoved.** The `capture` checks in the test suite fail if `\"avfoundation\"` reappears as an\nargument in init.lua.\n\nVerify capture health any time — the log line is written after every recording:\n\n```bash\nTMPDIR_REAL=$(getconf DARWIN_USER_TEMP_DIR)\ngrep \"recording: captured\" \"${TMPDIR_REAL}whisper-dictate/whisper-dictate.log\" | tail -3\n# → recording: captured 19.54s of 20.11s wall (97%)\n# Anything near 90% means capture regressed. The remainder is device-open latency.\n```\n\n`lw-record` prints `READY` when its engine is actually running and `CAPTURED \u003csecs\u003e` on exit.\nBoth arrive on **stdout via the streaming callback** — `hs.task` routes stdout there whenever\na streaming callback is registered and leaves the termination callback's `out` empty, so\nparsing `CAPTURED` at termination silently reads nil forever.",
+          "old_string": "```\nHammerspoon eventtap (trigger combo hold/release, matched on raw device flags)\n  → ffmpeg (chunked WAV recording, 1s segments)\n  → whisper-cli (transcription, 55s segments, chosen model — or the remote API)\n  → Post-processing (filler removal, app-aware capitalize)\n  → Action hooks (voice commands, note-taking, app launching)\n  → Text insertion at cursor (paste or keystroke)\n  → Overlay + menu bar updates\n```\n\nTranscription is not streamed: nothing is transcribed until the key is released. Older\ndocs describing live partials, silence-aware splitting, or chained segment prompts\ndescribe code that no longer exists.\n\nEverything runs inside `~/.hammerspoon/init.lua` — no external bash scripts at runtime.\n\n## Key paths\n\n- `~/.hammerspoon/init.lua` — main config (overlay, recording, insertion, hotkeys, menu bar)\n- `~/.hammerspoon/local_whisper_actions.lua` — user voice commands (optional, auto-reloads)\n- `~/.local-whisper/` — all user settings (lang, model, output, prompt, recent dictations)\n- `~/whisper.cpp/build/bin/whisper-cli` — transcription binary\n- `~/whisper.cpp/models/` — whisper models (medium, large-v3-turbo, etc.)\n- `$TMPDIR/whisper-dictate/` — all temp state (per-user private dir on macOS)\n- `$TMPDIR/whisper-dictate/chunks/` — recording segments (ephemeral)\n- `$TMPDIR/whisper-dictate/whisper-dictate.log` — debug log",
+          "replace_all": false
+        },
+        "name": "Edit",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce7Y6fsG2fmhMoDv2AVve",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 816,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 816,
+      "cache_read_input_tokens": 201511,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 816,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 816,
+          "cache_read_input_tokens": 201511,
+          "input_tokens": 2,
+          "output_tokens": 2275,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 2275,
+      "output_tokens_details": {
+        "thinking_tokens": 0
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "e46481bf-9a91-4fb9-aea4-8944d08490c7",
+  "requestId": "req_011Ce7Y6dzA3gHF1hxS9TAvi",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "timestamp": "2026-08-17T02:32:44.146Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "4e05424f-fa57-447a-914f-353b0e4664ae",
+  "version": "2.1.233"
+}

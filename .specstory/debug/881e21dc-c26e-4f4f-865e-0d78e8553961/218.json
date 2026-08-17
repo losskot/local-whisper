@@ -1,0 +1,65 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "signature": "CAIS2QgKhwEIEBgCKkCAcaN4uNg7hym6O+LvhzYw5pFm9NZuMolNCRZNj1cawP7ijV4uqK39pP0A05MPaHCqYIvHexC59urPO/e9k2WVMg1jbGF1ZGUtb3B1cy01OAFCCHRoaW5raW5nWiQ4MmY1MDliMS03NDFhLTQ1MzgtYjcyNS1lNWU1ZmVjZjY1NzgSDKYyJgFAoK4EFE2trBoM+T/GDbWo/hXUaDJwIjAFdVlI3gBgSfIVHccPONb3cY/Q5xbMQmDDA4xY7fr+1ujfPc81/5nwvFk9v6I9tC4q/gaSJk7oHoEnilT6YKXP9RJGjP2cRbcw6KY8BP9GAuTgfUCSp/ZWu0DThrbt3ivawceDC2dyF9y7+zcVxccRv+nuO5eFIK/ck6UqDKGpKJXeQTuRmsn+fdA6X3F7hNAL4n+mzKq904EN4711xHaqa/Ti7OK7hHsUnGzYf9hvU9piPG0/kufxZMHpx+IrenrbbcsZBBrEpLJRyX1/8gnHcHpV8acGOmIar/X9eJ9OsrqmcxXmmeb/5Yjls+kv7vHLbZz78rnrWyHzjD1Qi3l9LQscXEE8chZN+qNhOOrzGkptXz3Bs5z712OFpxarL1VBkdv7b+ot+mDgte6U1Bf67o0dkTfCGgKGBFlSJ8VYj7f7fciV8HX2TJ5Qdw/uiVHOoubbACJUdKmYyyWMcGCxKV/F3MHuEvCr9LmIf/ws8Cz/4QpiG60knCM6bTToZSF2/8TtPKEZy3CQ1sY+jJ/yiCZqy6Eqh8fhKeqvCyMMQadExdw+z3GSbUAnlNIQD/g2I8zro7IYE+p1mLjzML4orvarjLgUbAx9QI60Me6mhDzWynPS/EtS1as6U5xO38gyyYvYFCR5QaorsgdNevokO8ZcKyVqpMyrtPeJvgvyxhW7YOt3Rcq8lItenFO8x8hh4bs7y4mVa6pkrojSySBkRjQFF8Dt4wb13CMCA4cKEw//QqzeMFShc/AdlB3Ou3KkG8i5LAgqJNU0ENAIATaddtjvUVdpoDlXnzbr5sp1y+r1SnO0lh1CSpD7mVg8v74NIdLlkiPrL1095lYjARVVaNOsBgFs2pctuzbEJX0XLa/aK8p1vQZuVL6Z1DI0VDRIDtMasppljcRCaCn0/S57z0zQmO9QdOU3ZYmwDR3xGHdcy8v0dtFmTmaNDY5wBPuJmMLKRn4Lq/Hz17lnP3rHg17DmTy0N5gMotgzpmCIGLM83LMGE6Yfsy5sQH/K32ZXS/kF3UPYtaadYkprM+JekcEmfQ52H/P+XsQITn3WHwGwaSvR6wivLc2FsSB/1KQ8hgP+ouVvpxRiV3Ji6pw98tX7BH71aJwJKJ2EZ1SN4rRu77qweU4CJ7f2B8oQQA//jGb0J2/jj5rN99hhTE8La5KiENQzrCZOlt1qnEr2DPdAk2DYa3FN35fDT0tEEoa9qIfoBPbY59lUChmEpEgggtChXFwmkNoodByJ8DNiiSgYAQ==",
+        "thinking": "",
+        "type": "thinking"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce7Wm79N8tsxwKKhujcwF",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 987,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 987,
+      "cache_read_input_tokens": 147353,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 987,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 987,
+          "cache_read_input_tokens": 147353,
+          "input_tokens": 2,
+          "output_tokens": 783,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 783,
+      "output_tokens_details": {
+        "thinking_tokens": 359
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "72886366-b5f8-4a64-82bd-dbe3f6fad412",
+  "requestId": "req_011Ce7Wm5inuXVy9qkB1AFAN",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "timestamp": "2026-08-17T02:14:53.814Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "d48fd5b1-534a-40e5-ac15-37e8464a0c71",
+  "version": "2.1.233"
+}

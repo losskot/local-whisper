@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "=== AGENTS.md claims: post 0x800001 -\u003e poll returns 0x800000 ===\nactual: 0x0\n-- Loading extension: screen\n-- Loading extension: application\n=== and with a small delay, in case posting is async ===\nafter 200ms: 0x800000",
+        "is_error": false,
+        "tool_use_id": "toolu_017iTa7gSeKzRW29HUKa2kZ1",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "c50bc1e4-009a-43f4-af97-543f1828e1cb",
+  "promptId": "b1c3dd4b-bdb6-4805-8c6e-1e76cb9b10ed",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "c50bc1e4-009a-43f4-af97-543f1828e1cb",
+  "timestamp": "2026-08-17T02:25:17.967Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "=== AGENTS.md claims: post 0x800001 -\u003e poll returns 0x800000 ===\nactual: 0x0\n-- Loading extension: screen\n-- Loading extension: application\n=== and with a small delay, in case posting is async ===\nafter 200ms: 0x800000"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "294795fa-ab21-432a-b130-cbb6c00291e9",
+  "version": "2.1.233"
+}

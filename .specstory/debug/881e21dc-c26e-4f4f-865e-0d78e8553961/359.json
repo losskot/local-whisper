@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "output restored to: paste\n=== docs mentioning capture via ffmpeg/avfoundation ===\nREADME.md:18:- **Warmup probe**: Before every recording, a short ffmpeg probe warms up the audio device; if the device never produces audio within 10 seconds, recording aborts with an error sound\nREADME.md:67:brew install ffmpeg cmake git\nREADME.md:118:ffmpeg -f avfoundation -list_devices true -i \"\"\nREADME.md:150:Claude, Hammerspoon, whisper.cpp, ffmpeg, macOS, Lua, Anthropic\nREADME.md:205:  → warmup probe: short ffmpeg run to open the audio device before committing\nREADME.md:206:  → ffmpeg records chunked WAV segments (1s each) via avfoundation\nREADME.md:209:  → per segment: ffmpeg concat → whisper-cli (or the remote API), in order\nREADME.md:220:- **ffmpeg exits immediately (code 251)**: `AUDIO_DEVICE` is missing the colon prefix — use `:0` not `0`. The `:` tells avfoundation it's an audio device.\nREADME.md:221:- **Wrong microphone**: Run `ffmpeg -f avfoundation -list_devices true -i \"\"` and update `AUDIO_DEVICE` in init.lua (or use `:default`)\nAGENTS.md:11:  → ffmpeg (chunked WAV recording, 1s segments)\nAGENTS.md:199:| `overlay` | clicking the X mid-recording leaving ffmpeg running; deleting the canvas from inside its own mouse callback; unpinning hiding the overlay while still recording |\nsetup.sh:68:FFMPEG_BIN=\"$(brew --prefix 2\u003e/dev/null)/bin/ffmpeg\"\nsetup.sh:70:    FFMPEG_BIN=\"$(which ffmpeg 2\u003e/dev/null || echo \"\")\"\nsetup.sh:76:    # Parse audio device list from ffmpeg\nsetup.sh:77:    DEVICE_OUTPUT=$(\"$FFMPEG_BIN\" -f avfoundation -list_devices true -i \"\" 2\u003e\u00261 || true)\nsetup.sh:94:        warn \"Added colon prefix → $NEW_DEVICE (avfoundation requires ':' for audio devices)\"\nsetup.sh:142:    [[ -n \"$FFMPEG_BIN\" ]] \u0026\u0026 run_with_timeout 5 \"$FFMPEG_BIN\" -f avfoundation -i \":default\" -t 0.1 -f null - 2\u003e/dev/null\ninstall.sh:59:BREW_FORMULAE=(ffmpeg cmake git)",
+        "is_error": false,
+        "tool_use_id": "toolu_017VxQEWeHsAJyrzAqQQZn5E",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "bc81ea2c-2330-417e-b2bb-22e7c442d658",
+  "promptId": "b1c3dd4b-bdb6-4805-8c6e-1e76cb9b10ed",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "bc81ea2c-2330-417e-b2bb-22e7c442d658",
+  "timestamp": "2026-08-17T02:31:32.504Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "output restored to: paste\n=== docs mentioning capture via ffmpeg/avfoundation ===\nREADME.md:18:- **Warmup probe**: Before every recording, a short ffmpeg probe warms up the audio device; if the device never produces audio within 10 seconds, recording aborts with an error sound\nREADME.md:67:brew install ffmpeg cmake git\nREADME.md:118:ffmpeg -f avfoundation -list_devices true -i \"\"\nREADME.md:150:Claude, Hammerspoon, whisper.cpp, ffmpeg, macOS, Lua, Anthropic\nREADME.md:205:  → warmup probe: short ffmpeg run to open the audio device before committing\nREADME.md:206:  → ffmpeg records chunked WAV segments (1s each) via avfoundation\nREADME.md:209:  → per segment: ffmpeg concat → whisper-cli (or the remote API), in order\nREADME.md:220:- **ffmpeg exits immediately (code 251)**: `AUDIO_DEVICE` is missing the colon prefix — use `:0` not `0`. The `:` tells avfoundation it's an audio device.\nREADME.md:221:- **Wrong microphone**: Run `ffmpeg -f avfoundation -list_devices true -i \"\"` and update `AUDIO_DEVICE` in init.lua (or use `:default`)\nAGENTS.md:11:  → ffmpeg (chunked WAV recording, 1s segments)\nAGENTS.md:199:| `overlay` | clicking the X mid-recording leaving ffmpeg running; deleting the canvas from inside its own mouse callback; unpinning hiding the overlay while still recording |\nsetup.sh:68:FFMPEG_BIN=\"$(brew --prefix 2\u003e/dev/null)/bin/ffmpeg\"\nsetup.sh:70:    FFMPEG_BIN=\"$(which ffmpeg 2\u003e/dev/null || echo \"\")\"\nsetup.sh:76:    # Parse audio device list from ffmpeg\nsetup.sh:77:    DEVICE_OUTPUT=$(\"$FFMPEG_BIN\" -f avfoundation -list_devices true -i \"\" 2\u003e\u00261 || true)\nsetup.sh:94:        warn \"Added colon prefix → $NEW_DEVICE (avfoundation requires ':' for audio devices)\"\nsetup.sh:142:    [[ -n \"$FFMPEG_BIN\" ]] \u0026\u0026 run_with_timeout 5 \"$FFMPEG_BIN\" -f avfoundation -i \":default\" -t 0.1 -f null - 2\u003e/dev/null\ninstall.sh:59:BREW_FORMULAE=(ffmpeg cmake git)"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "1fff1319-c55b-4413-a599-24ff5ca533e3",
+  "version": "2.1.233"
+}

@@ -1,0 +1,35 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "1562\t        end,\n1563\t        function(task, stdout, stderr)  -- streaming: READY, then the final CAPTURED total\n1564\t            if stdout then\n1565\t                if isWarmingUp and stdout:find(\"READY\", 1, true) then\n1566\t                    log(\"warmup: device ready on attempt \" .. warmupAttempt)\n1567\t                    onRecorderReady()\n1568\t                end\n1569\t                local c = tonumber(stdout:match(\"CAPTURED%s+([%d%.]+)\"))\n1570\t                if c then recorderCaptured = c end\n1571\t            end\n1572\t            return true\n1573\t        end,\n1574\t        { CHUNK_DIR, \"1\", \"16000\" })\n1575\t    recorderTask:start()\n1576\t\n1577\t    -- If no READY within 1s, kill and retry (up to max)\n1578\t    warmupTimer = hs.timer.doAfter(WARMUP_ATTEMPT_SECS, function()\n1579\t        warmupTimer = nil",
+        "tool_use_id": "toolu_012oPbxjEvbhfvG8siUPM7mb",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "da1006f6-2161-406f-8221-b4d9d50ff271",
+  "promptId": "b1c3dd4b-bdb6-4805-8c6e-1e76cb9b10ed",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "da1006f6-2161-406f-8221-b4d9d50ff271",
+  "timestamp": "2026-08-17T02:27:57.478Z",
+  "toolUseResult": {
+    "file": {
+      "content": "        end,\n        function(task, stdout, stderr)  -- streaming: READY, then the final CAPTURED total\n            if stdout then\n                if isWarmingUp and stdout:find(\"READY\", 1, true) then\n                    log(\"warmup: device ready on attempt \" .. warmupAttempt)\n                    onRecorderReady()\n                end\n                local c = tonumber(stdout:match(\"CAPTURED%s+([%d%.]+)\"))\n                if c then recorderCaptured = c end\n            end\n            return true\n        end,\n        { CHUNK_DIR, \"1\", \"16000\" })\n    recorderTask:start()\n\n    -- If no READY within 1s, kill and retry (up to max)\n    warmupTimer = hs.timer.doAfter(WARMUP_ATTEMPT_SECS, function()\n        warmupTimer = nil",
+      "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+      "numLines": 18,
+      "startLine": 1562,
+      "totalLines": 1763
+    },
+    "type": "text"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "2096c82c-5397-4f26-ab0a-7a4aabb729db",
+  "version": "2.1.233"
+}

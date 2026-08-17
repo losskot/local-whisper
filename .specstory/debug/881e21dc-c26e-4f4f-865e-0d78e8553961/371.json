@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "README.md:121:Then update `AUDIO_DEVICE` in `~/.hammerspoon/init.lua` (e.g., `:0`, `:1`).\nREADME.md:220:- **ffmpeg exits immediately (code 251)**: `AUDIO_DEVICE` is missing the colon prefix — use `:0` not `0`. The `:` tells avfoundation it's an audio device.\nREADME.md:221:- **Wrong microphone**: Run `ffmpeg -f avfoundation -list_devices true -i \"\"` and update `AUDIO_DEVICE` in init.lua (or use `:default`)\nhammerspoon/init.lua:80:-- node). The old AUDIO_DEVICE constant selected an ffmpeg avfoundation index and was",
+        "is_error": false,
+        "tool_use_id": "toolu_015iYtjaCJjiQH4RBQVvbSRL",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "1df48820-da07-48a6-9f71-e423c58443b7",
+  "promptId": "b1c3dd4b-bdb6-4805-8c6e-1e76cb9b10ed",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "1df48820-da07-48a6-9f71-e423c58443b7",
+  "timestamp": "2026-08-17T02:32:15.454Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "README.md:121:Then update `AUDIO_DEVICE` in `~/.hammerspoon/init.lua` (e.g., `:0`, `:1`).\nREADME.md:220:- **ffmpeg exits immediately (code 251)**: `AUDIO_DEVICE` is missing the colon prefix — use `:0` not `0`. The `:` tells avfoundation it's an audio device.\nREADME.md:221:- **Wrong microphone**: Run `ffmpeg -f avfoundation -list_devices true -i \"\"` and update `AUDIO_DEVICE` in init.lua (or use `:default`)\nhammerspoon/init.lua:80:-- node). The old AUDIO_DEVICE constant selected an ffmpeg avfoundation index and was"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "837312b1-bf66-46f7-9067-9672a4b4f51f",
+  "version": "2.1.233"
+}

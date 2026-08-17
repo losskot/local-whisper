@@ -1,0 +1,51 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/README.md has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01PeLc3fZrSBHVDUFq5jgorT",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "908a462a-cdd9-4856-ac62-f74db77769ef",
+  "promptId": "b1c3dd4b-bdb6-4805-8c6e-1e76cb9b10ed",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "908a462a-cdd9-4856-ac62-f74db77769ef",
+  "timestamp": "2026-08-17T02:34:20.949Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/README.md",
+    "newString": "- **Custom vocabulary / mixed-language anchor**: `~/.local-whisper/prompt` is a *writing sample*, not an instruction — whisper continues in whatever style it establishes. Seeded with a ru/uk/en example on first run; edit it to match how you actually speak. Applied to both the local model (with `--carry-initial-prompt`) and the remote API",
+    "oldString": "- **Custom vocabulary**: Provide a prompt file to improve recognition of domain-specific terms",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          " - **Multi-language**: English, Russian, Ukrainian, and auto-detect (per segment, so mixed-language speech is not \"translated\")",
+          " - **App-aware processing**: Auto-capitalizes in most apps, skips in terminals and code editors",
+          " - **Text post-processing**: Remove filler words (um, uh, hmm), clean whitespace",
+          "-- **Custom vocabulary**: Provide a prompt file to improve recognition of domain-specific terms",
+          "+- **Custom vocabulary / mixed-language anchor**: `~/.local-whisper/prompt` is a *writing sample*, not an instruction — whisper continues in whatever style it establishes. Seeded with a ru/uk/en example on first run; edit it to match how you actually speak. Applied to both the local model (with `--carry-initial-prompt`) and the remote API",
+          " - **Lossless capture**: A native AVAudioEngine recorder (`lw-record`) opens the microphone. ffmpeg's avfoundation input silently dropped ~10% of every recording, which swallowed whole words; the recorder logs captured-vs-wall-clock seconds after every dictation so a regression is visible",
+          " - **Warmup probe**: The recorder signals when audio is genuinely flowing; if the device never responds within 10 seconds, recording aborts with an error sound",
+          " - **Sleep recovery**: A dictation interrupted by system sleep is finalized on wake instead of being silently lost"
+        ],
+        "newLines": 7,
+        "newStart": 14,
+        "oldLines": 7,
+        "oldStart": 14
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "6729f7fd-2346-4ae5-b5bd-c7ceca110f26",
+  "version": "2.1.233"
+}

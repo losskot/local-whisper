@@ -1,0 +1,35 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "1594\t        if finalizeTimers.watchdog then finalizeTimers.watchdog:stop(); finalizeTimers.watchdog = nil end\n1595\t        log(\"recovery: flushing pending finalization, then starting the new recording\")\n1596\t        doFinalTranscription()\n1597\t    end\n1598\t    isWarmingUp = true\n1599\t    warmupAttempt = 0\n1600\t    log(\"warmup: probing audio device...\")\n1601\t\n1602\t    setOverlayText(\"...\")\n1603\t    showOverlay()\n1604\t\n1605\t    tryWarmup()\n1606\tend\n1607\t\n1608\tlocal function stopRecording()\n1609\t    -- Cancel warmup if key released before device was ready\n1610\t    if isWarmingUp then\n1611\t        isWarmingUp = false\n1612\t        warmupAttempt = 0\n1613\t        cancelWarmup()\n1614\t        log(\"warmup: cancelled (key released before device ready)\")\n1615\t        hideOverlay()\n1616\t        return\n1617\t    end\n1618\t\n1619\t    if not isRecording then return end\n1620\t    isRecording = false\n1621\t    log(\"recording: stop\")\n1622\t\n1623\t    stopRecordingIndicator()\n1624\t    updateMenuBar()\n1625\t\n1626\t    if recorderTask and recorderTask:isRunning() then\n1627\t        recorderTask:interrupt()   -- SIGINT: lw-record flushes its partial final chunk, then exits 0\n1628\t    end\n1629\t    recorderTask = nil",
+        "tool_use_id": "toolu_01GdaDfNZ9TpVeVS9tXfyR1W",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "5e1bdfdb-68ad-407c-b5cc-eb5fb4fff5db",
+  "promptId": "b1c3dd4b-bdb6-4805-8c6e-1e76cb9b10ed",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "5e1bdfdb-68ad-407c-b5cc-eb5fb4fff5db",
+  "timestamp": "2026-08-17T02:27:18.342Z",
+  "toolUseResult": {
+    "file": {
+      "content": "        if finalizeTimers.watchdog then finalizeTimers.watchdog:stop(); finalizeTimers.watchdog = nil end\n        log(\"recovery: flushing pending finalization, then starting the new recording\")\n        doFinalTranscription()\n    end\n    isWarmingUp = true\n    warmupAttempt = 0\n    log(\"warmup: probing audio device...\")\n\n    setOverlayText(\"...\")\n    showOverlay()\n\n    tryWarmup()\nend\n\nlocal function stopRecording()\n    -- Cancel warmup if key released before device was ready\n    if isWarmingUp then\n        isWarmingUp = false\n        warmupAttempt = 0\n        cancelWarmup()\n        log(\"warmup: cancelled (key released before device ready)\")\n        hideOverlay()\n        return\n    end\n\n    if not isRecording then return end\n    isRecording = false\n    log(\"recording: stop\")\n\n    stopRecordingIndicator()\n    updateMenuBar()\n\n    if recorderTask and recorderTask:isRunning() then\n        recorderTask:interrupt()   -- SIGINT: lw-record flushes its partial final chunk, then exits 0\n    end\n    recorderTask = nil",
+      "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+      "numLines": 36,
+      "startLine": 1594,
+      "totalLines": 1750
+    },
+    "type": "text"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "25a18e34-768d-4859-8358-1c6f65d5ab29",
+  "version": "2.1.233"
+}

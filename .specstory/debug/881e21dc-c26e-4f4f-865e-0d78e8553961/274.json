@@ -1,0 +1,64 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "text": "`--carry-initial-prompt` works — whisper processed 102 prompt tokens, exit 0, so the style anchor genuinely reaches the model. The mutation run timed out from GPU contention with that whisper job; re-running it alone:",
+        "type": "text"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce7XKbgVUZrEKEyixk6c8",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 1306,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 1306,
+      "cache_read_input_tokens": 168138,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1306,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 1306,
+          "cache_read_input_tokens": 168138,
+          "input_tokens": 2,
+          "output_tokens": 1440,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 1440,
+      "output_tokens_details": {
+        "thinking_tokens": 1081
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "5d8822fe-6e29-4b5b-b607-ec75edbd06d6",
+  "requestId": "req_011Ce7XKagiXPDi8AbZeRBb7",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "timestamp": "2026-08-17T02:22:25.074Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "6fa57486-062d-4545-b71d-e39c7771de94",
+  "version": "2.1.233"
+}

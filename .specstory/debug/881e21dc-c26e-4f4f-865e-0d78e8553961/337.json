@@ -1,0 +1,64 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "text": "Now stop dropping the handle before the process has actually exited:",
+        "type": "text"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce7XnVnYEtATcv4Q5R5t3",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 1488,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 1488,
+      "cache_read_input_tokens": 188971,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1488,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 1488,
+          "cache_read_input_tokens": 188971,
+          "input_tokens": 2,
+          "output_tokens": 397,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 397,
+      "output_tokens_details": {
+        "thinking_tokens": 0
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "0bfec742-972d-40f8-9838-a10636145a5b",
+  "requestId": "req_011Ce7XnUD37TuagYbtnJ5ze",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "timestamp": "2026-08-17T02:28:15.396Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "8ecb1886-ad11-4e79-ab0f-05137d3cc8b5",
+  "version": "2.1.233"
+}

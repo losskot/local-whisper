@@ -1,0 +1,53 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01MBsZqVfLqbrf64xakuCmxo",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "8dce3662-dc12-4b94-b40f-e3a83db52abc",
+  "promptId": "b1c3dd4b-bdb6-4805-8c6e-1e76cb9b10ed",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "8dce3662-dc12-4b94-b40f-e3a83db52abc",
+  "timestamp": "2026-08-17T02:28:19.554Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+    "newString": "    if recorderTask and recorderTask:isRunning() then\n        recorderTask:interrupt()   -- SIGINT: lw-record flushes its partial final chunk, then exits 0\n    end\n    -- Deliberately keep the handle: the process is still flushing. Its termination callback\n    -- clears it, and until then tryWarmup() needs it to detect and kill a slow predecessor\n    -- before wiping CHUNK_DIR out from under it.",
+    "oldString": "    if recorderTask and recorderTask:isRunning() then\n        recorderTask:interrupt()   -- SIGINT: lw-record flushes its partial final chunk, then exits 0\n    end\n    recorderTask = nil",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          "     if recorderTask and recorderTask:isRunning() then",
+          "         recorderTask:interrupt()   -- SIGINT: lw-record flushes its partial final chunk, then exits 0",
+          "     end",
+          "-    recorderTask = nil",
+          "+    -- Deliberately keep the handle: the process is still flushing. Its termination callback",
+          "+    -- clears it, and until then tryWarmup() needs it to detect and kill a slow predecessor",
+          "+    -- before wiping CHUNK_DIR out from under it.",
+          " ",
+          "     -- Brief delay for the recorder to finalize last chunk. A short timer scheduled right as the",
+          "     -- system suspends can be silently dropped across sleep (see sleepWatcher below), so track"
+        ],
+        "newLines": 9,
+        "newStart": 1646,
+        "oldLines": 7,
+        "oldStart": 1646
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "25cacaa8-3523-4150-a2e1-176f8c30a992",
+  "version": "2.1.233"
+}

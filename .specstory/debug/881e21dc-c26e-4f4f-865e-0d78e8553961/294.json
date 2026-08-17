@@ -1,0 +1,34 @@
+{
+  "classifierMetaLines": "{\"meta\":{\"gitStatus\":{\"staged\":0,\"modified\":5,\"untracked\":5}}}\n",
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "old: files=13 audio=11.28s\nper-chunk (old): \n  0.873625\n  0.885375\n  0.864000\n  0.874625",
+        "is_error": false,
+        "tool_use_id": "toolu_0145fwv77JZBYDPHYAVg7aCw",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "6fac15f9-8611-4878-9570-1fd534e3280a",
+  "promptId": "b1c3dd4b-bdb6-4805-8c6e-1e76cb9b10ed",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "6fac15f9-8611-4878-9570-1fd534e3280a",
+  "timestamp": "2026-08-17T02:24:32.874Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "old: files=13 audio=11.28s\nper-chunk (old): \n  0.873625\n  0.885375\n  0.864000\n  0.874625"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "b1541d25-504d-4208-98dc-d81e1ab74cdb",
+  "version": "2.1.233"
+}

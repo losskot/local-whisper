@@ -1,0 +1,27 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "Exit code 143\nCommand timed out after 2m 0s\n--- mutation: silence scan disabled (falls back to hard cut) ---",
+        "is_error": true,
+        "tool_use_id": "toolu_015V8SqD6htwnWR5rmmb3FEf",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "108bf176-6fc0-4129-8bdc-3e45eaa2e0c3",
+  "promptId": "b1c3dd4b-bdb6-4805-8c6e-1e76cb9b10ed",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "108bf176-6fc0-4129-8bdc-3e45eaa2e0c3",
+  "timestamp": "2026-08-17T02:21:57.938Z",
+  "toolUseResult": "Error: Exit code 143\nCommand timed out after 2m 0s\n--- mutation: silence scan disabled (falls back to hard cut) ---",
+  "type": "user",
+  "userType": "external",
+  "uuid": "c0884566-eec2-483e-894e-070acf83bdf6",
+  "version": "2.1.233"
+}

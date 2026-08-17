@@ -1,0 +1,34 @@
+{
+  "classifierMetaLines": "{\"meta\":{\"gitStatus\":{\"staged\":0,\"modified\":9,\"untracked\":5}}}\n",
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "total 416\ndrwxr-xr-x   3 vitaliy  wheel      96 Aug 17 04:34 .\ndrwx------  44 vitaliy  wheel    1408 Aug 17 04:34 ..\n-rw-r--r--   1 vitaliy  wheel  209334 Aug 17 04:34 test.m4a\n=== running the batch transcriber ===\nwhisper_init_state: compute buffer (decode) =  100.04 MB\nsystem_info: n_threads = 8 / 8 | WHISPER : COREML = 0 | OPENVINO = 0 | MTL : EMBED_LIBRARY = 1 | CPU : SSE3 = 1 | SSSE3 = 1 | ACCELERATE = 1 | REPACK = 1 | \nmain: processing '/var/folders/ph/3yv4hw8567g12wy09lntpvt40000gp/T/tmp.nWogqkguiZ/000001.wav' (74463 samples, 4.7 sec), 8 threads, 1 processors, 5 beams + best of 5, lang = auto, task = transcribe, timestamps = 1 ...\nwhisper_full_with_state: auto-detected language: ru (p = 0.999598)\n[00:00:00.000 --\u003e 00:00:01.860]   Проверка бочевого транскрибатора.\n[00:00:02.180 --\u003e 00:00:04.540]   Это тестовый файл в формате М4А.\noutput_txt: saving output to '/private/tmp/claude-502/-Users-vitaliy-Documents-GitHub-local-whisper/881e21dc-c26e-4f4f-865e-0d78e8553961/scratchpad/batch/test.txt'\nwhisper_print_timings:     load time =   741.66 ms\nwhisper_print_timings:     fallbacks =   0 p /   0 h\nwhisper_print_timings:      mel time =     4.46 ms\nwhisper_print_timings:   sample time =    45.01 ms /   163 runs (     0.28 ms per run)\nwhisper_print_timings:   encode time =  3297.07 ms /     2 runs (  1648.53 ms per run)\nwhisper_print_timings:   decode time =    35.96 ms /     1 runs (    35.96 ms per run)\nwhisper_print_timings:   batchd time =   200.13 ms /   161 runs (     1.24 ms per run)\nwhisper_print_timings:   prompt time =     0.00 ms /     1 runs (     0.00 ms per run)\nwhisper_print_timings:    total time =  4390.40 ms\nggml_metal_free: deallocating\n\u001b[0;32m[ok]\u001b[0m   → /private/tmp/claude-502/-Users-vitaliy-Documents-GitHub-local-whisper/881e21dc-c26e-4f4f-865e-0d78e8553961/scratchpad/batch/test.txt\n\n\u001b[1mDone.\u001b[0m Processed: 1/1  |  Failed: 0",
+        "is_error": false,
+        "tool_use_id": "toolu_01YcMrpt87NQhJXYx39eyE8J",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "2537512c-4396-409a-be5c-f7db37a2cec5",
+  "promptId": "b1c3dd4b-bdb6-4805-8c6e-1e76cb9b10ed",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "2537512c-4396-409a-be5c-f7db37a2cec5",
+  "timestamp": "2026-08-17T02:35:01.100Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "total 416\ndrwxr-xr-x   3 vitaliy  wheel      96 Aug 17 04:34 .\ndrwx------  44 vitaliy  wheel    1408 Aug 17 04:34 ..\n-rw-r--r--   1 vitaliy  wheel  209334 Aug 17 04:34 test.m4a\n=== running the batch transcriber ===\nwhisper_init_state: compute buffer (decode) =  100.04 MB\nsystem_info: n_threads = 8 / 8 | WHISPER : COREML = 0 | OPENVINO = 0 | MTL : EMBED_LIBRARY = 1 | CPU : SSE3 = 1 | SSSE3 = 1 | ACCELERATE = 1 | REPACK = 1 | \nmain: processing '/var/folders/ph/3yv4hw8567g12wy09lntpvt40000gp/T/tmp.nWogqkguiZ/000001.wav' (74463 samples, 4.7 sec), 8 threads, 1 processors, 5 beams + best of 5, lang = auto, task = transcribe, timestamps = 1 ...\nwhisper_full_with_state: auto-detected language: ru (p = 0.999598)\n[00:00:00.000 --\u003e 00:00:01.860]   Проверка бочевого транскрибатора.\n[00:00:02.180 --\u003e 00:00:04.540]   Это тестовый файл в формате М4А.\noutput_txt: saving output to '/private/tmp/claude-502/-Users-vitaliy-Documents-GitHub-local-whisper/881e21dc-c26e-4f4f-865e-0d78e8553961/scratchpad/batch/test.txt'\nwhisper_print_timings:     load time =   741.66 ms\nwhisper_print_timings:     fallbacks =   0 p /   0 h\nwhisper_print_timings:      mel time =     4.46 ms\nwhisper_print_timings:   sample time =    45.01 ms /   163 runs (     0.28 ms per run)\nwhisper_print_timings:   encode time =  3297.07 ms /     2 runs (  1648.53 ms per run)\nwhisper_print_timings:   decode time =    35.96 ms /     1 runs (    35.96 ms per run)\nwhisper_print_timings:   batchd time =   200.13 ms /   161 runs (     1.24 ms per run)\nwhisper_print_timings:   prompt time =     0.00 ms /     1 runs (     0.00 ms per run)\nwhisper_print_timings:    total time =  4390.40 ms\nggml_metal_free: deallocating\n\u001b[0;32m[ok]\u001b[0m   → /private/tmp/claude-502/-Users-vitaliy-Documents-GitHub-local-whisper/881e21dc-c26e-4f4f-865e-0d78e8553961/scratchpad/batch/test.txt\n\n\u001b[1mDone.\u001b[0m Processed: 1/1  |  Failed: 0"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "47f3d8aa-0db3-4796-bea4-c8d46bca985a",
+  "version": "2.1.233"
+}

@@ -1,0 +1,27 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "Exit code 1\n### J: -capture_raw_data true, -t 15 ###\n   J samples=13.538688\n### K: -audio_device_index 0 -t 15 ###\n   K samples=13.474688\n### older ffmpeg available? ###\nffmpeg@2.8\nffmpeg@4\nffmpeg@5\nffmpeg@6\nffmpeg@7\nffmpeg@9\n(eval):8: no matches found: /opt/homebrew/Cellar/ffmpeg*",
+        "is_error": true,
+        "tool_use_id": "toolu_01HkCCLFetPof14sP8ZC6k79",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "6a151927-7d54-42dc-9c12-eb6ae18c4ff1",
+  "promptId": "853ca6f7-97d8-4bf6-8abc-86466ddb0eda",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "6a151927-7d54-42dc-9c12-eb6ae18c4ff1",
+  "timestamp": "2026-08-17T01:33:35.265Z",
+  "toolUseResult": "Error: Exit code 1\n### J: -capture_raw_data true, -t 15 ###\n   J samples=13.538688\n### K: -audio_device_index 0 -t 15 ###\n   K samples=13.474688\n### older ffmpeg available? ###\nffmpeg@2.8\nffmpeg@4\nffmpeg@5\nffmpeg@6\nffmpeg@7\nffmpeg@9\n(eval):8: no matches found: /opt/homebrew/Cellar/ffmpeg*",
+  "type": "user",
+  "userType": "external",
+  "uuid": "2373dc87-2536-4cb0-9b95-1865e4ba564c",
+  "version": "2.1.233"
+}

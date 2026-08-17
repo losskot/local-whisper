@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "12:  → ffmpeg concat → whisper-cli (55s segments, chosen model — or the remote API)",
+        "is_error": false,
+        "tool_use_id": "toolu_013yD6GU9aEmXewbsuTAVTsZ",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "16867d8c-8bdc-467d-bfcd-59ad483e5505",
+  "promptId": "b1c3dd4b-bdb6-4805-8c6e-1e76cb9b10ed",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "16867d8c-8bdc-467d-bfcd-59ad483e5505",
+  "timestamp": "2026-08-17T02:33:36.738Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "12:  → ffmpeg concat → whisper-cli (55s segments, chosen model — or the remote API)"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "d2642096-827d-4a2c-8c0c-c1dd8a17450d",
+  "version": "2.1.233"
+}

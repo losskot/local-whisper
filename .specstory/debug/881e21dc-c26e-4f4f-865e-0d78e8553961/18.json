@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "=== seg wavs ===\n-rw-r--r--@ 1 vitaliy  staff  1572910 Aug 17 03:25 /var/folders/ph/3yv4hw8567g12wy09lntpvt40000gp/T/whisper-dictate/seg_1.wav\n-rw-r--r--@ 1 vitaliy  staff   357486 Aug 17 03:25 /var/folders/ph/3yv4hw8567g12wy09lntpvt40000gp/T/whisper-dictate/seg_2.wav\n-rw-r--r--@ 1 vitaliy  staff  1311172 Aug 17 03:15 /var/folders/ph/3yv4hw8567g12wy09lntpvt40000gp/T/whisper-dictate/seg_3.wav\n=== chunk count + sizes (first 12, last 5) ===\ntotal 4104\ndrwxr-xr-x@ 70 vitaliy  staff   2240 Aug 17 03:25 .\ndrwxr-xr-x@ 11 vitaliy  staff    352 Aug 17 03:24 ..\n-rw-r--r--@  1 vitaliy  staff  29058 Aug 17 03:24 chunk_000.wav\n-rw-r--r--@  1 vitaliy  staff  28750 Aug 17 03:24 chunk_001.wav\n-rw-r--r--@  1 vitaliy  staff  29434 Aug 17 03:24 chunk_002.wav\n-rw-r--r--@  1 vitaliy  staff  28750 Aug 17 03:24 chunk_003.wav\n-rw-r--r--@  1 vitaliy  staff  28750 Aug 17 03:24 chunk_004.wav\n-rw-r--r--@  1 vitaliy  staff  28408 Aug 17 03:24 chunk_005.wav\n-rw-r--r--@  1 vitaliy  staff  29092 Aug 17 03:24 chunk_006.wav\n-rw-r--r--@  1 vitaliy  staff  29090 Aug 17 03:24 chunk_007.wav\n-rw-r--r--@  1 vitaliy  staff  28410 Aug 17 03:24 chunk_008.wav\n-rw-r--r--@  1 vitaliy  staff  28408 Aug 17 03:24 chunk_009.wav\n-rw-r--r--@  1 vitaliy  staff  28068 Aug 17 03:24 chunk_010.wav\n-rw-r--r--@  1 vitaliy  staff  29090 Aug 17 03:24 chunk_011.wav\n...\n-rw-r--r--@  1 vitaliy  staff  28750 Aug 17 03:25 chunk_063.wav\n-rw-r--r--@  1 vitaliy  staff  28750 Aug 17 03:25 chunk_064.wav\n-rw-r--r--@  1 vitaliy  staff  29432 Aug 17 03:25 chunk_065.wav\n-rw-r--r--@  1 vitaliy  staff  29432 Aug 17 03:25 chunk_066.wav\n-rw-r--r--@  1 vitaliy  staff  13082 Aug 17 03:25 chunk_067.wav\n=== unique chunk sizes ===\n   1 13082\n   1 26702\n   2 27726\n   1 28066\n   5 28068\n  11 28408\n   7 28410\n  19 28750\n   1 29058\n   5 29090\n   7 29092\n   5 29432\n   1 29434\n   2 29774",
+        "is_error": false,
+        "tool_use_id": "toolu_01VHEaCLsjd1FkBsUz5TBbEf",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "c159d306-c13e-47f9-b8b8-2f800cc1f925",
+  "promptId": "853ca6f7-97d8-4bf6-8abc-86466ddb0eda",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "c159d306-c13e-47f9-b8b8-2f800cc1f925",
+  "timestamp": "2026-08-17T01:26:46.956Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "=== seg wavs ===\n-rw-r--r--@ 1 vitaliy  staff  1572910 Aug 17 03:25 /var/folders/ph/3yv4hw8567g12wy09lntpvt40000gp/T/whisper-dictate/seg_1.wav\n-rw-r--r--@ 1 vitaliy  staff   357486 Aug 17 03:25 /var/folders/ph/3yv4hw8567g12wy09lntpvt40000gp/T/whisper-dictate/seg_2.wav\n-rw-r--r--@ 1 vitaliy  staff  1311172 Aug 17 03:15 /var/folders/ph/3yv4hw8567g12wy09lntpvt40000gp/T/whisper-dictate/seg_3.wav\n=== chunk count + sizes (first 12, last 5) ===\ntotal 4104\ndrwxr-xr-x@ 70 vitaliy  staff   2240 Aug 17 03:25 .\ndrwxr-xr-x@ 11 vitaliy  staff    352 Aug 17 03:24 ..\n-rw-r--r--@  1 vitaliy  staff  29058 Aug 17 03:24 chunk_000.wav\n-rw-r--r--@  1 vitaliy  staff  28750 Aug 17 03:24 chunk_001.wav\n-rw-r--r--@  1 vitaliy  staff  29434 Aug 17 03:24 chunk_002.wav\n-rw-r--r--@  1 vitaliy  staff  28750 Aug 17 03:24 chunk_003.wav\n-rw-r--r--@  1 vitaliy  staff  28750 Aug 17 03:24 chunk_004.wav\n-rw-r--r--@  1 vitaliy  staff  28408 Aug 17 03:24 chunk_005.wav\n-rw-r--r--@  1 vitaliy  staff  29092 Aug 17 03:24 chunk_006.wav\n-rw-r--r--@  1 vitaliy  staff  29090 Aug 17 03:24 chunk_007.wav\n-rw-r--r--@  1 vitaliy  staff  28410 Aug 17 03:24 chunk_008.wav\n-rw-r--r--@  1 vitaliy  staff  28408 Aug 17 03:24 chunk_009.wav\n-rw-r--r--@  1 vitaliy  staff  28068 Aug 17 03:24 chunk_010.wav\n-rw-r--r--@  1 vitaliy  staff  29090 Aug 17 03:24 chunk_011.wav\n...\n-rw-r--r--@  1 vitaliy  staff  28750 Aug 17 03:25 chunk_063.wav\n-rw-r--r--@  1 vitaliy  staff  28750 Aug 17 03:25 chunk_064.wav\n-rw-r--r--@  1 vitaliy  staff  29432 Aug 17 03:25 chunk_065.wav\n-rw-r--r--@  1 vitaliy  staff  29432 Aug 17 03:25 chunk_066.wav\n-rw-r--r--@  1 vitaliy  staff  13082 Aug 17 03:25 chunk_067.wav\n=== unique chunk sizes ===\n   1 13082\n   1 26702\n   2 27726\n   1 28066\n   5 28068\n  11 28408\n   7 28410\n  19 28750\n   1 29058\n   5 29090\n   7 29092\n   5 29432\n   1 29434\n   2 29774"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "0718bdfb-93fb-415d-a3cc-7230481e65a2",
+  "version": "2.1.233"
+}

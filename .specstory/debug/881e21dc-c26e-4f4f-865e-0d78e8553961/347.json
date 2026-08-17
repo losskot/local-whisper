@@ -1,0 +1,55 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01F8NMf8Cdae6HSxbYwRtptT",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "c9bbf46a-20d7-4d7e-9f84-ff18d00a5905",
+  "promptId": "b1c3dd4b-bdb6-4805-8c6e-1e76cb9b10ed",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "c9bbf46a-20d7-4d7e-9f84-ff18d00a5905",
+  "timestamp": "2026-08-17T02:28:34.973Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+    "newString": "    -- terminate(), not interrupt(): emergency stop throws the audio away, so there is no\n    -- reason to let the recorder flush a final chunk first. The handle is left for the\n    -- termination callback to clear, so a re-press can still detect a slow exit.\n    if recorderTask and recorderTask:isRunning() then recorderTask:terminate() end\n    forceHideOverlay()",
+    "oldString": "    if recorderTask and recorderTask:isRunning() then recorderTask:interrupt() end\n    recorderTask = nil\n    forceHideOverlay()",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          "     if finalizeTimers.timer then finalizeTimers.timer:stop(); finalizeTimers.timer = nil end",
+          "     if finalizeTimers.watchdog then finalizeTimers.watchdog:stop(); finalizeTimers.watchdog = nil end",
+          "     stopRecordingIndicator()",
+          "-    if recorderTask and recorderTask:isRunning() then recorderTask:interrupt() end",
+          "-    recorderTask = nil",
+          "+    -- terminate(), not interrupt(): emergency stop throws the audio away, so there is no",
+          "+    -- reason to let the recorder flush a final chunk first. The handle is left for the",
+          "+    -- termination callback to clear, so a re-press can still detect a slow exit.",
+          "+    if recorderTask and recorderTask:isRunning() then recorderTask:terminate() end",
+          "     forceHideOverlay()",
+          "     updateMenuBar()",
+          "     os.execute(\"killall whisper-cli 2\u003e/dev/null\")"
+        ],
+        "newLines": 10,
+        "newStart": 1185,
+        "oldLines": 8,
+        "oldStart": 1185
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "b9a65c39-e0cb-4a63-ae60-bf1aef3911a6",
+  "version": "2.1.233"
+}

@@ -1,0 +1,56 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/tests/test_init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01CaokkhXqimsapPdaih9WPG",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "04e0b72f-de83-4db7-9d7c-f9d0545bc964",
+  "promptId": "b1c3dd4b-bdb6-4805-8c6e-1e76cb9b10ed",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "04e0b72f-de83-4db7-9d7c-f9d0545bc964",
+  "timestamp": "2026-08-17T02:14:26.812Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/tests/test_init.lua",
+    "newString": "-- Match the quoted argument form, so the comment explaining *why* we avoid it stays legal.\nlocal usesAvfoundation = src:find('\"avfoundation\"', 1, true) ~= nil\ncheck(\"capture: init.lua does not capture through ffmpeg's avfoundation input\",\n      not usesAvfoundation,\n      'found \"avfoundation\" as an argument -- that input device drops ~10% of the audio')",
+    "oldString": "local usesAvfoundation = src:find(\"avfoundation\", 1, true) ~= nil\ncheck(\"capture: init.lua does not capture through ffmpeg's avfoundation input\",\n      not usesAvfoundation,\n      \"found 'avfoundation' in init.lua -- that input device drops ~10% of the audio\")",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          " -- ffmpeg is still correct for concat here and for format conversion in tools/transcribe.sh,",
+          " -- so this only forbids pairing it with avfoundation.",
+          " ",
+          "-local usesAvfoundation = src:find(\"avfoundation\", 1, true) ~= nil",
+          "+-- Match the quoted argument form, so the comment explaining *why* we avoid it stays legal.",
+          "+local usesAvfoundation = src:find('\"avfoundation\"', 1, true) ~= nil",
+          " check(\"capture: init.lua does not capture through ffmpeg's avfoundation input\",",
+          "       not usesAvfoundation,",
+          "-      \"found 'avfoundation' in init.lua -- that input device drops ~10% of the audio\")",
+          "+      'found \"avfoundation\" as an argument -- that input device drops ~10% of the audio')",
+          " ",
+          " check(\"capture: the native recorder binary is invoked\",",
+          "       src:find(\"RECORDER_BIN\", 1, true) ~= nil,"
+        ],
+        "newLines": 11,
+        "newStart": 378,
+        "oldLines": 10,
+        "oldStart": 378
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "0ac660fd-6138-4db6-a684-f0707eb4e375",
+  "version": "2.1.233"
+}

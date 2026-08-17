@@ -1,0 +1,27 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "Exit code 127\n=== total bytes across 68 chunks vs expected ===\nfiles=68  totalBytes=1935544  audioSecs=60.39  (expected 68.0 s if 1s each)\n=== ffprobe a single chunk (truth about rate/duration) ===\n(eval):5: no such file or directory: /opt/homebrew/bin/ffprobe\n=== ffprobe seg_1.wav (the concatenated 55-chunk segment) ===\n(eval):7: no such file or directory: /opt/homebrew/bin/ffprobe",
+        "is_error": true,
+        "tool_use_id": "toolu_013SaLsz9NULKarZ5k15k2S6",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "b862d0a7-a004-400b-9104-2682a7bf886b",
+  "promptId": "853ca6f7-97d8-4bf6-8abc-86466ddb0eda",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "b862d0a7-a004-400b-9104-2682a7bf886b",
+  "timestamp": "2026-08-17T01:27:12.392Z",
+  "toolUseResult": "Error: Exit code 127\n=== total bytes across 68 chunks vs expected ===\nfiles=68  totalBytes=1935544  audioSecs=60.39  (expected 68.0 s if 1s each)\n=== ffprobe a single chunk (truth about rate/duration) ===\n(eval):5: no such file or directory: /opt/homebrew/bin/ffprobe\n=== ffprobe seg_1.wav (the concatenated 55-chunk segment) ===\n(eval):7: no such file or directory: /opt/homebrew/bin/ffprobe",
+  "type": "user",
+  "userType": "external",
+  "uuid": "e5896735-ce18-46b9-b4f3-600aebcef57f",
+  "version": "2.1.233"
+}

@@ -14,8 +14,9 @@ Hold **fn + left Control**, speak, release — text appears at your cursor.
 - **Multi-language**: English, Russian, Ukrainian, and auto-detect (per segment, so mixed-language speech is not "translated")
 - **App-aware processing**: Auto-capitalizes in most apps, skips in terminals and code editors
 - **Text post-processing**: Remove filler words (um, uh, hmm), clean whitespace
-- **Custom vocabulary**: Provide a prompt file to improve recognition of domain-specific terms
-- **Warmup probe**: Before every recording, a short ffmpeg probe warms up the audio device; if the device never produces audio within 10 seconds, recording aborts with an error sound
+- **Custom vocabulary / mixed-language anchor**: `~/.local-whisper/prompt` is a *writing sample*, not an instruction — whisper continues in whatever style it establishes. Seeded with a ru/uk/en example on first run; edit it to match how you actually speak. Applied to both the local model (with `--carry-initial-prompt`) and the remote API
+- **Lossless capture**: A native AVAudioEngine recorder (`lw-record`) opens the microphone. ffmpeg's avfoundation input silently dropped ~10% of every recording, which swallowed whole words; the recorder logs captured-vs-wall-clock seconds after every dictation so a regression is visible
+- **Warmup probe**: The recorder signals when audio is genuinely flowing; if the device never responds within 10 seconds, recording aborts with an error sound
 - **Sleep recovery**: A dictation interrupted by system sleep is finalized on wake instead of being silently lost
 - **Menu bar**: Waveform icon shows recording status (turns red), click for settings and recent dictations
 - **Recent dictations**: View and re-paste your last 10 dictations from the menu bar
@@ -112,13 +113,9 @@ This installs the `hs` command-line tool used for IPC.
 
 ### Audio device
 
-The default `:default` uses your system input device — this is recommended as it survives dock/undock and audio device changes. To use a specific device, find its index:
-
-```bash
-ffmpeg -f avfoundation -list_devices true -i ""
-```
-
-Then update `AUDIO_DEVICE` in `~/.hammerspoon/init.lua` (e.g., `:0`, `:1`).
+local-whisper records from your **macOS default input device**, so it follows your system
+choice and survives dock/undock. To use a different microphone, change it in
+**System Settings → Sound → Input**. There is no device setting in `init.lua`.
 
 ## Menu bar
 
@@ -202,10 +199,10 @@ The config auto-reloads when you save the file. For more patterns and examples, 
 
 ```
 Trigger combo hold/release (detected by Hammerspoon eventtap on raw device flags)
-  → warmup probe: short ffmpeg run to open the audio device before committing
-  → ffmpeg records chunked WAV segments (1s each) via avfoundation
+  → lw-record opens the mic (AVAudioEngine) and reports READY once audio is flowing
+  → it writes chunked WAV segments (1s each), losing no samples
   ↓  (key released)
-  → doFinalTranscription(): group the 1s chunks into 55s segments
+  → doFinalTranscription(): group the 1s chunks into ≤55s segments, cutting at a pause
   → per segment: ffmpeg concat → whisper-cli (or the remote API), in order
   → progress bar tracks transcribed seconds against recorded seconds
   → join the segment texts, drop whisper's known silence hallucinations
@@ -217,8 +214,9 @@ Trigger combo hold/release (detected by Hammerspoon eventtap on raw device flags
 ## Troubleshooting
 
 - **No transcription output**: Check `$TMPDIR/whisper-dictate/whisper-dictate.log` for errors (run `echo $TMPDIR` to find the path)
-- **ffmpeg exits immediately (code 251)**: `AUDIO_DEVICE` is missing the colon prefix — use `:0` not `0`. The `:` tells avfoundation it's an audio device.
-- **Wrong microphone**: Run `ffmpeg -f avfoundation -list_devices true -i ""` and update `AUDIO_DEVICE` in init.lua (or use `:default`)
+- **Words missing from the middle of sentences**: Check the capture health line — `grep "recording: captured"` in the log. It should read ~97% of wall clock; anything near 90% means capture regressed
+- **Wrong microphone**: Change the input device in System Settings → Sound → Input. local-whisper follows the system default
+- **`lw-record` build failed**: Needs the Xcode command line tools (`xcode-select --install`). init.lua rebuilds it automatically when the source changes; errors land in the log
 - **Trigger key does nothing**: Accessibility permission may need toggling. Go to System Settings > Privacy & Security > Accessibility, toggle Hammerspoon **OFF then ON**, then run `hs.reload()` in the Hammerspoon console
 - **External keyboard mapping**: Some keyboards (e.g., Logitech MX Keys) send non-standard modifier flags, and most non-Apple keyboards have no `fn` key at all. Pick a different `TRIGGER_KEY` in init.lua — `fnLeftCtrl` (default), `rightCmd`, `rightAlt`, or `rightCtrl` — or add your own entry to the `TRIGGERS` table
 - **`hs` command not found**: Run `hs.ipc.cliInstall()` in Hammerspoon console

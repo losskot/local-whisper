@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "[04:29:04] loaded (trigger=fnLeftCtrl, lang=auto, output=copy, model=large-v3-turbo-q5_0)\n[04:35:13] actions: loaded /Users/vitaliy/.hammerspoon/local_whisper_actions.lua\n[04:35:13] actions: enabled\n[04:35:13] loaded (trigger=fnLeftCtrl, lang=auto, output=paste, model=large-v3-turbo-q5_0)\n=== GC test: force collection, then confirm the trigger tap is still alive ===\nmodTap enabled=true\n=== settings intact ===\n  lang = auto\n  model = large-v3-turbo-q5_0\n  output = paste\n  enter = off\n  prompt = Ок, давай подивимось: треба задеп...",
+        "is_error": false,
+        "tool_use_id": "toolu_01RmE3NV73VSCdSQ5EDSPzVp",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "3ca7f253-e356-442a-b3d8-4a0c16a02332",
+  "promptId": "b1c3dd4b-bdb6-4805-8c6e-1e76cb9b10ed",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "3ca7f253-e356-442a-b3d8-4a0c16a02332",
+  "timestamp": "2026-08-17T02:35:17.887Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "[04:29:04] loaded (trigger=fnLeftCtrl, lang=auto, output=copy, model=large-v3-turbo-q5_0)\n[04:35:13] actions: loaded /Users/vitaliy/.hammerspoon/local_whisper_actions.lua\n[04:35:13] actions: enabled\n[04:35:13] loaded (trigger=fnLeftCtrl, lang=auto, output=paste, model=large-v3-turbo-q5_0)\n=== GC test: force collection, then confirm the trigger tap is still alive ===\nmodTap enabled=true\n=== settings intact ===\n  lang = auto\n  model = large-v3-turbo-q5_0\n  output = paste\n  enter = off\n  prompt = Ок, давай подивимось: треба задеп..."
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "11ce4775-93f4-4060-a0a4-1f11ce861ccf",
+  "version": "2.1.233"
+}

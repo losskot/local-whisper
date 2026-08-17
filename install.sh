@@ -67,6 +67,17 @@ for formula in "${BREW_FORMULAE[@]}"; do
     fi
 done
 
+# swiftc compiles tools/lw-record.swift, the native microphone recorder. init.lua builds it
+# on load, but check here so a missing toolchain is reported during install rather than as a
+# dead trigger later. ffmpeg is still required — it does the segment concat and, in
+# tools/transcribe.sh, all audio/video format conversion.
+if xcrun --find swiftc &>/dev/null || command -v swiftc &>/dev/null; then
+    ok "swiftc found (needed to build the audio recorder)"
+else
+    error "swiftc not found — run: xcode-select --install"
+    error "Without it the recorder cannot be built and recording will not work."
+fi
+
 if brew list --cask hammerspoon &>/dev/null; then
     ok "hammerspoon already installed"
 else

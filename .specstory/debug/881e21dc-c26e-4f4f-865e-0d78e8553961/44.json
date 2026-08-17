@@ -1,0 +1,72 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_0176nfGUdmvYDCC283buSqgR",
+        "input": {
+          "command": "S=/private/tmp/claude-502/-Users-vitaliy-Documents-GitHub-local-whisper/881e21dc-c26e-4f4f-865e-0d78e8553961/scratchpad\nrun() { local label=\"$1\"; shift; /usr/local/bin/ffmpeg -y -hide_banner \"$@\" \u003e \"$S/$label.log\" 2\u003e\u00261 \u0026 local p=$!; sleep 10; kill -INT $p 2\u003e/dev/null; wait $p 2\u003e/dev/null; }\nchk() { printf \"   %s: samples=\" \"$1\"; /usr/local/bin/ffprobe -v error -show_entries format=duration -of csv=p=0 \"$S/$1.wav\" 2\u003e/dev/null | tr -d '\\n'; printf \"s  ffmpeg_timeline=\"; grep -o \"time=[0-9:.]*\" \"$S/$1.log\" | tail -1; }\necho \"### E: -thread_queue_size 4096 ###\"; run E -thread_queue_size 4096 -f avfoundation -i :default -ac 1 -ar 16000 \"$S/E.wav\"; chk E\necho \"### F: -use_wallclock_as_timestamps 1 ###\"; run F -f avfoundation -use_wallclock_as_timestamps 1 -i :default -ac 1 -ar 16000 \"$S/F.wav\"; chk F\necho \"### G: explicit device index :0 ###\"; run G -f avfoundation -i \":0\" -ac 1 -ar 16000 \"$S/G.wav\"; chk G\necho \"### avfoundation options in this build ###\"; /usr/local/bin/ffmpeg -hide_banner -h demuxer=avfoundation 2\u003e\u00261 | sed -n '1,40p'\necho \"### alternatives installed? ###\"; which sox rec parec 2\u003e/dev/null; ls -la /usr/local/bin/ffmpeg; /usr/local/bin/ffmpeg -version 2\u003e\u00261 | head -2",
+          "description": "Test thread_queue_size and other capture fixes"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce7TKtY3esE8J1FwGTA2r",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 1812,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 1812,
+      "cache_read_input_tokens": 68629,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1812,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 1812,
+          "cache_read_input_tokens": 68629,
+          "input_tokens": 2,
+          "output_tokens": 1901,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 1901,
+      "output_tokens_details": {
+        "thinking_tokens": 1101
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "096b0551-c54d-40f0-9c8a-c221fc4ad891",
+  "requestId": "req_011Ce7TKskRETp2VrKvQXdYF",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "timestamp": "2026-08-17T01:30:09.920Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "d8bcf8b5-ba6c-4610-86a8-75a5047b83cf",
+  "version": "2.1.233"
+}

@@ -1,0 +1,64 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "text": "Now the mixed-language handling. `--carry-initial-prompt` is the key flag — it holds the style anchor across the whole segment instead of just the first 30 s window.",
+        "type": "text"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce7WR5MAEGeMtcfpsRfeL",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 1545,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 1545,
+      "cache_read_input_tokens": 121768,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1545,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 1545,
+          "cache_read_input_tokens": 121768,
+          "input_tokens": 2,
+          "output_tokens": 2749,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 2749,
+      "output_tokens_details": {
+        "thinking_tokens": 1825
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "b87696bc-5355-4d2c-9cf7-34d60a345b48",
+  "requestId": "req_011Ce7WR4WJmJ1zFm9kyi5R3",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "timestamp": "2026-08-17T02:10:47.599Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "78f64258-cfeb-4465-939e-749c84a2bf58",
+  "version": "2.1.233"
+}

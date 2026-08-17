@@ -1,0 +1,72 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_017cJ9qY6MvwbyWAs83cT9ra",
+        "input": {
+          "command": "S=/private/tmp/claude-502/-Users-vitaliy-Documents-GitHub-local-whisper/881e21dc-c26e-4f4f-865e-0d78e8553961/scratchpad\necho \"### -t 20 : ffmpeg stops when OUTPUT timeline hits 20s. Compare to real wall clock. ###\"\nT0=$(python3 -c 'import time;print(time.time())')\n/usr/local/bin/ffmpeg -y -hide_banner -f avfoundation -i :default -ac 1 -ar 16000 -t 20 \"$S/T.wav\" \u003e \"$S/T.log\" 2\u003e\u00261\nT1=$(python3 -c 'import time;print(time.time())')\npython3 -c \"print(f'   real wall clock elapsed = {$T1-$T0:.2f} s')\"\nprintf \"   samples in file        = \"; /usr/local/bin/ffprobe -v error -show_entries format=duration -of csv=p=0 \"$S/T.wav\"\ngrep -o \"time=[0-9:.]*\" \"$S/T.log\" | tail -1 | sed 's/^/   ffmpeg /'\npython3 - \u003c\u003c'EOF'\nimport subprocess\nd=float(subprocess.check_output([\"/usr/local/bin/ffprobe\",\"-v\",\"error\",\"-show_entries\",\"format=duration\",\"-of\",\"csv=p=0\",\"/private/tmp/claude-502/-Users-vitaliy-Documents-GitHub-local-whisper/881e21dc-c26e-4f4f-865e-0d78e8553961/scratchpad/T.wav\"]).strip())\nprint(f\"   -\u003e file holds {d:.2f}s of samples\")\nEOF\necho; echo \"### input devices compiled into this ffmpeg ###\"; /usr/local/bin/ffmpeg -hide_banner -devices 2\u003e\u00261 | sed -n '1,25p'",
+          "description": "Decisive wall-clock vs samples test"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce7TTpuz2r2RHdixreuzS",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 3141,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 3141,
+      "cache_read_input_tokens": 73090,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 3141,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 3141,
+          "cache_read_input_tokens": 73090,
+          "input_tokens": 2,
+          "output_tokens": 2054,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 2054,
+      "output_tokens_details": {
+        "thinking_tokens": 1274
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "b2d47fe4-afe0-484e-9fc1-f0f64386ab09",
+  "requestId": "req_011Ce7TTosUgpQtveHdA33qR",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "timestamp": "2026-08-17T01:32:02.714Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "2289a099-f7a0-45cb-8941-715ca8328450",
+  "version": "2.1.233"
+}

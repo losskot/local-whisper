@@ -8,8 +8,8 @@ local-whisper is a fully-local macOS dictation tool. Hold **fn + left Control** 
 
 ```
 Hammerspoon eventtap (trigger combo hold/release, matched on raw device flags)
-  → ffmpeg (chunked WAV recording, 1s segments)
-  → whisper-cli (transcription, 55s segments, chosen model — or the remote API)
+  → lw-record (native AVAudioEngine capture, 1s WAV chunks)
+  → ffmpeg concat → whisper-cli (55s segments, chosen model — or the remote API)
   → Post-processing (filler removal, app-aware capitalize)
   → Action hooks (voice commands, note-taking, app launching)
   → Text insertion at cursor (paste or keystroke)
@@ -17,21 +17,61 @@ Hammerspoon eventtap (trigger combo hold/release, matched on raw device flags)
 ```
 
 Transcription is not streamed: nothing is transcribed until the key is released. Older
-docs describing live partials, silence-aware splitting, or chained segment prompts
-describe code that no longer exists.
+docs describing live partials or chained segment prompts describe code that no longer
+exists. Silence-aware splitting, however, **is** back — see the segmenting section below.
 
 Everything runs inside `~/.hammerspoon/init.lua` — no external bash scripts at runtime.
+The one compiled helper is `lw-record`; init.lua builds it on load when it is missing or
+older than its source, so there is still no install step.
 
 ## Key paths
 
 - `~/.hammerspoon/init.lua` — main config (overlay, recording, insertion, hotkeys, menu bar)
 - `~/.hammerspoon/local_whisper_actions.lua` — user voice commands (optional, auto-reloads)
+- `tools/lw-record.swift` — native mic recorder source (the only thing that opens the mic)
+- `~/.local-whisper/bin/lw-record` — the compiled recorder, built by init.lua on load
 - `~/.local-whisper/` — all user settings (lang, model, output, prompt, recent dictations)
+- `~/.local-whisper/prompt` — mixed-language style anchor; seeded with a default on first run
 - `~/whisper.cpp/build/bin/whisper-cli` — transcription binary
 - `~/whisper.cpp/models/` — whisper models (medium, large-v3-turbo, etc.)
 - `$TMPDIR/whisper-dictate/` — all temp state (per-user private dir on macOS)
 - `$TMPDIR/whisper-dictate/chunks/` — recording segments (ephemeral)
 - `$TMPDIR/whisper-dictate/whisper-dictate.log` — debug log
+
+## Audio capture: never go back to ffmpeg for the microphone
+
+ffmpeg's avfoundation **input device** hands over roughly 90% of what it captures. Measured
+with a fixed output duration: a `-t 20` run took 21.11s of wall clock, ffmpeg reported a
+20.00s timeline, and the file held **18.04s** of PCM. Every 1-second chunk it wrote came out
+0.885–0.917s long, so the loss is spread evenly — about 100ms missing from every second.
+That swallows short words whole and clips longer ones, and because whisper is generative it
+papers over the gaps with fluent invented text. The transcript reads *better* than the truth
+while missing words, which is exactly what makes it hard to notice.
+
+None of these changed it: `-thread_queue_size`, `-drop_late_frames false`,
+`-use_wallclock_as_timestamps 1`, `-capture_raw_data true`, `-audio_device_index`, `:0` vs
+`:default`, dropping the segment muxer, or dropping the resampler (native 48kHz loses the
+same). It is inside the indev.
+
+`tools/lw-record.swift` taps AVAudioEngine's input node instead and loses nothing: chunks
+come out at exactly `1.000000` s. ffmpeg is still correct — and still used — for segment
+concat here and for all format conversion in `tools/transcribe.sh`. **Only the microphone
+moved.** The `capture` checks in the test suite fail if `"avfoundation"` reappears as an
+argument in init.lua.
+
+Verify capture health any time — the log line is written after every recording:
+
+```bash
+TMPDIR_REAL=$(getconf DARWIN_USER_TEMP_DIR)
+grep "recording: captured" "${TMPDIR_REAL}whisper-dictate/whisper-dictate.log" | tail -3
+# → recording: captured 19.54s of 20.11s wall (97%)
+# Anything near 90% means capture regressed. The remainder is device-open latency.
+```
+
+`lw-record` prints `READY` when its engine is actually running and `CAPTURED <secs>` on exit.
+Both arrive on **stdout via the streaming callback** — `hs.task` routes stdout there whenever
+a streaming callback is registered and leaves the termination callback's `out` empty, so
+parsing `CAPTURED` at termination silently reads nil forever.
 
 ## Conventions
 
@@ -77,7 +117,7 @@ Expected output includes `"Message port invalidated."` — this is **normal**; t
 
 Lua 5.4 (Hammerspoon's runtime) enforces a **hard limit of 200 locals per function**. The top-level chunk of `init.lua` counts as one function. This limit is a compiler error — exceeding it prevents the file from loading at all.
 
-**Current count: ~121/200** — comfortable headroom after meeting mode, LLM refine, silence auto-stop and preferred languages were removed. Only *top-level* locals count against the limit; locals inside a function body belong to that function's own budget, so match the start of the line exactly:
+**Current count: ~128/200** — comfortable headroom after meeting mode, LLM refine, silence auto-stop and preferred languages were removed. Only *top-level* locals count against the limit; locals inside a function body belong to that function's own budget, so match the start of the line exactly:
 
 ```bash
 grep -c '^local ' hammerspoon/init.lua
@@ -121,6 +161,46 @@ hs -c 'collectgarbage("collect"); collectgarbage("collect")
 # → the log must show a new "warmup: probing audio device..." line
 ```
 
+### Segmenting: cut at a pause, never at a fixed index
+
+Recordings longer than `FINAL_SEGMENT_SECS` (55s) are split and each piece is transcribed by
+an **independent** whisper call. A fixed-index cut therefore lands mid-word and the word is
+mangled or duplicated across the seam — a real transcript showed segment 1 ending
+`...чтобы меня передавали.` and segment 2 opening `давали по звучанию.`
+
+`splitAtSilence()` scans back up to 8s from the hard boundary for the quietest 1-second chunk
+(`getWavRMS` reads the PCM directly, no subprocess) and cuts there instead, stopping early at
+RMS < 300. It never moves the boundary earlier than halfway through the window, so an
+unbroken passage is still bounded by `maxSecs`.
+
+This was written once, deleted in the "remove dead features" cleanup, and restored. If you
+are tempted to delete it again: the seam artifact it prevents is invisible in every check
+except a long real dictation.
+
+### Mixed-language speech (surzhyk, ru/uk/en)
+
+Whisper decodes each window into exactly one language — there is no mixed mode. Left alone it
+picks the dominant language and normalises everything else into it, rewriting Ukrainian words
+as Russian and transliterating English terms. `-l auto` is applied **per segment**, so a long
+dictation can even flip language mid-way.
+
+The initial prompt is the only real lever, and it is a **writing sample, not an instruction**
+— whisper continues in whatever style the prompt establishes. `~/.local-whisper/prompt` is
+seeded on first run with a ru/uk/en sample and is meant to be edited to match how the user
+actually speaks.
+
+Both transcription paths must stay in sync on this:
+
+- **local** — `getPromptArgs()` passes `--prompt` plus `--carry-initial-prompt`. Without the
+  latter the anchor only applies to whisper's first internal 30s window and long segments
+  drift back to single-language output.
+- **remote API** — `transcribeViaAPI()` sends the same text as the `prompt` form field, plus
+  `temperature=0`. Before this it sent no prompt at all, so the LAN model normalised the mix
+  exactly as whisper-cli did. There is no `--carry-initial-prompt` equivalent over the wire.
+
+`PROMPT_DEFAULT`/`readPrompt()` are declared **above** `transcribeViaAPI` on purpose — see the
+declaration-order rule above.
+
 ### The trigger is a modifier combo
 
 `TRIGGER_KEY` selects an entry from the `TRIGGERS` table; the default `fnLeftCtrl` ORs
@@ -149,21 +229,58 @@ and the recording dies 0.1s in, which reads to the user as "the key binding does
 I don't even see the UI". Both rules are covered by the `trigger` checks in the test suite —
 including one that fails if any device bit appears in a `heldMask`.
 
-### Simulating a whole dictation without touching the keyboard
+### Simulating a keypress — and why a whole dictation is hard to fake
 
-Posted flagsChanged events update the session flag state, so a synthetic press is held from
-the app's point of view until you post the release — the release poller sees the generic bits
-and keeps recording. This exercises the real pipeline end to end:
+A posted flagsChanged event does reach the eventtap, so a synthetic press **starts** a
+recording. Holding one is the hard part, because the session flag state updates
+**asynchronously** — roughly 200ms behind the post:
 
 ```bash
-hs -c 'local function f(x) local e=hs.eventtap.event.newEvent()
-         e:setType(hs.eventtap.event.types.flagsChanged); e:rawFlags(x); return e end
-       f(0x840001):post()                                   -- fn + control + deviceLeftControl
-       hs.timer.doAfter(6, function() f(0):post() end)'
+hs -c 'local e=hs.eventtap.event.newEvent(); e:setType(hs.eventtap.event.types.flagsChanged)
+       e:rawFlags(0x800001); e:post()
+       return string.format("0x%x", hs.eventtap.checkKeyboardModifiers(true)._raw)'
+# → 0x0        immediately after the post
+# → 0x800000   if you sleep ~200ms first (fn survived, deviceLeftControl did not)
 ```
 
-Set `~/.local-whisper/output` to `copy` first and restore it afterwards — otherwise the
-transcript is pasted into whatever window happens to be focused.
+The release poller runs every 0.1s, so it checks *before* the flags land, reads "nothing
+held", and cancels the recording — the log shows `warmup: cancelled (key released before
+device ready)` about a second after you posted a press you never released. A real key does
+not race this, because its flags are already set when the tap fires.
+
+Two traps if you try anyway:
+
+- Re-posting the press on a timer to "hold" it does not work — every post is a fresh
+  flagsChanged event, so the tap sees press/release churn and starts and stops repeatedly.
+  That can leave two recorders writing into the same `chunks/` directory.
+- **Root every timer you create in a global.** An `hs.timer.doAfter` stored nowhere in an
+  `hs -c` one-liner gets collected before it fires, so the loop that was supposed to stop
+  the simulation never runs. This is the same GC rule as the runtime code, and it bites
+  throwaway test snippets just as hard.
+
+Prefer testing the two halves separately — they cover everything except the trigger itself,
+which a single real keypress verifies in seconds:
+
+```bash
+# capture half: spawn the recorder exactly as Hammerspoon does (inherits its mic permission)
+hs -c 'LWT = hs.task.new(os.getenv("HOME").."/.local-whisper/bin/lw-record",
+         function(c) print("exit "..tostring(c)) end, function() return true end,
+         {"/tmp/lwtest","1","16000"}); LWT:start(); return "started"'
+sleep 8; hs -c 'LWT:interrupt()'
+# every chunk must be exactly 1.000000s
+
+# transcribe half: run the real whisper args over any WAV
+~/whisper.cpp/build/bin/whisper-cli -m ~/whisper.cpp/models/ggml-large-v3-turbo-q5_0.bin \
+  -f /tmp/lwtest/chunk_000.wav -l auto -nt \
+  --prompt "$(cat ~/.local-whisper/prompt)" --carry-initial-prompt
+```
+
+If you do run a full dictation, set `~/.local-whisper/output` to `copy` first and restore it
+afterwards — otherwise the transcript is pasted into whatever window happens to be focused.
+
+Note that synthesised speech (`say -v Milena`) is a poor quality probe: it is clean and
+well-separated enough that whisper transcribes it perfectly even from audio missing 10% of
+its samples. It validates that the pipeline runs, not that it transcribes well.
 
 ## Testing & debugging
 
@@ -195,6 +312,8 @@ implementation:
 | `lifetime` | an eventtap, watcher or repeating timer left unrooted, which the GC silently unregisters mid-session |
 | `globals` | state leaked into Hammerspoon's shared `_ENV` |
 | `sort` | chunk files ordered as strings, which reorders audio past chunk 999 |
+| `capture` | the microphone going back through ffmpeg's avfoundation input (drops ~10% of every recording); the recorder no longer being invoked; the `CAPTURED` health check being parsed where `hs.task` leaves it empty |
+| `split` | a segment boundary cutting mid-word instead of at a pause, and — the invariant that matters most — regrouping losing or duplicating a chunk |
 | `emergencyStop` | emergency stop not cancelling a pending finalization |
 | `overlay` | clicking the X mid-recording leaving ffmpeg running; deleting the canvas from inside its own mouse callback; unpinning hiding the overlay while still recording |
 | `startRecording` | a re-press inside the finalization window flushing the old dictation but swallowing the new keypress |

@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "[04:26:33] final: first=chunk_000.wav  last=chunk_000.wav  duration≈1s\n[04:26:33] final: not enough chunks, skipping\n[04:26:33] warmup: probing audio device...\n[04:26:33] warmup: attempt 1/10\n[04:26:33] recording: app=Code (com.microsoft.VSCode)\n[04:26:33] recording: recorder exited 0\n[04:26:33] warmup: device ready on attempt 1\n[04:26:33] recording: start (audio flowing)\n=== stuck processes? ===\n61164 /Users/vitaliy/.local-whisper/bin/lw-record /var/folders/ph/3yv4hw8567g12wy09lntpvt40000gp/T//whisper-dictate/chunks 1 16000\nisRecording state check: true",
+        "is_error": false,
+        "tool_use_id": "toolu_018cpQmiB8eiRWDLZoneS5eK",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "a2c73051-df16-4d25-ba6d-52548efaefc9",
+  "promptId": "b1c3dd4b-bdb6-4805-8c6e-1e76cb9b10ed",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "a2c73051-df16-4d25-ba6d-52548efaefc9",
+  "timestamp": "2026-08-17T02:26:39.931Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "[04:26:33] final: first=chunk_000.wav  last=chunk_000.wav  duration≈1s\n[04:26:33] final: not enough chunks, skipping\n[04:26:33] warmup: probing audio device...\n[04:26:33] warmup: attempt 1/10\n[04:26:33] recording: app=Code (com.microsoft.VSCode)\n[04:26:33] recording: recorder exited 0\n[04:26:33] warmup: device ready on attempt 1\n[04:26:33] recording: start (audio flowing)\n=== stuck processes? ===\n61164 /Users/vitaliy/.local-whisper/bin/lw-record /var/folders/ph/3yv4hw8567g12wy09lntpvt40000gp/T//whisper-dictate/chunks 1 16000\nisRecording state check: true"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "3c38e332-f11a-4f01-a3ff-8c9562deb7dc",
+  "version": "2.1.233"
+}

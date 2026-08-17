@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "copyholding trigger for 15s\n[04:17:49] loaded (trigger=fnLeftCtrl, lang=auto, output=copy, model=large-v3-turbo-q5_0)\n[04:25:17] warmup: probing audio device...\n[04:25:17] warmup: attempt 1/10\n[04:25:17] recording: app=Royal TSX (com.lemonmojo.RoyalTSX.App)\n[04:25:18] warmup: cancelled (key released before device ready)\n[04:25:18] recording: recorder exited 0\n[04:25:18] recording: captured 0.00s of 0.36s wall (0%)\n[04:25:53] warmup: probing audio device...\n[04:25:53] warmup: attempt 1/10\n[04:25:53] recording: app=Royal TSX (com.lemonmojo.RoyalTSX.App)\n[04:25:53] warmup: device ready on attempt 1\n[04:25:53] recording: start (audio flowing)\n[04:25:54] recording: stop\n[04:25:54] recording: recorder exited 0\n[04:25:54] recovery: flushing pending finalization, then starting the new recording\n[04:25:54] final: START — total chunks=0\n[04:25:54] final: not enough chunks, skipping\n[04:25:54] warmup: probing audio device...\n[04:25:54] warmup: attempt 1/10\n[04:25:54] recording: app=Royal TSX (com.lemonmojo.RoyalTSX.App)\n[04:25:54] warmup: device ready on attempt 1\n[04:25:54] recording: start (audio flowing)",
+        "is_error": false,
+        "tool_use_id": "toolu_01W9QEBAnh8tUAxjcPHpCpDt",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "bfd6fdf6-f598-4996-9e6a-059c95488341",
+  "promptId": "b1c3dd4b-bdb6-4805-8c6e-1e76cb9b10ed",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "bfd6fdf6-f598-4996-9e6a-059c95488341",
+  "timestamp": "2026-08-17T02:26:20.930Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "copyholding trigger for 15s\n[04:17:49] loaded (trigger=fnLeftCtrl, lang=auto, output=copy, model=large-v3-turbo-q5_0)\n[04:25:17] warmup: probing audio device...\n[04:25:17] warmup: attempt 1/10\n[04:25:17] recording: app=Royal TSX (com.lemonmojo.RoyalTSX.App)\n[04:25:18] warmup: cancelled (key released before device ready)\n[04:25:18] recording: recorder exited 0\n[04:25:18] recording: captured 0.00s of 0.36s wall (0%)\n[04:25:53] warmup: probing audio device...\n[04:25:53] warmup: attempt 1/10\n[04:25:53] recording: app=Royal TSX (com.lemonmojo.RoyalTSX.App)\n[04:25:53] warmup: device ready on attempt 1\n[04:25:53] recording: start (audio flowing)\n[04:25:54] recording: stop\n[04:25:54] recording: recorder exited 0\n[04:25:54] recovery: flushing pending finalization, then starting the new recording\n[04:25:54] final: START — total chunks=0\n[04:25:54] final: not enough chunks, skipping\n[04:25:54] warmup: probing audio device...\n[04:25:54] warmup: attempt 1/10\n[04:25:54] recording: app=Royal TSX (com.lemonmojo.RoyalTSX.App)\n[04:25:54] warmup: device ready on attempt 1\n[04:25:54] recording: start (audio flowing)"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "879ccff4-3464-4b56-a8ff-a88670a1ef6d",
+  "version": "2.1.233"
+}

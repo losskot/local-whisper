@@ -1,0 +1,35 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "473\t        sanskrit = \"sa\", luxembourgish = \"lb\", myanmar = \"my\", tibetan = \"bo\", tagalog = \"tl\",\n474\t        malagasy = \"mg\", assamese = \"as\", tatar = \"tt\", hawaiian = \"haw\", lingala = \"ln\",\n475\t        hausa = \"ha\", bashkir = \"ba\", javanese = \"jw\", sundanese = \"su\", cantonese = \"yue\",\n476\t    }\n477\t    lang = lang:lower()\n478\t    return nameToCode[lang] or lang\n479\tend\n480\t\n481\t-- Transcribe a WAV file via the remote OpenAI-compatible API instead of local whisper-cli.\n482\t-- Returns the hs.task so callers can terminate it on timeout if needed.\n483\t-- callback(text, detectedLang, errMsg) — errMsg is set (and text empty) on failure.\n484\tlocal function transcribeViaAPI(wavPath, lang, timeoutSecs, callback)",
+        "tool_use_id": "toolu_013FMPa3m9YPKyAfv5e2qmXZ",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "6d7e6cba-87de-4e52-941b-7fdfb5cfedac",
+  "promptId": "b1c3dd4b-bdb6-4805-8c6e-1e76cb9b10ed",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "6d7e6cba-87de-4e52-941b-7fdfb5cfedac",
+  "timestamp": "2026-08-17T02:11:32.118Z",
+  "toolUseResult": {
+    "file": {
+      "content": "        sanskrit = \"sa\", luxembourgish = \"lb\", myanmar = \"my\", tibetan = \"bo\", tagalog = \"tl\",\n        malagasy = \"mg\", assamese = \"as\", tatar = \"tt\", hawaiian = \"haw\", lingala = \"ln\",\n        hausa = \"ha\", bashkir = \"ba\", javanese = \"jw\", sundanese = \"su\", cantonese = \"yue\",\n    }\n    lang = lang:lower()\n    return nameToCode[lang] or lang\nend\n\n-- Transcribe a WAV file via the remote OpenAI-compatible API instead of local whisper-cli.\n-- Returns the hs.task so callers can terminate it on timeout if needed.\n-- callback(text, detectedLang, errMsg) — errMsg is set (and text empty) on failure.\nlocal function transcribeViaAPI(wavPath, lang, timeoutSecs, callback)",
+      "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+      "numLines": 12,
+      "startLine": 473,
+      "totalLines": 1740
+    },
+    "type": "text"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "32cda375-b911-48fc-a752-725e164d5996",
+  "version": "2.1.233"
+}

@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "1185-    if finalizeTimers.timer then finalizeTimers.timer:stop(); finalizeTimers.timer = nil end\n1186-    if finalizeTimers.watchdog then finalizeTimers.watchdog:stop(); finalizeTimers.watchdog = nil end\n1187-    stopRecordingIndicator()\n1188:    if recorderTask and recorderTask:isRunning() then recorderTask:interrupt() end\n1189-    recorderTask = nil\n1190-    forceHideOverlay()\n1191-    updateMenuBar()",
+        "is_error": false,
+        "tool_use_id": "toolu_019mHx5LV9e7Aq8gRA7KnqUT",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "ea8e5d3e-5b8e-4068-9067-8a53e9e5d9eb",
+  "promptId": "b1c3dd4b-bdb6-4805-8c6e-1e76cb9b10ed",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "ea8e5d3e-5b8e-4068-9067-8a53e9e5d9eb",
+  "timestamp": "2026-08-17T02:28:25.981Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "1185-    if finalizeTimers.timer then finalizeTimers.timer:stop(); finalizeTimers.timer = nil end\n1186-    if finalizeTimers.watchdog then finalizeTimers.watchdog:stop(); finalizeTimers.watchdog = nil end\n1187-    stopRecordingIndicator()\n1188:    if recorderTask and recorderTask:isRunning() then recorderTask:interrupt() end\n1189-    recorderTask = nil\n1190-    forceHideOverlay()\n1191-    updateMenuBar()"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "d7d9a06b-3a08-4860-a12d-2ada05472ff8",
+  "version": "2.1.233"
+}

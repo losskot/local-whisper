@@ -79,31 +79,22 @@ if [[ -n "$FFMPEG_BIN" ]]; then
     echo ""
 fi
 
-CURRENT_DEVICE=$(grep -m1 'local AUDIO_DEVICE' "$INIT_LUA" | sed 's/.*"\(.*\)".*/\1/')
-echo -e "  Current: ${BOLD}${CURRENT_DEVICE}${NC}"
-echo ""
-echo "  :default uses your system input device (recommended — survives dock/undock)"
-echo "  Enter a device string (e.g. :default, :0, :1) or press Enter to keep current:"
-read -r -p "  Device [${CURRENT_DEVICE}]: " NEW_DEVICE
-NEW_DEVICE="${NEW_DEVICE:-$CURRENT_DEVICE}"
-
-if [[ "$NEW_DEVICE" != "$CURRENT_DEVICE" ]]; then
-    # Auto-fix missing colon prefix (common mistake: "0" instead of ":0")
-    if [[ "$NEW_DEVICE" =~ ^[0-9]+$ ]]; then
-        NEW_DEVICE=":${NEW_DEVICE}"
-        warn "Added colon prefix → $NEW_DEVICE (avfoundation requires ':' for audio devices)"
-    fi
-    # Validate device format (colon + digits or :default)
-    if [[ ! "$NEW_DEVICE" =~ ^:[0-9]+$ ]] && [[ "$NEW_DEVICE" != ":default" ]]; then
-        warn "Unusual device format: $NEW_DEVICE (expected :default, :0, :1)"
-    fi
-    # Escape special chars for sed
-    ESCAPED_DEVICE=$(printf '%s\n' "$NEW_DEVICE" | sed 's/[&/\]/\\&/g')
-    sed -i '' "s/local AUDIO_DEVICE = \".*\"/local AUDIO_DEVICE = \"${ESCAPED_DEVICE}\"/" "$INIT_LUA"
-    ok "Audio device set to: $NEW_DEVICE"
-else
-    ok "Audio device: $NEW_DEVICE (unchanged)"
+# Recording goes through tools/lw-record.swift (AVAudioEngine), which always captures from
+# the macOS default input device. There is no device setting in init.lua to patch any more:
+# ffmpeg's avfoundation input dropped ~10% of every recording, so it no longer opens the mic.
+CURRENT_DEVICE=$(system_profiler SPAudioDataType 2>/dev/null \
+    | awk '/^ *[^ ].*:$/ {name=$0} /Default Input Device: Yes/ {print name; exit}' \
+    | sed 's/^ *//; s/:$//')
+echo -e "  local-whisper records from your ${BOLD}macOS default input device${NC}."
+if [[ -n "$CURRENT_DEVICE" ]]; then
+    echo -e "  Currently: ${BOLD}${CURRENT_DEVICE}${NC}"
 fi
+echo ""
+echo "  To use a different microphone, change it in:"
+echo "    System Settings → Sound → Input"
+echo ""
+echo "  That way local-whisper follows your system choice and survives dock/undock."
+ok "Audio input: system default"
 
 # ─── Step 3: Permissions ────────────────────────────────────────────────────
 echo ""

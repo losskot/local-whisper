@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "### B: single continuous file, 16k mono (no segmenter) ###\n   B duration = 8.629313 s\ntime=00:00:09.56\n### C: single continuous file, NO resample (native 48k f32) ###\n   C duration = 8.608000 s\ntime=00:00:09.60\n### D: single file, 16k, with -audio_buffer_size 50 ###\n/private/tmp/claude-502/-Users-vitaliy-Documents-GitHub-local-whisper/881e21dc-c26e-4f4f-865e-0d78e8553961/scratchpad/D.wav: No such file or directory",
+        "is_error": false,
+        "tool_use_id": "toolu_01Gkk4zdn8SLDfeCQoM91QgP",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "9e512c99-0b82-4a38-a429-d98df1610b14",
+  "promptId": "853ca6f7-97d8-4bf6-8abc-86466ddb0eda",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "9e512c99-0b82-4a38-a429-d98df1610b14",
+  "timestamp": "2026-08-17T01:29:44.612Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "### B: single continuous file, 16k mono (no segmenter) ###\n   B duration = 8.629313 s\ntime=00:00:09.56\n### C: single continuous file, NO resample (native 48k f32) ###\n   C duration = 8.608000 s\ntime=00:00:09.60\n### D: single file, 16k, with -audio_buffer_size 50 ###\n/private/tmp/claude-502/-Users-vitaliy-Documents-GitHub-local-whisper/881e21dc-c26e-4f4f-865e-0d78e8553961/scratchpad/D.wav: No such file or directory"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "4784f06e-ad2e-4514-a422-efe5f5b501e0",
+  "version": "2.1.233"
+}

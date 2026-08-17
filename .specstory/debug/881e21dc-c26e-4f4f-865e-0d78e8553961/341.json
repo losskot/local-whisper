@@ -1,0 +1,35 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "1116\t    overlay[EL.bar_rec].fillColor = { red = 1.0, green = 0.35, blue = 0.15, alpha = 0.0 }\n1117\t    overlay[EL.bar_txn].fillColor = { red = 0.2, green = 0.75, blue = 1.0, alpha = 0.0 }\n1118\tend\n1119\t\n1120\tlocal function startRecordingIndicator()\n1121\t    if not overlay then return end\n1122\t    recordingStartTime = hs.timer.secondsSinceEpoch()\n1123\t    recordedSecs = nil\n1124\t    transcribedSecs = 0\n1125\t    barMaxSecs = 180\n1126\t    pulseAlpha = 1.0\n1127\t    pulseFading = true\n1128\t\n1129\t    -- Show dot and timer",
+        "tool_use_id": "toolu_01TkqEZ37xfJWLuiy1DQt5P9",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "722454d2-283d-4a82-a6c9-9e2534d81096",
+  "promptId": "b1c3dd4b-bdb6-4805-8c6e-1e76cb9b10ed",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "722454d2-283d-4a82-a6c9-9e2534d81096",
+  "timestamp": "2026-08-17T02:28:22.251Z",
+  "toolUseResult": {
+    "file": {
+      "content": "    overlay[EL.bar_rec].fillColor = { red = 1.0, green = 0.35, blue = 0.15, alpha = 0.0 }\n    overlay[EL.bar_txn].fillColor = { red = 0.2, green = 0.75, blue = 1.0, alpha = 0.0 }\nend\n\nlocal function startRecordingIndicator()\n    if not overlay then return end\n    recordingStartTime = hs.timer.secondsSinceEpoch()\n    recordedSecs = nil\n    transcribedSecs = 0\n    barMaxSecs = 180\n    pulseAlpha = 1.0\n    pulseFading = true\n\n    -- Show dot and timer",
+      "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+      "numLines": 14,
+      "startLine": 1116,
+      "totalLines": 1772
+    },
+    "type": "text"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "595da1ad-d502-45b6-ac6d-4170fc60733b",
+  "version": "2.1.233"
+}

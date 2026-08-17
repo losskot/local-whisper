@@ -1,0 +1,63 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01XnDs1Duo7feyQkacV1HRVE",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "01d5c81a-ad32-47cf-a545-157d5d071dd3",
+  "promptId": "b1c3dd4b-bdb6-4805-8c6e-1e76cb9b10ed",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "01d5c81a-ad32-47cf-a545-157d5d071dd3",
+  "timestamp": "2026-08-17T02:09:56.398Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+    "newString": "    -- Group chunks into segments, cutting at a pause near FINAL_SEGMENT_SECS instead of\n    -- at a fixed index, so a word never straddles two independent whisper calls.\n    local segmentGroups = splitAtSilence(chunks, FINAL_SEGMENT_SECS)",
+    "oldString": "    -- Split 1-second chunks into groups of FINAL_SEGMENT_SECS\n    local segmentGroups = {}\n    local i = 1\n    while i \u003c= #chunks do\n        local group = {}\n        for j = i, math.min(i + FINAL_SEGMENT_SECS - 1, #chunks) do\n            table.insert(group, chunks[j])\n        end\n        table.insert(segmentGroups, group)\n        i = i + FINAL_SEGMENT_SECS\n    end",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          "     local lang = getLang()",
+          "     local promptArgs = getPromptArgs()",
+          " ",
+          "-    -- Split 1-second chunks into groups of FINAL_SEGMENT_SECS",
+          "-    local segmentGroups = {}",
+          "-    local i = 1",
+          "-    while i \u003c= #chunks do",
+          "-        local group = {}",
+          "-        for j = i, math.min(i + FINAL_SEGMENT_SECS - 1, #chunks) do",
+          "-            table.insert(group, chunks[j])",
+          "-        end",
+          "-        table.insert(segmentGroups, group)",
+          "-        i = i + FINAL_SEGMENT_SECS",
+          "-    end",
+          "+    -- Group chunks into segments, cutting at a pause near FINAL_SEGMENT_SECS instead of",
+          "+    -- at a fixed index, so a word never straddles two independent whisper calls.",
+          "+    local segmentGroups = splitAtSilence(chunks, FINAL_SEGMENT_SECS)",
+          " ",
+          "     local totalSegs = #segmentGroups",
+          "     log(\"final: segments=\" .. totalSegs .. \" (FINAL_SEGMENT_SECS=\" .. FINAL_SEGMENT_SECS .. \")\")"
+        ],
+        "newLines": 9,
+        "newStart": 1262,
+        "oldLines": 17,
+        "oldStart": 1262
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "9849a06b-9566-45a6-8224-f15cdd93c457",
+  "version": "2.1.233"
+}

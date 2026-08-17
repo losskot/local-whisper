@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "    ok \"Trigger key: $KEY_LABEL\"\nfi\n\n# ─── Step 2: Choose audio device ────────────────────────────────────────────\necho \"\"\necho -e \"${BOLD}Step 2: Choose your microphone${NC}\"\necho \"\"\n\nFFMPEG_BIN=\"$(brew --prefix 2\u003e/dev/null)/bin/ffmpeg\"\nif [[ ! -x \"$FFMPEG_BIN\" ]]; then\n    FFMPEG_BIN=\"$(which ffmpeg 2\u003e/dev/null || echo \"\")\"\nfi\n\nif [[ -n \"$FFMPEG_BIN\" ]]; then\n    info \"Available audio devices:\"\n    echo \"\"\n    # Parse audio device list from ffmpeg\n    DEVICE_OUTPUT=$(\"$FFMPEG_BIN\" -f avfoundation -list_devices true -i \"\" 2\u003e\u00261 || true)\n    echo \"$DEVICE_OUTPUT\" | grep -A 100 \"AVFoundation audio devices:\" | grep -E \"^\\[AVFoundation\" | head -10\n    echo \"\"\nfi\n\nCURRENT_DEVICE=$(grep -m1 'local AUDIO_DEVICE' \"$INIT_LUA\" | sed 's/.*\"\\(.*\\)\".*/\\1/')\necho -e \"  Current: ${BOLD}${CURRENT_DEVICE}${NC}\"\necho \"\"\necho \"  :default uses your system input device (recommended — survives dock/undock)\"\necho \"  Enter a device string (e.g. :default, :0, :1) or press Enter to keep current:\"\nread -r -p \"  Device [${CURRENT_DEVICE}]: \" NEW_DEVICE\nNEW_DEVICE=\"${NEW_DEVICE:-$CURRENT_DEVICE}\"\n\nif [[ \"$NEW_DEVICE\" != \"$CURRENT_DEVICE\" ]]; then\n    # Auto-fix missing colon prefix (common mistake: \"0\" instead of \":0\")\n    if [[ \"$NEW_DEVICE\" =~ ^[0-9]+$ ]]; then\n        NEW_DEVICE=\":${NEW_DEVICE}\"\n        warn \"Added colon prefix → $NEW_DEVICE (avfoundation requires ':' for audio devices)\"\n    fi\n    # Validate device format (colon + digits or :default)\n    if [[ ! \"$NEW_DEVICE\" =~ ^:[0-9]+$ ]] \u0026\u0026 [[ \"$NEW_DEVICE\" != \":default\" ]]; then\n        warn \"Unusual device format: $NEW_DEVICE (expected :default, :0, :1)\"\n    fi\n    # Escape special chars for sed\n    ESCAPED_DEVICE=$(printf '%s\\n' \"$NEW_DEVICE\" | sed 's/[\u0026/\\]/\\\\\u0026/g')\n    sed -i '' \"s/local AUDIO_DEVICE = \\\".*\\\"/local AUDIO_DEVICE = \\\"${ESCAPED_DEVICE}\\\"/\" \"$INIT_LUA\"\n    ok \"Audio device set to: $NEW_DEVICE\"\nelse\n    ok \"Audio device: $NEW_DEVICE (unchanged)\"\nfi\n\n# ─── Step 3: Permissions ────────────────────────────────────────────────────\necho \"\"\necho -e \"${BOLD}Step 3: macOS permissions${NC}\"",
+        "is_error": false,
+        "tool_use_id": "toolu_01RQGV7uK26itXTbzSEf89Cp",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "443c6473-1146-4d5b-a099-72c45abe72ef",
+  "promptId": "b1c3dd4b-bdb6-4805-8c6e-1e76cb9b10ed",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "443c6473-1146-4d5b-a099-72c45abe72ef",
+  "timestamp": "2026-08-17T02:31:40.260Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "    ok \"Trigger key: $KEY_LABEL\"\nfi\n\n# ─── Step 2: Choose audio device ────────────────────────────────────────────\necho \"\"\necho -e \"${BOLD}Step 2: Choose your microphone${NC}\"\necho \"\"\n\nFFMPEG_BIN=\"$(brew --prefix 2\u003e/dev/null)/bin/ffmpeg\"\nif [[ ! -x \"$FFMPEG_BIN\" ]]; then\n    FFMPEG_BIN=\"$(which ffmpeg 2\u003e/dev/null || echo \"\")\"\nfi\n\nif [[ -n \"$FFMPEG_BIN\" ]]; then\n    info \"Available audio devices:\"\n    echo \"\"\n    # Parse audio device list from ffmpeg\n    DEVICE_OUTPUT=$(\"$FFMPEG_BIN\" -f avfoundation -list_devices true -i \"\" 2\u003e\u00261 || true)\n    echo \"$DEVICE_OUTPUT\" | grep -A 100 \"AVFoundation audio devices:\" | grep -E \"^\\[AVFoundation\" | head -10\n    echo \"\"\nfi\n\nCURRENT_DEVICE=$(grep -m1 'local AUDIO_DEVICE' \"$INIT_LUA\" | sed 's/.*\"\\(.*\\)\".*/\\1/')\necho -e \"  Current: ${BOLD}${CURRENT_DEVICE}${NC}\"\necho \"\"\necho \"  :default uses your system input device (recommended — survives dock/undock)\"\necho \"  Enter a device string (e.g. :default, :0, :1) or press Enter to keep current:\"\nread -r -p \"  Device [${CURRENT_DEVICE}]: \" NEW_DEVICE\nNEW_DEVICE=\"${NEW_DEVICE:-$CURRENT_DEVICE}\"\n\nif [[ \"$NEW_DEVICE\" != \"$CURRENT_DEVICE\" ]]; then\n    # Auto-fix missing colon prefix (common mistake: \"0\" instead of \":0\")\n    if [[ \"$NEW_DEVICE\" =~ ^[0-9]+$ ]]; then\n        NEW_DEVICE=\":${NEW_DEVICE}\"\n        warn \"Added colon prefix → $NEW_DEVICE (avfoundation requires ':' for audio devices)\"\n    fi\n    # Validate device format (colon + digits or :default)\n    if [[ ! \"$NEW_DEVICE\" =~ ^:[0-9]+$ ]] \u0026\u0026 [[ \"$NEW_DEVICE\" != \":default\" ]]; then\n        warn \"Unusual device format: $NEW_DEVICE (expected :default, :0, :1)\"\n    fi\n    # Escape special chars for sed\n    ESCAPED_DEVICE=$(printf '%s\\n' \"$NEW_DEVICE\" | sed 's/[\u0026/\\]/\\\\\u0026/g')\n    sed -i '' \"s/local AUDIO_DEVICE = \\\".*\\\"/local AUDIO_DEVICE = \\\"${ESCAPED_DEVICE}\\\"/\" \"$INIT_LUA\"\n    ok \"Audio device set to: $NEW_DEVICE\"\nelse\n    ok \"Audio device: $NEW_DEVICE (unchanged)\"\nfi\n\n# ─── Step 3: Permissions ────────────────────────────────────────────────────\necho \"\"\necho -e \"${BOLD}Step 3: macOS permissions${NC}\""
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "3571de80-1e96-4ae5-8738-f38fb2efc3e0",
+  "version": "2.1.233"
+}

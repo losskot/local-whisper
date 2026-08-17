@@ -1,0 +1,59 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01JgSip9Des8z5EaqeGeoBup",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "38fdbc02-b8ba-4425-a6fd-b3c7352b457e",
+  "promptId": "b1c3dd4b-bdb6-4805-8c6e-1e76cb9b10ed",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "38fdbc02-b8ba-4425-a6fd-b3c7352b457e",
+  "timestamp": "2026-08-17T02:09:21.018Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+    "newString": "    if recorderTask and recorderTask:isRunning() then\n        recorderTask:interrupt()   -- SIGINT: lw-record flushes its partial final chunk, then exits 0\n    end\n    recorderTask = nil\n\n    -- Brief delay for the recorder to finalize last chunk. A short timer scheduled right as the",
+    "oldString": "    if ffmpegTask and ffmpegTask:isRunning() then\n        ffmpegTask:interrupt()\n    end\n    ffmpegTask = nil\n\n    -- Brief delay for ffmpeg to finalize last chunk. A short timer scheduled right as the",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          "     stopRecordingIndicator()",
+          "     updateMenuBar()",
+          " ",
+          "-    if ffmpegTask and ffmpegTask:isRunning() then",
+          "-        ffmpegTask:interrupt()",
+          "+    if recorderTask and recorderTask:isRunning() then",
+          "+        recorderTask:interrupt()   -- SIGINT: lw-record flushes its partial final chunk, then exits 0",
+          "     end",
+          "-    ffmpegTask = nil",
+          "+    recorderTask = nil",
+          " ",
+          "-    -- Brief delay for ffmpeg to finalize last chunk. A short timer scheduled right as the",
+          "+    -- Brief delay for the recorder to finalize last chunk. A short timer scheduled right as the",
+          "     -- system suspends can be silently dropped across sleep (see sleepWatcher below), so track",
+          "     -- pending state and recover on wake instead of just losing the recording silently.",
+          "     finalizationPending = true"
+        ],
+        "newLines": 12,
+        "newStart": 1546,
+        "oldLines": 12,
+        "oldStart": 1546
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "9a21e007-d4ec-44ab-b9a4-83334432e1df",
+  "version": "2.1.233"
+}

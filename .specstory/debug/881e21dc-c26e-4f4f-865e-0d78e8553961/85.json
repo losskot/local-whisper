@@ -1,0 +1,64 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "text": "Confirmed — `splitAtSilence` existed and was dropped in the cleanup. Swift 6.3 is available. Let me read the remote API path and the capture lifecycle before writing.",
+        "type": "text"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce7VyG6M3yTM4rypfBpg9",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 2733,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 2733,
+      "cache_read_input_tokens": 90072,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 2733,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 2733,
+          "cache_read_input_tokens": 90072,
+          "input_tokens": 2,
+          "output_tokens": 1258,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 1258,
+      "output_tokens_details": {
+        "thinking_tokens": 967
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "5a4a0ef3-65cf-4d80-b7a5-8c526695c13d",
+  "requestId": "req_011Ce7VyFGyqVBNQ6ATewYrJ",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "timestamp": "2026-08-17T02:04:42.333Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "db3f5cbe-8771-4842-9b5f-5f3766d63f84",
+  "version": "2.1.233"
+}

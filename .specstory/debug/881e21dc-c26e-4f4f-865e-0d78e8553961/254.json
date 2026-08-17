@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "  \u001b[0;32mPASS\u001b[0m  overlay: X while idle does not call emergencyStop\n  \u001b[0;32mPASS\u001b[0m  trigger: no modifiers at all does not fire\n\u001b[0;32m\u001b[1mAll 78 checks passed.\u001b[0m\nlocals: 128\n=== verify splitAtSilence guard: mutate to a hard cut ===\n1307:    local segmentGroups = splitAtSilence(chunks, FINAL_SEGMENT_SECS)",
+        "is_error": false,
+        "tool_use_id": "toolu_01NeBda6oHsobCnmTSkcjset",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "aba07a93-810c-414d-b8f6-1f017fa5c1f0",
+  "promptId": "b1c3dd4b-bdb6-4805-8c6e-1e76cb9b10ed",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "aba07a93-810c-414d-b8f6-1f017fa5c1f0",
+  "timestamp": "2026-08-17T02:18:52.364Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "  \u001b[0;32mPASS\u001b[0m  overlay: X while idle does not call emergencyStop\n  \u001b[0;32mPASS\u001b[0m  trigger: no modifiers at all does not fire\n\u001b[0;32m\u001b[1mAll 78 checks passed.\u001b[0m\nlocals: 128\n=== verify splitAtSilence guard: mutate to a hard cut ===\n1307:    local segmentGroups = splitAtSilence(chunks, FINAL_SEGMENT_SECS)"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "bf8c46c9-95ad-4944-98fc-815cf8beda55",
+  "version": "2.1.233"
+}

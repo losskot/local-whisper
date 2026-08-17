@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "  -mc N,     --max-context N        [-1     ] maximum number of text context tokens to store\n  -bo N,     --best-of N            [5      ] number of best candidates to keep\n  -bs N,     --beam-size N          [5      ] beam size for beam search\n  -et N,     --entropy-thold N      [2.40   ] entropy threshold for decoder fail\n  -lpt N,    --logprob-thold N      [-1.00  ] log probability threshold for decoder fail\n  -tp,       --temperature N        [0.00   ] The sampling temperature, between 0 and 1\n  -tpi,      --temperature-inc N    [0.20   ] The increment of temperature, between 0 and 1\n  -tr,       --translate            [false  ] translate from source language to english\n  -nf,       --no-fallback          [false  ] do not use temperature fallback while decoding\n  -l LANG,   --language LANG        [en     ] spoken language ('auto' for auto-detect)\n  -dl,       --detect-language      [false  ] exit after automatically detecting language\n             --prompt PROMPT        [       ] initial prompt (max n_text_ctx/2 tokens)\n             --carry-initial-prompt [false  ] always prepend initial prompt\n  -sns,      --suppress-nst         [false  ] suppress non-speech tokens\n  --suppress-regex REGEX            [       ] regular expression matching tokens to suppress",
+        "is_error": false,
+        "tool_use_id": "toolu_01V8ML3JZEQ6D6rTvSwUex7D",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "ea42a379-6e84-4fad-96c8-6c7087b18d06",
+  "promptId": "b1c3dd4b-bdb6-4805-8c6e-1e76cb9b10ed",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "ea42a379-6e84-4fad-96c8-6c7087b18d06",
+  "timestamp": "2026-08-17T02:10:15.527Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "  -mc N,     --max-context N        [-1     ] maximum number of text context tokens to store\n  -bo N,     --best-of N            [5      ] number of best candidates to keep\n  -bs N,     --beam-size N          [5      ] beam size for beam search\n  -et N,     --entropy-thold N      [2.40   ] entropy threshold for decoder fail\n  -lpt N,    --logprob-thold N      [-1.00  ] log probability threshold for decoder fail\n  -tp,       --temperature N        [0.00   ] The sampling temperature, between 0 and 1\n  -tpi,      --temperature-inc N    [0.20   ] The increment of temperature, between 0 and 1\n  -tr,       --translate            [false  ] translate from source language to english\n  -nf,       --no-fallback          [false  ] do not use temperature fallback while decoding\n  -l LANG,   --language LANG        [en     ] spoken language ('auto' for auto-detect)\n  -dl,       --detect-language      [false  ] exit after automatically detecting language\n             --prompt PROMPT        [       ] initial prompt (max n_text_ctx/2 tokens)\n             --carry-initial-prompt [false  ] always prepend initial prompt\n  -sns,      --suppress-nst         [false  ] suppress non-speech tokens\n  --suppress-regex REGEX            [       ] regular expression matching tokens to suppress"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "0066496a-5d29-42fd-9882-5d2c4dbbe768",
+  "version": "2.1.233"
+}

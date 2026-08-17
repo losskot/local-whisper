@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "821:local ffmpegTask = nil\n1087:    if ffmpegTask and ffmpegTask:isRunning() then ffmpegTask:interrupt() end\n1088:    ffmpegTask = nil\n1548:    if ffmpegTask and ffmpegTask:isRunning() then\n1549:        ffmpegTask:interrupt()\n1551:    ffmpegTask = nil",
+        "is_error": false,
+        "tool_use_id": "toolu_012v4xyytbfmdxHBeCkGRXnA",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "ca30fd53-140c-4f53-86f7-11bc5bf5169e",
+  "promptId": "b1c3dd4b-bdb6-4805-8c6e-1e76cb9b10ed",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "ca30fd53-140c-4f53-86f7-11bc5bf5169e",
+  "timestamp": "2026-08-17T02:09:07.444Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "821:local ffmpegTask = nil\n1087:    if ffmpegTask and ffmpegTask:isRunning() then ffmpegTask:interrupt() end\n1088:    ffmpegTask = nil\n1548:    if ffmpegTask and ffmpegTask:isRunning() then\n1549:        ffmpegTask:interrupt()\n1551:    ffmpegTask = nil"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "1355002c-9c58-42ac-a15b-b5c1b7ea681f",
+  "version": "2.1.233"
+}

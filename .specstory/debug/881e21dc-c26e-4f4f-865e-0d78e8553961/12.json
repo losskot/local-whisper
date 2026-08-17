@@ -1,0 +1,64 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "text": "The log already contains the very dictation you just sent me — and it shows the defect directly. Let me confirm the mechanism in the code and the audio files.",
+        "type": "text"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce7T3ariwQ6ASTYmYEeJ2",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 6013,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 6013,
+      "cache_read_input_tokens": 42349,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 6013,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 6013,
+          "cache_read_input_tokens": 42349,
+          "input_tokens": 2,
+          "output_tokens": 3109,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 3109,
+      "output_tokens_details": {
+        "thinking_tokens": 2343
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "cc7fd23f-2775-439d-ae6f-a635a1584276",
+  "requestId": "req_011Ce7T3Zqhfb83Z2EJ7Qqhp",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "timestamp": "2026-08-17T01:26:38.524Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "33c70868-f283-4323-9bbd-d664cb9ec9a3",
+  "version": "2.1.233"
+}

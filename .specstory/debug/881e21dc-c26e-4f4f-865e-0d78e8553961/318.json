@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "repost loop stopped, release posted\n=== stray processes ===\n  none\nLWHOLD cleared: true\n[04:26:58] recording: recorder exited 0\n[04:26:58] recording: captured 24.00s of 4.01s wall (598%)\n[04:26:58] recording: recorder exited 0\n[04:26:58] recording: captured 24.00s of 4.01s wall (598%)",
+        "is_error": false,
+        "tool_use_id": "toolu_014DbsYMJrChBo4Ao5Mcot4Z",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "c597b206-964f-4125-8687-e4426f35d176",
+  "promptId": "b1c3dd4b-bdb6-4805-8c6e-1e76cb9b10ed",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "c597b206-964f-4125-8687-e4426f35d176",
+  "timestamp": "2026-08-17T02:26:59.380Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "repost loop stopped, release posted\n=== stray processes ===\n  none\nLWHOLD cleared: true\n[04:26:58] recording: recorder exited 0\n[04:26:58] recording: captured 24.00s of 4.01s wall (598%)\n[04:26:58] recording: recorder exited 0\n[04:26:58] recording: captured 24.00s of 4.01s wall (598%)"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "76c0cb8d-9766-4e24-b466-3103ece346bd",
+  "version": "2.1.233"
+}

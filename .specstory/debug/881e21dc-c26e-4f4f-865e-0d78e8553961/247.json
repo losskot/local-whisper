@@ -1,0 +1,72 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_0167dhs1cW2fdhdECzZjB9KG",
+        "input": {
+          "command": "echo \"=== terminate() immediately after start (the warmup-cancel race) ===\"\nrm -rf /tmp/lwtest3 \u0026\u0026 mkdir -p /tmp/lwtest3\nhs -c 'LW3 = hs.task.new(os.getenv(\"HOME\")..\"/.local-whisper/bin/lw-record\",\n  function(c) local f=io.open(\"/tmp/lwtest3/r.txt\",\"w\"); f:write(\"exit=\"..tostring(c)); f:close() end,\n  function() return true end, {\"/tmp/lwtest3\",\"1\",\"16000\"})\nLW3:start()\nhs.timer.doAfter(0.05, function() LW3:terminate() end)\nreturn \"started+terminated\"'\nsleep 3\ncat /tmp/lwtest3/r.txt; echo\necho \"=== orphan check ===\"; pgrep -fl lw-record || echo \"  no lw-record processes left\"",
+          "description": "Test early terminate for orphans"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce7X1ZWGi5Mva2RWwEvGP",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 630,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 630,
+      "cache_read_input_tokens": 159422,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 630,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 630,
+          "cache_read_input_tokens": 159422,
+          "input_tokens": 2,
+          "output_tokens": 623,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 623,
+      "output_tokens_details": {
+        "thinking_tokens": 209
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "1cb6c4a4-909b-47c2-a78c-5cccbf2c53fd",
+  "requestId": "req_011Ce7X1YSGtXxunt5gcJmPZ",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "timestamp": "2026-08-17T02:18:11.685Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "b684693d-aea8-4ba7-a379-1395ffea9fd5",
+  "version": "2.1.233"
+}

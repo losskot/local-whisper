@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "-- test_init.lua — structural and behavioral tests for hammerspoon/init.lua\n--\n-- Run via tests/test_init.sh (which drives it through the Hammerspoon `hs` CLI,\n-- since there is no standalone Lua interpreter in this stack).\n--\n-- These tests guard the bug classes that have actually bitten this file:\n--   * a top-level local referenced by an earlier-defined function, which silently\n--     compiles to a nil global instead of capturing the local\n--   * the Lua 200-local-per-function ceiling\n--   * unguarded hs.sound.getByFile(...):play(), which throws and aborts its callback\n--   * chunk filenames sorted as strings, which reorders audio past chunk 999\n--   * a modifier-combo trigger matched with `flags \u0026 mask \u003e 0`, which fires on half\n--     the combo -- every Ctrl-C would start a recording\n--   * removed subsystems (meeting mode, LLM refine, silence auto-stop, ...) creeping back\n--\n-- Config (set as globals by the runner; `hs` does not inherit the caller's environment):\n--   LW_TARGET  path to the init.lua under test (default: repo copy)\n--   LW_OUT     path to write results to (default: /tmp/lw_test_init.txt)\n\nlocal HOME   = os.getenv(\"HOME\")\nlocal TARGET = _G.LW_TARGET or (HOME .. \"/Documents/GitHub/local-whisper/hammerspoon/init.lua\")\nlocal OUT    = _G.LW_OUT or \"/tmp/lw_test_init.txt\"\n\n--------------------------------------------------------------------------------\n-- Harness\n--------------------------------------------------------------------------------\n\nlocal results = {}\n\nlocal function record(name, passed, detail)\n    results[#results + 1] = {\n        name   = name,\n        passed = passed and true or false,\n        detail = detail or \"\",\n    }\nend\n\nlocal function check(name, passed, detail)\n    record(name, passed, passed and \"\" or (detail or \"\"))\nend\n=== how src is built ===\n47:    local f = io.open(path, \"r\")\n54:local src = readSource(TARGET)\n57:    local f = io.open(OUT, \"w\")\n906:local out = io.open(OUT, \"w\")",
+        "is_error": false,
+        "tool_use_id": "toolu_01JEJTLuoG9Wdn9Jrm6uwPEG",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "ae163fb5-28de-49ae-8f37-caa1398ba75e",
+  "promptId": "b1c3dd4b-bdb6-4805-8c6e-1e76cb9b10ed",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "ae163fb5-28de-49ae-8f37-caa1398ba75e",
+  "timestamp": "2026-08-17T02:12:11.062Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "-- test_init.lua — structural and behavioral tests for hammerspoon/init.lua\n--\n-- Run via tests/test_init.sh (which drives it through the Hammerspoon `hs` CLI,\n-- since there is no standalone Lua interpreter in this stack).\n--\n-- These tests guard the bug classes that have actually bitten this file:\n--   * a top-level local referenced by an earlier-defined function, which silently\n--     compiles to a nil global instead of capturing the local\n--   * the Lua 200-local-per-function ceiling\n--   * unguarded hs.sound.getByFile(...):play(), which throws and aborts its callback\n--   * chunk filenames sorted as strings, which reorders audio past chunk 999\n--   * a modifier-combo trigger matched with `flags \u0026 mask \u003e 0`, which fires on half\n--     the combo -- every Ctrl-C would start a recording\n--   * removed subsystems (meeting mode, LLM refine, silence auto-stop, ...) creeping back\n--\n-- Config (set as globals by the runner; `hs` does not inherit the caller's environment):\n--   LW_TARGET  path to the init.lua under test (default: repo copy)\n--   LW_OUT     path to write results to (default: /tmp/lw_test_init.txt)\n\nlocal HOME   = os.getenv(\"HOME\")\nlocal TARGET = _G.LW_TARGET or (HOME .. \"/Documents/GitHub/local-whisper/hammerspoon/init.lua\")\nlocal OUT    = _G.LW_OUT or \"/tmp/lw_test_init.txt\"\n\n--------------------------------------------------------------------------------\n-- Harness\n--------------------------------------------------------------------------------\n\nlocal results = {}\n\nlocal function record(name, passed, detail)\n    results[#results + 1] = {\n        name   = name,\n        passed = passed and true or false,\n        detail = detail or \"\",\n    }\nend\n\nlocal function check(name, passed, detail)\n    record(name, passed, passed and \"\" or (detail or \"\"))\nend\n=== how src is built ===\n47:    local f = io.open(path, \"r\")\n54:local src = readSource(TARGET)\n57:    local f = io.open(OUT, \"w\")\n906:local out = io.open(OUT, \"w\")"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "13ca19c8-73f9-4703-826c-516dfac26179",
+  "version": "2.1.233"
+}

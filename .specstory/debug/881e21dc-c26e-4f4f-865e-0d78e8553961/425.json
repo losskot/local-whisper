@@ -1,0 +1,72 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01T4tKQw9Njj1168dd3WKeKx",
+        "input": {
+          "command": "cd /Users/vitaliy/Documents/GitHub/local-whisper\ngit add -A\ngit commit -q -F - \u003c\u003c'MSG'\nReplace ffmpeg mic capture: it was dropping ~10% of every recording\n\nffmpeg's avfoundation *input device* hands over roughly 90% of what it\ncaptures. Measured with a fixed output duration: a `-t 20` run took 21.11s\nof wall clock, ffmpeg reported a 20.00s timeline, and the file held 18.04s\nof PCM. Every 1-second chunk it wrote came out 0.885-0.917s long, so the\nloss is spread evenly -- about 100ms missing from every second. That\nswallows short words whole, and because whisper is generative it papers\nover the gaps with fluent invented text: the transcript reads better than\nthe truth while missing words, which is what made it hard to notice.\n\nNone of these changed it: -thread_queue_size, -drop_late_frames false,\n-use_wallclock_as_timestamps, -capture_raw_data, -audio_device_index,\n:0 vs :default, dropping the segment muxer, or dropping the resampler\n(native 48kHz loses the same). It is inside the indev.\n\ntools/lw-record.swift taps AVAudioEngine's input node instead and loses\nnothing -- chunks come out at exactly 1.000000s. init.lua builds it on load\nwhen missing or stale, so there is still no install step. ffmpeg remains\ncorrect and unchanged for segment concat and for all format conversion in\ntools/transcribe.sh; only the microphone moved.\n\nThe recorder doubles as the warmup probe. Previously a throwaway\n`ffmpeg -f null` open was followed by a second open for the real recording,\nso the device was opened twice per dictation and everything spoken during\nthe probe went to /dev/null. lw-record prints READY once its engine is\nactually running and has been recording since before that line, so the\nlead-in is kept.\n\nAlso:\n\n- Restore splitAtSilence(). Segments over 55s are transcribed by independent\n  whisper calls, so a fixed-index cut lands mid-word and the word is mangled\n  across the seam -- a real transcript showed seg 1 ending \"...чтобы меня\n  передавали.\" and seg 2 opening \"давали по звучанию.\" It was written once,\n  deleted in the dead-feature cleanup, and is now covered by tests.\n\n- Mixed-language (surzhyk) handling on both paths. Whisper decodes each\n  window into one language and normalises the rest into it. The initial\n  prompt is the only lever, and it is a writing sample rather than an\n  instruction. ~/.local-whisper/prompt is seeded with a ru/uk/en sample;\n  the local path adds --carry-initial-prompt so the anchor survives past\n  whisper's first 30s window, and transcribeViaAPI now sends the same text\n  as `prompt` plus temperature=0 -- it previously sent no prompt at all, so\n  the LAN model normalised the mix exactly as whisper-cli did.\n\n- Fix a chunk-directory race. stopRecording() dropped the task handle while\n  the recorder was still flushing, so a fast re-press cleared CHUNK_DIR out\n  from under it and the old tail was spliced onto the next transcript. The\n  handle now lives until the process exits, tryWarmup() kills a slow\n  predecessor first, and each task's callbacks ignore output once superseded.\n\n- Health check: every recording logs captured-vs-wall-clock seconds, so a\n  future capture regression is visible instead of silent. It is parsed in\n  the streaming callback because hs.task leaves the termination callback's\n  stdout empty whenever a streaming callback exists.\n\n- setup.sh no longer prompts for AUDIO_DEVICE. It patched a constant that no\n  longer exists, so the prompt was a no-op; capture follows the macOS default\n  input device now.\n\nTests: 85 checks pass. New `capture` and `split` guards were each verified to\nfail on the bug they claim to catch by mutating the current file.\n\nCo-Authored-By: Claude Opus 5 \u003cnoreply@anthropic.com\u003e\nMSG\ngit log --oneline -1",
+          "description": "Commit the work"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce7YM87UJW9Tz1arhHgcm",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 1199,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 1199,
+      "cache_read_input_tokens": 217755,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1199,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 1199,
+          "cache_read_input_tokens": 217755,
+          "input_tokens": 2,
+          "output_tokens": 2028,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 2028,
+      "output_tokens_details": {
+        "thinking_tokens": 518
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "3a1fb4a8-538a-4de8-bc36-10d22f83076f",
+  "requestId": "req_011Ce7YM6BdhqKKf9B7Refsc",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "timestamp": "2026-08-17T02:36:01.814Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "8bff699c-644c-4111-af19-344b6994e5ba",
+  "version": "2.1.233"
+}

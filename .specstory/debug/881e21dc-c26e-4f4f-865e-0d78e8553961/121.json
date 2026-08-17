@@ -1,0 +1,74 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01LiMhmAxiVjHekHhymCegyX",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "463346c8-5255-416e-a7aa-c395c83a52c8",
+  "promptId": "b1c3dd4b-bdb6-4805-8c6e-1e76cb9b10ed",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "463346c8-5255-416e-a7aa-c395c83a52c8",
+  "timestamp": "2026-08-17T02:08:44.026Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+    "newString": "-- Compile tools/lw-record.swift → RECORDER_BIN if it is missing or older than its source.\n-- Runs at load time, never on a keypress, so a rebuild can't delay a recording. The repo\n-- lives wherever this file's symlink points, so resolve it rather than hardcoding a path.\nlocal function ensureRecorder()\n    local this = debug.getinfo(1, \"S\").source:match(\"^@(.*)$\")\n    if not this then return end\n    local real = hs.fs.symlinkAttributes(this, \"target\") or this\n    local src = real:match(\"^(.*)/hammerspoon/init%.lua$\")\n    if not src then return end\n    src = src .. \"/tools/lw-record.swift\"\n\n    local srcAttr = hs.fs.attributes(src)\n    if not srcAttr then\n        log(\"recorder: source missing at \" .. src)\n        return\n    end\n    local binAttr = hs.fs.attributes(RECORDER_BIN)\n    if binAttr and binAttr.modification \u003e= srcAttr.modification then return end\n\n    log(\"recorder: building \" .. RECORDER_BIN)\n    os.execute(\"mkdir -p '\" .. CONFIG_DIR .. \"/bin'\")\n    local ok = os.execute(\"/usr/bin/swiftc -O -o '\" .. RECORDER_BIN .. \"' '\" .. src .. \"' 2\u003e\u003e'\" .. LOG_FILE .. \"'\")\n    log(\"recorder: build \" .. (ok and \"OK\" or \"FAILED — recording will not work\"))\nend\n\n-- Play a system sound by name. getByFile returns nil if the file is missing or AudioToolbox\n-- fails to load it, and indexing that nil throws — which previously aborted whichever\n-- callback was mid-flight, stranding the overlay on screen. Never let a chime break a flow.",
+    "oldString": "-- Play a system sound by name. getByFile returns nil if the file is missing or AudioToolbox\n-- fails to load it, and indexing that nil throws — which previously aborted whichever\n-- callback was mid-flight, stranding the overlay on screen. Never let a chime break a flow.",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          "     end",
+          " end",
+          " ",
+          "+-- Compile tools/lw-record.swift → RECORDER_BIN if it is missing or older than its source.",
+          "+-- Runs at load time, never on a keypress, so a rebuild can't delay a recording. The repo",
+          "+-- lives wherever this file's symlink points, so resolve it rather than hardcoding a path.",
+          "+local function ensureRecorder()",
+          "+    local this = debug.getinfo(1, \"S\").source:match(\"^@(.*)$\")",
+          "+    if not this then return end",
+          "+    local real = hs.fs.symlinkAttributes(this, \"target\") or this",
+          "+    local src = real:match(\"^(.*)/hammerspoon/init%.lua$\")",
+          "+    if not src then return end",
+          "+    src = src .. \"/tools/lw-record.swift\"",
+          "+",
+          "+    local srcAttr = hs.fs.attributes(src)",
+          "+    if not srcAttr then",
+          "+        log(\"recorder: source missing at \" .. src)",
+          "+        return",
+          "+    end",
+          "+    local binAttr = hs.fs.attributes(RECORDER_BIN)",
+          "+    if binAttr and binAttr.modification \u003e= srcAttr.modification then return end",
+          "+",
+          "+    log(\"recorder: building \" .. RECORDER_BIN)",
+          "+    os.execute(\"mkdir -p '\" .. CONFIG_DIR .. \"/bin'\")",
+          "+    local ok = os.execute(\"/usr/bin/swiftc -O -o '\" .. RECORDER_BIN .. \"' '\" .. src .. \"' 2\u003e\u003e'\" .. LOG_FILE .. \"'\")",
+          "+    log(\"recorder: build \" .. (ok and \"OK\" or \"FAILED — recording will not work\"))",
+          "+end",
+          "+",
+          " -- Play a system sound by name. getByFile returns nil if the file is missing or AudioToolbox",
+          " -- fails to load it, and indexing that nil throws — which previously aborted whichever",
+          " -- callback was mid-flight, stranding the overlay on screen. Never let a chime break a flow."
+        ],
+        "newLines": 31,
+        "newStart": 171,
+        "oldLines": 6,
+        "oldStart": 171
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "627bbd79-2529-4d77-847d-e26ed9ff0b59",
+  "version": "2.1.233"
+}

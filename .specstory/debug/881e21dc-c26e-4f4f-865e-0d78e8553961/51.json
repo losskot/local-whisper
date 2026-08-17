@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "### H: -drop_late_frames false ###\n   H: samples=8.565313s  timeline=time=00:00:09.64\n### I: -drop_late_frames false, native rate, no -ac/-ar ###\n   I: samples=8.352000s  timeline=time=00:00:09.46",
+        "is_error": false,
+        "tool_use_id": "toolu_01RpDeehDGhYW5SJ7dvr2Aa7",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "430fc9c7-b927-4a13-8ddb-eae267997135",
+  "promptId": "853ca6f7-97d8-4bf6-8abc-86466ddb0eda",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "430fc9c7-b927-4a13-8ddb-eae267997135",
+  "timestamp": "2026-08-17T01:31:32.313Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "### H: -drop_late_frames false ###\n   H: samples=8.565313s  timeline=time=00:00:09.64\n### I: -drop_late_frames false, native rate, no -ac/-ar ###\n   I: samples=8.352000s  timeline=time=00:00:09.46"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "60efb029-3f12-4924-b35d-8d4a6bc5f710",
+  "version": "2.1.233"
+}

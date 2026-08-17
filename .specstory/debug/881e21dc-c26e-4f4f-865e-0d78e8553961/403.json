@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "    error \"Homebrew not found. Install it first: https://brew.sh\"\n    exit 1\nfi\nok \"Homebrew found\"\n\n# ─── Step 1: Brew dependencies ──────────────────────────────────────────────\necho \"\"\ninfo \"Step 1/5: Installing dependencies via Homebrew...\"\n\nBREW_FORMULAE=(ffmpeg cmake git)\nfor formula in \"${BREW_FORMULAE[@]}\"; do\n    if brew list \"$formula\" \u0026\u003e/dev/null; then\n        ok \"$formula already installed\"\n    else\n        info \"Installing $formula...\"\n        brew install \"$formula\"\n        ok \"$formula installed\"\n    fi\ndone\n\nif brew list --cask hammerspoon \u0026\u003e/dev/null; then\n    ok \"hammerspoon already installed\"\nelse\n    info \"Installing hammerspoon...\"\n    brew install --cask hammerspoon\n    ok \"hammerspoon installed\"",
+        "is_error": false,
+        "tool_use_id": "toolu_01SgLacKVJLs6VSukZZtqrgd",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "a60295aa-12f6-4c8d-a632-d63eb96df602",
+  "promptId": "b1c3dd4b-bdb6-4805-8c6e-1e76cb9b10ed",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "a60295aa-12f6-4c8d-a632-d63eb96df602",
+  "timestamp": "2026-08-17T02:34:24.027Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "    error \"Homebrew not found. Install it first: https://brew.sh\"\n    exit 1\nfi\nok \"Homebrew found\"\n\n# ─── Step 1: Brew dependencies ──────────────────────────────────────────────\necho \"\"\ninfo \"Step 1/5: Installing dependencies via Homebrew...\"\n\nBREW_FORMULAE=(ffmpeg cmake git)\nfor formula in \"${BREW_FORMULAE[@]}\"; do\n    if brew list \"$formula\" \u0026\u003e/dev/null; then\n        ok \"$formula already installed\"\n    else\n        info \"Installing $formula...\"\n        brew install \"$formula\"\n        ok \"$formula installed\"\n    fi\ndone\n\nif brew list --cask hammerspoon \u0026\u003e/dev/null; then\n    ok \"hammerspoon already installed\"\nelse\n    info \"Installing hammerspoon...\"\n    brew install --cask hammerspoon\n    ok \"hammerspoon installed\""
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "f9e76797-d3ea-46d8-aba1-967b5c30ba87",
+  "version": "2.1.233"
+}

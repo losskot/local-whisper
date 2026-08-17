@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "### devices ###\n[AVFoundation indev @ 0x7fe4af00bdc0] AVFoundation video devices:\n[AVFoundation indev @ 0x7fe4af00bdc0] [0] HD-камера FaceTime\n[AVFoundation indev @ 0x7fe4af00bdc0] [1] Capture screen 0\n[AVFoundation indev @ 0x7fe4af00bdc0] AVFoundation audio devices:\n[AVFoundation indev @ 0x7fe4af00bdc0] [0] Микрофон MacBook Air\n[AVFoundation indev @ 0x7fe4af00bdc0] [1] NoMachine Audio Adapter\n[AVFoundation indev @ 0x7fe4af00bdc0] [2] Microsoft Teams Audio\n[AVFoundation indev @ 0x7fe4af00bdc0] [3] NoMachine Microphone Adapter\n[AVFoundation indev @ 0x7fe4af00bdc0] [4] ZoomAudioDevice\n[in#0 @ 0x7fe4af00b800] Error opening input: Input/output error\nError opening input file .\nError opening input files: Input/output error\n\n### default input device per CoreAudio ###\nAudio:\n\n    Devices:\n\n        Микрофон MacBook Air:\n\n          Default Input Device: Yes\n          Input Channels: 1\n          Manufacturer: Apple Inc.\n          Current SampleRate: 48000\n          Transport: Built-in\n          Input Source: Микрофон MacBook Air\n\n        Динамики MacBook Air:\n\n          Default Output Device: Yes\n          Default System Output Device: Yes\n          Manufacturer: Apple Inc.\n          Output Channels: 2\n          Current SampleRate: 48000\n          Transport: Built-in\n          Output Source: Динамики MacBook Air\n\n        Microsoft Teams Audio:\n\n          Input Channels: 1\n          Manufacturer: Microsoft Corp.\n          Output Channels: 1\n          Current SampleRate: 48000\n          Transport: Virtual\n          Input Source: Microsoft Teams Audio Device\n          Output Source: Microsoft Teams Audio Device\n\n        NoMachine Audio Adapter:\n\n          Input Channels: 2\n          Manufacturer: NoMachine\n          Output Channels: 2\n          Current SampleRate: 44100\n          Transport: Virtual\n          Input Source: NoMachine Audio Adapter\n          Output Source: NoMachine Audio Adapter\n\n        NoMachine Microphone Adapter:\n\n          Input Channels: 2\n          Manufacturer: NoMachine\n          Output Channels: 2\n          Current SampleRate: 44100\n          Transport: Virtual\n          Input Source: NoMachine Microphone Adapter\n          Output Source: NoMachine Microphone Adapter\n\n        ZoomAudioDevice:\n\n          Input Channels: 2\n          Manufacturer: zoom.us\n          Output Channels: 2\n          Current SampleRate: 48000\n          Transport: Virtual",
+        "is_error": false,
+        "tool_use_id": "toolu_01FXbEqCMdSjdGXFWUkaQdey",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "4ad9a314-5a2b-475f-8047-18eaa67e8614",
+  "promptId": "853ca6f7-97d8-4bf6-8abc-86466ddb0eda",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "4ad9a314-5a2b-475f-8047-18eaa67e8614",
+  "timestamp": "2026-08-17T01:31:07.375Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "### devices ###\n[AVFoundation indev @ 0x7fe4af00bdc0] AVFoundation video devices:\n[AVFoundation indev @ 0x7fe4af00bdc0] [0] HD-камера FaceTime\n[AVFoundation indev @ 0x7fe4af00bdc0] [1] Capture screen 0\n[AVFoundation indev @ 0x7fe4af00bdc0] AVFoundation audio devices:\n[AVFoundation indev @ 0x7fe4af00bdc0] [0] Микрофон MacBook Air\n[AVFoundation indev @ 0x7fe4af00bdc0] [1] NoMachine Audio Adapter\n[AVFoundation indev @ 0x7fe4af00bdc0] [2] Microsoft Teams Audio\n[AVFoundation indev @ 0x7fe4af00bdc0] [3] NoMachine Microphone Adapter\n[AVFoundation indev @ 0x7fe4af00bdc0] [4] ZoomAudioDevice\n[in#0 @ 0x7fe4af00b800] Error opening input: Input/output error\nError opening input file .\nError opening input files: Input/output error\n\n### default input device per CoreAudio ###\nAudio:\n\n    Devices:\n\n        Микрофон MacBook Air:\n\n          Default Input Device: Yes\n          Input Channels: 1\n          Manufacturer: Apple Inc.\n          Current SampleRate: 48000\n          Transport: Built-in\n          Input Source: Микрофон MacBook Air\n\n        Динамики MacBook Air:\n\n          Default Output Device: Yes\n          Default System Output Device: Yes\n          Manufacturer: Apple Inc.\n          Output Channels: 2\n          Current SampleRate: 48000\n          Transport: Built-in\n          Output Source: Динамики MacBook Air\n\n        Microsoft Teams Audio:\n\n          Input Channels: 1\n          Manufacturer: Microsoft Corp.\n          Output Channels: 1\n          Current SampleRate: 48000\n          Transport: Virtual\n          Input Source: Microsoft Teams Audio Device\n          Output Source: Microsoft Teams Audio Device\n\n        NoMachine Audio Adapter:\n\n          Input Channels: 2\n          Manufacturer: NoMachine\n          Output Channels: 2\n          Current SampleRate: 44100\n          Transport: Virtual\n          Input Source: NoMachine Audio Adapter\n          Output Source: NoMachine Audio Adapter\n\n        NoMachine Microphone Adapter:\n\n          Input Channels: 2\n          Manufacturer: NoMachine\n          Output Channels: 2\n          Current SampleRate: 44100\n          Transport: Virtual\n          Input Source: NoMachine Microphone Adapter\n          Output Source: NoMachine Microphone Adapter\n\n        ZoomAudioDevice:\n\n          Input Channels: 2\n          Manufacturer: zoom.us\n          Output Channels: 2\n          Current SampleRate: 48000\n          Transport: Virtual"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "8214647c-a0f6-43a7-b87a-ac319064ebc8",
+  "version": "2.1.233"
+}

@@ -1,0 +1,74 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_013qxpSCrMsN8msR17umuZ1J",
+        "input": {
+          "file_path": "/Users/vitaliy/Documents/GitHub/local-whisper/AGENTS.md",
+          "new_string": "### Simulating a keypress — and why a whole dictation is hard to fake\n\nA posted flagsChanged event does reach the eventtap, so a synthetic press **starts** a\nrecording. Holding one is the hard part, because the session flag state updates\n**asynchronously** — roughly 200ms behind the post:\n\n```bash\nhs -c 'local e=hs.eventtap.event.newEvent(); e:setType(hs.eventtap.event.types.flagsChanged)\n       e:rawFlags(0x800001); e:post()\n       return string.format(\"0x%x\", hs.eventtap.checkKeyboardModifiers(true)._raw)'\n# → 0x0        immediately after the post\n# → 0x800000   if you sleep ~200ms first (fn survived, deviceLeftControl did not)\n```\n\nThe release poller runs every 0.1s, so it checks *before* the flags land, reads \"nothing\nheld\", and cancels the recording — the log shows `warmup: cancelled (key released before\ndevice ready)` about a second after you posted a press you never released. A real key does\nnot race this, because its flags are already set when the tap fires.\n\nTwo traps if you try anyway:\n\n- Re-posting the press on a timer to \"hold\" it does not work — every post is a fresh\n  flagsChanged event, so the tap sees press/release churn and starts and stops repeatedly.\n  That can leave two recorders writing into the same `chunks/` directory.\n- **Root every timer you create in a global.** An `hs.timer.doAfter` stored nowhere in an\n  `hs -c` one-liner gets collected before it fires, so the loop that was supposed to stop\n  the simulation never runs. This is the same GC rule as the runtime code, and it bites\n  throwaway test snippets just as hard.\n\nPrefer testing the two halves separately — they cover everything except the trigger itself,\nwhich a single real keypress verifies in seconds:\n\n```bash\n# capture half: spawn the recorder exactly as Hammerspoon does (inherits its mic permission)\nhs -c 'LWT = hs.task.new(os.getenv(\"HOME\")..\"/.local-whisper/bin/lw-record\",\n         function(c) print(\"exit \"..tostring(c)) end, function() return true end,\n         {\"/tmp/lwtest\",\"1\",\"16000\"}); LWT:start(); return \"started\"'\nsleep 8; hs -c 'LWT:interrupt()'\n# every chunk must be exactly 1.000000s\n\n# transcribe half: run the real whisper args over any WAV\n~/whisper.cpp/build/bin/whisper-cli -m ~/whisper.cpp/models/ggml-large-v3-turbo-q5_0.bin \\\n  -f /tmp/lwtest/chunk_000.wav -l auto -nt \\\n  --prompt \"$(cat ~/.local-whisper/prompt)\" --carry-initial-prompt\n```\n\nIf you do run a full dictation, set `~/.local-whisper/output` to `copy` first and restore it\nafterwards — otherwise the transcript is pasted into whatever window happens to be focused.\n\nNote that synthesised speech (`say -v Milena`) is a poor quality probe: it is clean and\nwell-separated enough that whisper transcribes it perfectly even from audio missing 10% of\nits samples. It validates that the pipeline runs, not that it transcribes well.",
+          "old_string": "### Simulating a whole dictation without touching the keyboard\n\nPosted flagsChanged events update the session flag state, so a synthetic press is held from\nthe app's point of view until you post the release — the release poller sees the generic bits\nand keeps recording. This exercises the real pipeline end to end:\n\n```bash\nhs -c 'local function f(x) local e=hs.eventtap.event.newEvent()\n         e:setType(hs.eventtap.event.types.flagsChanged); e:rawFlags(x); return e end\n       f(0x840001):post()                                   -- fn + control + deviceLeftControl\n       hs.timer.doAfter(6, function() f(0):post() end)'\n```\n\nSet `~/.local-whisper/output` to `copy` first and restore it afterwards — otherwise the\ntranscript is pasted into whatever window happens to be focused.",
+          "replace_all": false
+        },
+        "name": "Edit",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce7Y9jj2DbNPwr5YXNX9D",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 693,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 693,
+      "cache_read_input_tokens": 205247,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 693,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 693,
+          "cache_read_input_tokens": 205247,
+          "input_tokens": 2,
+          "output_tokens": 1532,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 1532,
+      "output_tokens_details": {
+        "thinking_tokens": 0
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "62d2e1bd-c9c6-4b08-b558-a1e2d9fd0a5e",
+  "requestId": "req_011Ce7Y9iLRmTSUAt9Cz96Yw",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "timestamp": "2026-08-17T02:33:20.027Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "77378d4f-588b-4351-81ff-9828ad575b52",
+  "version": "2.1.233"
+}

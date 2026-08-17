@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "SYNTAX OK\n  \u001b[0;32mPASS\u001b[0m  overlay: X while idle does not call emergencyStop\n  \u001b[0;32mPASS\u001b[0m  trigger: no modifiers at all does not fire\n\u001b[0;32m\u001b[1mAll 85 checks passed.\u001b[0m\nlocals: 128",
+        "is_error": false,
+        "tool_use_id": "toolu_01PZk8vfKDaNSwSArFTjJw6N",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "fde25888-9b5f-422f-bf10-e94cf057e229",
+  "promptId": "b1c3dd4b-bdb6-4805-8c6e-1e76cb9b10ed",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "fde25888-9b5f-422f-bf10-e94cf057e229",
+  "timestamp": "2026-08-17T02:28:42.039Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "SYNTAX OK\n  \u001b[0;32mPASS\u001b[0m  overlay: X while idle does not call emergencyStop\n  \u001b[0;32mPASS\u001b[0m  trigger: no modifiers at all does not fire\n\u001b[0;32m\u001b[1mAll 85 checks passed.\u001b[0m\nlocals: 128"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "349a3ea3-b354-40de-adf9-26dbb71c8d7e",
+  "version": "2.1.233"
+}

@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "352--- changing one without the other silently breaks ordering again.\n353-\n354-local writerPattern = src:find('chunk_%%03d%.wav', 1, false) ~= nil\n355-local readerPattern = src:find('chunk_%(%%d%+%)%%%.wav', 1, false) ~= nil\n356:check(\"sort: ffmpeg output template and comparator pattern agree\",\n357-      writerPattern and readerPattern,\n358-      \"writer chunk_%03d.wav=\" .. tostring(writerPattern) ..\n359-      \", reader chunk_(%d+)%.wav=\" .. tostring(readerPattern))\n360-\n361---------------------------------------------------------------------------------\n362--- 9. Emergency stop cancels pending finalization\n363---------------------------------------------------------------------------------\n364--- Otherwise the timer armed by stopRecording() still fires after the user hits\n365--- Emergency Stop, and pastes the transcript into whatever is focused by then.\n366-\n367-local esStart, esEnd\n368-for i, s in ipairs(stripped) do\n369-    if s:match(\"^function%s+emergencyStop%s*%(\") then esStart = i end\n370-    if esStart and not esEnd and i \u003e esStart and s:match(\"^end%s*$\") then esEnd = i end",
+        "is_error": false,
+        "tool_use_id": "toolu_016PB1sRdak8suPWxRx3gkDg",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "c4fb8d12-32cd-495d-a7b1-e84672b6d71f",
+  "promptId": "b1c3dd4b-bdb6-4805-8c6e-1e76cb9b10ed",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "c4fb8d12-32cd-495d-a7b1-e84672b6d71f",
+  "timestamp": "2026-08-17T02:12:04.523Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "352--- changing one without the other silently breaks ordering again.\n353-\n354-local writerPattern = src:find('chunk_%%03d%.wav', 1, false) ~= nil\n355-local readerPattern = src:find('chunk_%(%%d%+%)%%%.wav', 1, false) ~= nil\n356:check(\"sort: ffmpeg output template and comparator pattern agree\",\n357-      writerPattern and readerPattern,\n358-      \"writer chunk_%03d.wav=\" .. tostring(writerPattern) ..\n359-      \", reader chunk_(%d+)%.wav=\" .. tostring(readerPattern))\n360-\n361---------------------------------------------------------------------------------\n362--- 9. Emergency stop cancels pending finalization\n363---------------------------------------------------------------------------------\n364--- Otherwise the timer armed by stopRecording() still fires after the user hits\n365--- Emergency Stop, and pastes the transcript into whatever is focused by then.\n366-\n367-local esStart, esEnd\n368-for i, s in ipairs(stripped) do\n369-    if s:match(\"^function%s+emergencyStop%s*%(\") then esStart = i end\n370-    if esStart and not esEnd and i \u003e esStart and s:match(\"^end%s*$\") then esEnd = i end"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "119d511c-17f1-4551-bd10-825e478ef2e1",
+  "version": "2.1.233"
+}

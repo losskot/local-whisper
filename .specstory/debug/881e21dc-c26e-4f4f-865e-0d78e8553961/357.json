@@ -1,0 +1,64 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "text": "I'll stop fighting the synthetic harness — it's generating noise, and a real keypress will verify in seconds. Restoring your settings and updating the docs:",
+        "type": "text"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce7Y1bNVzFRdfCWmftwST",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 1060,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 1060,
+      "cache_read_input_tokens": 193751,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1060,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 1060,
+          "cache_read_input_tokens": 193751,
+          "input_tokens": 2,
+          "output_tokens": 1276,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 1276,
+      "output_tokens_details": {
+        "thinking_tokens": 956
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "28d95253-55d9-4bbf-a4cc-479236cf4420",
+  "requestId": "req_011Ce7Y1ZfomsgkChUcSPQdk",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "timestamp": "2026-08-17T02:31:27.831Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "6f07f2a7-2cd0-462e-a461-9b5e39d15a9f",
+  "version": "2.1.233"
+}

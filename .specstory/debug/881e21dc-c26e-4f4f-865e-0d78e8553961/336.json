@@ -1,0 +1,87 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01LdMFs6ChsS9DUTTGE3UnyB",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "d8d9adec-9240-4414-9d24-fd77b0e8c43e",
+  "promptId": "b1c3dd4b-bdb6-4805-8c6e-1e76cb9b10ed",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "d8d9adec-9240-4414-9d24-fd77b0e8c43e",
+  "timestamp": "2026-08-17T02:28:12.725Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+    "newString": "        function(code, out, err)  -- termination callback\n            local isCurrent = (recorderTask == thisTask)\n            if isCurrent then recorderTask = nil end\n            log(\"recording: recorder exited \" .. tostring(code))\n            if not isCurrent then return end   -- superseded: its counters belong to a newer run\n            if code ~= 0 and not recorderCaptured then\n                log(\"recording: ERROR — lw-record failed: \" .. tostring(err))\n                return\n            end\n            if recorderCaptured and recordStartedAt then\n                local wall = hs.timer.secondsSinceEpoch() - recordStartedAt\n                log(string.format(\"recording: captured %.2fs of %.2fs wall (%.0f%%)\",\n                    recorderCaptured, wall, wall \u003e 0 and (recorderCaptured / wall * 100) or 0))\n            end\n        end,\n        function(task, stdout, stderr)  -- streaming: READY, then the final CAPTURED total\n            -- Ignore a superseded recorder's output entirely: its READY would start a\n            -- recording the user already released, and its CAPTURED would overwrite the\n            -- health check of the run now in progress.\n            if recorderTask ~= thisTask then return true end\n            if stdout then\n                if isWarmingUp and stdout:find(\"READY\", 1, true) then\n                    log(\"warmup: device ready on attempt \" .. warmupAttempt)\n                    onRecorderReady()\n                end\n                local c = tonumber(stdout:match(\"CAPTURED%s+([%d%.]+)\"))\n                if c then recorderCaptured = c end\n            end\n            return true\n        end,\n        { CHUNK_DIR, \"1\", \"16000\" })\n    recorderTask = thisTask\n    recorderTask:start()",
+    "oldString": "        function(code, out, err)  -- termination callback\n            if recorderTask == thisTask then recorderTask = nil end\n            log(\"recording: recorder exited \" .. tostring(code))\n            if code ~= 0 and not recorderCaptured then\n                log(\"recording: ERROR — lw-record failed: \" .. tostring(err))\n                return\n            end\n            if recorderCaptured and recordStartedAt then\n                local wall = hs.timer.secondsSinceEpoch() - recordStartedAt\n                log(string.format(\"recording: captured %.2fs of %.2fs wall (%.0f%%)\",\n                    recorderCaptured, wall, wall \u003e 0 and (recorderCaptured / wall * 100) or 0))\n            end\n        end,\n        function(task, stdout, stderr)  -- streaming: READY, then the final CAPTURED total\n            if stdout then\n                if isWarmingUp and stdout:find(\"READY\", 1, true) then\n                    log(\"warmup: device ready on attempt \" .. warmupAttempt)\n                    onRecorderReady()\n                end\n                local c = tonumber(stdout:match(\"CAPTURED%s+([%d%.]+)\"))\n                if c then recorderCaptured = c end\n            end\n            return true\n        end,\n        { CHUNK_DIR, \"1\", \"16000\" })\n    recorderTask:start()",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          "     local thisTask",
+          "     thisTask = hs.task.new(RECORDER_BIN,",
+          "         function(code, out, err)  -- termination callback",
+          "-            if recorderTask == thisTask then recorderTask = nil end",
+          "+            local isCurrent = (recorderTask == thisTask)",
+          "+            if isCurrent then recorderTask = nil end",
+          "             log(\"recording: recorder exited \" .. tostring(code))",
+          "+            if not isCurrent then return end   -- superseded: its counters belong to a newer run",
+          "             if code ~= 0 and not recorderCaptured then",
+          "                 log(\"recording: ERROR — lw-record failed: \" .. tostring(err))",
+          "                 return"
+        ],
+        "newLines": 10,
+        "newStart": 1548,
+        "oldLines": 8,
+        "oldStart": 1548
+      },
+      {
+        "lines": [
+          "             end",
+          "         end,",
+          "         function(task, stdout, stderr)  -- streaming: READY, then the final CAPTURED total",
+          "+            -- Ignore a superseded recorder's output entirely: its READY would start a",
+          "+            -- recording the user already released, and its CAPTURED would overwrite the",
+          "+            -- health check of the run now in progress.",
+          "+            if recorderTask ~= thisTask then return true end",
+          "             if stdout then",
+          "                 if isWarmingUp and stdout:find(\"READY\", 1, true) then",
+          "                     log(\"warmup: device ready on attempt \" .. warmupAttempt)"
+        ],
+        "newLines": 10,
+        "newStart": 1563,
+        "oldLines": 6,
+        "oldStart": 1561
+      },
+      {
+        "lines": [
+          "             return true",
+          "         end,",
+          "         { CHUNK_DIR, \"1\", \"16000\" })",
+          "+    recorderTask = thisTask",
+          "     recorderTask:start()",
+          " ",
+          "     -- If no READY within 1s, kill and retry (up to max)"
+        ],
+        "newLines": 7,
+        "newStart": 1578,
+        "oldLines": 6,
+        "oldStart": 1572
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "0bfec742-972d-40f8-9838-a10636145a5b",
+  "version": "2.1.233"
+}

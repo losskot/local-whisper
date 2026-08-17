@@ -1,0 +1,35 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "119\tlocal function extractFunction(name)\n120\t    local startLine\n121\t    for i, s in ipairs(stripped) do\n122\t        if s:match(\"^local%s+function%s+\" .. name .. \"%s*%(\") then startLine = i break end\n123\t    end\n124\t    if not startLine then return nil end\n125\t    for i = startLine + 1, #lines do\n126\t        if stripped[i]:match(\"^end%s*$\") then\n127\t            return table.concat({ table.unpack(lines, startLine, i) }, \"\\n\")\n128\t        end\n129\t    end\n130\t    return nil\n131\tend\n132\t\n133\t-- Load a lifted `local function` and return it, bound to `env`.\n134\tlocal function liftFunction(name, env)\n135\t    local fnSrc = extractFunction(name)\n136\t    if not fnSrc then return nil, \"could not locate local function \" .. name .. \"()\" end\n137\t    local factory, err = loadIn(fnSrc .. \"\\nreturn \" .. name, env, name)\n138\t    if not factory then return nil, tostring(err) end\n139\t    return factory()\n140\tend\n141\t\n142\t--------------------------------------------------------------------------------\n143\t-- 1. Syntax\n144\t--------------------------------------------------------------------------------\n145\t\n146\tlocal chunk, loadErr = loadfile(TARGET)",
+        "tool_use_id": "toolu_01C7zB9Nj7QUVGuKoqjGuozi",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "cd105dfa-e806-4212-8158-91640d010756",
+  "promptId": "b1c3dd4b-bdb6-4805-8c6e-1e76cb9b10ed",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "cd105dfa-e806-4212-8158-91640d010756",
+  "timestamp": "2026-08-17T02:19:06.651Z",
+  "toolUseResult": {
+    "file": {
+      "content": "local function extractFunction(name)\n    local startLine\n    for i, s in ipairs(stripped) do\n        if s:match(\"^local%s+function%s+\" .. name .. \"%s*%(\") then startLine = i break end\n    end\n    if not startLine then return nil end\n    for i = startLine + 1, #lines do\n        if stripped[i]:match(\"^end%s*$\") then\n            return table.concat({ table.unpack(lines, startLine, i) }, \"\\n\")\n        end\n    end\n    return nil\nend\n\n-- Load a lifted `local function` and return it, bound to `env`.\nlocal function liftFunction(name, env)\n    local fnSrc = extractFunction(name)\n    if not fnSrc then return nil, \"could not locate local function \" .. name .. \"()\" end\n    local factory, err = loadIn(fnSrc .. \"\\nreturn \" .. name, env, name)\n    if not factory then return nil, tostring(err) end\n    return factory()\nend\n\n--------------------------------------------------------------------------------\n-- 1. Syntax\n--------------------------------------------------------------------------------\n\nlocal chunk, loadErr = loadfile(TARGET)",
+      "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/tests/test_init.lua",
+      "numLines": 28,
+      "startLine": 119,
+      "totalLines": 945
+    },
+    "type": "text"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "529b6628-e2a9-4939-a656-c6d545d5758d",
+  "version": "2.1.233"
+}

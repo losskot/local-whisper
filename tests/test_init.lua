@@ -348,15 +348,147 @@ end
 --------------------------------------------------------------------------------
 -- 8. Chunk filename pattern stays in sync between writer and reader
 --------------------------------------------------------------------------------
--- ffmpeg's -segment output template and the sort comparator's pattern must agree;
--- changing one without the other silently breaks ordering again.
+-- The recorder's output template and the sort comparator's pattern must agree; changing
+-- one without the other silently breaks ordering again. The writer moved out of init.lua
+-- into tools/lw-record.swift when ffmpeg stopped doing the capture, so accept it in either
+-- place -- that also keeps this check meaningful when pointed at an older revision.
 
-local writerPattern = src:find('chunk_%%03d%.wav', 1, false) ~= nil
+local REPO = TARGET:match("^(.*)/hammerspoon/init%.lua$")
+    or (HOME .. "/Documents/GitHub/local-whisper")
+local recorderSrc = readSource(REPO .. "/tools/lw-record.swift") or ""
+
+local writerPattern = (recorderSrc:find('chunk_%%03d%.wav', 1, false) ~= nil)
+    or (src:find('chunk_%%03d%.wav', 1, false) ~= nil)
 local readerPattern = src:find('chunk_%(%%d%+%)%%%.wav', 1, false) ~= nil
-check("sort: ffmpeg output template and comparator pattern agree",
+check("sort: recorder output template and comparator pattern agree",
       writerPattern and readerPattern,
       "writer chunk_%03d.wav=" .. tostring(writerPattern) ..
       ", reader chunk_(%d+)%.wav=" .. tostring(readerPattern))
+
+--------------------------------------------------------------------------------
+-- 8b. Live capture never goes back through ffmpeg's avfoundation input
+--------------------------------------------------------------------------------
+-- ffmpeg's avfoundation indev hands over ~90% of the samples it captures: a fixed 20s
+-- capture produced 18.04s of PCM, and every 1-second chunk came out 0.885-0.917s long.
+-- The loss is spread evenly, so short words vanish and whisper papers over the gaps with
+-- fluent invented text. No ffmpeg flag fixed it (-thread_queue_size, -drop_late_frames
+-- false, -use_wallclock_as_timestamps, -capture_raw_data, other device indexes, dropping
+-- the segmenter or the resampler). Capture must stay on the native recorder.
+--
+-- ffmpeg is still correct for concat here and for format conversion in tools/transcribe.sh,
+-- so this only forbids pairing it with avfoundation.
+
+-- Match the quoted argument form, so the comment explaining *why* we avoid it stays legal.
+local usesAvfoundation = src:find('"avfoundation"', 1, true) ~= nil
+check("capture: init.lua does not capture through ffmpeg's avfoundation input",
+      not usesAvfoundation,
+      'found "avfoundation" as an argument -- that input device drops ~10% of the audio')
+
+check("capture: the native recorder binary is invoked",
+      src:find("RECORDER_BIN", 1, true) ~= nil,
+      "RECORDER_BIN not referenced -- what is opening the microphone?")
+
+check("capture: the recorder reports captured seconds for the health check",
+      src:find("CAPTURED", 1, true) ~= nil and recorderSrc:find("CAPTURED", 1, true) ~= nil,
+      "the CAPTURED handshake is how a future capture regression becomes visible in the log")
+
+-- hs.task hands stdout to the streaming callback when one is registered and leaves the
+-- termination callback's `out` empty, so parsing CAPTURED there reads nil forever and the
+-- health check silently never fires. Keep the parse in the streaming callback.
+do
+    local streamStart = src:find("streaming: READY", 1, true)
+    local capturedPos = src:find("CAPTURED%%s%+", 1, false)
+    check("capture: CAPTURED is parsed in the streaming callback, not at termination",
+          streamStart ~= nil and capturedPos ~= nil and capturedPos > streamStart,
+          "hs.task leaves the termination callback's stdout empty once a streaming callback exists")
+end
+
+--------------------------------------------------------------------------------
+-- 8c. Segment splitting cuts at a pause and never loses a chunk
+--------------------------------------------------------------------------------
+-- A fixed-index cut lands mid-word: the halves are transcribed by independent whisper
+-- calls, so the word is mangled or duplicated across the seam. splitAtSilence() scans back
+-- for the quietest chunk instead. The invariant that actually matters is that regrouping
+-- preserves every chunk exactly once -- a bug there silently truncates the transcript.
+
+do
+    local dir = os.getenv("TMPDIR") or "/tmp/"
+    if dir:sub(-1) ~= "/" then dir = dir .. "/" end
+    dir = dir .. "lw_split_test"
+    os.execute("rm -rf '" .. dir .. "' && mkdir -p '" .. dir .. "'")
+
+    -- getWavRMS reads int16 LE starting at byte 44, so only the header length matters.
+    local function writeWav(path, amplitude, frames)
+        local f = io.open(path, "wb")
+        if not f then return false end
+        f:write(string.rep("\0", 44))
+        for _ = 1, frames do f:write(string.pack("<i2", amplitude)) end
+        f:close()
+        return true
+    end
+
+    local TOTAL, QUIET_AT = 120, 50
+    local paths = {}
+    for i = 1, TOTAL do
+        local p = string.format("%s/chunk_%03d.wav", dir, i - 1)
+        writeWav(p, i == QUIET_AT and 0 or 6000, 64)
+        paths[i] = p
+    end
+
+    local env = setmetatable({ log = function() end }, { __index = _G })
+    local rms = liftFunction("getWavRMS", env)
+    check("split: getWavRMS is liftable and compiles", rms ~= nil, "could not lift getWavRMS")
+
+    if rms then
+        env.getWavRMS = rms
+        check("split: a silent chunk reads quieter than a loud one",
+              rms(paths[QUIET_AT]) < 300 and rms(paths[1]) > 300,
+              "quiet=" .. tostring(rms(paths[QUIET_AT])) .. " loud=" .. tostring(rms(paths[1])))
+
+        local split, splitErr = liftFunction("splitAtSilence", env)
+        check("split: splitAtSilence is liftable and compiles", split ~= nil, tostring(splitErr))
+
+        if split then
+            local groups = split(paths, 55, 8)
+
+            -- Every chunk survives, in order, exactly once.
+            local flat = {}
+            for _, g in ipairs(groups) do
+                for _, p in ipairs(g) do flat[#flat + 1] = p end
+            end
+            local sameOrder = #flat == TOTAL
+            if sameOrder then
+                for i = 1, TOTAL do
+                    if flat[i] ~= paths[i] then sameOrder = false break end
+                end
+            end
+            check("split: regrouping preserves every chunk exactly once, in order",
+                  sameOrder, "got " .. #flat .. " chunks back out of " .. TOTAL)
+
+            check("split: the first cut lands on the silent chunk, not the hard boundary",
+                  #groups[1] == QUIET_AT,
+                  "first group is " .. #groups[1] .. " chunks, expected " .. QUIET_AT ..
+                  " (hard boundary would be 55)")
+
+            -- With no pause anywhere, it must still bound the segment at maxSecs.
+            local loud = {}
+            for i = 1, TOTAL do
+                local p = string.format("%s/loud_%03d.wav", dir, i - 1)
+                writeWav(p, 6000, 64)
+                loud[i] = p
+            end
+            local loudGroups = split(loud, 55, 8)
+            local maxLen = 0
+            for _, g in ipairs(loudGroups) do
+                if #g > maxLen then maxLen = #g end
+            end
+            check("split: an unbroken passage is still bounded by maxSecs",
+                  maxLen <= 55, "longest group was " .. maxLen .. " chunks")
+        end
+    end
+
+    os.execute("rm -rf '" .. dir .. "'")
+end
 
 --------------------------------------------------------------------------------
 -- 9. Emergency stop cancels pending finalization

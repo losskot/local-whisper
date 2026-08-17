@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "commit 34946c514e5d80aeb34b9b32ac4380f292fe6f66\nAuthor: Vitaliy Hlyniany-Zhuk \u003chlyniany@gmail.com\u003e\nDate:   Tue Jun 23 01:57:14 2026 +0200\n\n    fix: smart silence-based chunk splitting + abort on no-audio timeout\n    \n    - Add getWavRMS(): reads 16-bit mono WAV RMS directly in Lua, no subprocess\n    - Add splitAtSilence(): splits chunks at the quietest 1-second window near\n      the 25s boundary (scans back up to 8s), preventing cuts mid-word or\n      mid-sentence\n    - Replace fixed FINAL_SEGMENT_SECS loop with splitAtSilence() call\n    - pollForFirstChunk timeout: instead of playing Pop and continuing blind,\n      now plays Basso error sound, shows 'Нет аудио', and aborts cleanly\n\n hammerspoon/init.lua | 93 ++++++++++++++++++++++++++++++++++++++++++----------\n 1 file changed, 76 insertions(+), 17 deletions(-)\n=== the silence-split logic ===\n5:    fix: smart silence-based chunk splitting + abort on no-audio timeout\n8:    - Add splitAtSilence(): splits chunks at the quietest 1-second window near\n11:    - Replace fixed FINAL_SEGMENT_SECS loop with splitAtSilence() call\n44:+-- Split chunk list into groups no longer than maxSecs, but breaking at the\n47:+local function splitAtSilence(chunks, maxSecs, lookbackSecs)\n70:+                if rms \u003c 300 then break end  -- near-silence found, stop scanning\n76:+        log(\"split: seg ends at chunk \" .. bestIdx .. \" (RMS=\" .. math.floor(bestRMS) .. \", hard=\" .. hardEnd .. \")\")\n89:-    -- Split 1-second chunks into groups of FINAL_SEGMENT_SECS\n100:+    -- Split chunks at natural silence boundaries near FINAL_SEGMENT_SECS.\n101:+    -- splitAtSilence reads WAV RMS directly (no subprocess) and prefers cutting\n103:+    local segmentGroups = splitAtSilence(chunks, FINAL_SEGMENT_SECS)",
+        "is_error": false,
+        "tool_use_id": "toolu_01WHJF3S9YsWBUcQk1ej6SGH",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "7f5371d8-eafa-428f-99f1-0011267df798",
+  "promptId": "b1c3dd4b-bdb6-4805-8c6e-1e76cb9b10ed",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "7f5371d8-eafa-428f-99f1-0011267df798",
+  "timestamp": "2026-08-17T02:04:07.236Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "commit 34946c514e5d80aeb34b9b32ac4380f292fe6f66\nAuthor: Vitaliy Hlyniany-Zhuk \u003chlyniany@gmail.com\u003e\nDate:   Tue Jun 23 01:57:14 2026 +0200\n\n    fix: smart silence-based chunk splitting + abort on no-audio timeout\n    \n    - Add getWavRMS(): reads 16-bit mono WAV RMS directly in Lua, no subprocess\n    - Add splitAtSilence(): splits chunks at the quietest 1-second window near\n      the 25s boundary (scans back up to 8s), preventing cuts mid-word or\n      mid-sentence\n    - Replace fixed FINAL_SEGMENT_SECS loop with splitAtSilence() call\n    - pollForFirstChunk timeout: instead of playing Pop and continuing blind,\n      now plays Basso error sound, shows 'Нет аудио', and aborts cleanly\n\n hammerspoon/init.lua | 93 ++++++++++++++++++++++++++++++++++++++++++----------\n 1 file changed, 76 insertions(+), 17 deletions(-)\n=== the silence-split logic ===\n5:    fix: smart silence-based chunk splitting + abort on no-audio timeout\n8:    - Add splitAtSilence(): splits chunks at the quietest 1-second window near\n11:    - Replace fixed FINAL_SEGMENT_SECS loop with splitAtSilence() call\n44:+-- Split chunk list into groups no longer than maxSecs, but breaking at the\n47:+local function splitAtSilence(chunks, maxSecs, lookbackSecs)\n70:+                if rms \u003c 300 then break end  -- near-silence found, stop scanning\n76:+        log(\"split: seg ends at chunk \" .. bestIdx .. \" (RMS=\" .. math.floor(bestRMS) .. \", hard=\" .. hardEnd .. \")\")\n89:-    -- Split 1-second chunks into groups of FINAL_SEGMENT_SECS\n100:+    -- Split chunks at natural silence boundaries near FINAL_SEGMENT_SECS.\n101:+    -- splitAtSilence reads WAV RMS directly (no subprocess) and prefers cutting\n103:+    local segmentGroups = splitAtSilence(chunks, FINAL_SEGMENT_SECS)"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "ef14c09d-f93a-4d75-b7c4-b3464ff75b1a",
+  "version": "2.1.233"
+}

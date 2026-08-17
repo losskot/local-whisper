@@ -1,0 +1,53 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01DguRRF39sG4cEYj2pkjrQU",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "f5e4e91c-735c-46a3-b6d9-2cee43694281",
+  "promptId": "b1c3dd4b-bdb6-4805-8c6e-1e76cb9b10ed",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "f5e4e91c-735c-46a3-b6d9-2cee43694281",
+  "timestamp": "2026-08-17T02:09:15.644Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+    "newString": "    if recorderTask and recorderTask:isRunning() then recorderTask:interrupt() end\n    recorderTask = nil",
+    "oldString": "    if ffmpegTask and ffmpegTask:isRunning() then ffmpegTask:interrupt() end\n    ffmpegTask = nil",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          "     if finalizeTimers.timer then finalizeTimers.timer:stop(); finalizeTimers.timer = nil end",
+          "     if finalizeTimers.watchdog then finalizeTimers.watchdog:stop(); finalizeTimers.watchdog = nil end",
+          "     stopRecordingIndicator()",
+          "-    if ffmpegTask and ffmpegTask:isRunning() then ffmpegTask:interrupt() end",
+          "-    ffmpegTask = nil",
+          "+    if recorderTask and recorderTask:isRunning() then recorderTask:interrupt() end",
+          "+    recorderTask = nil",
+          "     forceHideOverlay()",
+          "     updateMenuBar()",
+          "     os.execute(\"killall whisper-cli 2\u003e/dev/null\")"
+        ],
+        "newLines": 8,
+        "newStart": 1085,
+        "oldLines": 8,
+        "oldStart": 1085
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "004f8f3f-054a-43d0-a869-4a221072204b",
+  "version": "2.1.233"
+}

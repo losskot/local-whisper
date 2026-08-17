@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "tools/lw-record.swift:45:6: warning: concurrently-executed global function 'wavHeader(dataBytes:rate:channels:)' must be marked as '@Sendable'; this is an error in the Swift 6 language mode\n 43 | \n 44 | /// 44-byte canonical RIFF/WAVE header for 16-bit PCM.\n 45 | func wavHeader(dataBytes: Int, rate: Double, channels: Int = 1) -\u003e Data {\n    |      `- warning: concurrently-executed global function 'wavHeader(dataBytes:rate:channels:)' must be marked as '@Sendable'; this is an error in the Swift 6 language mode\n 46 |     var d = Data()\n 47 |     func u32(_ v: UInt32) { withUnsafeBytes(of: v.littleEndian) { d.append(contentsOf: $0) } }\nexit=0\n-rwxr-xr-x  1 vitaliy  staff  86296 Aug 17 04:06 /Users/vitaliy/.local-whisper/bin/lw-record",
+        "is_error": false,
+        "tool_use_id": "toolu_01HUZNFyNcpsvYpc1YsG66JU",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "8c1a46c4-3757-490c-99b4-b9742adda89e",
+  "promptId": "b1c3dd4b-bdb6-4805-8c6e-1e76cb9b10ed",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "8c1a46c4-3757-490c-99b4-b9742adda89e",
+  "timestamp": "2026-08-17T02:06:46.526Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "tools/lw-record.swift:45:6: warning: concurrently-executed global function 'wavHeader(dataBytes:rate:channels:)' must be marked as '@Sendable'; this is an error in the Swift 6 language mode\n 43 | \n 44 | /// 44-byte canonical RIFF/WAVE header for 16-bit PCM.\n 45 | func wavHeader(dataBytes: Int, rate: Double, channels: Int = 1) -\u003e Data {\n    |      `- warning: concurrently-executed global function 'wavHeader(dataBytes:rate:channels:)' must be marked as '@Sendable'; this is an error in the Swift 6 language mode\n 46 |     var d = Data()\n 47 |     func u32(_ v: UInt32) { withUnsafeBytes(of: v.littleEndian) { d.append(contentsOf: $0) } }\nexit=0\n-rwxr-xr-x  1 vitaliy  staff  86296 Aug 17 04:06 /Users/vitaliy/.local-whisper/bin/lw-record"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "ba5f6fc4-c98e-40df-9174-ce575820b71b",
+  "version": "2.1.233"
+}

@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "total 48\ndrwxr-xr-x    7 vitaliy  staff   224 Aug 16 22:51 .\ndrwxr-x---+ 163 vitaliy  staff  5216 Aug 17 03:24 ..\n-rw-r--r--@   1 vitaliy  staff     3 Jul 21 20:20 enter\n-rw-r--r--@   1 vitaliy  staff     4 Jul 21 20:20 lang\n-rw-r--r--@   1 vitaliy  staff    19 Aug 12 01:23 model\n-rw-r--r--@   1 vitaliy  staff     5 Aug 16 23:37 output\n-rw-r--r--@   1 vitaliy  staff  7303 Aug 17 03:25 recent.json\n--- settings ---\nenter: off\nlang: auto\nmodel: large-v3-turbo-q5_0\noutput: paste\nrecent.json: [skipped, large]",
+        "is_error": false,
+        "tool_use_id": "toolu_01M9tSyd2jGubF9wZxvHo67w",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "6ddeb189-3d7a-4eb9-9c39-feb83c9f3d0c",
+  "promptId": "853ca6f7-97d8-4bf6-8abc-86466ddb0eda",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "6ddeb189-3d7a-4eb9-9c39-feb83c9f3d0c",
+  "timestamp": "2026-08-17T01:26:01.089Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "total 48\ndrwxr-xr-x    7 vitaliy  staff   224 Aug 16 22:51 .\ndrwxr-x---+ 163 vitaliy  staff  5216 Aug 17 03:24 ..\n-rw-r--r--@   1 vitaliy  staff     3 Jul 21 20:20 enter\n-rw-r--r--@   1 vitaliy  staff     4 Jul 21 20:20 lang\n-rw-r--r--@   1 vitaliy  staff    19 Aug 12 01:23 model\n-rw-r--r--@   1 vitaliy  staff     5 Aug 16 23:37 output\n-rw-r--r--@   1 vitaliy  staff  7303 Aug 17 03:25 recent.json\n--- settings ---\nenter: off\nlang: auto\nmodel: large-v3-turbo-q5_0\noutput: paste\nrecent.json: [skipped, large]"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "a517c5ab-4071-4e47-82c7-ec57780cfcf0",
+  "version": "2.1.233"
+}

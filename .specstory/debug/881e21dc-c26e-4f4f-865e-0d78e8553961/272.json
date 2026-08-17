@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "=== whisper-cli with the new prompt args (does --carry-initial-prompt work?) ===\nwhisper_print_timings:   encode time =  3265.85 ms /     2 runs (  1632.92 ms per run)\nwhisper_print_timings:   decode time =    30.52 ms /     2 runs (    15.26 ms per run)\nwhisper_print_timings:   batchd time =    62.29 ms /    37 runs (     1.68 ms per run)\nwhisper_print_timings:   prompt time =    41.83 ms /   102 runs (     0.41 ms per run)\nwhisper_print_timings:    total time =  4026.89 ms\nggml_metal_free: deallocating\nexit=0",
+        "is_error": false,
+        "tool_use_id": "toolu_01Ra9egTVxGKqttF9tQgL5KL",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "35aff601-56f8-4f9f-8dc1-522daeb9e809",
+  "promptId": "b1c3dd4b-bdb6-4805-8c6e-1e76cb9b10ed",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "35aff601-56f8-4f9f-8dc1-522daeb9e809",
+  "timestamp": "2026-08-17T02:22:07.952Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "=== whisper-cli with the new prompt args (does --carry-initial-prompt work?) ===\nwhisper_print_timings:   encode time =  3265.85 ms /     2 runs (  1632.92 ms per run)\nwhisper_print_timings:   decode time =    30.52 ms /     2 runs (    15.26 ms per run)\nwhisper_print_timings:   batchd time =    62.29 ms /    37 runs (     1.68 ms per run)\nwhisper_print_timings:   prompt time =    41.83 ms /   102 runs (     0.41 ms per run)\nwhisper_print_timings:    total time =  4026.89 ms\nggml_metal_free: deallocating\nexit=0"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "bfae04b3-0e82-492f-8937-9eecd6612cb4",
+  "version": "2.1.233"
+}

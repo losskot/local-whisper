@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "99:-- Functions are lifted out of the source under test and executed against stubbed\n101:-- drifts. Every name the lifted function closes over in init.lua resolves to the\n119:local function extractFunction(name)\n133:-- Load a lifted `local function` and return it, bound to `env`.\n134:local function liftFunction(name, env)\n135:    local fnSrc = extractFunction(name)\n568:    local fn, err = liftFunction(\"startRecording\", env)\n576:check(\"startRecording: function is liftable and compiles\", repress ~= nil, tostring(repressErr))\n646:        local fn, err = liftFunction(\"updateProgressBar\", env)\n672:    check(\"progress: updateProgressBar is liftable and compiles\", bar ~= nil, tostring(barErr))\n700:    local startBody = extractFunction(\"startRecordingIndicator\")\n701:    local stopBody  = extractFunction(\"stopRecordingIndicator\")\n799:        local pressed, pErr = liftFunction(\"triggerPressed\", env)\n800:        check(\"trigger: triggerPressed is liftable and compiles\", pressed ~= nil, tostring(pErr))\n881:        local held, hErr = liftFunction(\"triggerHeld\", baseEnv())\n882:        check(\"trigger: triggerHeld is liftable and compiles\", held ~= nil, tostring(hErr))\n893:            held = liftFunction(\"triggerHeld\", hEnv)",
+        "is_error": false,
+        "tool_use_id": "toolu_01DFWURF7EG6joNzCDjG8r4P",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "f9ee1927-6b1f-472e-ae78-089ded4411cf",
+  "promptId": "b1c3dd4b-bdb6-4805-8c6e-1e76cb9b10ed",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "f9ee1927-6b1f-472e-ae78-089ded4411cf",
+  "timestamp": "2026-08-17T02:19:04.060Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "99:-- Functions are lifted out of the source under test and executed against stubbed\n101:-- drifts. Every name the lifted function closes over in init.lua resolves to the\n119:local function extractFunction(name)\n133:-- Load a lifted `local function` and return it, bound to `env`.\n134:local function liftFunction(name, env)\n135:    local fnSrc = extractFunction(name)\n568:    local fn, err = liftFunction(\"startRecording\", env)\n576:check(\"startRecording: function is liftable and compiles\", repress ~= nil, tostring(repressErr))\n646:        local fn, err = liftFunction(\"updateProgressBar\", env)\n672:    check(\"progress: updateProgressBar is liftable and compiles\", bar ~= nil, tostring(barErr))\n700:    local startBody = extractFunction(\"startRecordingIndicator\")\n701:    local stopBody  = extractFunction(\"stopRecordingIndicator\")\n799:        local pressed, pErr = liftFunction(\"triggerPressed\", env)\n800:        check(\"trigger: triggerPressed is liftable and compiles\", pressed ~= nil, tostring(pErr))\n881:        local held, hErr = liftFunction(\"triggerHeld\", baseEnv())\n882:        check(\"trigger: triggerHeld is liftable and compiles\", held ~= nil, tostring(hErr))\n893:            held = liftFunction(\"triggerHeld\", hEnv)"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "15dccd29-8341-4b83-b439-c0a913ce2ea9",
+  "version": "2.1.233"
+}

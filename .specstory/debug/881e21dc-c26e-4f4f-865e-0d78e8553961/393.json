@@ -1,0 +1,89 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/AGENTS.md has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01Nf2NvVnZ3J9Cg6Kgf5DW2h",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "6cfc9093-b4cf-428a-908a-40e5b983c297",
+  "promptId": "b1c3dd4b-bdb6-4805-8c6e-1e76cb9b10ed",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "6cfc9093-b4cf-428a-908a-40e5b983c297",
+  "timestamp": "2026-08-17T02:33:52.055Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/AGENTS.md",
+    "newString": "### Segmenting: cut at a pause, never at a fixed index\n\nRecordings longer than `FINAL_SEGMENT_SECS` (55s) are split and each piece is transcribed by\nan **independent** whisper call. A fixed-index cut therefore lands mid-word and the word is\nmangled or duplicated across the seam — a real transcript showed segment 1 ending\n`...чтобы меня передавали.` and segment 2 opening `давали по звучанию.`\n\n`splitAtSilence()` scans back up to 8s from the hard boundary for the quietest 1-second chunk\n(`getWavRMS` reads the PCM directly, no subprocess) and cuts there instead, stopping early at\nRMS \u003c 300. It never moves the boundary earlier than halfway through the window, so an\nunbroken passage is still bounded by `maxSecs`.\n\nThis was written once, deleted in the \"remove dead features\" cleanup, and restored. If you\nare tempted to delete it again: the seam artifact it prevents is invisible in every check\nexcept a long real dictation.\n\n### Mixed-language speech (surzhyk, ru/uk/en)\n\nWhisper decodes each window into exactly one language — there is no mixed mode. Left alone it\npicks the dominant language and normalises everything else into it, rewriting Ukrainian words\nas Russian and transliterating English terms. `-l auto` is applied **per segment**, so a long\ndictation can even flip language mid-way.\n\nThe initial prompt is the only real lever, and it is a **writing sample, not an instruction**\n— whisper continues in whatever style the prompt establishes. `~/.local-whisper/prompt` is\nseeded on first run with a ru/uk/en sample and is meant to be edited to match how the user\nactually speaks.\n\nBoth transcription paths must stay in sync on this:\n\n- **local** — `getPromptArgs()` passes `--prompt` plus `--carry-initial-prompt`. Without the\n  latter the anchor only applies to whisper's first internal 30s window and long segments\n  drift back to single-language output.\n- **remote API** — `transcribeViaAPI()` sends the same text as the `prompt` form field, plus\n  `temperature=0`. Before this it sent no prompt at all, so the LAN model normalised the mix\n  exactly as whisper-cli did. There is no `--carry-initial-prompt` equivalent over the wire.\n\n`PROMPT_DEFAULT`/`readPrompt()` are declared **above** `transcribeViaAPI` on purpose — see the\ndeclaration-order rule above.\n\n### The trigger is a modifier combo",
+    "oldString": "### The trigger is a modifier combo",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          " # → the log must show a new \"warmup: probing audio device...\" line",
+          " ```",
+          " ",
+          "+### Segmenting: cut at a pause, never at a fixed index",
+          "+",
+          "+Recordings longer than `FINAL_SEGMENT_SECS` (55s) are split and each piece is transcribed by",
+          "+an **independent** whisper call. A fixed-index cut therefore lands mid-word and the word is",
+          "+mangled or duplicated across the seam — a real transcript showed segment 1 ending",
+          "+`...чтобы меня передавали.` and segment 2 opening `давали по звучанию.`",
+          "+",
+          "+`splitAtSilence()` scans back up to 8s from the hard boundary for the quietest 1-second chunk",
+          "+(`getWavRMS` reads the PCM directly, no subprocess) and cuts there instead, stopping early at",
+          "+RMS \u003c 300. It never moves the boundary earlier than halfway through the window, so an",
+          "+unbroken passage is still bounded by `maxSecs`.",
+          "+",
+          "+This was written once, deleted in the \"remove dead features\" cleanup, and restored. If you",
+          "+are tempted to delete it again: the seam artifact it prevents is invisible in every check",
+          "+except a long real dictation.",
+          "+",
+          "+### Mixed-language speech (surzhyk, ru/uk/en)",
+          "+",
+          "+Whisper decodes each window into exactly one language — there is no mixed mode. Left alone it",
+          "+picks the dominant language and normalises everything else into it, rewriting Ukrainian words",
+          "+as Russian and transliterating English terms. `-l auto` is applied **per segment**, so a long",
+          "+dictation can even flip language mid-way.",
+          "+",
+          "+The initial prompt is the only real lever, and it is a **writing sample, not an instruction**",
+          "+— whisper continues in whatever style the prompt establishes. `~/.local-whisper/prompt` is",
+          "+seeded on first run with a ru/uk/en sample and is meant to be edited to match how the user",
+          "+actually speaks.",
+          "+",
+          "+Both transcription paths must stay in sync on this:",
+          "+",
+          "+- **local** — `getPromptArgs()` passes `--prompt` plus `--carry-initial-prompt`. Without the",
+          "+  latter the anchor only applies to whisper's first internal 30s window and long segments",
+          "+  drift back to single-language output.",
+          "+- **remote API** — `transcribeViaAPI()` sends the same text as the `prompt` form field, plus",
+          "+  `temperature=0`. Before this it sent no prompt at all, so the LAN model normalised the mix",
+          "+  exactly as whisper-cli did. There is no `--carry-initial-prompt` equivalent over the wire.",
+          "+",
+          "+`PROMPT_DEFAULT`/`readPrompt()` are declared **above** `transcribeViaAPI` on purpose — see the",
+          "+declaration-order rule above.",
+          "+",
+          " ### The trigger is a modifier combo",
+          " ",
+          " `TRIGGER_KEY` selects an entry from the `TRIGGERS` table; the default `fnLeftCtrl` ORs"
+        ],
+        "newLines": 46,
+        "newStart": 161,
+        "oldLines": 6,
+        "oldStart": 161
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "6106f07a-1118-4bfd-bb15-8d08bcf28e3b",
+  "version": "2.1.233"
+}

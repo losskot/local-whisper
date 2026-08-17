@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "=== ffprobe chunk_004 ===\ncodec_name=pcm_s16le\nsample_rate=16000\nchannels=1\nduration=0.896000\n=== ffprobe seg_1.wav (55 chunks concatenated) ===\nsample_rate=16000\nchannels=1\nduration=49.151000\n=== per-chunk duration, chunks 0..9 ===\nchunk_000: 0.905625\nchunk_001: 0.896000\nchunk_002: 0.917375\nchunk_003: 0.896000\nchunk_004: 0.896000\nchunk_005: 0.885313\nchunk_006: 0.906688\nchunk_007: 0.906625\nchunk_008: 0.885375\nchunk_009: 0.885313",
+        "is_error": false,
+        "tool_use_id": "toolu_019rEmkqVy5bqLpZicduQovo",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "21dbe9f2-4668-43ce-a932-4ac99f15ac57",
+  "promptId": "853ca6f7-97d8-4bf6-8abc-86466ddb0eda",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "21dbe9f2-4668-43ce-a932-4ac99f15ac57",
+  "timestamp": "2026-08-17T01:28:35.751Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "=== ffprobe chunk_004 ===\ncodec_name=pcm_s16le\nsample_rate=16000\nchannels=1\nduration=0.896000\n=== ffprobe seg_1.wav (55 chunks concatenated) ===\nsample_rate=16000\nchannels=1\nduration=49.151000\n=== per-chunk duration, chunks 0..9 ===\nchunk_000: 0.905625\nchunk_001: 0.896000\nchunk_002: 0.917375\nchunk_003: 0.896000\nchunk_004: 0.896000\nchunk_005: 0.885313\nchunk_006: 0.906688\nchunk_007: 0.906625\nchunk_008: 0.885375\nchunk_009: 0.885313"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "d2dc2a85-1e0a-485f-805c-350c19cb495d",
+  "version": "2.1.233"
+}

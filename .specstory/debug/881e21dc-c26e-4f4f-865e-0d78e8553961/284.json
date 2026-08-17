@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "Albert              en_US    # Hello! My name is Albert.\nBad News            en_US    # Hello! My name is Bad News.\nBahh                en_US    # Hello! My name is Bahh.\nBells               en_US    # Hello! My name is Bells.\nBoing               en_US    # Hello! My name is Boing.\nBubbles             en_US    # Hello! My name is Bubbles.\n--- current volume ---\n69",
+        "is_error": false,
+        "tool_use_id": "toolu_01KzKw1XDm1oZYxm9ygmzKW1",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "f34d404a-3ad2-4cc7-9981-b33dedaaf90c",
+  "promptId": "b1c3dd4b-bdb6-4805-8c6e-1e76cb9b10ed",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "f34d404a-3ad2-4cc7-9981-b33dedaaf90c",
+  "timestamp": "2026-08-17T02:23:02.932Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "Albert              en_US    # Hello! My name is Albert.\nBad News            en_US    # Hello! My name is Bad News.\nBahh                en_US    # Hello! My name is Bahh.\nBells               en_US    # Hello! My name is Bells.\nBoing               en_US    # Hello! My name is Boing.\nBubbles             en_US    # Hello! My name is Bubbles.\n--- current volume ---\n69"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "344e0da9-8c96-49bd-a0e1-393bee56e26e",
+  "version": "2.1.233"
+}

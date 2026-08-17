@@ -1,0 +1,59 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_016qLCM65T5N6wFBGe4ZKLCn",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "9a6b5f25-5b9c-45b6-adbd-2593ab2033cd",
+  "promptId": "b1c3dd4b-bdb6-4805-8c6e-1e76cb9b10ed",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "9a6b5f25-5b9c-45b6-adbd-2593ab2033cd",
+  "timestamp": "2026-08-17T02:27:41.965Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+    "newString": "    -- A recorder from the previous dictation can still be alive here: stopRecording() only\n    -- sends SIGINT, and lw-record then takes a moment to flush its final chunk. If it is\n    -- still writing when we clear CHUNK_DIR, its tail lands in the new recording's directory\n    -- and gets spliced onto the front of the next transcript. Kill it before clearing.\n    if recorderTask and recorderTask:isRunning() then\n        log(\"warmup: terminating a still-running recorder from the previous dictation\")\n        recorderTask:terminate()\n    end\n    recorderTask = nil\n\n    -- Each attempt records from scratch: a stale chunk from a failed attempt would be\n    -- concatenated into the front of the transcript.\n    os.execute(\"rm -rf '\" .. CHUNK_DIR .. \"'\")\n    os.execute(\"mkdir -p '\" .. CHUNK_DIR .. \"'\")",
+    "oldString": "    -- Each attempt records from scratch: a stale chunk from a failed attempt would be\n    -- concatenated into the front of the transcript.\n    os.execute(\"rm -rf '\" .. CHUNK_DIR .. \"'\")\n    os.execute(\"mkdir -p '\" .. CHUNK_DIR .. \"'\")",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          "     if warmupTick then warmupTick:play() end",
+          "     setOverlayText(\"... \" .. warmupAttempt .. \"/\" .. WARMUP_MAX_ATTEMPTS)",
+          " ",
+          "+    -- A recorder from the previous dictation can still be alive here: stopRecording() only",
+          "+    -- sends SIGINT, and lw-record then takes a moment to flush its final chunk. If it is",
+          "+    -- still writing when we clear CHUNK_DIR, its tail lands in the new recording's directory",
+          "+    -- and gets spliced onto the front of the next transcript. Kill it before clearing.",
+          "+    if recorderTask and recorderTask:isRunning() then",
+          "+        log(\"warmup: terminating a still-running recorder from the previous dictation\")",
+          "+        recorderTask:terminate()",
+          "+    end",
+          "+    recorderTask = nil",
+          "+",
+          "     -- Each attempt records from scratch: a stale chunk from a failed attempt would be",
+          "     -- concatenated into the front of the transcript.",
+          "     os.execute(\"rm -rf '\" .. CHUNK_DIR .. \"'\")"
+        ],
+        "newLines": 16,
+        "newStart": 1519,
+        "oldLines": 6,
+        "oldStart": 1519
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "5aa8a7dd-0c5e-4501-a29a-1602c6043736",
+  "version": "2.1.233"
+}

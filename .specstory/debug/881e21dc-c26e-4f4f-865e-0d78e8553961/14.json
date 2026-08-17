@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "3:-- No Karabiner needed. Just Hammerspoon + ffmpeg + whisper.cpp\n25:local FFMPEG = hs.fs.attributes(\"/opt/homebrew/bin/ffmpeg\") and \"/opt/homebrew/bin/ffmpeg\" or \"/usr/local/bin/ffmpeg\"\n293:    -- Sort by the numeric index, not lexicographically: ffmpeg's %03d overflows past 999\n789:local ffmpegTask = nil\n1055:    if ffmpegTask and ffmpegTask:isRunning() then ffmpegTask:interrupt() end\n1056:    ffmpegTask = nil\n1147:local FINAL_SEGMENT_SECS = 55\n1172:    -- Split 1-second chunks into groups of FINAL_SEGMENT_SECS\n1177:        for j = i, math.min(i + FINAL_SEGMENT_SECS - 1, #chunks) do\n1181:        i = i + FINAL_SEGMENT_SECS\n1185:    log(\"final: segments=\" .. totalSegs .. \" (FINAL_SEGMENT_SECS=\" .. FINAL_SEGMENT_SECS .. \")\")\n1248:        log(\"final: seg \" .. n .. \" starting ffmpeg concat → \" .. segWav)\n1373:    ffmpegTask = hs.task.new(FFMPEG, function(code, out, err)\n1374:        log(\"recording: ffmpeg exited \" .. tostring(code))\n1376:            log(\"recording: ERROR — ffmpeg failed to open audio device '\" .. AUDIO_DEVICE .. \"'. Check device format (should be :default, :0, :1) and microphone permissions.\")\n1380:        \"-ac\", \"1\", \"-ar\", \"16000\",\n1381:        \"-f\", \"segment\", \"-segment_time\", \"1\", \"-segment_format\", \"wav\",\n1384:    ffmpegTask:start()\n1432:        function(task, stdout, stderr)  -- streaming callback: ffmpeg writes to stderr once device is open\n1442:          \"-ac\", \"1\", \"-ar\", \"16000\",\n1509:    if ffmpegTask and ffmpegTask:isRunning() then\n1510:        ffmpegTask:interrupt()\n1512:    ffmpegTask = nil\n1514:    -- Brief delay for ffmpeg to finalize last chunk. A short timer scheduled right as the",
+        "is_error": false,
+        "tool_use_id": "toolu_011LJo9Kcqp3B6wQUVVZaSJ5",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "c4aae83b-70fb-4bd9-a6a9-c98e1f8750aa",
+  "promptId": "853ca6f7-97d8-4bf6-8abc-86466ddb0eda",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "c4aae83b-70fb-4bd9-a6a9-c98e1f8750aa",
+  "timestamp": "2026-08-17T01:26:40.746Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "3:-- No Karabiner needed. Just Hammerspoon + ffmpeg + whisper.cpp\n25:local FFMPEG = hs.fs.attributes(\"/opt/homebrew/bin/ffmpeg\") and \"/opt/homebrew/bin/ffmpeg\" or \"/usr/local/bin/ffmpeg\"\n293:    -- Sort by the numeric index, not lexicographically: ffmpeg's %03d overflows past 999\n789:local ffmpegTask = nil\n1055:    if ffmpegTask and ffmpegTask:isRunning() then ffmpegTask:interrupt() end\n1056:    ffmpegTask = nil\n1147:local FINAL_SEGMENT_SECS = 55\n1172:    -- Split 1-second chunks into groups of FINAL_SEGMENT_SECS\n1177:        for j = i, math.min(i + FINAL_SEGMENT_SECS - 1, #chunks) do\n1181:        i = i + FINAL_SEGMENT_SECS\n1185:    log(\"final: segments=\" .. totalSegs .. \" (FINAL_SEGMENT_SECS=\" .. FINAL_SEGMENT_SECS .. \")\")\n1248:        log(\"final: seg \" .. n .. \" starting ffmpeg concat → \" .. segWav)\n1373:    ffmpegTask = hs.task.new(FFMPEG, function(code, out, err)\n1374:        log(\"recording: ffmpeg exited \" .. tostring(code))\n1376:            log(\"recording: ERROR — ffmpeg failed to open audio device '\" .. AUDIO_DEVICE .. \"'. Check device format (should be :default, :0, :1) and microphone permissions.\")\n1380:        \"-ac\", \"1\", \"-ar\", \"16000\",\n1381:        \"-f\", \"segment\", \"-segment_time\", \"1\", \"-segment_format\", \"wav\",\n1384:    ffmpegTask:start()\n1432:        function(task, stdout, stderr)  -- streaming callback: ffmpeg writes to stderr once device is open\n1442:          \"-ac\", \"1\", \"-ar\", \"16000\",\n1509:    if ffmpegTask and ffmpegTask:isRunning() then\n1510:        ffmpegTask:interrupt()\n1512:    ffmpegTask = nil\n1514:    -- Brief delay for ffmpeg to finalize last chunk. A short timer scheduled right as the"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "47d562b6-03af-48f0-bb25-31982e75ce21",
+  "version": "2.1.233"
+}

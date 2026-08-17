@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "120:**Current count: ~121/200** — comfortable headroom after meeting mode, LLM refine, silence auto-stop and preferred languages were removed. Only *top-level* locals count against the limit; locals inside a function body belong to that function's own budget, so match the start of the line exactly:\n192:### Simulating a whole dictation without touching the keyboard\n### Simulating a whole dictation without touching the keyboard\n\nPosted flagsChanged events update the session flag state, so a synthetic press is held from\nthe app's point of view until you post the release — the release poller sees the generic bits\nand keeps recording. This exercises the real pipeline end to end:\n\n```bash\nhs -c 'local function f(x) local e=hs.eventtap.event.newEvent()\n         e:setType(hs.eventtap.event.types.flagsChanged); e:rawFlags(x); return e end\n       f(0x840001):post()                                   -- fn + control + deviceLeftControl\n       hs.timer.doAfter(6, function() f(0):post() end)'\n```\n\nSet `~/.local-whisper/output` to `copy` first and restore it afterwards — otherwise the\ntranscript is pasted into whatever window happens to be focused.\n\n## Testing \u0026 debugging",
+        "is_error": false,
+        "tool_use_id": "toolu_013X7byBS12EsKrfNkkqfFMY",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "7f613a8b-95e1-4a9f-9145-e74c7a895c23",
+  "promptId": "b1c3dd4b-bdb6-4805-8c6e-1e76cb9b10ed",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "7f613a8b-95e1-4a9f-9145-e74c7a895c23",
+  "timestamp": "2026-08-17T02:32:51.101Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "120:**Current count: ~121/200** — comfortable headroom after meeting mode, LLM refine, silence auto-stop and preferred languages were removed. Only *top-level* locals count against the limit; locals inside a function body belong to that function's own budget, so match the start of the line exactly:\n192:### Simulating a whole dictation without touching the keyboard\n### Simulating a whole dictation without touching the keyboard\n\nPosted flagsChanged events update the session flag state, so a synthetic press is held from\nthe app's point of view until you post the release — the release poller sees the generic bits\nand keeps recording. This exercises the real pipeline end to end:\n\n```bash\nhs -c 'local function f(x) local e=hs.eventtap.event.newEvent()\n         e:setType(hs.eventtap.event.types.flagsChanged); e:rawFlags(x); return e end\n       f(0x840001):post()                                   -- fn + control + deviceLeftControl\n       hs.timer.doAfter(6, function() f(0):post() end)'\n```\n\nSet `~/.local-whisper/output` to `copy` first and restore it afterwards — otherwise the\ntranscript is pasted into whatever window happens to be focused.\n\n## Testing \u0026 debugging"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "c2614b60-4d53-4c72-ae69-3d0a53a6b047",
+  "version": "2.1.233"
+}

@@ -1,0 +1,51 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/AGENTS.md has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01ESehzioqhYqJEd9iKuMhda",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "c2390f17-8d28-4014-86ef-6748620992a8",
+  "promptId": "b1c3dd4b-bdb6-4805-8c6e-1e76cb9b10ed",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "c2390f17-8d28-4014-86ef-6748620992a8",
+  "timestamp": "2026-08-17T02:33:00.862Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/AGENTS.md",
+    "newString": "**Current count: ~128/200** — comfortable headroom after meeting mode, LLM refine, silence auto-stop and preferred languages were removed.",
+    "oldString": "**Current count: ~121/200** — comfortable headroom after meeting mode, LLM refine, silence auto-stop and preferred languages were removed.",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          " ",
+          " Lua 5.4 (Hammerspoon's runtime) enforces a **hard limit of 200 locals per function**. The top-level chunk of `init.lua` counts as one function. This limit is a compiler error — exceeding it prevents the file from loading at all.",
+          " ",
+          "-**Current count: ~121/200** — comfortable headroom after meeting mode, LLM refine, silence auto-stop and preferred languages were removed. Only *top-level* locals count against the limit; locals inside a function body belong to that function's own budget, so match the start of the line exactly:",
+          "+**Current count: ~128/200** — comfortable headroom after meeting mode, LLM refine, silence auto-stop and preferred languages were removed. Only *top-level* locals count against the limit; locals inside a function body belong to that function's own budget, so match the start of the line exactly:",
+          " ",
+          " ```bash",
+          " grep -c '^local ' hammerspoon/init.lua"
+        ],
+        "newLines": 7,
+        "newStart": 117,
+        "oldLines": 7,
+        "oldStart": 117
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "62d2e1bd-c9c6-4b08-b558-a1e2d9fd0a5e",
+  "version": "2.1.233"
+}

@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "484:local function transcribeViaAPI(wavPath, lang, timeoutSecs, callback)\n501:    local promptText = readPrompt()\n533:local PROMPT_DEFAULT =\n538:local function readPrompt()\n542:local function ensurePromptFile()\n545:    if f then f:write(PROMPT_DEFAULT .. \"\\n\"); f:close() end\n549:local function getPromptArgs()",
+        "is_error": false,
+        "tool_use_id": "toolu_01UUo1cEqUt8usezd6xRkcKb",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "304d4f80-030b-4152-947d-099a7ef83355",
+  "promptId": "b1c3dd4b-bdb6-4805-8c6e-1e76cb9b10ed",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "304d4f80-030b-4152-947d-099a7ef83355",
+  "timestamp": "2026-08-17T02:11:16.347Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "484:local function transcribeViaAPI(wavPath, lang, timeoutSecs, callback)\n501:    local promptText = readPrompt()\n533:local PROMPT_DEFAULT =\n538:local function readPrompt()\n542:local function ensurePromptFile()\n545:    if f then f:write(PROMPT_DEFAULT .. \"\\n\"); f:close() end\n549:local function getPromptArgs()"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "8c940c6f-5f8e-46ce-8a98-57ad66fa5ed2",
+  "version": "2.1.233"
+}

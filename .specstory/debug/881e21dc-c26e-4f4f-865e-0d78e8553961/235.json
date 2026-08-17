@@ -1,0 +1,72 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_013UWxp5SHVRGxUbvu5pnEBk",
+        "input": {
+          "command": "rm -rf /tmp/lwtest \u0026\u0026 mkdir -p /tmp/lwtest\nhs -c 'LWTEST = hs.task.new(os.getenv(\"HOME\")..\"/.local-whisper/bin/lw-record\",\n  function(c,o,e) local f=io.open(\"/tmp/lwtest/result.txt\",\"w\"); f:write(\"exit=\"..tostring(c)..\"\\nout=\"..tostring(o)..\"\\nerr=\"..tostring(e)); f:close() end,\n  function(t,so,se) return true end,\n  {\"/tmp/lwtest\",\"1\",\"16000\"})\nLWTEST:start(); return \"started pid=\"..tostring(LWTEST:pid())'\nsleep 8\nhs -c 'LWTEST:interrupt(); return \"interrupted\"'\nsleep 2\necho \"=== result ===\"; cat /tmp/lwtest/result.txt\necho; echo \"=== chunks ===\"; ls -l /tmp/lwtest/*.wav | awk '{s+=$5;n++} END {printf \"files=%d totalAudio=%.3fs\\n\", n, (s-n*44)/32000}'\nfor f in $(ls /tmp/lwtest/*.wav | head -3); do printf \"  %s \" $(basename $f); /usr/local/bin/ffprobe -v error -show_entries format=duration -of csv=p=0 \"$f\"; done",
+          "description": "Test recorder spawned by Hammerspoon"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce7WsvJSyJDuzBcNRhpWn",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 1751,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 1751,
+      "cache_read_input_tokens": 152507,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1751,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 1751,
+          "cache_read_input_tokens": 152507,
+          "input_tokens": 2,
+          "output_tokens": 2498,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 2498,
+      "output_tokens_details": {
+        "thinking_tokens": 1847
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "c11ac098-6ca1-4f5e-b281-177588d6833b",
+  "requestId": "req_011Ce7Wsu8zzHqdt1WWwotPG",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "timestamp": "2026-08-17T02:16:53.363Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "c89cf14e-9edc-4d80-9970-da8b9a5f3478",
+  "version": "2.1.233"
+}

@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "    printf \"${BLD}[%d/%d]${RST} %s\\n\" \"$DONE\" \"$TOTAL\" \"$filename\"\n\n    # Convert to WAV if needed\n    audio_file=\"$input_file\"\n    if [[ \"$(ext_type \"$ext\")\" == \"ffmpeg\" ]]; then\n        wav_tmp=\"${TMPWORK}/$(printf '%06d' \"$DONE\").wav\"\n        log \"  Converting via ffmpeg → WAV 16 kHz mono…\"\n        if ! \"$FFMPEG_BIN\" -hide_banner -loglevel error \\\n            -fflags +discardcorrupt \\\n            -i \"$input_file\" \\\n            -ar 16000 -ac 1 -c:a pcm_s16le \\\n            -y \"$wav_tmp\" 2\u003e\u00261; then\n            err \"  ffmpeg conversion failed — skipping.\"\n            (( FAILED++ )) || true\n            continue\n        fi\n        audio_file=\"$wav_tmp\"\n    fi\n\n    # Build whisper-cli command\n    cmd=(\n=== swift toolchain available? ===\n/usr/bin/swiftc\n/usr/bin/swift\nswift-driver version: 1.148.6 Apple Swift version 6.3.3 (swiftlang-6.3.3.1.3 clang-2100.1.1.101)\nTarget: arm64-apple-macosx26.0\n/Library/Developer/CommandLineTools",
+        "is_error": false,
+        "tool_use_id": "toolu_01AE74a34gk7m1qqkhLuy7Gh",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "58e1fd7a-974b-42fa-ab73-6983d0e101ff",
+  "promptId": "b1c3dd4b-bdb6-4805-8c6e-1e76cb9b10ed",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "58e1fd7a-974b-42fa-ab73-6983d0e101ff",
+  "timestamp": "2026-08-17T02:04:23.527Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "    printf \"${BLD}[%d/%d]${RST} %s\\n\" \"$DONE\" \"$TOTAL\" \"$filename\"\n\n    # Convert to WAV if needed\n    audio_file=\"$input_file\"\n    if [[ \"$(ext_type \"$ext\")\" == \"ffmpeg\" ]]; then\n        wav_tmp=\"${TMPWORK}/$(printf '%06d' \"$DONE\").wav\"\n        log \"  Converting via ffmpeg → WAV 16 kHz mono…\"\n        if ! \"$FFMPEG_BIN\" -hide_banner -loglevel error \\\n            -fflags +discardcorrupt \\\n            -i \"$input_file\" \\\n            -ar 16000 -ac 1 -c:a pcm_s16le \\\n            -y \"$wav_tmp\" 2\u003e\u00261; then\n            err \"  ffmpeg conversion failed — skipping.\"\n            (( FAILED++ )) || true\n            continue\n        fi\n        audio_file=\"$wav_tmp\"\n    fi\n\n    # Build whisper-cli command\n    cmd=(\n=== swift toolchain available? ===\n/usr/bin/swiftc\n/usr/bin/swift\nswift-driver version: 1.148.6 Apple Swift version 6.3.3 (swiftlang-6.3.3.1.3 clang-2100.1.1.101)\nTarget: arm64-apple-macosx26.0\n/Library/Developer/CommandLineTools"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "da30c36d-986a-4cbf-b06d-d1d95d0b02db",
+  "version": "2.1.233"
+}

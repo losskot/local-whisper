@@ -1,0 +1,81 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_017PcK3H3aHbWgvnacynma1x",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "061fa9c7-633f-4162-a82c-dee35434236a",
+  "promptId": "b1c3dd4b-bdb6-4805-8c6e-1e76cb9b10ed",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "061fa9c7-633f-4162-a82c-dee35434236a",
+  "timestamp": "2026-08-17T02:17:39.326Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+    "newString": "    recordStartedAt = hs.timer.secondsSinceEpoch()\n    recorderCaptured = nil\n\n    recorderTask = hs.task.new(RECORDER_BIN,\n        function(code, out, err)  -- termination callback\n            recorderTask = nil\n            log(\"recording: recorder exited \" .. tostring(code))\n            if code ~= 0 and not recorderCaptured then\n                log(\"recording: ERROR — lw-record failed: \" .. tostring(err))\n                return\n            end\n            if recorderCaptured and recordStartedAt then\n                local wall = hs.timer.secondsSinceEpoch() - recordStartedAt\n                log(string.format(\"recording: captured %.2fs of %.2fs wall (%.0f%%)\",\n                    recorderCaptured, wall, wall \u003e 0 and (recorderCaptured / wall * 100) or 0))\n            end\n        end,\n        function(task, stdout, stderr)  -- streaming: READY, then the final CAPTURED total\n            if stdout then\n                if isWarmingUp and stdout:find(\"READY\", 1, true) then\n                    log(\"warmup: device ready on attempt \" .. warmupAttempt)\n                    onRecorderReady()\n                end\n                local c = tonumber(stdout:match(\"CAPTURED%s+([%d%.]+)\"))\n                if c then recorderCaptured = c end\n            end\n            return true\n        end,\n        { CHUNK_DIR, \"1\", \"16000\" })",
+    "oldString": "    recordStartedAt = hs.timer.secondsSinceEpoch()\n\n    recorderTask = hs.task.new(RECORDER_BIN,\n        function(code, out, err)  -- termination callback\n            recorderTask = nil\n            log(\"recording: recorder exited \" .. tostring(code))\n            if code ~= 0 then\n                log(\"recording: ERROR — lw-record failed: \" .. tostring(err))\n                return\n            end\n            local captured = tonumber((out or \"\"):match(\"CAPTURED%s+([%d%.]+)\"))\n            if captured and recordStartedAt then\n                local wall = hs.timer.secondsSinceEpoch() - recordStartedAt\n                log(string.format(\"recording: captured %.2fs of %.2fs wall (%.0f%%)\",\n                    captured, wall, wall \u003e 0 and (captured / wall * 100) or 0))\n            end\n        end,\n        function(task, stdout, stderr)  -- streaming: READY once the engine is running\n            if isWarmingUp and stdout and stdout:find(\"READY\", 1, true) then\n                log(\"warmup: device ready on attempt \" .. warmupAttempt)\n                onRecorderReady()\n            end\n            return true\n        end,\n        { CHUNK_DIR, \"1\", \"16000\" })",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          "     -- capture regression shows up in the log as a gap against the wall clock instead of",
+          "     -- silently shortening words. ffmpeg lost ~10% here and nothing recorded it.",
+          "     recordStartedAt = hs.timer.secondsSinceEpoch()",
+          "+    recorderCaptured = nil",
+          " ",
+          "     recorderTask = hs.task.new(RECORDER_BIN,",
+          "         function(code, out, err)  -- termination callback",
+          "             recorderTask = nil",
+          "             log(\"recording: recorder exited \" .. tostring(code))",
+          "-            if code ~= 0 then",
+          "+            if code ~= 0 and not recorderCaptured then",
+          "                 log(\"recording: ERROR — lw-record failed: \" .. tostring(err))",
+          "                 return",
+          "             end",
+          "-            local captured = tonumber((out or \"\"):match(\"CAPTURED%s+([%d%.]+)\"))",
+          "-            if captured and recordStartedAt then",
+          "+            if recorderCaptured and recordStartedAt then",
+          "                 local wall = hs.timer.secondsSinceEpoch() - recordStartedAt",
+          "                 log(string.format(\"recording: captured %.2fs of %.2fs wall (%.0f%%)\",",
+          "-                    captured, wall, wall \u003e 0 and (captured / wall * 100) or 0))",
+          "+                    recorderCaptured, wall, wall \u003e 0 and (recorderCaptured / wall * 100) or 0))",
+          "             end",
+          "         end,",
+          "-        function(task, stdout, stderr)  -- streaming: READY once the engine is running",
+          "-            if isWarmingUp and stdout and stdout:find(\"READY\", 1, true) then",
+          "-                log(\"warmup: device ready on attempt \" .. warmupAttempt)",
+          "-                onRecorderReady()",
+          "+        function(task, stdout, stderr)  -- streaming: READY, then the final CAPTURED total",
+          "+            if stdout then",
+          "+                if isWarmingUp and stdout:find(\"READY\", 1, true) then",
+          "+                    log(\"warmup: device ready on attempt \" .. warmupAttempt)",
+          "+                    onRecorderReady()",
+          "+                end",
+          "+                local c = tonumber(stdout:match(\"CAPTURED%s+([%d%.]+)\"))",
+          "+                if c then recorderCaptured = c end",
+          "             end",
+          "             return true",
+          "         end,"
+        ],
+        "newLines": 30,
+        "newStart": 1531,
+        "oldLines": 26,
+        "oldStart": 1531
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "d7818cef-f32e-4e57-b517-5ae62c5f2887",
+  "version": "2.1.233"
+}

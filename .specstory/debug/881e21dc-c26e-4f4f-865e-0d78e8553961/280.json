@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "  \u001b[0;32mPASS\u001b[0m  split: getWavRMS is liftable and compiles\n  \u001b[0;32mPASS\u001b[0m  split: a silent chunk reads quieter than a loud one\n  \u001b[0;32mPASS\u001b[0m  split: splitAtSilence is liftable and compiles\n  \u001b[0;32mPASS\u001b[0m  split: regrouping preserves every chunk exactly once, in order\n  \u001b[0;31mFAIL\u001b[0m  split: the first cut lands on the silent chunk, not the hard boundary\n  \u001b[0;32mPASS\u001b[0m  split: an unbroken passage is still bounded by maxSecs\n  \u001b[0;32mPASS\u001b[0m  overlay: X while idle does not call emergencyStop\n  \u001b[0;32mPASS\u001b[0m  trigger: no modifiers at all does not fire\n\u001b[0;31m\u001b[1m1 of 85 checks failed.\u001b[0m",
+        "is_error": false,
+        "tool_use_id": "toolu_01YQhLTudiFcxegkqLdZjsWd",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "7700b1ad-7734-453b-b869-eaaf90ab3f01",
+  "promptId": "b1c3dd4b-bdb6-4805-8c6e-1e76cb9b10ed",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "7700b1ad-7734-453b-b869-eaaf90ab3f01",
+  "timestamp": "2026-08-17T02:22:40.230Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "  \u001b[0;32mPASS\u001b[0m  split: getWavRMS is liftable and compiles\n  \u001b[0;32mPASS\u001b[0m  split: a silent chunk reads quieter than a loud one\n  \u001b[0;32mPASS\u001b[0m  split: splitAtSilence is liftable and compiles\n  \u001b[0;32mPASS\u001b[0m  split: regrouping preserves every chunk exactly once, in order\n  \u001b[0;31mFAIL\u001b[0m  split: the first cut lands on the silent chunk, not the hard boundary\n  \u001b[0;32mPASS\u001b[0m  split: an unbroken passage is still bounded by maxSecs\n  \u001b[0;32mPASS\u001b[0m  overlay: X while idle does not call emergencyStop\n  \u001b[0;32mPASS\u001b[0m  trigger: no modifiers at all does not fire\n\u001b[0;31m\u001b[1m1 of 85 checks failed.\u001b[0m"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "bb47ae49-248d-403c-b0df-b9efc6147e7a",
+  "version": "2.1.233"
+}

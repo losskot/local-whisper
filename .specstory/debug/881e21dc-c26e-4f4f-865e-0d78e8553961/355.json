@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "release posted\nno stray recorder\n[04:26:58] recording: captured 24.00s of 4.01s wall (598%)\n[04:26:58] recording: recorder exited 0\n[04:26:58] recording: captured 24.00s of 4.01s wall (598%)\n[04:27:02] final: seg 1 whisper(auto) exit=0 outlen=25 errlen=4052\n[04:27:02] seg 1 auto-detected: ru\n[04:27:02] final: seg 1 onSegmentText hallucination=false len=23\n[04:27:02] final: seg 1 accepted text: 'Блять. Блять.'\n[04:27:02] final: finishAll — collected 1 text segment(s)\n[04:27:02] final combined (1 seg(s)): 'Блять. Блять.'\n[04:27:02] action: inserted [Code]: Блять. Блять.\n[04:29:01] recorder: building /Users/vitaliy/.local-whisper/bin/lw-record\n/Users/vitaliy/Documents/GitHub/local-whisper/tools/lw-record.swift:45:6: warning: concurrently-executed global function 'wavHeader(dataBytes:rate:channels:)' must be marked as '@Sendable'; this is an error in the Swift 6 language mode\n 43 | \n 44 | /// 44-byte canonical RIFF/WAVE header for 16-bit PCM.\n 45 | func wavHeader(dataBytes: Int, rate: Double, channels: Int = 1) -\u003e Data {\n    |      `- warning: concurrently-executed global function 'wavHeader(dataBytes:rate:channels:)' must be marked as '@Sendable'; this is an error in the Swift 6 language mode\n 46 |     var d = Data()\n 47 |     func u32(_ v: UInt32) { withUnsafeBytes(of: v.littleEndian) { d.append(contentsOf: $0) } }\n[04:29:03] recorder: build OK\n[04:29:04] actions: loaded /Users/vitaliy/.hammerspoon/local_whisper_actions.lua\n[04:29:04] actions: enabled\n[04:29:04] loaded (trigger=fnLeftCtrl, lang=auto, output=copy, model=large-v3-turbo-q5_0)",
+        "is_error": false,
+        "tool_use_id": "toolu_01Jc1omVT6qBBPsqwBxobJfk",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "667e1141-752e-463d-95df-fdd6b42cf831",
+  "promptId": "b1c3dd4b-bdb6-4805-8c6e-1e76cb9b10ed",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "667e1141-752e-463d-95df-fdd6b42cf831",
+  "timestamp": "2026-08-17T02:31:10.228Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "release posted\nno stray recorder\n[04:26:58] recording: captured 24.00s of 4.01s wall (598%)\n[04:26:58] recording: recorder exited 0\n[04:26:58] recording: captured 24.00s of 4.01s wall (598%)\n[04:27:02] final: seg 1 whisper(auto) exit=0 outlen=25 errlen=4052\n[04:27:02] seg 1 auto-detected: ru\n[04:27:02] final: seg 1 onSegmentText hallucination=false len=23\n[04:27:02] final: seg 1 accepted text: 'Блять. Блять.'\n[04:27:02] final: finishAll — collected 1 text segment(s)\n[04:27:02] final combined (1 seg(s)): 'Блять. Блять.'\n[04:27:02] action: inserted [Code]: Блять. Блять.\n[04:29:01] recorder: building /Users/vitaliy/.local-whisper/bin/lw-record\n/Users/vitaliy/Documents/GitHub/local-whisper/tools/lw-record.swift:45:6: warning: concurrently-executed global function 'wavHeader(dataBytes:rate:channels:)' must be marked as '@Sendable'; this is an error in the Swift 6 language mode\n 43 | \n 44 | /// 44-byte canonical RIFF/WAVE header for 16-bit PCM.\n 45 | func wavHeader(dataBytes: Int, rate: Double, channels: Int = 1) -\u003e Data {\n    |      `- warning: concurrently-executed global function 'wavHeader(dataBytes:rate:channels:)' must be marked as '@Sendable'; this is an error in the Swift 6 language mode\n 46 |     var d = Data()\n 47 |     func u32(_ v: UInt32) { withUnsafeBytes(of: v.littleEndian) { d.append(contentsOf: $0) } }\n[04:29:03] recorder: build OK\n[04:29:04] actions: loaded /Users/vitaliy/.hammerspoon/local_whisper_actions.lua\n[04:29:04] actions: enabled\n[04:29:04] loaded (trigger=fnLeftCtrl, lang=auto, output=copy, model=large-v3-turbo-q5_0)"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "e8937d4b-03f2-4fa9-af56-473ab4a3a382",
+  "version": "2.1.233"
+}

@@ -1,0 +1,74 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01DkJA8YfBzVdUZV4yyZ8XtH",
+        "input": {
+          "file_path": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+          "new_string": "    local args = {\n        \"-s\", \"-S\", \"-f\", \"-m\", tostring(timeoutSecs or 30),\n        \"-F\", \"file=@\" .. wavPath,\n        \"-F\", \"model=\" .. API.MODEL_ID,\n        \"-F\", \"response_format=verbose_json\",\n        -- Server translates to English if 'language' is omitted entirely (even with\n        -- task=transcribe) — always send it, \"auto\" included, to force transcription.\n        \"-F\", \"language=\" .. (lang or \"auto\"),\n        -- temperature=0 is the OpenAI-API equivalent of pinning the decoder: the server\n        -- won't climb its fallback ladder and start paraphrasing on a hard passage.\n        \"-F\", \"temperature=0\",\n    }\n    -- Same mixed-language anchor as the local path. The OpenAI transcription API takes the\n    -- style sample as 'prompt'; without it the remote model normalises the mix exactly as\n    -- whisper-cli did. There is no --carry-initial-prompt equivalent over the wire, which is\n    -- another reason segments are kept short.\n    local promptText = readPrompt()\n    if promptText ~= \"\" then\n        table.insert(args, \"-F\")\n        table.insert(args, \"prompt=\" .. promptText)\n    end\n    table.insert(args, API.URL)",
+          "old_string": "    local args = {\n        \"-s\", \"-S\", \"-f\", \"-m\", tostring(timeoutSecs or 30),\n        \"-F\", \"file=@\" .. wavPath,\n        \"-F\", \"model=\" .. API.MODEL_ID,\n        \"-F\", \"response_format=verbose_json\",\n        -- Server translates to English if 'language' is omitted entirely (even with\n        -- task=transcribe) — always send it, \"auto\" included, to force transcription.\n        \"-F\", \"language=\" .. (lang or \"auto\"),\n    }\n    table.insert(args, API.URL)",
+          "replace_all": false
+        },
+        "name": "Edit",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce7WUBz6fPtCFJVs4kms6",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 2817,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 2817,
+      "cache_read_input_tokens": 123313,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 2817,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 2817,
+          "cache_read_input_tokens": 123313,
+          "input_tokens": 2,
+          "output_tokens": 805,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 805,
+      "output_tokens_details": {
+        "thinking_tokens": 0
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "2e895bbe-27e0-465d-a5f5-6f167d694279",
+  "requestId": "req_011Ce7WUAq9P31w3XDRq2KZN",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "timestamp": "2026-08-17T02:11:07.164Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "a853b9be-b937-42db-bf8f-f61fafdb0979",
+  "version": "2.1.233"
+}

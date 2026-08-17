@@ -1,0 +1,65 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "signature": "CAISugQKhwEIEBgCKkBybBeqUIpbLI6vZkUZg/okVKFciwuCsS9xjks7HQsoXpdmHclcDKqQSxu/bpSeK7owtkEiDI6Maq+3UGGBGsM1Mg1jbGF1ZGUtb3B1cy01OAFCCHRoaW5raW5nWiQ4MmY1MDliMS03NDFhLTQ1MzgtYjcyNS1lNWU1ZmVjZjY1NzgSDFtIveEl0qwl/9W/YRoMWzd9RDbUzZP9CujWIjA9AHmfMcPQ0dAcglNcGGoPsHUcBQcZIjRrMEqUaRIJkkM23oOLuHk6CujjMYps8sYq3wJ75rMwvMlcAj2F0FTmCwEdZWW1x6bsRDzRS3y2xw8BRCR6gypCePYX10b1aW04Mb0YxZmRSRktk6iDiLSlQD191LWb68MXcXenLUWPYBNgNe62YSapjrU3DxIKsE4iC/C5mtzqbdWEA+rr3os8g//ptJYLTEHs/oIUjHOaq87MitAbyBDtQ4R8VkkOsUoR1QavaKKAdRGndPVI5Kn4fNVLk8nTQIkbae5yq9tjXQhB6A8yADP+JS+BDVMnwuAcUo+ISri9+3b5KDEwlEjbzoOkMS7jjcvPdOtLUXsdkBmYm3t2EQuA0/j+QfsG9uDAX+9ZOFQ0JMgO6bd3/aCz2Z/HzwMc84x0wc7RHBC/GSpkdec4gyAjfMyHhirCbINEDrde0iNRdR21r8/rJw7lvF9iU0JIXmgVVzmKBSubGki61U4w4AriOqlX4B2Zr8XmNkxxZ57n+szx9gQu0sj+bzEYAQ==",
+        "thinking": "",
+        "type": "thinking"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce7YHE72BJQVnJViBeedy",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 545,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 545,
+      "cache_read_input_tokens": 214160,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 545,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 545,
+          "cache_read_input_tokens": 214160,
+          "input_tokens": 2,
+          "output_tokens": 512,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 512,
+      "output_tokens_details": {
+        "thinking_tokens": 118
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "bec5e9f5-7644-4845-aa0d-310355510e49",
+  "requestId": "req_011Ce7YHC1GduLoudWZoHBZy",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "timestamp": "2026-08-17T02:34:46.623Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "d0034172-9973-4d46-97f0-04556dde3569",
+  "version": "2.1.233"
+}

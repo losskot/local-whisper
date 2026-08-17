@@ -1,0 +1,57 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01DXYZ4RVTqp7kSERPerqffk",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "d68c4a4f-1c5c-4e61-b9bc-371d64fad757",
+  "promptId": "b1c3dd4b-bdb6-4805-8c6e-1e76cb9b10ed",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "d68c4a4f-1c5c-4e61-b9bc-371d64fad757",
+  "timestamp": "2026-08-17T02:27:48.207Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+    "newString": "    -- Captured so the callback can tell whether it is still the current recorder: a slow\n    -- exit from the previous dictation must not clear the handle of the one now running.\n    local thisTask\n    thisTask = hs.task.new(RECORDER_BIN,\n        function(code, out, err)  -- termination callback\n            if recorderTask == thisTask then recorderTask = nil end\n            log(\"recording: recorder exited \" .. tostring(code))",
+    "oldString": "    recorderTask = hs.task.new(RECORDER_BIN,\n        function(code, out, err)  -- termination callback\n            recorderTask = nil\n            log(\"recording: recorder exited \" .. tostring(code))",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          "     recordStartedAt = hs.timer.secondsSinceEpoch()",
+          "     recorderCaptured = nil",
+          " ",
+          "-    recorderTask = hs.task.new(RECORDER_BIN,",
+          "+    -- Captured so the callback can tell whether it is still the current recorder: a slow",
+          "+    -- exit from the previous dictation must not clear the handle of the one now running.",
+          "+    local thisTask",
+          "+    thisTask = hs.task.new(RECORDER_BIN,",
+          "         function(code, out, err)  -- termination callback",
+          "-            recorderTask = nil",
+          "+            if recorderTask == thisTask then recorderTask = nil end",
+          "             log(\"recording: recorder exited \" .. tostring(code))",
+          "             if code ~= 0 and not recorderCaptured then",
+          "                 log(\"recording: ERROR — lw-record failed: \" .. tostring(err))"
+        ],
+        "newLines": 12,
+        "newStart": 1543,
+        "oldLines": 9,
+        "oldStart": 1543
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "86318286-160e-49de-94ff-d1cd65509d9d",
+  "version": "2.1.233"
+}

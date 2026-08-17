@@ -1,0 +1,52 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01S4UGurCMZStmTjAgcZgS4D",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "7630549a-0fb8-445e-837d-7532fa4c1907",
+  "promptId": "b1c3dd4b-bdb6-4805-8c6e-1e76cb9b10ed",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "7630549a-0fb8-445e-837d-7532fa4c1907",
+  "timestamp": "2026-08-17T02:09:11.459Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+    "newString": "local recorderTask = nil\nlocal recordStartedAt = nil",
+    "oldString": "local ffmpegTask = nil",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          " ",
+          " -- isRecording and overlayPinned are declared in the Overlay UI section above,",
+          " -- because createOverlay's mouse callback captures them.",
+          "-local ffmpegTask = nil",
+          "+local recorderTask = nil",
+          "+local recordStartedAt = nil",
+          " local finalizationPending = false  -- true between stopRecording() and doFinalTranscription() actually starting",
+          " local finalizeTimers = { timer = nil, watchdog = nil }",
+          " "
+        ],
+        "newLines": 8,
+        "newStart": 818,
+        "oldLines": 7,
+        "oldStart": 818
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "b136f8ad-6c5a-4869-940d-027bb4c59d06",
+  "version": "2.1.233"
+}

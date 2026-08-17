@@ -1,0 +1,35 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "1541\t    -- capture regression shows up in the log as a gap against the wall clock instead of\n1542\t    -- silently shortening words. ffmpeg lost ~10% here and nothing recorded it.\n1543\t    recordStartedAt = hs.timer.secondsSinceEpoch()\n1544\t    recorderCaptured = nil\n1545\t\n1546\t    -- Captured so the callback can tell whether it is still the current recorder: a slow\n1547\t    -- exit from the previous dictation must not clear the handle of the one now running.\n1548\t    local thisTask\n1549\t    thisTask = hs.task.new(RECORDER_BIN,\n1550\t        function(code, out, err)  -- termination callback\n1551\t            if recorderTask == thisTask then recorderTask = nil end\n1552\t            log(\"recording: recorder exited \" .. tostring(code))\n1553\t            if code ~= 0 and not recorderCaptured then\n1554\t                log(\"recording: ERROR — lw-record failed: \" .. tostring(err))\n1555\t                return\n1556\t            end\n1557\t            if recorderCaptured and recordStartedAt then\n1558\t                local wall = hs.timer.secondsSinceEpoch() - recordStartedAt\n1559\t                log(string.format(\"recording: captured %.2fs of %.2fs wall (%.0f%%)\",\n1560\t                    recorderCaptured, wall, wall \u003e 0 and (recorderCaptured / wall * 100) or 0))\n1561\t            end\n1562\t        end,",
+        "tool_use_id": "toolu_01L2UEYvEwKBYKTkGM8Q8Ly1",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "820a3e6d-5fba-49c6-b203-ece02a1a55a6",
+  "promptId": "b1c3dd4b-bdb6-4805-8c6e-1e76cb9b10ed",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "820a3e6d-5fba-49c6-b203-ece02a1a55a6",
+  "timestamp": "2026-08-17T02:27:51.266Z",
+  "toolUseResult": {
+    "file": {
+      "content": "    -- capture regression shows up in the log as a gap against the wall clock instead of\n    -- silently shortening words. ffmpeg lost ~10% here and nothing recorded it.\n    recordStartedAt = hs.timer.secondsSinceEpoch()\n    recorderCaptured = nil\n\n    -- Captured so the callback can tell whether it is still the current recorder: a slow\n    -- exit from the previous dictation must not clear the handle of the one now running.\n    local thisTask\n    thisTask = hs.task.new(RECORDER_BIN,\n        function(code, out, err)  -- termination callback\n            if recorderTask == thisTask then recorderTask = nil end\n            log(\"recording: recorder exited \" .. tostring(code))\n            if code ~= 0 and not recorderCaptured then\n                log(\"recording: ERROR — lw-record failed: \" .. tostring(err))\n                return\n            end\n            if recorderCaptured and recordStartedAt then\n                local wall = hs.timer.secondsSinceEpoch() - recordStartedAt\n                log(string.format(\"recording: captured %.2fs of %.2fs wall (%.0f%%)\",\n                    recorderCaptured, wall, wall \u003e 0 and (recorderCaptured / wall * 100) or 0))\n            end\n        end,",
+      "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+      "numLines": 22,
+      "startLine": 1541,
+      "totalLines": 1763
+    },
+    "type": "text"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "d006166b-9dff-4404-848f-8039db9051cb",
+  "version": "2.1.233"
+}

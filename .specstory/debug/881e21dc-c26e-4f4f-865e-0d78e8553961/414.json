@@ -1,0 +1,72 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01RmE3NV73VSCdSQ5EDSPzVp",
+        "input": {
+          "command": "cd /Users/vitaliy/Documents/GitHub/local-whisper\nhs -c \"hs.reload()\" \u003e/dev/null 2\u003e\u00261; sleep 5\nTMPDIR_REAL=$(getconf DARWIN_USER_TEMP_DIR); L=\"${TMPDIR_REAL}whisper-dictate/whisper-dictate.log\"\ntail -4 \"$L\"\necho \"=== GC test: force collection, then confirm the trigger tap is still alive ===\"\nhs -c 'collectgarbage(\"collect\"); collectgarbage(\"collect\")\n       return \"modTap enabled=\" .. tostring(LocalWhisper.modTap and LocalWhisper.modTap:isEnabled())'\necho \"=== settings intact ===\"\nfor f in lang model output enter; do printf \"  %s = %s\\n\" \"$f\" \"$(cat ~/.local-whisper/$f)\"; done\necho \"  prompt = $(head -c 60 ~/.local-whisper/prompt)...\"",
+          "description": "Reload and verify clean state"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce7YJcB6ZxkufCx94fRXB",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 1511,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 1511,
+      "cache_read_input_tokens": 214705,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1511,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 1511,
+          "cache_read_input_tokens": 214705,
+          "input_tokens": 2,
+          "output_tokens": 587,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 587,
+      "output_tokens_details": {
+        "thinking_tokens": 115
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "88d5b637-2aa3-4a42-b7a7-b15acdb97780",
+  "requestId": "req_011Ce7YJadagX7qBdEkx77My",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "timestamp": "2026-08-17T02:35:10.319Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "3ca7f253-e356-442a-b3d8-4a0c16a02332",
+  "version": "2.1.233"
+}

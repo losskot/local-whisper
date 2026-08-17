@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "92:local LOG_FILE = WHISPER_TMP .. \"/whisper-dictate.log\"\n161:local function log(msg)\n---\n        local attr = hs.fs.attributes(path)\n        if attr then return saved end\n    end\n    return \"medium\"  -- default\nend\n\nlocal function isApiMode()\n    return getModelName() == API.MODEL_NAME\nend\n\nlocal function getModelPath()\n    return MODELS_DIR .. \"/ggml-\" .. getModelName() .. \".bin\"\nend\n\n-- Audio device: \":default\" for system default, \":0\", \":1\" etc. for specific\n-- Note: avfoundation requires colon prefix for audio-only (\":0\" not \"0\")\nlocal AUDIO_DEVICE = \":default\"\n\n-- Auto-fix missing colon prefix (common setup mistake)\nif AUDIO_DEVICE ~= \":default\" and not AUDIO_DEVICE:match(\"^:\") then\n    AUDIO_DEVICE = \":\" .. AUDIO_DEVICE\nend\n\n-- Trigger: which modifier(s) must be held down to record. See TRIGGERS below.\nlocal TRIGGER_KEY = \"fnLeftCtrl\"\n\n-- User preference files (all in CONFIG_DIR)\nlocal LANG_FILE = CONFIG_DIR .. \"/lang\"\nlocal OUTPUT_FILE = CONFIG_DIR .. \"/output\"\nlocal ENTER_FILE = CONFIG_DIR .. \"/enter\"\nlocal PROMPT_FILE = CONFIG_DIR .. \"/prompt\"\nlocal RECENT_FILE = CONFIG_DIR .. \"/recent.json\"\nlocal LOG_FILE = WHISPER_TMP .. \"/whisper-dictate.log\"\n\n-- Action hooks config\nlocal ACTIONS_FILE = HOME .. \"/.hammerspoon/local_whisper_actions.lua\"",
+        "is_error": false,
+        "tool_use_id": "toolu_01DJbQ2GvrFX2Q2LZezKzG5A",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "34bfce17-ad53-4e64-b70d-f159844e8229",
+  "promptId": "b1c3dd4b-bdb6-4805-8c6e-1e76cb9b10ed",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "34bfce17-ad53-4e64-b70d-f159844e8229",
+  "timestamp": "2026-08-17T02:08:21.757Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "92:local LOG_FILE = WHISPER_TMP .. \"/whisper-dictate.log\"\n161:local function log(msg)\n---\n        local attr = hs.fs.attributes(path)\n        if attr then return saved end\n    end\n    return \"medium\"  -- default\nend\n\nlocal function isApiMode()\n    return getModelName() == API.MODEL_NAME\nend\n\nlocal function getModelPath()\n    return MODELS_DIR .. \"/ggml-\" .. getModelName() .. \".bin\"\nend\n\n-- Audio device: \":default\" for system default, \":0\", \":1\" etc. for specific\n-- Note: avfoundation requires colon prefix for audio-only (\":0\" not \"0\")\nlocal AUDIO_DEVICE = \":default\"\n\n-- Auto-fix missing colon prefix (common setup mistake)\nif AUDIO_DEVICE ~= \":default\" and not AUDIO_DEVICE:match(\"^:\") then\n    AUDIO_DEVICE = \":\" .. AUDIO_DEVICE\nend\n\n-- Trigger: which modifier(s) must be held down to record. See TRIGGERS below.\nlocal TRIGGER_KEY = \"fnLeftCtrl\"\n\n-- User preference files (all in CONFIG_DIR)\nlocal LANG_FILE = CONFIG_DIR .. \"/lang\"\nlocal OUTPUT_FILE = CONFIG_DIR .. \"/output\"\nlocal ENTER_FILE = CONFIG_DIR .. \"/enter\"\nlocal PROMPT_FILE = CONFIG_DIR .. \"/prompt\"\nlocal RECENT_FILE = CONFIG_DIR .. \"/recent.json\"\nlocal LOG_FILE = WHISPER_TMP .. \"/whisper-dictate.log\"\n\n-- Action hooks config\nlocal ACTIONS_FILE = HOME .. \"/.hammerspoon/local_whisper_actions.lua\""
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "baf8fed2-b9bc-4db7-82a2-548f0ab6f205",
+  "version": "2.1.233"
+}

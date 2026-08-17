@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "  \u001b[0;32mPASS\u001b[0m  capture: init.lua does not capture through ffmpeg's avfoundation input\n  \u001b[0;32mPASS\u001b[0m  capture: the native recorder binary is invoked\n  \u001b[0;32mPASS\u001b[0m  capture: the recorder reports captured seconds for the health check\n  \u001b[0;32mPASS\u001b[0m  capture: CAPTURED is parsed in the streaming callback, not at termination\n  \u001b[0;32mPASS\u001b[0m  split: getWavRMS is liftable and compiles\n  \u001b[0;32mPASS\u001b[0m  split: a silent chunk reads quieter than a loud one\n  \u001b[0;32mPASS\u001b[0m  split: splitAtSilence is liftable and compiles\n  \u001b[0;32mPASS\u001b[0m  split: regrouping preserves every chunk exactly once, in order\n  \u001b[0;32mPASS\u001b[0m  split: the first cut lands on the silent chunk, not the hard boundary\n  \u001b[0;32mPASS\u001b[0m  split: an unbroken passage is still bounded by maxSecs\n  \u001b[0;32mPASS\u001b[0m  overlay: X while idle does not call emergencyStop\n  \u001b[0;32mPASS\u001b[0m  trigger: no modifiers at all does not fire\n\u001b[0;32m\u001b[1mAll 85 checks passed.\u001b[0m",
+        "is_error": false,
+        "tool_use_id": "toolu_01LgbKZJi985BpHwZjvK2hYn",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "e340133b-f7d1-4f5b-b413-3b1ec37b0cdb",
+  "promptId": "b1c3dd4b-bdb6-4805-8c6e-1e76cb9b10ed",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "e340133b-f7d1-4f5b-b413-3b1ec37b0cdb",
+  "timestamp": "2026-08-17T02:19:44.438Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "  \u001b[0;32mPASS\u001b[0m  capture: init.lua does not capture through ffmpeg's avfoundation input\n  \u001b[0;32mPASS\u001b[0m  capture: the native recorder binary is invoked\n  \u001b[0;32mPASS\u001b[0m  capture: the recorder reports captured seconds for the health check\n  \u001b[0;32mPASS\u001b[0m  capture: CAPTURED is parsed in the streaming callback, not at termination\n  \u001b[0;32mPASS\u001b[0m  split: getWavRMS is liftable and compiles\n  \u001b[0;32mPASS\u001b[0m  split: a silent chunk reads quieter than a loud one\n  \u001b[0;32mPASS\u001b[0m  split: splitAtSilence is liftable and compiles\n  \u001b[0;32mPASS\u001b[0m  split: regrouping preserves every chunk exactly once, in order\n  \u001b[0;32mPASS\u001b[0m  split: the first cut lands on the silent chunk, not the hard boundary\n  \u001b[0;32mPASS\u001b[0m  split: an unbroken passage is still bounded by maxSecs\n  \u001b[0;32mPASS\u001b[0m  overlay: X while idle does not call emergencyStop\n  \u001b[0;32mPASS\u001b[0m  trigger: no modifiers at all does not fire\n\u001b[0;32m\u001b[1mAll 85 checks passed.\u001b[0m"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "8072e854-e398-493b-a7f2-03c8488f85e9",
+  "version": "2.1.233"
+}
