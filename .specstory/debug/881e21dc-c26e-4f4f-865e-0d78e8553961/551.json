@@ -1,0 +1,72 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_0193MqsCwmUSfbHy1m6T5u3E",
+        "input": {
+          "command": "TMPDIR_REAL=$(getconf DARWIN_USER_TEMP_DIR); L=\"${TMPDIR_REAL}whisper-dictate/whisper-dictate.log\"\necho \"=== health lines now? ===\"\ngrep -E \"recording: captured|no CAPTURED line\" \"$L\" | tail -5\necho \"=== the 04:59 dictation trace ===\"\ngrep -n \"\" \"$L\" | sed -n '/04:59:2[0-9]/,/04:59:5[0-9]/p' | grep -E \"recording:|warmup:|captured|chunks=\" | head -10",
+          "description": "Check if health line now appears"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011Ce7aCb7fQPaTNovEbXKxN",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 429,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 429,
+      "cache_read_input_tokens": 265816,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 429,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 429,
+          "cache_read_input_tokens": 265816,
+          "input_tokens": 2,
+          "output_tokens": 419,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 419,
+      "output_tokens_details": {
+        "thinking_tokens": 143
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "3662f690-4508-4a80-a700-f71554d5d286",
+  "requestId": "req_011Ce7aCZSCuxPt1cf2fwGhb",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "timestamp": "2026-08-17T02:59:59.820Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "b61d91cf-bc0d-4baa-8a28-1be7ea531618",
+  "version": "2.1.233"
+}

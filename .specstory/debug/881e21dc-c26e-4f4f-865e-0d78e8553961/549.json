@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "hammerspoon alive\n[04:59:51] final: finishAll — collected 1 text segment(s)\n[04:59:51] final combined (1 seg(s)): 'Есть ли настройка в Visual Studio Code, чтобы в чате в режиме Автопилот, когда модель дает вопрос с выборами ответа, не было автовыбора, а все-таки останов.'\n[04:59:51] action: inserted [Royal TSX]: Есть ли настройка в Visual Studio Code, чтобы в чате в режиме Автопилот, когда модель дает вопрос с выборами ответа, не было автовыбора, а все-таки останов.",
+        "is_error": false,
+        "tool_use_id": "toolu_01X8zzQ1Xjc18iapC8nwWu88",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "fde44c86-0019-4b2d-a9b6-1fce08b83787",
+  "promptId": "8f0f702b-2395-43e1-b2eb-25eda16d6812",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "fde44c86-0019-4b2d-a9b6-1fce08b83787",
+  "timestamp": "2026-08-17T02:59:53.038Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "hammerspoon alive\n[04:59:51] final: finishAll — collected 1 text segment(s)\n[04:59:51] final combined (1 seg(s)): 'Есть ли настройка в Visual Studio Code, чтобы в чате в режиме Автопилот, когда модель дает вопрос с выборами ответа, не было автовыбора, а все-таки останов.'\n[04:59:51] action: inserted [Royal TSX]: Есть ли настройка в Visual Studio Code, чтобы в чате в режиме Автопилот, когда модель дает вопрос с выборами ответа, не было автовыбора, а все-таки останов."
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "7237b95b-7616-4089-84f1-606a257185c5",
+  "version": "2.1.233"
+}

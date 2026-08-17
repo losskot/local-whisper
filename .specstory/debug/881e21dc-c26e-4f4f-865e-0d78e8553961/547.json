@@ -1,0 +1,39 @@
+{
+  "classifierMetaLines": "{\"meta\":{\"repoVisibility\":{\"remote\":\"losskot/local-whisper\",\"branch\":\"main\",\"visibility\":\"public\"}}}\n",
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "To https://github.com/losskot/local-whisper.git\n   3023911..0e0f0f4  main -\u003e main\n## main...origin/main",
+        "is_error": false,
+        "tool_use_id": "toolu_01BBuJFMGwWLPm3poADEnvQx",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "dbf14593-581f-4c6a-82bc-150a80e619e9",
+  "promptId": "8f0f702b-2395-43e1-b2eb-25eda16d6812",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "dbf14593-581f-4c6a-82bc-150a80e619e9",
+  "timestamp": "2026-08-17T02:59:46.986Z",
+  "toolUseResult": {
+    "gitOperation": {
+      "push": {
+        "branch": "main"
+      }
+    },
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "To https://github.com/losskot/local-whisper.git\n   3023911..0e0f0f4  main -\u003e main\n## main...origin/main"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "7ffb6824-f775-4d4c-bd20-011f05129f69",
+  "version": "2.1.233"
+}
