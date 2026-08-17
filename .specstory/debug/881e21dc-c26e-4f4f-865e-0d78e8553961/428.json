@@ -1,0 +1,39 @@
+{
+  "classifierMetaLines": "{\"meta\":{\"repoVisibility\":{\"remote\":\"losskot/local-whisper\",\"branch\":\"main\",\"visibility\":\"public\"}}}\n",
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "error: cannot pull with rebase: You have unstaged changes.\nerror: Please commit or stash them.\nTo https://github.com/losskot/local-whisper.git\n   279fc1f..970047d  main -\u003e main\n--- status ---\n## main...origin/main\n M .specstory/history/2026-08-17_01-25-52Z.md",
+        "is_error": false,
+        "tool_use_id": "toolu_01AmYBRRHNPte2QG6zdR9N1p",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "e9777c4e-2dac-4b39-bdef-5dafd51630b3",
+  "promptId": "b1c3dd4b-bdb6-4805-8c6e-1e76cb9b10ed",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "e9777c4e-2dac-4b39-bdef-5dafd51630b3",
+  "timestamp": "2026-08-17T02:36:15.639Z",
+  "toolUseResult": {
+    "gitOperation": {
+      "push": {
+        "branch": "main"
+      }
+    },
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "error: cannot pull with rebase: You have unstaged changes.\nerror: Please commit or stash them.\nTo https://github.com/losskot/local-whisper.git\n   279fc1f..970047d  main -\u003e main\n--- status ---\n## main...origin/main\n M .specstory/history/2026-08-17_01-25-52Z.md"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "3e3c4038-996e-453c-9ac8-80492f2fe3bb",
+  "version": "2.1.233"
+}

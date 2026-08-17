@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "970047d Replace ffmpeg mic capture: it was dropping ~10% of every recording",
+        "is_error": false,
+        "tool_use_id": "toolu_01T4tKQw9Njj1168dd3WKeKx",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "8bff699c-644c-4111-af19-344b6994e5ba",
+  "promptId": "b1c3dd4b-bdb6-4805-8c6e-1e76cb9b10ed",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "8bff699c-644c-4111-af19-344b6994e5ba",
+  "timestamp": "2026-08-17T02:36:04.371Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "970047d Replace ffmpeg mic capture: it was dropping ~10% of every recording"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "a78f5d6d-e5e5-4b1e-9d1a-62563373c846",
+  "version": "2.1.233"
+}
