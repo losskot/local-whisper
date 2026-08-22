@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "=== history mentioning live/partial/streaming transcription ===\n970047d Replace ffmpeg mic capture: it was dropping ~10% of every recording\n3e41166 Remove meeting mode; fix code review findings; add init.lua test suite\n435ffae fix: surface API-mode transcription errors instead of silently hiding overlay\nc2c2984 feat: add remote API transcription mode (OpenAI-compatible)\nd8e20cc feat: add transcribe.sh for batch audio/video transcription using whisper.cpp\nc0d8066 fix: reduce locals to 198 (under Lua 200 limit)\nac208cc feat: streaming pipeline — transcribe segments live during recording\n6b8a247 feat: enhance final transcription logging and error handling\nf015cd9 fix: meeting transcript stops after first window\nbe44ab6 UX improvements + action hooks integration + app-aware processing\n--- 'live' ---\n--- transcribeChunk / rolling ---",
+        "is_error": false,
+        "tool_use_id": "toolu_01HWP9HcepXNcPYH6VV7pjjo",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "952c260c-e9d2-4c6f-bfdc-5e009d7cc23b",
+  "promptId": "1e1ffff6-8697-4c3e-a362-a80f68d5a1c9",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "952c260c-e9d2-4c6f-bfdc-5e009d7cc23b",
+  "timestamp": "2026-08-22T22:15:28.729Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "=== history mentioning live/partial/streaming transcription ===\n970047d Replace ffmpeg mic capture: it was dropping ~10% of every recording\n3e41166 Remove meeting mode; fix code review findings; add init.lua test suite\n435ffae fix: surface API-mode transcription errors instead of silently hiding overlay\nc2c2984 feat: add remote API transcription mode (OpenAI-compatible)\nd8e20cc feat: add transcribe.sh for batch audio/video transcription using whisper.cpp\nc0d8066 fix: reduce locals to 198 (under Lua 200 limit)\nac208cc feat: streaming pipeline — transcribe segments live during recording\n6b8a247 feat: enhance final transcription logging and error handling\nf015cd9 fix: meeting transcript stops after first window\nbe44ab6 UX improvements + action hooks integration + app-aware processing\n--- 'live' ---\n--- transcribeChunk / rolling ---"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "af46c627-c449-488f-8278-0ec0a7a779ea",
+  "version": "2.1.240"
+}

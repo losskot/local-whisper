@@ -1,0 +1,72 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01SuZ28nJw4f6t8GsiDqQuC3",
+        "input": {
+          "command": "cd /Users/vitaliy/Documents/GitHub/local-whisper; sed -n '815,860p' tests/test_init.lua",
+          "description": "Read lifetime test logic"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011CeJZT82qaCAoJUj7qBiTE",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 1005,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 1005,
+      "cache_read_input_tokens": 285354,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1005,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 1005,
+          "cache_read_input_tokens": 285354,
+          "input_tokens": 2,
+          "output_tokens": 121,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 121,
+      "output_tokens_details": {
+        "thinking_tokens": 0
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "c3461391-b3a1-4868-a250-ca6ebeaec995",
+  "requestId": "req_011CeJZT5ubPiq1kgDDrc55N",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "timestamp": "2026-08-22T22:16:38.649Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "5ffb11ed-a169-46d5-88ee-4f787e8efbe9",
+  "version": "2.1.240"
+}

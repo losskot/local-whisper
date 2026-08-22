@@ -1,0 +1,34 @@
+{
+  "classifierMetaLines": "{\"meta\":{\"gitStatus\":{\"staged\":0,\"modified\":22,\"untracked\":69}}}\n",
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "(eval):3: no matches found: /var/folders/ph/3yv4hw8567g12wy09lntpvt40000gp/T/whisper-dictate/pipe_seg_*.wav\nrecorder started\nstarted at 00:20:20",
+        "is_error": false,
+        "tool_use_id": "toolu_01SyhT3CzNBr6Z82BwXH4V4Q",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "583b490c-6ae8-4dc1-83d1-cb0f88303435",
+  "promptId": "1e1ffff6-8697-4c3e-a362-a80f68d5a1c9",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "583b490c-6ae8-4dc1-83d1-cb0f88303435",
+  "timestamp": "2026-08-22T22:20:20.032Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "(eval):3: no matches found: /var/folders/ph/3yv4hw8567g12wy09lntpvt40000gp/T/whisper-dictate/pipe_seg_*.wav\nrecorder started\nstarted at 00:20:20"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "dec05720-4488-4d43-aaee-f62b4587e512",
+  "version": "2.1.240"
+}

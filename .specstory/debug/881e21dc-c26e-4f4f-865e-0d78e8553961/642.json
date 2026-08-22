@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "--- mutation A: skip one chunk when advancing (drops a second of audio) ---\n  \u001b[0;32mPASS\u001b[0m  pipeline: segments are dispatched during recording, not all at the end\n  \u001b[0;31mFAIL\u001b[0m  pipeline: streamed segments plus the tail cover every chunk exactly once, in order\n  \u001b[0;32mPASS\u001b[0m  overlay: X while idle does not call emergencyStop\n  \u001b[0;32mPASS\u001b[0m  trigger: no modifiers at all does not fire\n\u001b[0;31m\u001b[1m1 of 92 checks failed.\u001b[0m\n--- mutation B: re-claim one chunk (transcribes a second twice) ---\n  \u001b[0;32mPASS\u001b[0m  pipeline: segments are dispatched during recording, not all at the end\n  \u001b[0;31mFAIL\u001b[0m  pipeline: streamed segments plus the tail cover every chunk exactly once, in order\n  \u001b[0;32mPASS\u001b[0m  overlay: X while idle does not call emergencyStop\n  \u001b[0;32mPASS\u001b[0m  trigger: no modifiers at all does not fire\n\u001b[0;31m\u001b[1m1 of 92 checks failed.\u001b[0m\n--- mutation C: dispatch only after recording stops (the regression being fixed) ---\n  \u001b[0;31mFAIL\u001b[0m  pipeline: segments are dispatched during recording, not all at the end\n  \u001b[0;32mPASS\u001b[0m  overlay: X while idle does not call emergencyStop\n  \u001b[0;32mPASS\u001b[0m  trigger: no modifiers at all does not fire\n\u001b[0;31m\u001b[1m1 of 92 checks failed.\u001b[0m",
+        "is_error": false,
+        "tool_use_id": "toolu_01NbQaSzZoV1tW9w1m58natX",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "63ff7011-98ff-4835-a0e9-bba112f6c90a",
+  "promptId": "1e1ffff6-8697-4c3e-a362-a80f68d5a1c9",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "63ff7011-98ff-4835-a0e9-bba112f6c90a",
+  "timestamp": "2026-08-22T22:22:23.076Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "--- mutation A: skip one chunk when advancing (drops a second of audio) ---\n  \u001b[0;32mPASS\u001b[0m  pipeline: segments are dispatched during recording, not all at the end\n  \u001b[0;31mFAIL\u001b[0m  pipeline: streamed segments plus the tail cover every chunk exactly once, in order\n  \u001b[0;32mPASS\u001b[0m  overlay: X while idle does not call emergencyStop\n  \u001b[0;32mPASS\u001b[0m  trigger: no modifiers at all does not fire\n\u001b[0;31m\u001b[1m1 of 92 checks failed.\u001b[0m\n--- mutation B: re-claim one chunk (transcribes a second twice) ---\n  \u001b[0;32mPASS\u001b[0m  pipeline: segments are dispatched during recording, not all at the end\n  \u001b[0;31mFAIL\u001b[0m  pipeline: streamed segments plus the tail cover every chunk exactly once, in order\n  \u001b[0;32mPASS\u001b[0m  overlay: X while idle does not call emergencyStop\n  \u001b[0;32mPASS\u001b[0m  trigger: no modifiers at all does not fire\n\u001b[0;31m\u001b[1m1 of 92 checks failed.\u001b[0m\n--- mutation C: dispatch only after recording stops (the regression being fixed) ---\n  \u001b[0;31mFAIL\u001b[0m  pipeline: segments are dispatched during recording, not all at the end\n  \u001b[0;32mPASS\u001b[0m  overlay: X while idle does not call emergencyStop\n  \u001b[0;32mPASS\u001b[0m  trigger: no modifiers at all does not fire\n\u001b[0;31m\u001b[1m1 of 92 checks failed.\u001b[0m"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "e3e13a68-0501-45e4-82e7-e21aaa7a266e",
+  "version": "2.1.240"
+}

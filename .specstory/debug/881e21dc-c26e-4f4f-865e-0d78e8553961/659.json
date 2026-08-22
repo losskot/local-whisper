@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "AGENTS.md updated\nREADME.md updated",
+        "is_error": false,
+        "tool_use_id": "toolu_01MkZksjhskbDsp4PyEafTa8",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "a93d798e-765a-402a-a084-dfce3f57175f",
+  "promptId": "1e1ffff6-8697-4c3e-a362-a80f68d5a1c9",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "a93d798e-765a-402a-a084-dfce3f57175f",
+  "timestamp": "2026-08-22T22:25:31.497Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "AGENTS.md updated\nREADME.md updated"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "9b6986bd-8520-4038-9091-8980e2549670",
+  "version": "2.1.240"
+}

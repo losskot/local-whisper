@@ -1,0 +1,64 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "text": "I have the full picture. Restoring the pipeline, adapted to the current code (API mode, the 55 s silence split, and the progress bar all postdate the original):",
+        "type": "text"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011CeJZUE9TuVjjnajy88bi2",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 2813,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 2813,
+      "cache_read_input_tokens": 290005,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 2813,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 2813,
+          "cache_read_input_tokens": 290005,
+          "input_tokens": 2,
+          "output_tokens": 11403,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 11403,
+      "output_tokens_details": {
+        "thinking_tokens": 3150
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "2abb5508-053e-490b-ad97-fb3cb9791f0b",
+  "requestId": "req_011CeJZUCENhEubznMAWpMu8",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "timestamp": "2026-08-22T22:17:33.614Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "582967d1-77ce-439a-a57b-7372677efe4a",
+  "version": "2.1.240"
+}

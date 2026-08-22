@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "    check(\"progress: stopRecordingIndicator freezes the recorded duration\",\n          stopBody ~= nil and stopBody:find(\"recordedSecs%s*=%s*hs%.timer%.secondsSinceEpoch\") ~= nil,\n          \"stopRecordingIndicator() does not freeze recordedSecs from the clock\")\n\n    -- BAR_MAX in updateProgressBar and the bar_bg track width in createOverlay are\n    -- separate literals; drifting apart would misreport progress at the right edge.\n    local barMax  = src:match(\"local%s+BAR_MAX%s*=%s*(%d+)\")\n    local trackW  = src:match('id%s*=%s*\"bar_bg\".-w%s*=%s*(%d+)')\n    check(\"progress: BAR_MAX matches the bar_bg track width\",\n          barMax ~= nil and barMax == trackW,\n          \"BAR_MAX=\" .. tostring(barMax) .. \", bar_bg w=\" .. tostring(trackW))\nend\n\n--------------------------------------------------------------------------------\n-- 14. Long-lived system objects are rooted against the garbage collector\n--------------------------------------------------------------------------------\n-- Hammerspoon collects eventtaps, repeating timers and watchers that nothing in Lua\n-- references, and collecting one unregisters it from the system: no error, no log line,\n-- isEnabled() still true right up to the collection, then events silently stop arriving.\n-- init.lua's own top-level locals are NOT a root -- once the chunk returns, a local lives\n-- only as long as some reachable closure captures it. Removing the `_whisper` global once\n-- killed the trigger this way: it looked like dead state, but it was the only strong\n-- reference to the eventtap, which then died a few minutes after every reload.\n\nlocal GC_ROOT       = \"LocalWhisper\"\nlocal LONG_LIVED    = {\n    [\"hs%.eventtap%.new\"]           = \"eventtap\",\n    [\"hs%.caffeinate%.watcher%.new\"] = \"watcher\",\n    [\"hs%.timer%.doEvery\"]          = \"repeating timer\",\n}\n\nlocal discarded, unrooted = {}, {}\nfor i, s in ipairs(stripped) do\n    for pat, kind in pairs(LONG_LIVED) do\n        -- Top level only: an indented call belongs to a function body, whose own\n        -- lifetime is decided by whatever roots that function.\n        if s:match(\"^\" .. pat) then\n            discarded[#discarded + 1] = kind .. \" at L\" .. i\n        end\n        local name = s:match(\"^local%s+([%w_]+)%s*=%s*\" .. pat)\n        if name and not src:find(GC_ROOT .. \"%.[%w_]+%s*=%s*\" .. name .. \"%f[^%w_]\") then\n            unrooted[#unrooted + 1] = name .. \" (\" .. kind .. \", L\" .. i .. \")\"\n        end\n    end\nend",
+        "is_error": false,
+        "tool_use_id": "toolu_01SuZ28nJw4f6t8GsiDqQuC3",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "5ffb11ed-a169-46d5-88ee-4f787e8efbe9",
+  "promptId": "1e1ffff6-8697-4c3e-a362-a80f68d5a1c9",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "5ffb11ed-a169-46d5-88ee-4f787e8efbe9",
+  "timestamp": "2026-08-22T22:16:38.697Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "    check(\"progress: stopRecordingIndicator freezes the recorded duration\",\n          stopBody ~= nil and stopBody:find(\"recordedSecs%s*=%s*hs%.timer%.secondsSinceEpoch\") ~= nil,\n          \"stopRecordingIndicator() does not freeze recordedSecs from the clock\")\n\n    -- BAR_MAX in updateProgressBar and the bar_bg track width in createOverlay are\n    -- separate literals; drifting apart would misreport progress at the right edge.\n    local barMax  = src:match(\"local%s+BAR_MAX%s*=%s*(%d+)\")\n    local trackW  = src:match('id%s*=%s*\"bar_bg\".-w%s*=%s*(%d+)')\n    check(\"progress: BAR_MAX matches the bar_bg track width\",\n          barMax ~= nil and barMax == trackW,\n          \"BAR_MAX=\" .. tostring(barMax) .. \", bar_bg w=\" .. tostring(trackW))\nend\n\n--------------------------------------------------------------------------------\n-- 14. Long-lived system objects are rooted against the garbage collector\n--------------------------------------------------------------------------------\n-- Hammerspoon collects eventtaps, repeating timers and watchers that nothing in Lua\n-- references, and collecting one unregisters it from the system: no error, no log line,\n-- isEnabled() still true right up to the collection, then events silently stop arriving.\n-- init.lua's own top-level locals are NOT a root -- once the chunk returns, a local lives\n-- only as long as some reachable closure captures it. Removing the `_whisper` global once\n-- killed the trigger this way: it looked like dead state, but it was the only strong\n-- reference to the eventtap, which then died a few minutes after every reload.\n\nlocal GC_ROOT       = \"LocalWhisper\"\nlocal LONG_LIVED    = {\n    [\"hs%.eventtap%.new\"]           = \"eventtap\",\n    [\"hs%.caffeinate%.watcher%.new\"] = \"watcher\",\n    [\"hs%.timer%.doEvery\"]          = \"repeating timer\",\n}\n\nlocal discarded, unrooted = {}, {}\nfor i, s in ipairs(stripped) do\n    for pat, kind in pairs(LONG_LIVED) do\n        -- Top level only: an indented call belongs to a function body, whose own\n        -- lifetime is decided by whatever roots that function.\n        if s:match(\"^\" .. pat) then\n            discarded[#discarded + 1] = kind .. \" at L\" .. i\n        end\n        local name = s:match(\"^local%s+([%w_]+)%s*=%s*\" .. pat)\n        if name and not src:find(GC_ROOT .. \"%.[%w_]+%s*=%s*\" .. name .. \"%f[^%w_]\") then\n            unrooted[#unrooted + 1] = name .. \" (\" .. kind .. \", L\" .. i .. \")\"\n        end\n    end\nend"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "6e282968-8590-41fc-b98c-2cbf1352db6b",
+  "version": "2.1.240"
+}

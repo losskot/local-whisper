@@ -1,0 +1,67 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/AGENTS.md has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_0116a7jRDzoXtD4ii5gTeRC1",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "30542358-3031-4e5e-87c3-bf547a5fe20a",
+  "promptId": "1e1ffff6-8697-4c3e-a362-a80f68d5a1c9",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "30542358-3031-4e5e-87c3-bf547a5fe20a",
+  "timestamp": "2026-08-22T22:22:56.403Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/AGENTS.md",
+    "newString": "```\nHammerspoon eventtap (trigger combo hold/release, matched on raw device flags)\n  → lw-record (native AVAudioEngine capture, 1s WAV chunks)\n  ↓  streaming pipeline: every 3s, dispatch any pause-bounded ≤55s segment already on disk\n  → ffmpeg concat → whisper-cli (chosen model — or the remote API), several may run at once\n  ↓  (key released) → only the tail segment is left to transcribe\n  → Post-processing (filler removal, app-aware capitalize)\n  → Action hooks (voice commands, note-taking, app launching)\n  → Text insertion at cursor (paste or keystroke)\n  → Overlay + menu bar updates\n```\n\nTranscription **is** pipelined: segments are sent to whisper while the user is still\ntalking, so the wait after release does not scale with the recording length. Text is still\nonly inserted once every segment is back — there are no live partials on screen. Older docs\nclaiming \"nothing is transcribed until the key is released\" describe the gap between\n`ac4c275` (which deleted the pipeline) and its restoration; see the streaming section below.",
+    "oldString": "```\nHammerspoon eventtap (trigger combo hold/release, matched on raw device flags)\n  → lw-record (native AVAudioEngine capture, 1s WAV chunks)\n  → ffmpeg concat → whisper-cli (55s segments, chosen model — or the remote API)\n  → Post-processing (filler removal, app-aware capitalize)\n  → Action hooks (voice commands, note-taking, app launching)\n  → Text insertion at cursor (paste or keystroke)\n  → Overlay + menu bar updates\n```\n\nTranscription is not streamed: nothing is transcribed until the key is released. Older\ndocs describing live partials or chained segment prompts describe code that no longer\nexists. Silence-aware splitting, however, **is** back — see the segmenting section below.",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          " ```",
+          " Hammerspoon eventtap (trigger combo hold/release, matched on raw device flags)",
+          "   → lw-record (native AVAudioEngine capture, 1s WAV chunks)",
+          "-  → ffmpeg concat → whisper-cli (55s segments, chosen model — or the remote API)",
+          "+  ↓  streaming pipeline: every 3s, dispatch any pause-bounded ≤55s segment already on disk",
+          "+  → ffmpeg concat → whisper-cli (chosen model — or the remote API), several may run at once",
+          "+  ↓  (key released) → only the tail segment is left to transcribe",
+          "   → Post-processing (filler removal, app-aware capitalize)",
+          "   → Action hooks (voice commands, note-taking, app launching)",
+          "   → Text insertion at cursor (paste or keystroke)",
+          "   → Overlay + menu bar updates",
+          " ```",
+          " ",
+          "-Transcription is not streamed: nothing is transcribed until the key is released. Older",
+          "-docs describing live partials or chained segment prompts describe code that no longer",
+          "-exists. Silence-aware splitting, however, **is** back — see the segmenting section below.",
+          "+Transcription **is** pipelined: segments are sent to whisper while the user is still",
+          "+talking, so the wait after release does not scale with the recording length. Text is still",
+          "+only inserted once every segment is back — there are no live partials on screen. Older docs",
+          "+claiming \"nothing is transcribed until the key is released\" describe the gap between",
+          "+`ac4c275` (which deleted the pipeline) and its restoration; see the streaming section below.",
+          " ",
+          " Everything runs inside `~/.hammerspoon/init.lua` — no external bash scripts at runtime.",
+          " The one compiled helper is `lw-record`; init.lua builds it on load when it is missing or"
+        ],
+        "newLines": 20,
+        "newStart": 9,
+        "oldLines": 16,
+        "oldStart": 9
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "0960931b-fcb6-4b69-9fa6-c6133f05f5f9",
+  "version": "2.1.240"
+}

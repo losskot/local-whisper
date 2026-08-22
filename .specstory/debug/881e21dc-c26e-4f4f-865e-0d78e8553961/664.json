@@ -1,0 +1,35 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "1\t  \u001b[0;32mPASS\u001b[0m  pipeline: segments are dispatched during recording, not all at the end\n2\t  \u001b[0;32mPASS\u001b[0m  overlay: X while idle does not call emergencyStop\n3\t  \u001b[0;32mPASS\u001b[0m  trigger: no modifiers at all does not fire\n4\t\u001b[0;32m\u001b[1mAll 92 checks passed.\u001b[0m\n5\tlocals: 134\n6\t\n7\t[exited with code 0]\n8\t",
+        "tool_use_id": "toolu_01QjqxBB9KVCcA6MnfAmkPE3",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "14dc1765-74c7-4752-8737-d91cd64cad92",
+  "promptId": "1e1ffff6-8697-4c3e-a362-a80f68d5a1c9",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "14dc1765-74c7-4752-8737-d91cd64cad92",
+  "timestamp": "2026-08-22T22:25:40.653Z",
+  "toolUseResult": {
+    "file": {
+      "content": "  \u001b[0;32mPASS\u001b[0m  pipeline: segments are dispatched during recording, not all at the end\n  \u001b[0;32mPASS\u001b[0m  overlay: X while idle does not call emergencyStop\n  \u001b[0;32mPASS\u001b[0m  trigger: no modifiers at all does not fire\n\u001b[0;32m\u001b[1mAll 92 checks passed.\u001b[0m\nlocals: 134\n\n[exited with code 0]\n",
+      "filePath": "/private/tmp/claude-502/-Users-vitaliy-Documents-GitHub-local-whisper/881e21dc-c26e-4f4f-865e-0d78e8553961/tasks/bj1qe2cga.output",
+      "numLines": 8,
+      "startLine": 1,
+      "totalLines": 8
+    },
+    "type": "text"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "8ccffaba-a8a3-44d3-8a86-a8f9d649a7e5",
+  "version": "2.1.240"
+}

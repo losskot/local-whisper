@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "=== lifetime test: what does it flag? ===\n856-            unrooted[#unrooted + 1] = name .. \" (\" .. kind .. \", L\" .. i .. \")\"\n857-        end\n858-    end\n859-end\n860-\n861-check(\"lifetime: no long-lived object is created and discarded at top level\",\n862-      #discarded == 0,\n863-      \"unreferenced: \" .. table.concat(discarded, \", \"))\n864:check(\"lifetime: every top-level eventtap/watcher/repeating timer is stored in \" .. GC_ROOT,",
+        "is_error": false,
+        "tool_use_id": "toolu_01HvEeGhDBtsv8nGaDwGSRQc",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "b45ec16f-5e42-467f-bc26-1cecf3cef5ae",
+  "promptId": "1e1ffff6-8697-4c3e-a362-a80f68d5a1c9",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "b45ec16f-5e42-467f-bc26-1cecf3cef5ae",
+  "timestamp": "2026-08-22T22:16:35.574Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "=== lifetime test: what does it flag? ===\n856-            unrooted[#unrooted + 1] = name .. \" (\" .. kind .. \", L\" .. i .. \")\"\n857-        end\n858-    end\n859-end\n860-\n861-check(\"lifetime: no long-lived object is created and discarded at top level\",\n862-      #discarded == 0,\n863-      \"unreferenced: \" .. table.concat(discarded, \", \"))\n864:check(\"lifetime: every top-level eventtap/watcher/repeating timer is stored in \" .. GC_ROOT,"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "c3461391-b3a1-4868-a250-ca6ebeaec995",
+  "version": "2.1.240"
+}

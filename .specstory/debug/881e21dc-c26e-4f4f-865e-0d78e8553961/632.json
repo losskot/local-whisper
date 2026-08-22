@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "stopped\nCAPTURED=49.626\nchunks=50  audio=49.626s\n=== any chunk not exactly 1.000000s (other than the last)? ===\n  chunk_049.wav = 0.626313",
+        "is_error": false,
+        "tool_use_id": "toolu_01E2DPiq21upWqFjq3ZGs1VJ",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "a7439ead-7966-458d-9177-6ffa8f481dad",
+  "promptId": "1e1ffff6-8697-4c3e-a362-a80f68d5a1c9",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "a7439ead-7966-458d-9177-6ffa8f481dad",
+  "timestamp": "2026-08-22T22:21:16.257Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "stopped\nCAPTURED=49.626\nchunks=50  audio=49.626s\n=== any chunk not exactly 1.000000s (other than the last)? ===\n  chunk_049.wav = 0.626313"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "93d99256-fd87-4631-aa3e-8c7b2c2c8218",
+  "version": "2.1.240"
+}

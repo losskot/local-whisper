@@ -15,6 +15,7 @@ Hold **fn + left Control**, speak, release — text appears at your cursor.
 - **App-aware processing**: Auto-capitalizes in most apps, skips in terminals and code editors
 - **Text post-processing**: Remove filler words (um, uh, hmm), clean whitespace
 - **Custom vocabulary / mixed-language anchor**: `~/.local-whisper/prompt` is a *writing sample*, not an instruction — whisper continues in whatever style it establishes. Seeded with a ru/uk/en example on first run; edit it to match how you actually speak. Applied to both the local model (with `--carry-initial-prompt`) and the remote API
+- **Pipelined transcription**: Segments are transcribed while you are still talking, so the wait after releasing the key does not grow with the length of the dictation — only the tail segment is left. Text is inserted once all segments are back
 - **Lossless capture**: A native AVAudioEngine recorder (`lw-record`) opens the microphone. ffmpeg's avfoundation input silently dropped ~10% of every recording, which swallowed whole words; the recorder logs captured-vs-wall-clock seconds after every dictation so a regression is visible
 - **Warmup probe**: The recorder signals when audio is genuinely flowing; if the device never responds within 10 seconds, recording aborts with an error sound
 - **Sleep recovery**: A dictation interrupted by system sleep is finalized on wake instead of being silently lost
@@ -201,8 +202,10 @@ The config auto-reloads when you save the file. For more patterns and examples, 
 Trigger combo hold/release (detected by Hammerspoon eventtap on raw device flags)
   → lw-record opens the mic (AVAudioEngine) and reports READY once audio is flowing
   → it writes chunked WAV segments (1s each), losing no samples
+  → every 3s: any finished ≤55s segment (cut at a pause) goes to whisper immediately,
+    while recording continues — several segments may transcribe concurrently
   ↓  (key released)
-  → doFinalTranscription(): group the 1s chunks into ≤55s segments, cutting at a pause
+  → doFinalTranscription(): only the unclaimed tail is left to transcribe
   → per segment: ffmpeg concat → whisper-cli (or the remote API), in order
   → progress bar tracks transcribed seconds against recorded seconds
   → join the segment texts, drop whisper's known silence hallucinations

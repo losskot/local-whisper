@@ -1,0 +1,52 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01Urz5ZiZLNKzkFst9UfHjv3",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "ade38682-09b5-4805-ac54-669fd3cec9d0",
+  "promptId": "1e1ffff6-8697-4c3e-a362-a80f68d5a1c9",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "ade38682-09b5-4805-ac54-669fd3cec9d0",
+  "timestamp": "2026-08-22T22:19:56.145Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+    "newString": "-- Assigned, not declared: the local is forward-declared above emergencyStop.\npipelineReset = function()\n    if pipe.timer then pipe.timer:stop(); pipe.timer = nil end",
+    "oldString": "local function pipelineReset()\n    if pipe.timer then pipe.timer:stop(); pipe.timer = nil end",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          "     timer      = nil,   -- polls during recording for a segment that is ready to dispatch",
+          " }",
+          " ",
+          "-local function pipelineReset()",
+          "+-- Assigned, not declared: the local is forward-declared above emergencyStop.",
+          "+pipelineReset = function()",
+          "     if pipe.timer then pipe.timer:stop(); pipe.timer = nil end",
+          "     pipe.results    = {}",
+          "     pipe.lang       = nil"
+        ],
+        "newLines": 8,
+        "newStart": 1311,
+        "oldLines": 7,
+        "oldStart": 1311
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "6dde913b-9365-4c66-9e96-24c6bf71f230",
+  "version": "2.1.240"
+}

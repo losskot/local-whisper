@@ -1,0 +1,55 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01N28bjwCo3wMiDTVfjNkT8h",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "cb1bec70-00bc-47ce-b88b-3c284b179869",
+  "promptId": "1e1ffff6-8697-4c3e-a362-a80f68d5a1c9",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "cb1bec70-00bc-47ce-b88b-3c284b179869",
+  "timestamp": "2026-08-22T22:19:45.301Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+    "newString": "-- Emergency stop (forward declaration)\n--------------------------------------------------------------------------------\n\n-- Forward declaration: the streaming pipeline is defined further down (it needs\n-- insertTranscribedText, which is itself defined below this point), but emergencyStop has\n-- to be able to tear it down. Declaring it here means the call below captures this local\n-- instead of silently compiling to a nil global lookup.\nlocal pipelineReset\n\nfunction emergencyStop()",
+    "oldString": "-- Emergency stop (forward declaration)\n--------------------------------------------------------------------------------\n\nfunction emergencyStop()",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          " -- Emergency stop (forward declaration)",
+          " --------------------------------------------------------------------------------",
+          " ",
+          "+-- Forward declaration: the streaming pipeline is defined further down (it needs",
+          "+-- insertTranscribedText, which is itself defined below this point), but emergencyStop has",
+          "+-- to be able to tear it down. Declaring it here means the call below captures this local",
+          "+-- instead of silently compiling to a nil global lookup.",
+          "+local pipelineReset",
+          "+",
+          " function emergencyStop()",
+          "     log(\"emergency stop\")",
+          "     isRecording = false"
+        ],
+        "newLines": 12,
+        "newStart": 1176,
+        "oldLines": 6,
+        "oldStart": 1176
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "95eeeddb-0f2c-4ce2-bdf5-69f79eea5c49",
+  "version": "2.1.240"
+}

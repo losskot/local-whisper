@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "commit ac208cc024ea76e745adb1701123e9d7059cb586\nAuthor: Vitaliy Hlyniany-Zhuk \u003chlyniany@gmail.com\u003e\nDate:   Tue Jun 23 02:10:06 2026 +0200\n\n    feat: streaming pipeline — transcribe segments live during recording\n    \n    New pipeline architecture replaces the old sequential-after-stop approach:\n    \n=== commit message ===\nfeat: streaming pipeline — transcribe segments live during recording\n\nNew pipeline architecture replaces the old sequential-after-stop approach:\n\n- Every 3s during recording, streamCheckAndDispatch() checks if a\n  silence-bounded 25s segment is ready and dispatches it to whisper\n  immediately, while recording continues\n- dispatchSegment() runs ffmpeg concat + whisper-cli fully async; multiple\n  segments can run concurrently (each is an independent task)\n- onPipelineDone() collects results in order; once all done, pipelineFinalize()\n  assembles and inserts the full text\n- doFinalTranscription() now only handles remaining unchunked audio, then\n  sets pipelineFinalizing=true and triggers finalization\n- pipelineReset() called at start of each recording to clear state\n\nLatency improvement for a 60s dictation:\n  Before: stop → wait ~25s for all segments → text inserted\n  After:  stop → wait ~5s for tail segment only → text inserted\n  (first and second segments already transcribed during recording)",
+        "is_error": false,
+        "tool_use_id": "toolu_01JRqDW4ihGVC3WnDwVaZ6Kf",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "2544ec30-ea00-4a2e-94cd-a00c366079fe",
+  "promptId": "1e1ffff6-8697-4c3e-a362-a80f68d5a1c9",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "2544ec30-ea00-4a2e-94cd-a00c366079fe",
+  "timestamp": "2026-08-22T22:15:37.022Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "commit ac208cc024ea76e745adb1701123e9d7059cb586\nAuthor: Vitaliy Hlyniany-Zhuk \u003chlyniany@gmail.com\u003e\nDate:   Tue Jun 23 02:10:06 2026 +0200\n\n    feat: streaming pipeline — transcribe segments live during recording\n    \n    New pipeline architecture replaces the old sequential-after-stop approach:\n    \n=== commit message ===\nfeat: streaming pipeline — transcribe segments live during recording\n\nNew pipeline architecture replaces the old sequential-after-stop approach:\n\n- Every 3s during recording, streamCheckAndDispatch() checks if a\n  silence-bounded 25s segment is ready and dispatches it to whisper\n  immediately, while recording continues\n- dispatchSegment() runs ffmpeg concat + whisper-cli fully async; multiple\n  segments can run concurrently (each is an independent task)\n- onPipelineDone() collects results in order; once all done, pipelineFinalize()\n  assembles and inserts the full text\n- doFinalTranscription() now only handles remaining unchunked audio, then\n  sets pipelineFinalizing=true and triggers finalization\n- pipelineReset() called at start of each recording to clear state\n\nLatency improvement for a 60s dictation:\n  Before: stop → wait ~25s for all segments → text inserted\n  After:  stop → wait ~5s for tail segment only → text inserted\n  (first and second segments already transcribed during recording)"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "213d6144-7067-4e5a-b870-cf8d8074ee1a",
+  "version": "2.1.240"
+}

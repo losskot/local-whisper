@@ -9,16 +9,20 @@ local-whisper is a fully-local macOS dictation tool. Hold **fn + left Control** 
 ```
 Hammerspoon eventtap (trigger combo hold/release, matched on raw device flags)
   → lw-record (native AVAudioEngine capture, 1s WAV chunks)
-  → ffmpeg concat → whisper-cli (55s segments, chosen model — or the remote API)
+  ↓  streaming pipeline: every 3s, dispatch any pause-bounded ≤55s segment already on disk
+  → ffmpeg concat → whisper-cli (chosen model — or the remote API), several may run at once
+  ↓  (key released) → only the tail segment is left to transcribe
   → Post-processing (filler removal, app-aware capitalize)
   → Action hooks (voice commands, note-taking, app launching)
   → Text insertion at cursor (paste or keystroke)
   → Overlay + menu bar updates
 ```
 
-Transcription is not streamed: nothing is transcribed until the key is released. Older
-docs describing live partials or chained segment prompts describe code that no longer
-exists. Silence-aware splitting, however, **is** back — see the segmenting section below.
+Transcription **is** pipelined: segments are sent to whisper while the user is still
+talking, so the wait after release does not scale with the recording length. Text is still
+only inserted once every segment is back — there are no live partials on screen. Older docs
+claiming "nothing is transcribed until the key is released" describe the gap between
+`ac4c275` (which deleted the pipeline) and its restoration; see the streaming section below.
 
 Everything runs inside `~/.hammerspoon/init.lua` — no external bash scripts at runtime.
 The one compiled helper is `lw-record`; init.lua builds it on load when it is missing or
@@ -117,7 +121,7 @@ Expected output includes `"Message port invalidated."` — this is **normal**; t
 
 Lua 5.4 (Hammerspoon's runtime) enforces a **hard limit of 200 locals per function**. The top-level chunk of `init.lua` counts as one function. This limit is a compiler error — exceeding it prevents the file from loading at all.
 
-**Current count: ~128/200** — comfortable headroom after meeting mode, LLM refine, silence auto-stop and preferred languages were removed. Only *top-level* locals count against the limit; locals inside a function body belong to that function's own budget, so match the start of the line exactly:
+**Current count: ~134/200** — comfortable headroom after meeting mode, LLM refine, silence auto-stop and preferred languages were removed. Only *top-level* locals count against the limit; locals inside a function body belong to that function's own budget, so match the start of the line exactly:
 
 ```bash
 grep -c '^local ' hammerspoon/init.lua
@@ -176,6 +180,41 @@ unbroken passage is still bounded by `maxSecs`.
 This was written once, deleted in the "remove dead features" cleanup, and restored. If you
 are tempted to delete it again: the seam artifact it prevents is invisible in every check
 except a long real dictation.
+
+### Streaming pipeline: dispatch while the user is still talking
+
+`streamCheckAndDispatch()` runs every 3s during recording. When more than
+`FINAL_SEGMENT_SECS` of *unclaimed* chunks have accumulated, it takes `splitAtSilence`'s
+first pause-bounded group and hands it to whisper immediately; `doFinalTranscription()` then
+only has the tail left. For a 3-minute dictation that is the difference between waiting for
+three segments and waiting for one.
+
+The state lives in one `pipe` table (locals ceiling), and the ordering rule is that
+`pipe.results[segN]` is assembled by index, so segments finishing out of order still
+concatenate in the right order. `pipe.total` is only fixed once recording stops — until
+then `onPipelineDone` must not touch the overlay, which belongs to the recording timer.
+
+Two invariants, both covered by the `pipeline` checks in the test suite:
+
+- **Every chunk is claimed exactly once.** Audio is handed out in two places — the live
+  dispatcher and the tail — and if they disagree by one chunk, a second of speech is either
+  missing or transcribed twice. Both outcomes read as a plausible sentence, so nothing but
+  index accounting catches it. The tests mutate `pipe.nextChunk` by ±1 and both fail.
+- **Nothing is dispatched before a real pause-bounded cut exists.** The guard is strictly
+  `> FINAL_SEGMENT_SECS`: at exactly that many chunks `splitAtSilence` returns the whole
+  list as its trailing "everything remaining" group, which is not a silence cut and is
+  still growing.
+
+Concurrent whisper does **not** disturb capture — measured, because this feature would
+otherwise quietly undo the capture fix. With two `whisper-cli` runs overlapping a live
+recording, every chunk still came out exactly `1.000000` s and the recorder reported 49.63s
+over ~50s of wall clock. AVAudioEngine's input tap is real-time scheduled and Metal work
+does not starve it. Re-measure with the `recording: captured` log line if this changes.
+
+`emergencyStop()` calls `pipelineReset()` — otherwise segments already transcribed would
+still be assembled and pasted a moment after the user asked for a stop. `pipelineReset` is
+**forward-declared above `emergencyStop`** because the pipeline itself has to be defined
+below `insertTranscribedText`; the `scope` check catches this exact mistake.
 
 ### Mixed-language speech (surzhyk, ru/uk/en)
 
@@ -314,6 +353,7 @@ implementation:
 | `sort` | chunk files ordered as strings, which reorders audio past chunk 999 |
 | `capture` | the microphone going back through ffmpeg's avfoundation input (drops ~10% of every recording); the recorder no longer being invoked; the `CAPTURED` health check being parsed where `hs.task` leaves it empty |
 | `split` | a segment boundary cutting mid-word instead of at a pause, and — the invariant that matters most — regrouping losing or duplicating a chunk |
+| `pipeline` | live dispatch silently reverting to transcribe-after-release; the live dispatcher and the tail disagreeing by a chunk, so a second of speech is dropped or transcribed twice |
 | `emergencyStop` | emergency stop not cancelling a pending finalization |
 | `overlay` | clicking the X mid-recording leaving ffmpeg running; deleting the canvas from inside its own mouse callback; unpinning hiding the overlay while still recording |
 | `startRecording` | a re-press inside the finalization window flushing the old dictation but swallowing the new keypress |

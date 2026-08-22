@@ -1,0 +1,19 @@
+{
+  "attachment": {
+    "commandMode": "task-notification",
+    "prompt": "\u003ctask-notification\u003e\n\u003ctask-id\u003ebj1qe2cga\u003c/task-id\u003e\n\u003ctool-use-id\u003etoolu_014iZZDFPYotvEFccJWRdaB2\u003c/tool-use-id\u003e\n\u003coutput-file\u003e/private/tmp/claude-502/-Users-vitaliy-Documents-GitHub-local-whisper/881e21dc-c26e-4f4f-865e-0d78e8553961/tasks/bj1qe2cga.output\u003c/output-file\u003e\n\u003cstatus\u003ecompleted\u003c/status\u003e\n\u003csummary\u003eBackground command \"Re-run test suite\" completed (exit code 0)\u003c/summary\u003e\n\u003c/task-notification\u003e",
+    "timestamp": "2026-08-22T22:25:37.946Z",
+    "type": "queued_command"
+  },
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "parentUuid": "8ccffaba-a8a3-44d3-8a86-a8f9d649a7e5",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "timestamp": "2026-08-22T22:25:37.946Z",
+  "type": "attachment",
+  "userType": "external",
+  "uuid": "ede0f9db-6749-4451-8dae-3cf9614c37ed",
+  "version": "2.1.240"
+}

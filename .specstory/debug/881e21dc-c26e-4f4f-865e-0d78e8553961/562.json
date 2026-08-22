@@ -1,0 +1,29 @@
+{
+  "attachment": {
+    "addedLines": [
+      "mcp__claude_ai_Gmail__update_message_labels"
+    ],
+    "addedNames": [
+      "mcp__claude_ai_Gmail__update_message_labels"
+    ],
+    "needsAuthMcpServers": [
+      "claude.ai Slack",
+      "plugin:atlassian:atlassian"
+    ],
+    "pendingMcpServers": [],
+    "readdedNames": [],
+    "removedNames": [],
+    "type": "deferred_tools_delta"
+  },
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "parentUuid": "77a592e2-c7d5-43fc-9276-a8733a1be458",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "timestamp": "2026-08-22T22:15:02.597Z",
+  "type": "attachment",
+  "userType": "external",
+  "uuid": "a71a8af2-35e8-4cd7-a209-e1858185a2e5",
+  "version": "2.1.240"
+}

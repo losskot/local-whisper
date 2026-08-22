@@ -1,0 +1,72 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01Xu3idqBRdFFAdXwCeDDvFv",
+        "input": {
+          "command": "cd /Users/vitaliy/Documents/GitHub/local-whisper\ngit add -A\ngit commit -q -F - \u003c\u003c'MSG'\nRestore the streaming pipeline: transcribe while recording continues\n\nA three-minute dictation waited three minutes and then started transcribing.\nSegments were only dispatched after the key came up, so the wait scaled with\nthe recording instead of with the tail.\n\nThe pipeline existed once -- ac208cc, \"streaming pipeline: transcribe\nsegments live during recording\" -- and was deleted in ac4c275, the same\ndead-features cleanup that took splitAtSilence. Restored and adapted: API\nmode, the progress bar and the 55s silence split all postdate the original.\n\nstreamCheckAndDispatch() polls every 3s while recording. Once more than\nFINAL_SEGMENT_SECS of unclaimed chunks exist, it hands splitAtSilence's first\npause-bounded group to whisper immediately; doFinalTranscription() is left\nwith only the tail. Results are keyed by segment number, so segments that\nfinish out of order still concatenate in order.\n\nThe guard is strictly `\u003e FINAL_SEGMENT_SECS`: at exactly that many chunks\nsplitAtSilence returns the whole list as its trailing \"everything remaining\"\ngroup, which is not a silence-bounded cut and is still growing.\n\nMeasured first, because this feature could quietly undo the capture fix: with\ntwo whisper-cli runs overlapping a live recording, every chunk still came out\nexactly 1.000000s and the recorder reported 49.63s over ~50s of wall clock.\nAVAudioEngine's input tap is real-time scheduled and Metal work does not\nstarve it.\n\nemergencyStop() now resets the pipeline, otherwise segments already\ntranscribed would still be assembled and pasted a moment after the user asked\nit to stop. pipelineReset is forward-declared above emergencyStop -- the\npipeline itself must be defined below insertTranscribedText, and the `scope`\ncheck caught the nil-global that the naive ordering produced.\n\nTests: 92 pass, 5 new `pipeline` checks. Verified by mutation that they fail\non the three bugs that matter -- audio dropped (nextChunk +1), audio\ntranscribed twice (nextChunk -1), and live dispatch silently reverting to\ntranscribe-after-release.\n\nCo-Authored-By: Claude Opus 5 \u003cnoreply@anthropic.com\u003e\nMSG\ngit push 2\u003e\u00261 | tail -2; git status -sb | head -2",
+          "description": "Commit and push the pipeline"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011CeJa9JsKDoAYGaPQeJVNT",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 633,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 633,
+      "cache_read_input_tokens": 329067,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 633,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 633,
+          "cache_read_input_tokens": 329067,
+          "input_tokens": 2,
+          "output_tokens": 935,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 935,
+      "output_tokens_details": {
+        "thinking_tokens": 0
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "84aa4ead-0f48-4a66-8780-a7ac480bbf84",
+  "requestId": "req_011CeJa9GNkPT1XnMhyd18Jm",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "timestamp": "2026-08-22T22:25:53.826Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "871237ee-0c66-4e07-89f3-cdd703478ebc",
+  "version": "2.1.240"
+}

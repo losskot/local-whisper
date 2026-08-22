@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "SYNTAX OK\nlocals: 134\n=== killall whisper-cli duplicated in emergencyStop? ===\n1191:    os.execute(\"killall whisper-cli 2\u003e/dev/null\")\n1198:    os.execute(\"killall whisper-cli 2\u003e/dev/null\")\n  \u001b[0;31mFAIL\u001b[0m  scope: no top-level local used before its declaration\n  \u001b[0;32mPASS\u001b[0m  overlay: X while idle does not call emergencyStop\n  \u001b[0;32mPASS\u001b[0m  trigger: no modifiers at all does not fire\n\u001b[0;31m\u001b[1m1 of 87 checks failed.\u001b[0m",
+        "is_error": false,
+        "tool_use_id": "toolu_01W8zn2vNEVTpBxQ7QvZadth",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "79ac12ff-fdc6-4921-ab0a-4fd2c313ef78",
+  "promptId": "1e1ffff6-8697-4c3e-a362-a80f68d5a1c9",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "79ac12ff-fdc6-4921-ab0a-4fd2c313ef78",
+  "timestamp": "2026-08-22T22:19:13.796Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "SYNTAX OK\nlocals: 134\n=== killall whisper-cli duplicated in emergencyStop? ===\n1191:    os.execute(\"killall whisper-cli 2\u003e/dev/null\")\n1198:    os.execute(\"killall whisper-cli 2\u003e/dev/null\")\n  \u001b[0;31mFAIL\u001b[0m  scope: no top-level local used before its declaration\n  \u001b[0;32mPASS\u001b[0m  overlay: X while idle does not call emergencyStop\n  \u001b[0;32mPASS\u001b[0m  trigger: no modifiers at all does not fire\n\u001b[0;31m\u001b[1m1 of 87 checks failed.\u001b[0m"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "6a2b2c40-fcc7-40f9-8922-ae718207b553",
+  "version": "2.1.240"
+}

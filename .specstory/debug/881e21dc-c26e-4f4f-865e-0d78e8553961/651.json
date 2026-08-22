@@ -1,0 +1,84 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/AGENTS.md has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01E1wEy817CGyepjua1VSeC7",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "2e4c65f8-6455-46a6-a90d-5e4e21cdd7c1",
+  "promptId": "1e1ffff6-8697-4c3e-a362-a80f68d5a1c9",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "2e4c65f8-6455-46a6-a90d-5e4e21cdd7c1",
+  "timestamp": "2026-08-22T22:23:11.959Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/AGENTS.md",
+    "newString": "### Streaming pipeline: dispatch while the user is still talking\n\n`streamCheckAndDispatch()` runs every 3s during recording. When more than\n`FINAL_SEGMENT_SECS` of *unclaimed* chunks have accumulated, it takes `splitAtSilence`'s\nfirst pause-bounded group and hands it to whisper immediately; `doFinalTranscription()` then\nonly has the tail left. For a 3-minute dictation that is the difference between waiting for\nthree segments and waiting for one.\n\nThe state lives in one `pipe` table (locals ceiling), and the ordering rule is that\n`pipe.results[segN]` is assembled by index, so segments finishing out of order still\nconcatenate in the right order. `pipe.total` is only fixed once recording stops — until\nthen `onPipelineDone` must not touch the overlay, which belongs to the recording timer.\n\nTwo invariants, both covered by the `pipeline` checks in the test suite:\n\n- **Every chunk is claimed exactly once.** Audio is handed out in two places — the live\n  dispatcher and the tail — and if they disagree by one chunk, a second of speech is either\n  missing or transcribed twice. Both outcomes read as a plausible sentence, so nothing but\n  index accounting catches it. The tests mutate `pipe.nextChunk` by ±1 and both fail.\n- **Nothing is dispatched before a real pause-bounded cut exists.** The guard is strictly\n  `\u003e FINAL_SEGMENT_SECS`: at exactly that many chunks `splitAtSilence` returns the whole\n  list as its trailing \"everything remaining\" group, which is not a silence cut and is\n  still growing.\n\nConcurrent whisper does **not** disturb capture — measured, because this feature would\notherwise quietly undo the capture fix. With two `whisper-cli` runs overlapping a live\nrecording, every chunk still came out exactly `1.000000` s and the recorder reported 49.63s\nover ~50s of wall clock. AVAudioEngine's input tap is real-time scheduled and Metal work\ndoes not starve it. Re-measure with the `recording: captured` log line if this changes.\n\n`emergencyStop()` calls `pipelineReset()` — otherwise segments already transcribed would\nstill be assembled and pasted a moment after the user asked for a stop. `pipelineReset` is\n**forward-declared above `emergencyStop`** because the pipeline itself has to be defined\nbelow `insertTranscribedText`; the `scope` check catches this exact mistake.\n\n### Mixed-language speech (surzhyk, ru/uk/en)",
+    "oldString": "### Mixed-language speech (surzhyk, ru/uk/en)",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          " are tempted to delete it again: the seam artifact it prevents is invisible in every check",
+          " except a long real dictation.",
+          " ",
+          "+### Streaming pipeline: dispatch while the user is still talking",
+          "+",
+          "+`streamCheckAndDispatch()` runs every 3s during recording. When more than",
+          "+`FINAL_SEGMENT_SECS` of *unclaimed* chunks have accumulated, it takes `splitAtSilence`'s",
+          "+first pause-bounded group and hands it to whisper immediately; `doFinalTranscription()` then",
+          "+only has the tail left. For a 3-minute dictation that is the difference between waiting for",
+          "+three segments and waiting for one.",
+          "+",
+          "+The state lives in one `pipe` table (locals ceiling), and the ordering rule is that",
+          "+`pipe.results[segN]` is assembled by index, so segments finishing out of order still",
+          "+concatenate in the right order. `pipe.total` is only fixed once recording stops — until",
+          "+then `onPipelineDone` must not touch the overlay, which belongs to the recording timer.",
+          "+",
+          "+Two invariants, both covered by the `pipeline` checks in the test suite:",
+          "+",
+          "+- **Every chunk is claimed exactly once.** Audio is handed out in two places — the live",
+          "+  dispatcher and the tail — and if they disagree by one chunk, a second of speech is either",
+          "+  missing or transcribed twice. Both outcomes read as a plausible sentence, so nothing but",
+          "+  index accounting catches it. The tests mutate `pipe.nextChunk` by ±1 and both fail.",
+          "+- **Nothing is dispatched before a real pause-bounded cut exists.** The guard is strictly",
+          "+  `\u003e FINAL_SEGMENT_SECS`: at exactly that many chunks `splitAtSilence` returns the whole",
+          "+  list as its trailing \"everything remaining\" group, which is not a silence cut and is",
+          "+  still growing.",
+          "+",
+          "+Concurrent whisper does **not** disturb capture — measured, because this feature would",
+          "+otherwise quietly undo the capture fix. With two `whisper-cli` runs overlapping a live",
+          "+recording, every chunk still came out exactly `1.000000` s and the recorder reported 49.63s",
+          "+over ~50s of wall clock. AVAudioEngine's input tap is real-time scheduled and Metal work",
+          "+does not starve it. Re-measure with the `recording: captured` log line if this changes.",
+          "+",
+          "+`emergencyStop()` calls `pipelineReset()` — otherwise segments already transcribed would",
+          "+still be assembled and pasted a moment after the user asked for a stop. `pipelineReset` is",
+          "+**forward-declared above `emergencyStop`** because the pipeline itself has to be defined",
+          "+below `insertTranscribedText`; the `scope` check catches this exact mistake.",
+          "+",
+          " ### Mixed-language speech (surzhyk, ru/uk/en)",
+          " ",
+          " Whisper decodes each window into exactly one language — there is no mixed mode. Left alone it"
+        ],
+        "newLines": 41,
+        "newStart": 181,
+        "oldLines": 6,
+        "oldStart": 181
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "e2e65143-2c19-4d02-9120-eab5a3e5f832",
+  "version": "2.1.240"
+}

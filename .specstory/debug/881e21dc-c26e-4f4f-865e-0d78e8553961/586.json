@@ -1,0 +1,72 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01HvEeGhDBtsv8nGaDwGSRQc",
+        "input": {
+          "command": "cd /Users/vitaliy/Documents/GitHub/local-whisper\necho \"=== lifetime test: what does it flag? ===\"\nsed -n '/-- 1[0-9]*\\. .*[Ll]ifetime/,/^----/p' tests/test_init.lua | head -50 || awk '/lifetime:/{found=1} found' tests/test_init.lua | head -5\ngrep -n -B8 \"lifetime: every top-level\" tests/test_init.lua | head -30",
+          "description": "Read lifetime test rules"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011CeJZS3M2QwP5SX4zm3oa9",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 2315,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 2315,
+      "cache_read_input_tokens": 283039,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 2315,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 2315,
+          "cache_read_input_tokens": 283039,
+          "input_tokens": 2,
+          "output_tokens": 816,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 816,
+      "output_tokens_details": {
+        "thinking_tokens": 577
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "99655f19-3833-4230-b01f-e75935e60297",
+  "requestId": "req_011CeJZS1oG7eD129EgisnpN",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "timestamp": "2026-08-22T22:16:33.297Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "b45ec16f-5e42-467f-bc26-1cecf3cef5ae",
+  "version": "2.1.240"
+}

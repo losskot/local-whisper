@@ -1,0 +1,28 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "text": "Стабильность повысилась, но  ушла параллельная обработка, что Чанг отправляется на транскрипцию в то время, когда я ещё разговариваю. То есть я только что записывал трёхминутную голосовую запись, и первый Чанг начал транскрибироваться только после того, как началась вся запись. Это неправильно. Должна быть асинхронная обработка.",
+        "type": "text"
+      }
+    ],
+    "role": "user"
+  },
+  "origin": {
+    "kind": "human"
+  },
+  "parentUuid": "02db7d5b-bce4-4e60-a859-5f738ae547c5",
+  "permissionMode": "auto",
+  "promptId": "1e1ffff6-8697-4c3e-a362-a80f68d5a1c9",
+  "promptSource": "sdk",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "timestamp": "2026-08-22T22:15:02.623Z",
+  "type": "user",
+  "userType": "external",
+  "uuid": "77a592e2-c7d5-43fc-9276-a8733a1be458",
+  "version": "2.1.240"
+}

@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "=== when did 'not streamed' language enter AGENTS.md? ===\nac4c275 Remove dead features; switch the trigger to fn + left Control\n=== the 'remove dead features' commit ===\ncommit ac4c275b74c10fc89ccb10c8e90a164530057e7c\nAuthor: Vitaliy \u003closskot@gmail.com\u003e\nDate:   Sun Aug 16 22:58:37 2026 +0200\n\n    Remove dead features; switch the trigger to fn + left Control\n    \n    Deletes subsystems that were either never reachable or no longer wanted:\n    \n    - silence auto-stop: checkSilence() was never called and silenceTimer never\n      created, so the constants and the per-chunk bookkeeping were pure ballast\n    - LLM refinement via Ollama, along with the cached reachability probe, the\n      menu-bar toggle and tests/test_refine.sh",
+        "is_error": false,
+        "tool_use_id": "toolu_01PchKgT1Gb4pb8dMo2sUXR7",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "da7bbe6d-fbb6-4ced-ace1-89b544002792",
+  "promptId": "1e1ffff6-8697-4c3e-a362-a80f68d5a1c9",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "da7bbe6d-fbb6-4ced-ace1-89b544002792",
+  "timestamp": "2026-08-22T22:15:31.244Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "=== when did 'not streamed' language enter AGENTS.md? ===\nac4c275 Remove dead features; switch the trigger to fn + left Control\n=== the 'remove dead features' commit ===\ncommit ac4c275b74c10fc89ccb10c8e90a164530057e7c\nAuthor: Vitaliy \u003closskot@gmail.com\u003e\nDate:   Sun Aug 16 22:58:37 2026 +0200\n\n    Remove dead features; switch the trigger to fn + left Control\n    \n    Deletes subsystems that were either never reachable or no longer wanted:\n    \n    - silence auto-stop: checkSilence() was never called and silenceTimer never\n      created, so the constants and the per-chunk bookkeeping were pure ballast\n    - LLM refinement via Ollama, along with the cached reachability probe, the\n      menu-bar toggle and tests/test_refine.sh"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "7e9bc1d9-92fb-4c0c-bd4e-9657de7be410",
+  "version": "2.1.240"
+}

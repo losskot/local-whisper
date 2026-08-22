@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "+local pipelineResults    = {}     -- [seg_n] = text, filled as each segment completes\n+local pipelineLang       = nil    -- first detected language across all segments\n+local pipelineNextChunk  = 1      -- 1-based index of next chunk not yet claimed by pipeline\n+local pipelineNextSeg    = 1      -- next segment number to assign (1-indexed)\n+local pipelineTotal      = 0      -- total segments expected (fixed when recording stops)\n+local pipelineDone       = 0      -- segments completed so far\n+local pipelineFinalizing = false  -- true once we know the final total (recording stopped)\n+local streamTimer        = nil    -- fires every 3s during recording to dispatch ready segments\n+    if streamTimer  then streamTimer:stop();  streamTimer  = nil end\n+    pipelineReset()\n+local function pipelineReset()\n+local function pipelineFinalize()\n+        local t = pipelineResults[n] or \"\"\n+local function onPipelineDone(n, text, detected)\n+        local left = pipelineTotal - pipelineDone\n+            pipelineFinalize()\n+-- Concat chunkGroup → WAV → whisper, then call onPipelineDone(segN, text, lang).\n+local function dispatchSegment(segN, chunkGroup)\n+        onPipelineDone(segN, \"\", nil)\n+            onPipelineDone(segN, \"\", nil); return\n+            onPipelineDone(segN, clean, detected)\n+                if code2 ~= 0 then onPipelineDone(segN, \"\", nil); return end\n+                if code2 ~= 0 then onPipelineDone(segN, \"\", nil); return end\n+local function streamCheckAndDispatch()\n+    local segN = pipelineNextSeg\n+    dispatchSegment(segN, firstGroup)\n+    if streamTimer then streamTimer:stop(); streamTimer = nil end\n+            local segN = pipelineNextSeg\n+            dispatchSegment(segN, grp)\n+    local left = pipelineTotal - pipelineDone\n=== date order: streaming vs API mode ===\n6a7bf3b 2026-08-17 krasata\nac208cc 2026-06-23 feat: streaming pipeline — transcribe segments live during recording\nc2c2984 2026-08-03 feat: add remote API transcription mode (OpenAI-compatible)",
+        "is_error": false,
+        "tool_use_id": "toolu_01Afuawa27MQnNc1YVkmCUJY",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "236a6150-dd16-4c17-b363-812359731c92",
+  "promptId": "1e1ffff6-8697-4c3e-a362-a80f68d5a1c9",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "236a6150-dd16-4c17-b363-812359731c92",
+  "timestamp": "2026-08-22T22:15:52.784Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "+local pipelineResults    = {}     -- [seg_n] = text, filled as each segment completes\n+local pipelineLang       = nil    -- first detected language across all segments\n+local pipelineNextChunk  = 1      -- 1-based index of next chunk not yet claimed by pipeline\n+local pipelineNextSeg    = 1      -- next segment number to assign (1-indexed)\n+local pipelineTotal      = 0      -- total segments expected (fixed when recording stops)\n+local pipelineDone       = 0      -- segments completed so far\n+local pipelineFinalizing = false  -- true once we know the final total (recording stopped)\n+local streamTimer        = nil    -- fires every 3s during recording to dispatch ready segments\n+    if streamTimer  then streamTimer:stop();  streamTimer  = nil end\n+    pipelineReset()\n+local function pipelineReset()\n+local function pipelineFinalize()\n+        local t = pipelineResults[n] or \"\"\n+local function onPipelineDone(n, text, detected)\n+        local left = pipelineTotal - pipelineDone\n+            pipelineFinalize()\n+-- Concat chunkGroup → WAV → whisper, then call onPipelineDone(segN, text, lang).\n+local function dispatchSegment(segN, chunkGroup)\n+        onPipelineDone(segN, \"\", nil)\n+            onPipelineDone(segN, \"\", nil); return\n+            onPipelineDone(segN, clean, detected)\n+                if code2 ~= 0 then onPipelineDone(segN, \"\", nil); return end\n+                if code2 ~= 0 then onPipelineDone(segN, \"\", nil); return end\n+local function streamCheckAndDispatch()\n+    local segN = pipelineNextSeg\n+    dispatchSegment(segN, firstGroup)\n+    if streamTimer then streamTimer:stop(); streamTimer = nil end\n+            local segN = pipelineNextSeg\n+            dispatchSegment(segN, grp)\n+    local left = pipelineTotal - pipelineDone\n=== date order: streaming vs API mode ===\n6a7bf3b 2026-08-17 krasata\nac208cc 2026-06-23 feat: streaming pipeline — transcribe segments live during recording\nc2c2984 2026-08-03 feat: add remote API transcription mode (OpenAI-compatible)"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "21df92cf-dcca-4af1-9246-8bebdeba0fbb",
+  "version": "2.1.240"
+}

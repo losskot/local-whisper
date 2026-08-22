@@ -1,0 +1,36 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "Command did not complete within its 120s timeout and was moved to the background (ID: b92kvllge). Output is being written to: /private/tmp/claude-502/-Users-vitaliy-Documents-GitHub-local-whisper/881e21dc-c26e-4f4f-865e-0d78e8553961/tasks/b92kvllge.output. You will be notified when it completes. To check interim output, use Read on that file path.\nSession cwd remains /Users/vitaliy/Documents/GitHub/local-whisper; directory changes made by the backgrounded command do not apply to subsequent commands.",
+        "is_error": false,
+        "tool_use_id": "toolu_01RZHZvgvtv6CYcNs5UiwUec",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "6150cc6f-bc1f-48ce-b51e-de0c5ce2ab76",
+  "promptId": "1e1ffff6-8697-4c3e-a362-a80f68d5a1c9",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "6150cc6f-bc1f-48ce-b51e-de0c5ce2ab76",
+  "timestamp": "2026-08-22T22:25:25.701Z",
+  "toolUseResult": {
+    "backgroundCwdHint": "Session cwd remains /Users/vitaliy/Documents/GitHub/local-whisper; directory changes made by the backgrounded command do not apply to subsequent commands.",
+    "backgroundTaskId": "b92kvllge",
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "",
+    "timedOutAfterMs": 120000
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "9adf7a01-e655-4787-bed4-97dc3cf3a0b9",
+  "version": "2.1.240"
+}

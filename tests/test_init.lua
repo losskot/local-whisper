@@ -503,6 +503,118 @@ do
 end
 
 --------------------------------------------------------------------------------
+-- 8d. The streaming pipeline claims every chunk exactly once
+--------------------------------------------------------------------------------
+-- Segments are dispatched to whisper while recording continues, so the audio is handed out
+-- in two places: streamCheckAndDispatch() during recording and doFinalTranscription() for
+-- the tail. If those two disagree by even one chunk, a second of speech is either dropped
+-- from the transcript or transcribed twice -- and both read as a plausible sentence, so
+-- neither is visible without checking the indices.
+
+do
+    local dir = os.getenv("TMPDIR") or "/tmp/"
+    if dir:sub(-1) ~= "/" then dir = dir .. "/" end
+    dir = dir .. "lw_pipe_test"
+    os.execute("rm -rf '" .. dir .. "' && mkdir -p '" .. dir .. "'")
+
+    local function writeWav(path, amplitude)
+        local f = io.open(path, "wb")
+        if not f then return end
+        f:write(string.rep("\0", 44))
+        for _ = 1, 64 do f:write(string.pack("<i2", amplitude)) end
+        f:close()
+    end
+
+    -- 190 chunks with pauses scattered through, so splitAtSilence has real cuts to find.
+    local TOTAL = 190
+    local paths = {}
+    for i = 1, TOTAL do
+        local p = string.format("%s/chunk_%03d.wav", dir, i - 1)
+        writeWav(p, (i % 47 == 0) and 0 or 6000)
+        paths[i] = p
+    end
+
+    local env = setmetatable({ log = function() end }, { __index = _G })
+    local rms = liftFunction("getWavRMS", env)
+    local split = rms and (function() env.getWavRMS = rms; return liftFunction("splitAtSilence", env) end)()
+
+    if split then
+        env.splitAtSilence = split
+        env.FINAL_SEGMENT_SECS = tonumber(src:match("local%s+FINAL_SEGMENT_SECS%s*=%s*(%d+)")) or 55
+
+        local dispatched = {}
+        env.dispatchSegment = function(segN, group) dispatched[segN] = group end
+        env.isRecording = true
+        env.pipe = { results = {}, nextChunk = 1, nextSeg = 1, total = 0, done = 0, finalizing = false }
+
+        local visible = 0
+        env.getChunkFiles = function()
+            local out = {}
+            for i = 1, visible do out[i] = paths[i] end
+            return out
+        end
+
+        local stream, streamErr = liftFunction("streamCheckAndDispatch", env)
+        check("pipeline: streamCheckAndDispatch is liftable and compiles", stream ~= nil, tostring(streamErr))
+
+        if stream then
+            -- Nothing may be dispatched before a full pause-bounded segment exists.
+            visible = env.FINAL_SEGMENT_SECS
+            stream()
+            check("pipeline: nothing is dispatched before a full segment has accumulated",
+                  env.pipe.nextSeg == 1,
+                  "dispatched " .. (env.pipe.nextSeg - 1) .. " segment(s) too early")
+
+            -- Grow the recording one chunk at a time, exactly as the 3s poll sees it.
+            for n = env.FINAL_SEGMENT_SECS + 1, TOTAL do
+                visible = n
+                stream()
+            end
+
+            local streamedSegs = env.pipe.nextSeg - 1
+            check("pipeline: segments are dispatched during recording, not all at the end",
+                  streamedSegs >= 2,
+                  "only " .. streamedSegs .. " segment(s) dispatched live over " .. TOTAL .. " chunks")
+
+            -- The tail doFinalTranscription() would pick up.
+            local remaining = {}
+            for j = env.pipe.nextChunk, TOTAL do remaining[#remaining + 1] = paths[j] end
+            for _, grp in ipairs(split(remaining, env.FINAL_SEGMENT_SECS)) do
+                dispatched[env.pipe.nextSeg] = grp
+                env.pipe.nextSeg = env.pipe.nextSeg + 1
+            end
+
+            -- Streaming plus tail must reconstruct the recording exactly.
+            local flat = {}
+            for n = 1, env.pipe.nextSeg - 1 do
+                for _, p in ipairs(dispatched[n] or {}) do flat[#flat + 1] = p end
+            end
+            local exact = #flat == TOTAL
+            if exact then
+                for i = 1, TOTAL do
+                    if flat[i] ~= paths[i] then exact = false break end
+                end
+            end
+            check("pipeline: streamed segments plus the tail cover every chunk exactly once, in order",
+                  exact,
+                  "reassembled " .. #flat .. " chunks from " .. TOTAL ..
+                  " (a mismatch means dropped or doubled audio)")
+
+            check("pipeline: no segment is dispatched empty",
+                  (function()
+                      for n = 1, env.pipe.nextSeg - 1 do
+                          if not dispatched[n] or #dispatched[n] == 0 then return false end
+                      end
+                      return true
+                  end)(),
+                  "an empty segment would burn a whisper call and a slot in the ordered results")
+        end
+    end
+
+    os.execute("rm -rf '" .. dir .. "'")
+end
+
+--------------------------------------------------------------------------------
 -- 9. Emergency stop cancels pending finalization
 --------------------------------------------------------------------------------
 -- Otherwise the timer armed by stopRecording() still fires after the user hits

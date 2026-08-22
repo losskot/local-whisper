@@ -1,0 +1,53 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01HULj1p57PnhsDSLVrm917t",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "3709b385-45a4-4a82-a0f1-80a5f1ffa2d2",
+  "promptId": "1e1ffff6-8697-4c3e-a362-a80f68d5a1c9",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "3709b385-45a4-4a82-a0f1-80a5f1ffa2d2",
+  "timestamp": "2026-08-22T22:19:05.985Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+    "newString": "    -- Stop dispatching, and drop the segments already transcribed: emergency stop must not\n    -- paste a partial transcript a moment later.\n    pipelineReset()\n    os.execute(\"killall whisper-cli 2\u003e/dev/null\")\n    -- terminate(), not interrupt(): emergency stop throws the audio away, so there is no\n    -- reason to let the recorder flush a final chunk first. The handle is left for the\n    -- termination callback to clear, so a re-press can still detect a slow exit.\n    if recorderTask and recorderTask:isRunning() then recorderTask:terminate() end\n    forceHideOverlay()",
+    "oldString": "    -- terminate(), not interrupt(): emergency stop throws the audio away, so there is no\n    -- reason to let the recorder flush a final chunk first. The handle is left for the\n    -- termination callback to clear, so a re-press can still detect a slow exit.\n    if recorderTask and recorderTask:isRunning() then recorderTask:terminate() end\n    forceHideOverlay()",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          "     if finalizeTimers.timer then finalizeTimers.timer:stop(); finalizeTimers.timer = nil end",
+          "     if finalizeTimers.watchdog then finalizeTimers.watchdog:stop(); finalizeTimers.watchdog = nil end",
+          "     stopRecordingIndicator()",
+          "+    -- Stop dispatching, and drop the segments already transcribed: emergency stop must not",
+          "+    -- paste a partial transcript a moment later.",
+          "+    pipelineReset()",
+          "+    os.execute(\"killall whisper-cli 2\u003e/dev/null\")",
+          "     -- terminate(), not interrupt(): emergency stop throws the audio away, so there is no",
+          "     -- reason to let the recorder flush a final chunk first. The handle is left for the",
+          "     -- termination callback to clear, so a re-press can still detect a slow exit."
+        ],
+        "newLines": 10,
+        "newStart": 1185,
+        "oldLines": 6,
+        "oldStart": 1185
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "53c2b85d-ae7c-4952-8c28-a39b91965a63",
+  "version": "2.1.240"
+}

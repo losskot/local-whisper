@@ -1,0 +1,54 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The file /Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua has been updated successfully. (file state is current in your context — no need to Read it back)",
+        "tool_use_id": "toolu_01HH3bYQPkVX9qALTyksM29i",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "9d0ad139-e6ad-43fb-b338-f25a7f8f663b",
+  "promptId": "1e1ffff6-8697-4c3e-a362-a80f68d5a1c9",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "9d0ad139-e6ad-43fb-b338-f25a7f8f663b",
+  "timestamp": "2026-08-22T22:18:52.184Z",
+  "toolUseResult": {
+    "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua",
+    "newString": "    setOverlayText(\"\")\n    startRecordingIndicator()\n    updateMenuBar()\n    playSound(\"Pop\")\n\n    -- Start dispatching finished segments to whisper while the user keeps talking. 3s is\n    -- just the poll interval — a segment is only sent once a pause-bounded group is ready.\n    if pipe.timer then pipe.timer:stop() end\n    pipe.timer = hs.timer.doEvery(3, streamCheckAndDispatch)\nend",
+    "oldString": "    setOverlayText(\"\")\n    startRecordingIndicator()\n    updateMenuBar()\n    playSound(\"Pop\")\nend",
+    "originalFile": null,
+    "replaceAll": false,
+    "structuredPatch": [
+      {
+        "lines": [
+          "     startRecordingIndicator()",
+          "     updateMenuBar()",
+          "     playSound(\"Pop\")",
+          "+",
+          "+    -- Start dispatching finished segments to whisper while the user keeps talking. 3s is",
+          "+    -- just the poll interval — a segment is only sent once a pause-bounded group is ready.",
+          "+    if pipe.timer then pipe.timer:stop() end",
+          "+    pipe.timer = hs.timer.doEvery(3, streamCheckAndDispatch)",
+          " end",
+          " ",
+          " local function cancelWarmup()"
+        ],
+        "newLines": 11,
+        "newStart": 1562,
+        "oldLines": 6,
+        "oldStart": 1562
+      }
+    ],
+    "userModified": false
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "e1125474-3b57-4159-a1b5-2742c6b3cf45",
+  "version": "2.1.240"
+}

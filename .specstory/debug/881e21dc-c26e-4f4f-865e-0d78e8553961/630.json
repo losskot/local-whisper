@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "--- launching whisper #1 (48s segment) at 00:20:40 ---\n--- launching whisper #2 concurrently at 00:20:48 ---\n--- both whisper runs done at 00:20:53 ---",
+        "is_error": false,
+        "tool_use_id": "toolu_01PgE4jE6hjgBkTjdDYdWUgr",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "d42ab3d9-45e4-4366-a2cd-043c2256f9db",
+  "promptId": "1e1ffff6-8697-4c3e-a362-a80f68d5a1c9",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "d42ab3d9-45e4-4366-a2cd-043c2256f9db",
+  "timestamp": "2026-08-22T22:20:53.059Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "--- launching whisper #1 (48s segment) at 00:20:40 ---\n--- launching whisper #2 concurrently at 00:20:48 ---\n--- both whisper runs done at 00:20:53 ---"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "e235ba15-088e-4e21-b6ba-212deaa7fd62",
+  "version": "2.1.240"
+}
