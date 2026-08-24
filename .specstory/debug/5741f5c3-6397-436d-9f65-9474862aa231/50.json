@@ -1,0 +1,72 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01NPrVawRNFi772yK6r4QfQm",
+        "input": {
+          "command": "sed -n 480,660p tests/test_init.lua",
+          "description": "Read pipeline tests"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011CeLr32fT5pV8yVCA1tSbW",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 2367,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 2367,
+      "cache_read_input_tokens": 77622,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 2367,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 2367,
+          "cache_read_input_tokens": 77622,
+          "input_tokens": 2,
+          "output_tokens": 5348,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 5348,
+      "output_tokens_details": {
+        "thinking_tokens": 5255
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "7003f4e0-4c7b-4db2-975c-6adfb8407140",
+  "requestId": "req_011CeLr31p6oki1mc1FG2dGP",
+  "sessionId": "5741f5c3-6397-436d-9f65-9474862aa231",
+  "timestamp": "2026-08-24T03:16:33.588Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "ad70736e-ecad-4687-ba65-7792f1c6a8f1",
+  "version": "2.1.240"
+}

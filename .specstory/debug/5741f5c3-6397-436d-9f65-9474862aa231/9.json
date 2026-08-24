@@ -1,0 +1,64 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "text": "Посмотрю, как сейчас устроен путь «повторное нажатие во время транскрибации».",
+        "type": "text"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011CeLqoY4PJxsTLAvHDiXDZ",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 23911,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 23911,
+      "cache_read_input_tokens": 26772,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 23911,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 23911,
+          "cache_read_input_tokens": 26772,
+          "input_tokens": 2,
+          "output_tokens": 525,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 525,
+      "output_tokens_details": {
+        "thinking_tokens": 160
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "d2e27ac4-79e0-44a8-b573-2556d4b61ea1",
+  "requestId": "req_011CeLqoXFmBz8VjzTEUny7q",
+  "sessionId": "5741f5c3-6397-436d-9f65-9474862aa231",
+  "timestamp": "2026-08-24T03:12:18.777Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "3f2c5868-ab35-450b-bb6e-8f6156df6d6a",
+  "version": "2.1.240"
+}

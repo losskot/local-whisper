@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "907:local function setOverlayText(text)\n908-    if overlay then overlay[EL.text].text = text end\n909-end\n910-\n911---------------------------------------------------------------------------------\n912--- State\n913---------------------------------------------------------------------------------\n914-\n915--- isRecording and overlayPinned are declared in the Overlay UI section above,\n916--- because createOverlay's mouse callback captures them.\n917-local recorderTask = nil\n918-local recordStartedAt = nil\n919--- Seconds lw-record says it captured. Parsed in the streaming callback, not the termination",
+        "is_error": false,
+        "tool_use_id": "toolu_011dRmf8JTP3W7CdvHjpvKpH",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "e3cacb13-3a28-407b-bfb1-b3b5a59ba744",
+  "promptId": "e9cbafa6-e5e9-4e4e-8cd9-dc62304a92b1",
+  "sessionId": "5741f5c3-6397-436d-9f65-9474862aa231",
+  "sourceToolAssistantUUID": "e3cacb13-3a28-407b-bfb1-b3b5a59ba744",
+  "timestamp": "2026-08-24T03:21:32.233Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "907:local function setOverlayText(text)\n908-    if overlay then overlay[EL.text].text = text end\n909-end\n910-\n911---------------------------------------------------------------------------------\n912--- State\n913---------------------------------------------------------------------------------\n914-\n915--- isRecording and overlayPinned are declared in the Overlay UI section above,\n916--- because createOverlay's mouse callback captures them.\n917-local recorderTask = nil\n918-local recordStartedAt = nil\n919--- Seconds lw-record says it captured. Parsed in the streaming callback, not the termination"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "f07349e8-04e1-4d74-a10e-041a566db32a",
+  "version": "2.1.240"
+}

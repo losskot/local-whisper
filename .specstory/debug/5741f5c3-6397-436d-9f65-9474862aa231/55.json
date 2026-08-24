@@ -1,0 +1,27 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "Exit code 1\n933:local recordedSecs = nil    -- frozen recording duration once stopped; nil while recording\n938:local transcribedSecs = 0   -- seconds of audio fully transcribed so far\n939:local barMaxSecs = 180       -- current max duration displayed (expands at 90%)\n1098:local function updateProgressBar()\n1103:    -- barMaxSecs outruns transcribedSecs and the blue bar never reaches 100%.\n1104:    local elapsed = recordedSecs or (hs.timer.secondsSinceEpoch() - recordingStartTime)\n1106:    if elapsed \u003e= barMaxSecs * 0.9 then barMaxSecs = barMaxSecs + 180 end\n1107:    local recFrac = math.min(elapsed / barMaxSecs, 1.0)\n1108:    local txnFrac = math.min(transcribedSecs / barMaxSecs, 1.0)\n1113:local function hideProgressBar()\n1123:    recordedSecs = nil\n1124:    transcribedSecs = 0\n1125:    barMaxSecs = 180\n1137:    updateProgressBar()\n1159:        updateProgressBar()\n1165:    recordedSecs = hs.timer.secondsSinceEpoch() - recordingStartTime\n1337:        hideProgressBar()\n1348:    transcribedSecs = barMaxSecs\n1349:    if overlay then updateProgressBar() end\n1350:    hs.timer.doAfter(0.4, hideProgressBar)\n1360:    transcribedSecs = transcribedSecs + (chunkCount or 0)\n1361:    if overlay then updateProgressBar() end\n1512:        hideProgressBar()\n1537:        hideProgressBar()\n(eval):1: == not found",
+        "is_error": true,
+        "tool_use_id": "toolu_01CA1NzSUv4pYnJtW8oZCD8W",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "b59dc39a-af9c-4f32-972e-c6c6d07ea57c",
+  "promptId": "e9cbafa6-e5e9-4e4e-8cd9-dc62304a92b1",
+  "sessionId": "5741f5c3-6397-436d-9f65-9474862aa231",
+  "sourceToolAssistantUUID": "b59dc39a-af9c-4f32-972e-c6c6d07ea57c",
+  "timestamp": "2026-08-24T03:16:42.513Z",
+  "toolUseResult": "Error: Exit code 1\n933:local recordedSecs = nil    -- frozen recording duration once stopped; nil while recording\n938:local transcribedSecs = 0   -- seconds of audio fully transcribed so far\n939:local barMaxSecs = 180       -- current max duration displayed (expands at 90%)\n1098:local function updateProgressBar()\n1103:    -- barMaxSecs outruns transcribedSecs and the blue bar never reaches 100%.\n1104:    local elapsed = recordedSecs or (hs.timer.secondsSinceEpoch() - recordingStartTime)\n1106:    if elapsed \u003e= barMaxSecs * 0.9 then barMaxSecs = barMaxSecs + 180 end\n1107:    local recFrac = math.min(elapsed / barMaxSecs, 1.0)\n1108:    local txnFrac = math.min(transcribedSecs / barMaxSecs, 1.0)\n1113:local function hideProgressBar()\n1123:    recordedSecs = nil\n1124:    transcribedSecs = 0\n1125:    barMaxSecs = 180\n1137:    updateProgressBar()\n1159:        updateProgressBar()\n1165:    recordedSecs = hs.timer.secondsSinceEpoch() - recordingStartTime\n1337:        hideProgressBar()\n1348:    transcribedSecs = barMaxSecs\n1349:    if overlay then updateProgressBar() end\n1350:    hs.timer.doAfter(0.4, hideProgressBar)\n1360:    transcribedSecs = transcribedSecs + (chunkCount or 0)\n1361:    if overlay then updateProgressBar() end\n1512:        hideProgressBar()\n1537:        hideProgressBar()\n(eval):1: == not found",
+  "type": "user",
+  "userType": "external",
+  "uuid": "60b02ac2-0580-439b-97c4-6fc434841b14",
+  "version": "2.1.240"
+}

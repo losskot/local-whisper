@@ -1,0 +1,64 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "text": "Деплой — конфиг это симлинк, так что осталось перезагрузить Hammerspoon и проверить в рантайме.",
+        "type": "text"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011CeLsgP3SasCeGtHfKi1Y2",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 1208,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 1208,
+      "cache_read_input_tokens": 180548,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1208,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 1208,
+          "cache_read_input_tokens": 180548,
+          "input_tokens": 2,
+          "output_tokens": 762,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 762,
+      "output_tokens_details": {
+        "thinking_tokens": 457
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "29185681-4f6e-4380-8674-3f4ae1b5a815",
+  "requestId": "req_011CeLsgMVvGhDb4SSSTFnR3",
+  "sessionId": "5741f5c3-6397-436d-9f65-9474862aa231",
+  "timestamp": "2026-08-24T03:37:01.368Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "2e571764-bdcd-476d-ad14-97c026aa6086",
+  "version": "2.1.240"
+}

@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "#!/usr/bin/env bash\n# test_init.sh — structural and behavioral tests for hammerspoon/init.lua\n#\n# Runs tests/test_init.lua through the Hammerspoon `hs` CLI, since this stack has\n# no standalone Lua interpreter. Requires Hammerspoon to be running.\n#\n# Usage:\n#   ./tests/test_init.sh                 # test the repo's init.lua\n#   ./tests/test_init.sh path/to/init.lua  # test a specific file\nset -euo pipefail\n\nRED='\\033[0;31m'\nGREEN='\\033[0;32m'\nYELLOW='\\033[1;33m'\nBOLD='\\033[1m'\nNC='\\033[0m'\n\nSCRIPT_DIR=\"$(cd \"$(dirname \"${BASH_SOURCE[0]}\")\" \u0026\u0026 pwd)\"\nREPO_DIR=\"$(dirname \"$SCRIPT_DIR\")\"\n\nTARGET=\"${1:-$REPO_DIR/hammerspoon/init.lua}\"\n# hs runs as the Hammerspoon process, so paths must be absolute.\nTARGET=\"$(cd \"$(dirname \"$TARGET\")\" \u0026\u0026 pwd)/$(basename \"$TARGET\")\"\n\nHS_BIN=\"$(command -v hs || echo /Applications/Hammerspoon.app/Contents/Frameworks/hs/hs)\"\nif [[ ! -x \"$HS_BIN\" ]]; then\n    echo -e \"${RED}Error: the 'hs' CLI was not found.${NC}\"\n    echo \"Enable it from the Hammerspoon console: hs.ipc.cliInstall()\"\n    exit 1\nfi\n\nif ! pgrep -x Hammerspoon \u003e/dev/null 2\u003e\u00261; then\n    echo -e \"${RED}Error: Hammerspoon is not running.${NC}\"\n    echo \"These tests execute Lua through Hammerspoon's runtime. Start Hammerspoon and retry.\"\n    exit 1\nfi\n\nOUT=\"$(mktemp -t lw_test_init)\"\ntrap 'rm -f \"$OUT\"' EXIT\n\necho -e \"${BOLD}local-whisper init.lua test suite${NC}\"\necho -e \"Target: ${BOLD}${TARGET#\"$REPO_DIR\"/}${NC}\"\necho \"\"\n\n# hs evaluates in the running Hammerspoon process and does not inherit this shell's\n# environment, so pass the paths as globals rather than env vars.\n\"$HS_BIN\" -c \"_G.LW_TARGET='$TARGET'; _G.LW_OUT='$OUT'; dofile('$SCRIPT_DIR/test_init.lua')\" \u003e/dev/null 2\u003e\u00261\n\nif [[ ! -s \"$OUT\" ]]; then\n    echo -e \"${RED}Error: the test suite produced no output.${NC}\"\n    echo \"Check that $SCRIPT_DIR/test_init.lua loads cleanly.\"\n    exit 1\nfi\n\nPASS=0\nFAIL=0\nwhile IFS=$'\\t' read -r status name detail; do\n    [[ -z \"$status\" ]] \u0026\u0026 continue\n    if [[ \"$status\" == \"PASS\" ]]; then\n        PASS=$((PASS + 1))\n        echo -e \"  ${GREEN}PASS${NC}  $name\"\n    else\n        FAIL=$((FAIL + 1))\n        echo -e \"  ${RED}FAIL${NC}  $name\"\n        [[ -n \"$detail\" ]] \u0026\u0026 echo -e \"        ${YELLOW}$detail${NC}\"\n    fi\ndone \u003c \"$OUT\"\n\nTOTAL=$((PASS + FAIL))\necho \"\"\nif [[ $FAIL -eq 0 ]]; then\n    echo -e \"${GREEN}${BOLD}All $TOTAL checks passed.${NC}\"\n    exit 0\nelse\n    echo -e \"${RED}${BOLD}$FAIL of $TOTAL checks failed.${NC}\"\n    exit 1\nfi",
+        "is_error": false,
+        "tool_use_id": "toolu_01JURg2ZtnLqU8ubTMDs5CcJ",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "4dab9c0b-cbc7-4729-9381-1ffb23b0cf2f",
+  "promptId": "e9cbafa6-e5e9-4e4e-8cd9-dc62304a92b1",
+  "sessionId": "5741f5c3-6397-436d-9f65-9474862aa231",
+  "sourceToolAssistantUUID": "4dab9c0b-cbc7-4729-9381-1ffb23b0cf2f",
+  "timestamp": "2026-08-24T03:28:14.521Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "#!/usr/bin/env bash\n# test_init.sh — structural and behavioral tests for hammerspoon/init.lua\n#\n# Runs tests/test_init.lua through the Hammerspoon `hs` CLI, since this stack has\n# no standalone Lua interpreter. Requires Hammerspoon to be running.\n#\n# Usage:\n#   ./tests/test_init.sh                 # test the repo's init.lua\n#   ./tests/test_init.sh path/to/init.lua  # test a specific file\nset -euo pipefail\n\nRED='\\033[0;31m'\nGREEN='\\033[0;32m'\nYELLOW='\\033[1;33m'\nBOLD='\\033[1m'\nNC='\\033[0m'\n\nSCRIPT_DIR=\"$(cd \"$(dirname \"${BASH_SOURCE[0]}\")\" \u0026\u0026 pwd)\"\nREPO_DIR=\"$(dirname \"$SCRIPT_DIR\")\"\n\nTARGET=\"${1:-$REPO_DIR/hammerspoon/init.lua}\"\n# hs runs as the Hammerspoon process, so paths must be absolute.\nTARGET=\"$(cd \"$(dirname \"$TARGET\")\" \u0026\u0026 pwd)/$(basename \"$TARGET\")\"\n\nHS_BIN=\"$(command -v hs || echo /Applications/Hammerspoon.app/Contents/Frameworks/hs/hs)\"\nif [[ ! -x \"$HS_BIN\" ]]; then\n    echo -e \"${RED}Error: the 'hs' CLI was not found.${NC}\"\n    echo \"Enable it from the Hammerspoon console: hs.ipc.cliInstall()\"\n    exit 1\nfi\n\nif ! pgrep -x Hammerspoon \u003e/dev/null 2\u003e\u00261; then\n    echo -e \"${RED}Error: Hammerspoon is not running.${NC}\"\n    echo \"These tests execute Lua through Hammerspoon's runtime. Start Hammerspoon and retry.\"\n    exit 1\nfi\n\nOUT=\"$(mktemp -t lw_test_init)\"\ntrap 'rm -f \"$OUT\"' EXIT\n\necho -e \"${BOLD}local-whisper init.lua test suite${NC}\"\necho -e \"Target: ${BOLD}${TARGET#\"$REPO_DIR\"/}${NC}\"\necho \"\"\n\n# hs evaluates in the running Hammerspoon process and does not inherit this shell's\n# environment, so pass the paths as globals rather than env vars.\n\"$HS_BIN\" -c \"_G.LW_TARGET='$TARGET'; _G.LW_OUT='$OUT'; dofile('$SCRIPT_DIR/test_init.lua')\" \u003e/dev/null 2\u003e\u00261\n\nif [[ ! -s \"$OUT\" ]]; then\n    echo -e \"${RED}Error: the test suite produced no output.${NC}\"\n    echo \"Check that $SCRIPT_DIR/test_init.lua loads cleanly.\"\n    exit 1\nfi\n\nPASS=0\nFAIL=0\nwhile IFS=$'\\t' read -r status name detail; do\n    [[ -z \"$status\" ]] \u0026\u0026 continue\n    if [[ \"$status\" == \"PASS\" ]]; then\n        PASS=$((PASS + 1))\n        echo -e \"  ${GREEN}PASS${NC}  $name\"\n    else\n        FAIL=$((FAIL + 1))\n        echo -e \"  ${RED}FAIL${NC}  $name\"\n        [[ -n \"$detail\" ]] \u0026\u0026 echo -e \"        ${YELLOW}$detail${NC}\"\n    fi\ndone \u003c \"$OUT\"\n\nTOTAL=$((PASS + FAIL))\necho \"\"\nif [[ $FAIL -eq 0 ]]; then\n    echo -e \"${GREEN}${BOLD}All $TOTAL checks passed.${NC}\"\n    exit 0\nelse\n    echo -e \"${RED}${BOLD}$FAIL of $TOTAL checks failed.${NC}\"\n    exit 1\nfi"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "8f9e57b2-bfde-4c1e-a334-4cf0c393c5fa",
+  "version": "2.1.240"
+}

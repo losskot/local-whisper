@@ -12,6 +12,7 @@ Hammerspoon eventtap (trigger combo hold/release, matched on raw device flags)
   ↓  streaming pipeline: every 3s, dispatch any pause-bounded ≤55s segment already on disk
   → ffmpeg concat → whisper-cli (chosen model — or the remote API), several may run at once
   ↓  (key released) → only the tail segment is left to transcribe
+  ↓  a new keypress starts a *separate* dictation; the previous one keeps transcribing
   → Post-processing (filler removal, app-aware capitalize)
   → Action hooks (voice commands, note-taking, app launching)
   → Text insertion at cursor (paste or keystroke)
@@ -20,7 +21,9 @@ Hammerspoon eventtap (trigger combo hold/release, matched on raw device flags)
 
 Transcription **is** pipelined: segments are sent to whisper while the user is still
 talking, so the wait after release does not scale with the recording length. Text is still
-only inserted once every segment is back — there are no live partials on screen. Older docs
+only inserted once every segment is back — there are no live partials on screen. Dictations
+are also independent: pressing the trigger again while the previous one is still in whisper
+starts a new one beside it instead of destroying it (see "One job per keypress" below). Older docs
 claiming "nothing is transcribed until the key is released" describe the gap between
 `ac4c275` (which deleted the pipeline) and its restoration; see the streaming section below.
 
@@ -39,7 +42,8 @@ older than its source, so there is still no install step.
 - `~/whisper.cpp/build/bin/whisper-cli` — transcription binary
 - `~/whisper.cpp/models/` — whisper models (medium, large-v3-turbo, etc.)
 - `$TMPDIR/whisper-dictate/` — all temp state (per-user private dir on macOS)
-- `$TMPDIR/whisper-dictate/chunks/` — recording segments (ephemeral)
+- `$TMPDIR/whisper-dictate/chunks/g<N>/` — recording segments, one directory per dictation
+  (ephemeral; the parent is cleared at load, a generation's directory when it is done with)
 - `$TMPDIR/whisper-dictate/whisper-dictate.log` — debug log
 
 ## Audio capture: never go back to ffmpeg for the microphone
@@ -121,7 +125,7 @@ Expected output includes `"Message port invalidated."` — this is **normal**; t
 
 Lua 5.4 (Hammerspoon's runtime) enforces a **hard limit of 200 locals per function**. The top-level chunk of `init.lua` counts as one function. This limit is a compiler error — exceeding it prevents the file from loading at all.
 
-**Current count: ~134/200** — comfortable headroom after meeting mode, LLM refine, silence auto-stop and preferred languages were removed. Only *top-level* locals count against the limit; locals inside a function body belong to that function's own budget, so match the start of the line exactly:
+**Current count: ~141/200** — comfortable headroom after meeting mode, LLM refine, silence auto-stop and preferred languages were removed. Only *top-level* locals count against the limit; locals inside a function body belong to that function's own budget, so match the start of the line exactly:
 
 ```bash
 grep -c '^local ' hammerspoon/init.lua
@@ -216,6 +220,53 @@ still be assembled and pasted a moment after the user asked for a stop. `pipelin
 **forward-declared above `emergencyStop`** because the pipeline itself has to be defined
 below `insertTranscribedText`; the `scope` check catches this exact mistake.
 
+### One job per keypress — pipeline state is not global
+
+Pressing the trigger again while the previous dictation was still being transcribed used to
+lose it **whole**. Two independent causes, both in the start-of-recording path:
+
+- `tryWarmup()` called `pipelineReset()`, which wiped `results` and put `finalizing` back to
+  false. Segments that came back afterwards were written into the *new* dictation's state and
+  never assembled — `onPipelineDone` returns early while `finalizing` is false.
+- it also `rm -rf`'d the one shared `chunks/` directory, deleting audio the previous
+  dictation's ffmpeg was still concatenating.
+
+Both are visible in the log, and nowhere else — a 92-second dictation disappeared behind
+exactly these two lines:
+
+```
+final: START — total chunks=93, already streamed=1 seg(s), next unclaimed chunk=55
+pipeline: seg 2 concat FAILED (code=254)     ← its WAVs were deleted mid-concat
+pipeline: seg 2 complete (done=1/?)          ← "?" means finalizing went back to false
+```
+
+So state is **per dictation**, not global. `pipeNewJob()` mints a job per keypress with its
+own generation number, chunk directory (`chunks/g<N>`), segment files (`pipe_seg_g<N>_*`) and
+results; `pipe` means only "the dictation the trigger is driving now", and `pipeStartJob()`
+(called from `startRecording`) *detaches* the previous job instead of resetting it. The rules
+that keep it that way:
+
+- **Nothing in flight may read `pipe`.** `dispatchSegment` captures its job (`job = job or
+  pipe`) and `onPipelineDone`/`pipelineFinalize` take it as an argument. A callback that reads
+  `pipe` when whisper answers writes into whatever dictation is current by then — which is
+  the original bug, restored.
+- **The overlay and the progress bar belong to the current job only** (`job == pipe`). A
+  detached job reporting in would otherwise move the bar of the recording in progress.
+- **A detached job's text is queued, not typed** (`pipeJobs.pending`, prepended by the next
+  insertion, oldest first). It finishes while the user is *holding* the trigger combo, and
+  both output modes post keystrokes — ⌘V or a letter landing inside a held fn+ctrl is not
+  what the user asked for. `pipeInsertIsSafe()` is the one place that decides; if the
+  recorder is idle when it lands, it goes in immediately instead.
+- **Every path that produces no text still flushes the queue** (`pipeFlushPending`): a
+  too-short recording, a cancelled warmup, an empty transcript. Otherwise a queued dictation
+  waits for a next one that may never come.
+- **Audio is deleted only by the job that owns it** — `pipeCleanup(job)` after it finalises or
+  is abandoned. Never clear the shared parent while any dictation is alive.
+
+Emergency stop abandons *every* live job, including a detached one, because "stopped" has to
+mean nothing more reaches the cursor. A transcript that had already finished is not dropped
+silently: it goes to the clipboard and the notification says so.
+
 ### Mixed-language speech (surzhyk, ru/uk/en)
 
 Whisper decodes each window into exactly one language — there is no mixed mode. Left alone it
@@ -291,7 +342,7 @@ Two traps if you try anyway:
 
 - Re-posting the press on a timer to "hold" it does not work — every post is a fresh
   flagsChanged event, so the tap sees press/release churn and starts and stops repeatedly.
-  That can leave two recorders writing into the same `chunks/` directory.
+  That can leave two recorders alive at once (each in its own generation's directory).
 - **Root every timer you create in a global.** An `hs.timer.doAfter` stored nowhere in an
   `hs -c` one-liner gets collected before it fires, so the loop that was supposed to stop
   the simulation never runs. This is the same GC rule as the runtime code, and it bites
@@ -337,6 +388,17 @@ Note: `$TMPDIR` inside a sandbox may differ from the real user TMPDIR. Always us
 Requires Hammerspoon to be running — there is no standalone Lua interpreter in this
 stack, so `tests/test_init.lua` is executed through the `hs` CLI.
 
+The `hs` client sometimes **runs the tests and then never exits**, which hangs the runner
+after all the work is done (a stuck client from an earlier session can also queue new ones
+behind it). The results are already on disk by then — the runner passes its path as
+`LW_OUT`, a `mktemp -t lw_test_init` file:
+
+```bash
+ls -t "$(getconf DARWIN_USER_TEMP_DIR)"lw_test_init* | head -1   # newest run
+grep -c "^PASS" <file>; grep "^FAIL" <file>
+pkill -9 -f "^/usr/local/bin/hs -c"                              # free the IPC port
+```
+
 Guards the bug classes that have actually bitten this file, rather than restating the
 implementation:
 
@@ -354,6 +416,7 @@ implementation:
 | `capture` | the microphone going back through ffmpeg's avfoundation input (drops ~10% of every recording); the recorder no longer being invoked; the `CAPTURED` health check being parsed where `hs.task` leaves it empty |
 | `split` | a segment boundary cutting mid-word instead of at a pause, and — the invariant that matters most — regrouping losing or duplicating a chunk |
 | `pipeline` | live dispatch silently reverting to transcribe-after-release; the live dispatcher and the tail disagreeing by a chunk, so a second of speech is dropped or transcribed twice |
+| `detach` | a new recording destroying the dictation still being transcribed — reset pipeline state, a wiped shared chunk directory, a whisper callback reporting into whatever job is current, or a finished transcript typed into a held trigger combo |
 | `emergencyStop` | emergency stop not cancelling a pending finalization |
 | `overlay` | clicking the X mid-recording leaving ffmpeg running; deleting the canvas from inside its own mouse callback; unpinning hiding the overlay while still recording |
 | `startRecording` | a re-press inside the finalization window flushing the old dictation but swallowing the new keypress |

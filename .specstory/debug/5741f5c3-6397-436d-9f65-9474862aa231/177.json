@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "-rw-r--r--  1 vitaliy  wheel     0 Aug 24 05:31 b1x580lkq.output\n-rw-r--r--  1 vitaliy  wheel  5395 Aug 24 05:29 b4tc56u3e.output\n-rw-r--r--  1 vitaliy  wheel     0 Aug 24 05:31 bjqplp5ch.output\n-rw-r--r--  1 vitaliy  wheel   285 Aug 24 05:29 bqjhodfxa.output\n-rw-r--r--  1 vitaliy  wheel     3 Aug 24 05:30 buiuv751a.output\n---\nok\n---\n20059       01:17 /bin/zsh -c source /Users/vitaliy/.claude/shell-snapshots/snapshot-zsh-1787541140962-gx01o5.sh 2\u003e/dev/null || true \u0026\u0026 setopt NO_EXTENDED_GLOB NO_BARE_GLOB_QUAL 2\u003e/dev/null || true \u0026\u0026 { \\builtin unalias -- 'unsetenv'; \\builtin unset -f -- 'unsetenv'; } \u003e/dev/null 2\u003e\u00261 || true \u0026\u0026 eval 'python3 - \u003c\u003c'\"'\"'PYEOF'\"'\"'\\012P = \"tests/test_init.lua\"\\012src = open(P, encoding=\"utf-8\").read()\\012old = \"    local calls = { final = 0, warmup = 0, overlayText = 0, showOverlay = 0 }\"\\012new = \"    local calls = { final = 0, warmup = 0, overlayText = 0, showOverlay = 0, newJob = 0 }\"\\012assert src.count(old) == 1\\012open(P, \"w\", encoding=\"utf-8\").write(src.replace(old, new, 1))\\012print(\"ok\")\\012PYEOF\\012./tests/test_init.sh 2\u003e\u00261 | grep -E \"FAIL|checks\" ' \u0026\u0026 pwd -P \u003e| /tmp/claude-f5f6-cwd\n20062       01:17 bash ./tests/test_init.sh\n20076       01:17 /usr/local/bin/hs -c _G.LW_TARGET='/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua'; _G.LW_OUT='/var/folders/ph/3yv4hw8567g12wy09lntpvt40000gp/T/lw_test_init.SmCMs4RyPK'; dofile('/Users/vitaliy/Documents/GitHub/local-whisper/tests/test_init.lua')",
+        "is_error": false,
+        "tool_use_id": "toolu_01MFz2oc8m8wTdzHD21xzTLM",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "3d81f87c-3828-42c1-881c-329254ecaddf",
+  "promptId": "e9cbafa6-e5e9-4e4e-8cd9-dc62304a92b1",
+  "sessionId": "5741f5c3-6397-436d-9f65-9474862aa231",
+  "sourceToolAssistantUUID": "3d81f87c-3828-42c1-881c-329254ecaddf",
+  "timestamp": "2026-08-24T03:31:28.020Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "-rw-r--r--  1 vitaliy  wheel     0 Aug 24 05:31 b1x580lkq.output\n-rw-r--r--  1 vitaliy  wheel  5395 Aug 24 05:29 b4tc56u3e.output\n-rw-r--r--  1 vitaliy  wheel     0 Aug 24 05:31 bjqplp5ch.output\n-rw-r--r--  1 vitaliy  wheel   285 Aug 24 05:29 bqjhodfxa.output\n-rw-r--r--  1 vitaliy  wheel     3 Aug 24 05:30 buiuv751a.output\n---\nok\n---\n20059       01:17 /bin/zsh -c source /Users/vitaliy/.claude/shell-snapshots/snapshot-zsh-1787541140962-gx01o5.sh 2\u003e/dev/null || true \u0026\u0026 setopt NO_EXTENDED_GLOB NO_BARE_GLOB_QUAL 2\u003e/dev/null || true \u0026\u0026 { \\builtin unalias -- 'unsetenv'; \\builtin unset -f -- 'unsetenv'; } \u003e/dev/null 2\u003e\u00261 || true \u0026\u0026 eval 'python3 - \u003c\u003c'\"'\"'PYEOF'\"'\"'\\012P = \"tests/test_init.lua\"\\012src = open(P, encoding=\"utf-8\").read()\\012old = \"    local calls = { final = 0, warmup = 0, overlayText = 0, showOverlay = 0 }\"\\012new = \"    local calls = { final = 0, warmup = 0, overlayText = 0, showOverlay = 0, newJob = 0 }\"\\012assert src.count(old) == 1\\012open(P, \"w\", encoding=\"utf-8\").write(src.replace(old, new, 1))\\012print(\"ok\")\\012PYEOF\\012./tests/test_init.sh 2\u003e\u00261 | grep -E \"FAIL|checks\" ' \u0026\u0026 pwd -P \u003e| /tmp/claude-f5f6-cwd\n20062       01:17 bash ./tests/test_init.sh\n20076       01:17 /usr/local/bin/hs -c _G.LW_TARGET='/Users/vitaliy/Documents/GitHub/local-whisper/hammerspoon/init.lua'; _G.LW_OUT='/var/folders/ph/3yv4hw8567g12wy09lntpvt40000gp/T/lw_test_init.SmCMs4RyPK'; dofile('/Users/vitaliy/Documents/GitHub/local-whisper/tests/test_init.lua')"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "05167bd1-b807-4876-8a74-a2bc86d81f89",
+  "version": "2.1.240"
+}

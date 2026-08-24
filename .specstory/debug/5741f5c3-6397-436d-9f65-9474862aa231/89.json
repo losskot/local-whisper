@@ -1,0 +1,72 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01Q6TqRkcchDjx6wDe1a7ATf",
+        "input": {
+          "command": "cat \u003e /private/tmp/claude-502/-Users-vitaliy-Documents-GitHub-local-whisper/5741f5c3-6397-436d-9f65-9474862aa231/scratchpad/patch3.py \u003c\u003c'PYEOF'\nP = \"hammerspoon/init.lua\"\nsrc = open(P, encoding=\"utf-8\").read()\n\ndef rep(old, new, count=1):\n    global src\n    n = src.count(old)\n    assert n == count, \"anchor count %d (expected %d) for: %r\" % (n, count, old[:90])\n    src = src.replace(old, new, count)\n\n# ---------------------------------------------------------------- pipelineFinalize(job)\nrep('''local function pipelineFinalize()\n    local parts = {}\n    for n = 1, pipe.total do\n        local t = pipe.results[n] or \"\"\n        if t ~= \"\" then table.insert(parts, t) end\n    end\n    local finalText = table.concat(parts, \" \"):gsub(\"^%s+\", \"\"):gsub(\"%s+$\", \"\"):gsub(\"%s+\", \" \")\n    log(\"pipeline: finalized \" .. pipe.total .. \" seg(s): '\" .. finalText .. \"'\")\n\n    if finalText == \"\" then\n        hideProgressBar()\n        if pipe.apiError then\n            setOverlayText(\"API error: \" .. pipe.apiError)\n            hs.notify.new({ title = \"local-whisper\", informativeText = \"API error: \" .. pipe.apiError }):send()\n            hs.timer.doAfter(2.5, hideOverlay)\n        else\n            hideOverlay()\n        end\n        return\n    end\n    -- Flash the blue bar to 100% to confirm all audio was transcribed, then fade it\n    transcribedSecs = barMaxSecs\n    if overlay then updateProgressBar() end\n    hs.timer.doAfter(0.4, hideProgressBar)\n    insertTranscribedText(finalText, pipe.lang)\nend''',\n'''local function pipelineFinalize(job)\n    if job.abandoned or job.inserted then return end\n    job.inserted = true\n\n    local parts = {}\n    for n = 1, job.total do\n        local t = job.results[n] or \"\"\n        if t ~= \"\" then table.insert(parts, t) end\n    end\n    local finalText = table.concat(parts, \" \"):gsub(\"^%s+\", \"\"):gsub(\"%s+$\", \"\"):gsub(\"%s+\", \" \")\n    log(\"pipeline: gen \" .. job.gen .. \" finalized \" .. job.total .. \" seg(s): '\" .. finalText .. \"'\")\n    pipeCleanup(job)\n\n    -- This dictation finished behind a newer one. Typing it now would post keystrokes into\n    -- the trigger combo the user is still holding, and the overlay belongs to the recording\n    -- in progress — so queue it. The next insertion carries it, in the order it was spoken.\n    if job ~= pipe and not pipeInsertIsSafe() then\n        if finalText ~= \"\" then\n            table.insert(pipeJobs.pending, { text = finalText, lang = job.lang })\n            log(\"pipeline: gen \" .. job.gen .. \" queued behind the current dictation (\" ..\n                #pipeJobs.pending .. \" pending)\")\n        end\n        return\n    end\n\n    if job ~= pipe then\n        -- Nothing is recording and nothing else owns the overlay: deliver it on its own.\n        log(\"pipeline: gen \" .. job.gen .. \" inserting late — the recorder is idle\")\n        if finalText ~= \"\" then insertTranscribedText(finalText, job.lang) end\n        return\n    end\n\n    local queued, queuedLang = pipeTakePending()\n    if queued then\n        finalText = (finalText ~= \"\") and (queued .. \" \" .. finalText) or queued\n        if not job.lang then job.lang = queuedLang end\n        log(\"pipeline: prepended a queued dictation (\" .. #queued .. \" chars) from an earlier recording\")\n    end\n\n    if finalText == \"\" then\n        hideProgressBar()\n        if job.apiError then\n            setOverlayText(\"API error: \" .. job.apiError)\n            hs.notify.new({ title = \"local-whisper\", informativeText = \"API error: \" .. job.apiError }):send()\n            hs.timer.doAfter(2.5, hideOverlay)\n        else\n            hideOverlay()\n        end\n        return\n    end\n    -- Flash the blue bar to 100% to confirm all audio was transcribed, then fade it\n    transcribedSecs = barMaxSecs\n    if overlay then updateProgressBar() end\n    hs.timer.doAfter(0.4, hideProgressBar)\n    insertTranscribedText(finalText, job.lang)\nend''')\n\n# ---------------------------------------------------------------- onPipelineDone(job, ...)\nrep('''local function onPipelineDone(n, text, detected, chunkCount)\n    pipe.results[n] = text\n    if detected and not pipe.lang then pipe.lang = detected end\n    pipe.done = pipe.done + 1\n    transcribedSecs = transcribedSecs + (chunkCount or 0)\n    if overlay then updateProgressBar() end\n    log(\"pipeline: seg \" .. n .. \" complete (done=\" .. pipe.done .. \"/\" ..\n        (pipe.finalizing and pipe.total or \"?\") .. \")\")\n\n    -- While recording, the overlay belongs to the timer — don't stomp it. Only once the\n    -- total is known does the countdown make sense.\n    if not pipe.finalizing then return end\n    local left = pipe.total - pipe.done\n    if left \u003e 0 then\n        setOverlayText(string.format(\"Transcribing... (%d left)\", left))\n    else\n        pipelineFinalize()\n    end\nend''',\n'''local function onPipelineDone(job, n, text, detected, chunkCount)\n    if job.abandoned then\n        log(\"pipeline: gen \" .. job.gen .. \" seg \" .. n .. \" came back after a stop — dropped\")\n        return\n    end\n    job.results[n] = text\n    if detected and not job.lang then job.lang = detected end\n    job.done = job.done + 1\n    -- The progress bar and the overlay belong to the dictation in progress; a detached job\n    -- reporting in must not move them.\n    if job == pipe then\n        transcribedSecs = transcribedSecs + (chunkCount or 0)\n        if overlay then updateProgressBar() end\n    end\n    log(\"pipeline: gen \" .. job.gen .. \" seg \" .. n .. \" complete (done=\" .. job.done .. \"/\" ..\n        (job.finalizing and job.total or \"?\") .. \")\")\n\n    -- While recording, the overlay belongs to the timer — don't stomp it. Only once the\n    -- total is known does the countdown make sense.\n    if not job.finalizing then return end\n    local left = job.total - job.done\n    if left \u003e 0 then\n        if job == pipe then setOverlayText(string.format(\"Transcribing... (%d left)\", left)) end\n    else\n        pipelineFinalize(job)\n    end\nend''')\n\n# ---------------------------------------------------------------- dispatchSegment\nrep('''local function dispatchSegment(segN, group)\n    local lang       = getLang()\n    local promptArgs = getPromptArgs()\n    local nChunks    = #group\n    local concatFile = WHISPER_TMP .. \"/pipe_concat_\" .. segN .. \".txt\"\n    local segWav     = WHISPER_TMP .. \"/pipe_seg_\" .. segN .. \".wav\"''',\n'''-- `job` defaults to the current dictation, and every callback below closes over it instead\n-- of reading `pipe`: by the time whisper answers, `pipe` may already be the *next* dictation,\n-- and writing the result there is how a finished transcript vanished.\nlocal function dispatchSegment(segN, group, job)\n    job = job or pipe\n    local lang       = getLang()\n    local promptArgs = getPromptArgs()\n    local nChunks    = #group\n    local concatFile = WHISPER_TMP .. \"/pipe_concat_g\" .. job.gen .. \"_\" .. segN .. \".txt\"\n    local segWav     = WHISPER_TMP .. \"/pipe_seg_g\" .. job.gen .. \"_\" .. segN .. \".wav\"''')\n\n# every onPipelineDone / log inside dispatchSegment\nn = src.count(\"onPipelineDone(segN,\")\nassert n == 5, \"onPipelineDone(segN, ...) occurrences: %d\" % n\nsrc = src.replace(\"onPipelineDone(segN,\", \"onPipelineDone(job, segN,\")\n\nn = src.count('\"pipeline: seg \" .. segN')\nassert n == 12, 'log prefix occurrences: %d' % n\nsrc = src.replace('\"pipeline: seg \" .. segN', '\"pipeline: gen \" .. job.gen .. \" seg \" .. segN')\n\nrep(\"                    pipe.apiError = errMsg\", \"                    job.apiError = errMsg\")\n\nopen(P, \"w\", encoding=\"utf-8\").write(src)\nprint(\"patch3 ok\")\nPYEOF\npython3 /private/tmp/claude-502/-Users-vitaliy-Documents-GitHub-local-whisper/5741f5c3-6397-436d-9f65-9474862aa231/scratchpad/patch3.py",
+          "description": "Thread the job through the pipeline callbacks"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011CeLrahszLRg4UiBmudcEV",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 3216,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 3216,
+      "cache_read_input_tokens": 121107,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 3216,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 3216,
+          "cache_read_input_tokens": 121107,
+          "input_tokens": 2,
+          "output_tokens": 3211,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 3211,
+      "output_tokens_details": {
+        "thinking_tokens": 0
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "be88c6d7-6a2c-4378-87d3-a59c6f5c5d5e",
+  "requestId": "req_011CeLragYck7QFXtiU1eP5J",
+  "sessionId": "5741f5c3-6397-436d-9f65-9474862aa231",
+  "timestamp": "2026-08-24T03:22:55.370Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "b07aa198-50ca-482b-b343-82c1a7203e91",
+  "version": "2.1.240"
+}

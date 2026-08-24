@@ -158,6 +158,13 @@ end
 
 os.execute("mkdir -p '" .. WHISPER_TMP .. "'")
 
+-- Every dictation records into its own CHUNK_DIR/g<N> subdirectory and owns its own segment
+-- files, so a new recording can never delete audio a previous one is still transcribing.
+-- Generation numbers restart at 1 on every load, so clear what an earlier instance left.
+os.execute("rm -rf '" .. CHUNK_DIR .. "' '" .. WHISPER_TMP .. "'/pipe_seg_* '" ..
+           WHISPER_TMP .. "'/pipe_concat_* 2>/dev/null")
+os.execute("mkdir -p '" .. CHUNK_DIR .. "'")
+
 local function log(msg)
     local f = io.open(LOG_FILE, "a")
     if f then
@@ -308,13 +315,16 @@ local function isHallucination(text)
     return false
 end
 
-local function getChunkFiles()
+-- Chunks live in a per-dictation subdirectory of CHUNK_DIR (see pipeNewJob), so the caller
+-- always names the recording it means. A dictation that is still being transcribed keeps its
+-- own directory, which is what stops the next recording from deleting audio out from under it.
+local function getChunkFiles(dir)
     local chunks = {}
-    local ok, iter, dir = pcall(hs.fs.dir, CHUNK_DIR)
+    local ok, iter, d = pcall(hs.fs.dir, dir)
     if not ok then return chunks end
-    for file in iter, dir do
+    for file in iter, d do
         if file:match("^chunk_.*%.wav$") then
-            table.insert(chunks, CHUNK_DIR .. "/" .. file)
+            table.insert(chunks, dir .. "/" .. file)
         end
     end
     -- Sort by the numeric index, not lexicographically: the recorder's %03d overflows past
@@ -922,6 +932,10 @@ local recordStartedAt = nil
 local recorderCaptured = nil
 local finalizationPending = false  -- true between stopRecording() and doFinalTranscription() actually starting
 local finalizeTimers = { timer = nil, watchdog = nil }
+-- Declared here rather than next to the warmup code that drives it: the pipeline below asks
+-- whether it is safe to type a finished transcript, and a reference to a local declared
+-- further down would compile to a nil global read instead (see AGENTS.md).
+local isWarmingUp = false
 
 -- Menu bar
 local menuBar = nil
@@ -1191,17 +1205,21 @@ function emergencyStop()
     if finalizeTimers.timer then finalizeTimers.timer:stop(); finalizeTimers.timer = nil end
     if finalizeTimers.watchdog then finalizeTimers.watchdog:stop(); finalizeTimers.watchdog = nil end
     stopRecordingIndicator()
-    -- Stop dispatching, and drop the segments already transcribed: emergency stop must not
-    -- paste a partial transcript a moment later.
-    pipelineReset()
     -- terminate(), not interrupt(): emergency stop throws the audio away, so there is no
     -- reason to let the recorder flush a final chunk first. The handle is left for the
-    -- termination callback to clear, so a re-press can still detect a slow exit.
+    -- termination callback to clear, so a re-press can still detect a slow exit. Killed
+    -- before the cleanup below, which deletes the directory it is writing into.
     if recorderTask and recorderTask:isRunning() then recorderTask:terminate() end
+    -- Stop dispatching, and drop the segments already transcribed: emergency stop must not
+    -- paste a partial transcript a moment later. This abandons every job still in flight,
+    -- including one a newer recording detached, and rescues an already-finished transcript
+    -- to the clipboard rather than dropping it on the floor.
+    local rescued = pipelineReset()
     forceHideOverlay()
     updateMenuBar()
     os.execute("killall whisper-cli 2>/dev/null")
-    hs.notify.new({ title = "local-whisper", informativeText = "Stopped" }):send()
+    hs.notify.new({ title = "local-whisper", informativeText = rescued and
+        "Stopped — the earlier dictation is on the clipboard" or "Stopped" }):send()
 end
 
 --------------------------------------------------------------------------------
@@ -1299,45 +1317,170 @@ local FINAL_SEGMENT_SECS = 55
 --
 -- Grouped into one table on purpose: init.lua is bounded by Lua's 200-locals-per-function
 -- ceiling, so related state goes in a table rather than eight bare locals.
-local pipe = {
-    results    = {},    -- [segN] = text, filled as each segment completes (order preserved)
-    lang       = nil,   -- first detected language across all segments
-    nextChunk  = 1,     -- 1-based index of the next chunk not yet claimed by a segment
-    nextSeg    = 1,     -- next segment number to assign
-    total      = 0,     -- fixed once recording stops and the tail is dispatched
-    done       = 0,     -- segments finished so far
-    finalizing = false, -- true once `total` is known
-    apiError   = nil,
-    timer      = nil,   -- polls during recording for a segment that is ready to dispatch
+--
+-- State is *per dictation*, not global. Pressing the trigger again while the previous
+-- dictation is still being transcribed used to reset this table and wipe the shared chunk
+-- directory, which lost that dictation whole: its finished segments were dropped from
+-- `results`, `finalizing` went back to false so nothing was ever assembled, and the
+-- concat of its remaining audio failed with ffmpeg exit 254 because the WAVs were gone.
+-- Each keypress now gets its own job (own chunk directory, own segment files, own results)
+-- and an older job keeps transcribing and delivers its text on its own.
+local pipeJobs = {
+    live    = {},   -- [gen] = job, every job that can still produce text
+    pending = {},   -- finished transcripts waiting for a safe moment to be inserted
+    lastGen = 0,
 }
 
--- Assigned, not declared: the local is forward-declared above emergencyStop.
-pipelineReset = function()
-    if pipe.timer then pipe.timer:stop(); pipe.timer = nil end
-    pipe.results    = {}
-    pipe.lang       = nil
-    pipe.nextChunk  = 1
-    pipe.nextSeg    = 1
-    pipe.total      = 0
-    pipe.done       = 0
-    pipe.finalizing = false
-    pipe.apiError   = nil
+local function pipeNewJob()
+    pipeJobs.lastGen = pipeJobs.lastGen + 1
+    local job = {
+        gen        = pipeJobs.lastGen,
+        dir        = CHUNK_DIR .. "/g" .. pipeJobs.lastGen,  -- this dictation's audio, nobody else's
+        results    = {},    -- [segN] = text, filled as each segment completes (order preserved)
+        lang       = nil,   -- first detected language across all segments
+        nextChunk  = 1,     -- 1-based index of the next chunk not yet claimed by a segment
+        nextSeg    = 1,     -- next segment number to assign
+        total      = 0,     -- fixed once recording stops and the tail is dispatched
+        done       = 0,     -- segments finished so far
+        finalizing = false, -- true once `total` is known
+        inserted   = false, -- true once its text was inserted or queued, so it happens once
+        abandoned  = false, -- emergency stop: its segments are dropped as they come back
+        apiError   = nil,
+        timer      = nil,   -- polls during recording for a segment that is ready to dispatch
+    }
+    pipeJobs.live[job.gen] = job
+    os.execute("mkdir -p '" .. job.dir .. "'")
+    return job
 end
 
-local function pipelineFinalize()
+-- The dictation the trigger is currently driving. Reassigned per keypress by pipeStartJob;
+-- everything already in flight holds its own job reference instead of reading this.
+local pipe = pipeNewJob()
+
+-- A job's audio and intermediates are removed only when nothing can still read them.
+-- Deleting them early is exactly the bug this rework fixes.
+local function pipeCleanup(job)
+    pipeJobs.live[job.gen] = nil
+    if job.timer then job.timer:stop(); job.timer = nil end
+    os.execute("rm -rf '" .. job.dir .. "' '" .. WHISPER_TMP .. "'/pipe_seg_g" .. job.gen ..
+               "_* '" .. WHISPER_TMP .. "'/pipe_concat_g" .. job.gen .. "_* 2>/dev/null")
+end
+
+-- Transcripts that finished while a newer recording was running, oldest first.
+local function pipeTakePending()
+    if #pipeJobs.pending == 0 then return nil, nil end
+    local parts, lang = {}, nil
+    for _, p in ipairs(pipeJobs.pending) do
+        table.insert(parts, p.text)
+        lang = lang or p.lang
+    end
+    for i = #pipeJobs.pending, 1, -1 do pipeJobs.pending[i] = nil end
+    return table.concat(parts, " "), lang
+end
+
+-- True when a finished transcript can be typed *right now*: nothing is recording, the
+-- trigger combo is not held (both insertion modes post keystrokes, and ⌘V or a letter
+-- landing inside a held fn+ctrl is not what the user asked for), and no dictation in
+-- progress owns the overlay.
+local function pipeInsertIsSafe()
+    if isRecording or isWarmingUp or finalizationPending then return false end
+    if triggerHeld() then return false end
+    local cur = pipeJobs.live[pipe.gen]
+    if cur and (cur.nextSeg > 1 or cur.finalizing) then return false end
+    return true
+end
+
+-- Insert whatever earlier dictations left queued. Returns true if it inserted something, so
+-- callers that would otherwise just hide the overlay can tell.
+local function pipeFlushPending()
+    local text, lang = pipeTakePending()
+    if not text then return false end
+    log("pipeline: flushing a queued dictation (" .. #text .. " chars)")
+    insertTranscribedText(text, lang)
+    return true
+end
+
+-- Called once per keypress, before the recorder starts. The previous job is *detached*, not
+-- reset: if its transcription is still running it keeps its results, its chunk directory and
+-- its segment files, and delivers its own text when it finishes. Reassigning `pipe` is safe
+-- only because nothing in flight reads it — dispatchSegment captures the job it belongs to
+-- and every callback below takes that job explicitly.
+local function pipeStartJob()
+    if pipe.timer then pipe.timer:stop(); pipe.timer = nil end
+    local prev = pipe
+    if pipeJobs.live[prev.gen] then
+        if prev.nextSeg > 1 or prev.finalizing then
+            log("pipeline: gen " .. prev.gen .. " still transcribing — detached, it delivers its own text")
+        else
+            pipeCleanup(prev)   -- nothing was ever dispatched from it: its audio is dead weight
+        end
+    end
+    pipe = pipeNewJob()
+    log("pipeline: gen " .. pipe.gen .. " started")
+end
+
+-- Assigned, not declared: the local is forward-declared above emergencyStop.
+--
+-- Emergency stop means nothing from any of this reaches the cursor, so every job still in
+-- flight is abandoned — including one a newer recording detached. A transcript that already
+-- finished is not silently dropped: it goes to the clipboard, and the return value says so.
+pipelineReset = function()
+    for gen, job in pairs(pipeJobs.live) do
+        job.abandoned = true
+        log("pipeline: gen " .. gen .. " abandoned")
+        pipeCleanup(job)
+    end
+    local queued = pipeTakePending()
+    if not queued then return false end
+    hs.pasteboard.setContents(queued)
+    log("pipeline: a finished dictation was still queued — copied to the clipboard: '" .. queued .. "'")
+    return true
+end
+
+local function pipelineFinalize(job)
+    if job.abandoned or job.inserted then return end
+    job.inserted = true
+
     local parts = {}
-    for n = 1, pipe.total do
-        local t = pipe.results[n] or ""
+    for n = 1, job.total do
+        local t = job.results[n] or ""
         if t ~= "" then table.insert(parts, t) end
     end
     local finalText = table.concat(parts, " "):gsub("^%s+", ""):gsub("%s+$", ""):gsub("%s+", " ")
-    log("pipeline: finalized " .. pipe.total .. " seg(s): '" .. finalText .. "'")
+    log("pipeline: gen " .. job.gen .. " finalized " .. job.total .. " seg(s): '" .. finalText .. "'")
+    pipeCleanup(job)
+
+    -- This dictation finished behind a newer one. Typing it now would post keystrokes into
+    -- the trigger combo the user is still holding, and the overlay belongs to the recording
+    -- in progress — so queue it. The next insertion carries it, in the order it was spoken.
+    if job ~= pipe and not pipeInsertIsSafe() then
+        if finalText ~= "" then
+            table.insert(pipeJobs.pending, { text = finalText, lang = job.lang })
+            log("pipeline: gen " .. job.gen .. " queued behind the current dictation (" ..
+                #pipeJobs.pending .. " pending)")
+        end
+        return
+    end
+
+    if job ~= pipe then
+        -- Nothing is recording and nothing else owns the overlay: deliver it on its own.
+        log("pipeline: gen " .. job.gen .. " inserting late — the recorder is idle")
+        if finalText ~= "" then insertTranscribedText(finalText, job.lang) end
+        return
+    end
+
+    local queued, queuedLang = pipeTakePending()
+    if queued then
+        finalText = (finalText ~= "") and (queued .. " " .. finalText) or queued
+        if not job.lang then job.lang = queuedLang end
+        log("pipeline: prepended a queued dictation (" .. #queued .. " chars) from an earlier recording")
+    end
 
     if finalText == "" then
         hideProgressBar()
-        if pipe.apiError then
-            setOverlayText("API error: " .. pipe.apiError)
-            hs.notify.new({ title = "local-whisper", informativeText = "API error: " .. pipe.apiError }):send()
+        if job.apiError then
+            setOverlayText("API error: " .. job.apiError)
+            hs.notify.new({ title = "local-whisper", informativeText = "API error: " .. job.apiError }):send()
             hs.timer.doAfter(2.5, hideOverlay)
         else
             hideOverlay()
@@ -1348,44 +1491,56 @@ local function pipelineFinalize()
     transcribedSecs = barMaxSecs
     if overlay then updateProgressBar() end
     hs.timer.doAfter(0.4, hideProgressBar)
-    insertTranscribedText(finalText, pipe.lang)
+    insertTranscribedText(finalText, job.lang)
 end
 
 -- chunkCount drives the progress bar, which measures transcribed seconds against
 -- recorded seconds — one chunk is one second.
-local function onPipelineDone(n, text, detected, chunkCount)
-    pipe.results[n] = text
-    if detected and not pipe.lang then pipe.lang = detected end
-    pipe.done = pipe.done + 1
-    transcribedSecs = transcribedSecs + (chunkCount or 0)
-    if overlay then updateProgressBar() end
-    log("pipeline: seg " .. n .. " complete (done=" .. pipe.done .. "/" ..
-        (pipe.finalizing and pipe.total or "?") .. ")")
+local function onPipelineDone(job, n, text, detected, chunkCount)
+    if job.abandoned then
+        log("pipeline: gen " .. job.gen .. " seg " .. n .. " came back after a stop — dropped")
+        return
+    end
+    job.results[n] = text
+    if detected and not job.lang then job.lang = detected end
+    job.done = job.done + 1
+    -- The progress bar and the overlay belong to the dictation in progress; a detached job
+    -- reporting in must not move them.
+    if job == pipe then
+        transcribedSecs = transcribedSecs + (chunkCount or 0)
+        if overlay then updateProgressBar() end
+    end
+    log("pipeline: gen " .. job.gen .. " seg " .. n .. " complete (done=" .. job.done .. "/" ..
+        (job.finalizing and job.total or "?") .. ")")
 
     -- While recording, the overlay belongs to the timer — don't stomp it. Only once the
     -- total is known does the countdown make sense.
-    if not pipe.finalizing then return end
-    local left = pipe.total - pipe.done
+    if not job.finalizing then return end
+    local left = job.total - job.done
     if left > 0 then
-        setOverlayText(string.format("Transcribing... (%d left)", left))
+        if job == pipe then setOverlayText(string.format("Transcribing... (%d left)", left)) end
     else
-        pipelineFinalize()
+        pipelineFinalize(job)
     end
 end
 
 -- Concat a chunk group → WAV → whisper (or the remote API), then report via
 -- onPipelineDone. Fully async: several segments may be in flight at once.
-local function dispatchSegment(segN, group)
+-- `job` defaults to the current dictation, and every callback below closes over it instead
+-- of reading `pipe`: by the time whisper answers, `pipe` may already be the *next* dictation,
+-- and writing the result there is how a finished transcript vanished.
+local function dispatchSegment(segN, group, job)
+    job = job or pipe
     local lang       = getLang()
     local promptArgs = getPromptArgs()
     local nChunks    = #group
-    local concatFile = WHISPER_TMP .. "/pipe_concat_" .. segN .. ".txt"
-    local segWav     = WHISPER_TMP .. "/pipe_seg_" .. segN .. ".wav"
+    local concatFile = WHISPER_TMP .. "/pipe_concat_g" .. job.gen .. "_" .. segN .. ".txt"
+    local segWav     = WHISPER_TMP .. "/pipe_seg_g" .. job.gen .. "_" .. segN .. ".wav"
 
     local f, ferr = io.open(concatFile, "w")
     if not f then
-        log("pipeline: seg " .. segN .. " ERROR opening concat file: " .. tostring(ferr))
-        onPipelineDone(segN, "", nil, nChunks)
+        log("pipeline: gen " .. job.gen .. " seg " .. segN .. " ERROR opening concat file: " .. tostring(ferr))
+        onPipelineDone(job, segN, "", nil, nChunks)
         return
     end
     for _, chunk in ipairs(group) do f:write("file '" .. chunk .. "'\n") end
@@ -1393,25 +1548,25 @@ local function dispatchSegment(segN, group)
 
     local gfirst = group[1]:match("([^/]+)$") or group[1]
     local glast  = group[nChunks]:match("([^/]+)$") or group[nChunks]
-    log("pipeline: seg " .. segN .. " concat " .. nChunks .. " chunks (" .. gfirst .. " … " .. glast .. ")")
+    log("pipeline: gen " .. job.gen .. " seg " .. segN .. " concat " .. nChunks .. " chunks (" .. gfirst .. " … " .. glast .. ")")
 
     local concatTask = hs.task.new(FFMPEG, function(code)
         if code ~= 0 then
-            log("pipeline: seg " .. segN .. " concat FAILED (code=" .. tostring(code) .. ")")
-            onPipelineDone(segN, "", nil, nChunks)
+            log("pipeline: gen " .. job.gen .. " seg " .. segN .. " concat FAILED (code=" .. tostring(code) .. ")")
+            onPipelineDone(job, segN, "", nil, nChunks)
             return
         end
         local wavSize = (hs.fs.attributes(segWav) or {}).size or -1
-        log("pipeline: seg " .. segN .. " concat OK — wav size=" .. wavSize .. " bytes")
+        log("pipeline: gen " .. job.gen .. " seg " .. segN .. " concat OK — wav size=" .. wavSize .. " bytes")
 
         local function onSegmentText(text, detected)
             if text ~= "" and not isHallucination(text) then
-                log("pipeline: seg " .. segN .. " accepted: '" .. text:sub(1, 120) .. "'")
+                log("pipeline: gen " .. job.gen .. " seg " .. segN .. " accepted: '" .. text:sub(1, 120) .. "'")
             else
-                log("pipeline: seg " .. segN .. " REJECTED (empty or hallucination): '" .. text:sub(1, 80) .. "'")
+                log("pipeline: gen " .. job.gen .. " seg " .. segN .. " REJECTED (empty or hallucination): '" .. text:sub(1, 80) .. "'")
                 text = ""
             end
-            onPipelineDone(segN, text, detected, nChunks)
+            onPipelineDone(job, segN, text, detected, nChunks)
         end
 
         -- Auto-detect stays per segment for code-switching (surzhyk / mixed language):
@@ -1419,11 +1574,11 @@ local function dispatchSegment(segN, group)
         local effectiveLang = lang
 
         if isApiMode() then
-            log("pipeline: seg " .. segN .. " starting API transcription lang=" .. effectiveLang)
+            log("pipeline: gen " .. job.gen .. " seg " .. segN .. " starting API transcription lang=" .. effectiveLang)
             transcribeViaAPI(segWav, effectiveLang, 60, function(text, detected, errMsg)
                 if errMsg then
-                    log("pipeline: seg " .. segN .. " API error: " .. errMsg)
-                    pipe.apiError = errMsg
+                    log("pipeline: gen " .. job.gen .. " seg " .. segN .. " API error: " .. errMsg)
+                    job.apiError = errMsg
                     onSegmentText("", nil)
                     return
                 end
@@ -1433,33 +1588,33 @@ local function dispatchSegment(segN, group)
             return
         end
 
-        log("pipeline: seg " .. segN .. " starting whisper lang=" .. effectiveLang ..
+        log("pipeline: gen " .. job.gen .. " seg " .. segN .. " starting whisper lang=" .. effectiveLang ..
             " model=" .. getModelPath():match("([^/]+)$"))
 
         if effectiveLang == "auto" then
             local autoArgs = { "-m", getModelPath(), "-f", segWav, "-l", "auto", "-nt" }
             for _, a in ipairs(promptArgs) do table.insert(autoArgs, a) end
             hs.task.new(WHISPER_BIN, function(code2, out2, err2)
-                log("pipeline: seg " .. segN .. " whisper(auto) exit=" .. tostring(code2) ..
+                log("pipeline: gen " .. job.gen .. " seg " .. segN .. " whisper(auto) exit=" .. tostring(code2) ..
                     " outlen=" .. #(out2 or ""))
                 if code2 ~= 0 then
-                    log("pipeline: seg " .. segN .. " whisper FAILED (auto)")
-                    onPipelineDone(segN, "", nil, nChunks)
+                    log("pipeline: gen " .. job.gen .. " seg " .. segN .. " whisper FAILED (auto)")
+                    onPipelineDone(job, segN, "", nil, nChunks)
                     return
                 end
                 local detected = (err2 or ""):match("auto%-detected language:%s*(%w+)")
-                log("pipeline: seg " .. segN .. " auto-detected: " .. tostring(detected))
+                log("pipeline: gen " .. job.gen .. " seg " .. segN .. " auto-detected: " .. tostring(detected))
                 onSegmentText((out2 or ""):gsub("^%s+", ""):gsub("%s+$", ""):gsub("%s+", " "), detected)
             end, autoArgs):start()
         else
             local langArgs = { "-m", getModelPath(), "-f", segWav, "-l", effectiveLang, "-nt", "--no-prints" }
             for _, a in ipairs(promptArgs) do table.insert(langArgs, a) end
             hs.task.new(WHISPER_BIN, function(code2, out2)
-                log("pipeline: seg " .. segN .. " whisper(" .. effectiveLang .. ") exit=" .. tostring(code2) ..
+                log("pipeline: gen " .. job.gen .. " seg " .. segN .. " whisper(" .. effectiveLang .. ") exit=" .. tostring(code2) ..
                     " outlen=" .. #(out2 or ""))
                 if code2 ~= 0 then
-                    log("pipeline: seg " .. segN .. " whisper FAILED")
-                    onPipelineDone(segN, "", nil, nChunks)
+                    log("pipeline: gen " .. job.gen .. " seg " .. segN .. " whisper FAILED")
+                    onPipelineDone(job, segN, "", nil, nChunks)
                     return
                 end
                 onSegmentText((out2 or ""):gsub("^%s+", ""):gsub("%s+$", ""):gsub("%s+", " "), effectiveLang)
@@ -1474,7 +1629,7 @@ end
 local function streamCheckAndDispatch()
     if not isRecording then return end
 
-    local all = getChunkFiles()
+    local all = getChunkFiles(pipe.dir)
     -- lw-record renames each chunk into place only when it is complete, so every visible
     -- file is whole. Still leave the newest one alone as cheap insurance.
     local safeCount = #all - 1
@@ -1492,25 +1647,31 @@ local function streamCheckAndDispatch()
     local segN = pipe.nextSeg
     pipe.nextSeg   = pipe.nextSeg + 1
     pipe.nextChunk = pipe.nextChunk + #firstGroup
-    log("stream: dispatching seg " .. segN .. " live during recording (" .. #firstGroup ..
-        " chunks, " .. (#all - pipe.nextChunk + 1) .. " still unclaimed)")
-    dispatchSegment(segN, firstGroup)
+    log("stream: gen " .. pipe.gen .. " dispatching seg " .. segN .. " live during recording (" ..
+        #firstGroup .. " chunks, " .. (#all - pipe.nextChunk + 1) .. " still unclaimed)")
+    dispatchSegment(segN, firstGroup, pipe)
 end
 
 local function doFinalTranscription()
-    if pipe.timer then pipe.timer:stop(); pipe.timer = nil end
+    local job = pipe
+    if job.timer then job.timer:stop(); job.timer = nil end
+    if job.abandoned then log("final: gen " .. job.gen .. " was abandoned, nothing to do"); return end
+    if job.finalizing then log("final: gen " .. job.gen .. " is already finalizing"); return end
 
-    local all = getChunkFiles()
-    log("final: START — total chunks=" .. #all .. ", already streamed=" .. (pipe.nextSeg - 1) ..
-        " seg(s), next unclaimed chunk=" .. pipe.nextChunk)
+    local all = getChunkFiles(job.dir)
+    log("final: gen " .. job.gen .. " START — total chunks=" .. #all .. ", already streamed=" ..
+        (job.nextSeg - 1) .. " seg(s), next unclaimed chunk=" .. job.nextChunk)
 
     local remaining = {}
-    for j = pipe.nextChunk, #all do table.insert(remaining, all[j]) end
+    for j = job.nextChunk, #all do table.insert(remaining, all[j]) end
 
-    if pipe.nextSeg == 1 and #remaining < 2 then
+    if job.nextSeg == 1 and #remaining < 2 then
         log("final: not enough chunks, skipping")
+        pipeCleanup(job)
         hideProgressBar()
-        hideOverlay()
+        -- Nothing came of this recording, so an earlier dictation waiting on it is inserted
+        -- now rather than sitting in the queue until the user happens to dictate again.
+        if not pipeFlushPending() then hideOverlay() end
         return
     end
 
@@ -1520,31 +1681,32 @@ local function doFinalTranscription()
     -- conservative to take. Still split at silence so the seams stay off mid-word.
     if #remaining >= 2 then
         for _, grp in ipairs(splitAtSilence(remaining, FINAL_SEGMENT_SECS)) do
-            local segN = pipe.nextSeg
-            pipe.nextSeg   = pipe.nextSeg + 1
-            pipe.nextChunk = pipe.nextChunk + #grp
+            local segN = job.nextSeg
+            job.nextSeg   = job.nextSeg + 1
+            job.nextChunk = job.nextChunk + #grp
             log("final: dispatching tail seg " .. segN .. " → " .. #grp .. " chunks")
-            dispatchSegment(segN, grp)
+            dispatchSegment(segN, grp, job)
         end
     end
 
-    pipe.total      = pipe.nextSeg - 1
-    pipe.finalizing = true
-    log("final: total=" .. pipe.total .. " seg(s), done=" .. pipe.done)
+    job.total      = job.nextSeg - 1
+    job.finalizing = true
+    log("final: total=" .. job.total .. " seg(s), done=" .. job.done)
 
-    if pipe.total == 0 then
+    if job.total == 0 then
         log("final: no segments at all, skipping")
+        pipeCleanup(job)
         hideProgressBar()
-        hideOverlay()
+        if not pipeFlushPending() then hideOverlay() end
         return
     end
 
-    local left = pipe.total - pipe.done
+    local left = job.total - job.done
     if left > 0 then
         setOverlayText(string.format("Transcribing... (%d left)", left))
     else
         -- Every streamed segment already finished before the key came up.
-        pipelineFinalize()
+        pipelineFinalize(job)
     end
 end
 
@@ -1552,9 +1714,8 @@ end
 -- Start / stop recording
 --------------------------------------------------------------------------------
 
--- Warmup state
+-- Warmup state (isWarmingUp is declared far above, with the recording state)
 local warmupTimer = nil
-local isWarmingUp = false
 local warmupAttempt = 0
 local WARMUP_ATTEMPT_SECS = 1.0   -- timeout per attempt
 local WARMUP_MAX_ATTEMPTS = 10    -- give up after this many retries
@@ -1607,9 +1768,9 @@ tryWarmup = function()
     setOverlayText("... " .. warmupAttempt .. "/" .. WARMUP_MAX_ATTEMPTS)
 
     -- A recorder from the previous dictation can still be alive here: stopRecording() only
-    -- sends SIGINT, and lw-record then takes a moment to flush its final chunk. If it is
-    -- still writing when we clear CHUNK_DIR, its tail lands in the new recording's directory
-    -- and gets spliced onto the front of the next transcript. Kill it before clearing.
+    -- sends SIGINT, and lw-record then takes a moment to flush its final chunk. Its tail can
+    -- no longer contaminate this recording (it writes into its own generation's directory),
+    -- but it still holds the microphone — kill it before opening the device again.
     if recorderTask and recorderTask:isRunning() then
         log("warmup: terminating a still-running recorder from the previous dictation")
         recorderTask:terminate()
@@ -1617,13 +1778,15 @@ tryWarmup = function()
     recorderTask = nil
 
     -- Each attempt records from scratch: a stale chunk from a failed attempt would be
-    -- concatenated into the front of the transcript.
-    os.execute("rm -rf '" .. CHUNK_DIR .. "'")
-    os.execute("mkdir -p '" .. CHUNK_DIR .. "'")
+    -- concatenated into the front of the transcript. Only *this* dictation's directory is
+    -- cleared. The shared one used to be wiped here, which deleted audio a previous dictation
+    -- was still concatenating — ffmpeg exited 254 and that transcript was lost whole.
+    os.execute("rm -rf '" .. pipe.dir .. "'")
+    os.execute("mkdir -p '" .. pipe.dir .. "'")
 
-    -- Chunk indices restart at 0, so any pipeline state from the previous dictation would
-    -- claim the wrong audio.
-    pipelineReset()
+    -- Chunk indices restart at 0 along with the directory, so the claim cursors go back too.
+    pipe.nextChunk = 1
+    pipe.nextSeg   = 1
 
     captureActiveApp()
     log("recording: app=" .. tostring(capturedAppName) .. " (" .. tostring(capturedAppBundleID) .. ")")
@@ -1637,6 +1800,9 @@ tryWarmup = function()
     -- Captured so the callback can tell whether it is still the current recorder: a slow
     -- exit from the previous dictation must not clear the handle of the one now running.
     local thisTask
+    -- The directory this recorder writes into, captured so the callbacks below measure the
+    -- run they belong to even after the next keypress has moved `pipe` on.
+    local jobDir = pipe.dir
     -- Rolling tail of this recorder's stdout. hs.task delivers whatever happened to be in
     -- the pipe, so the final "CAPTURED 100.199" can land split across two calls ("CAPTU" +
     -- "RED 100.199"), matching neither. Matching against the joined tail is immune to that.
@@ -1664,7 +1830,7 @@ tryWarmup = function()
                 -- Never fail silently here. Fall back to measuring the chunks on disk, which
                 -- is the same number the transcription is about to be built from.
                 local secs = 0
-                for _, p in ipairs(getChunkFiles()) do
+                for _, p in ipairs(getChunkFiles(jobDir)) do
                     local a = hs.fs.attributes(p)
                     if a and a.size then secs = secs + (a.size - 44) / 32000 end
                 end
@@ -1689,7 +1855,7 @@ tryWarmup = function()
             end
             return true
         end,
-        { CHUNK_DIR, "1", "16000" })
+        { jobDir, "1", "16000" })
     recorderTask = thisTask
     recorderTask:start()
 
@@ -1727,6 +1893,9 @@ local function startRecording()
         log("recovery: flushing pending finalization, then starting the new recording")
         doFinalTranscription()
     end
+    -- This keypress gets its own job — chunk directory, segment files, results. The previous
+    -- dictation keeps everything it needs to finish and deliver its text.
+    pipeStartJob()
     isWarmingUp = true
     warmupAttempt = 0
     log("warmup: probing audio device...")
@@ -1745,6 +1914,9 @@ local function stopRecording()
         cancelWarmup()
         log("warmup: cancelled (key released before device ready)")
         hideOverlay()
+        -- Nothing is held any more, so a transcript queued while this recording was starting
+        -- goes in now instead of waiting for a dictation that may never come.
+        pipeFlushPending()
         return
     end
 

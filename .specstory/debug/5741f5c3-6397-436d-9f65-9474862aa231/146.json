@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "3:903-              unpinIdle and unpinIdle.env.overlayPinned == false and unpinIdle.calls.hideOverlay == 1,\n22:922-    env.log                  = function() end\n23:923-    env.isRecording          = state.recording and true or false\n24:924-    env.isWarmingUp          = state.warmingUp and true or false\n25:925-    env.finalizationPending  = state.pending and true or false\n26:926-    env.warmupAttempt        = 7  -- non-zero, so the reset is observable\n27:927-    env.finalizeTimers       = { timer = timerStub(\"timer\"), watchdog = timerStub(\"watchdog\") }\n28:928-    env.doFinalTranscription = function() calls.final = calls.final + 1 end\n29:929-    env.setOverlayText       = function() calls.overlayText = calls.overlayText + 1 end\n30:930-    env.showOverlay          = function() calls.showOverlay = calls.showOverlay + 1 end\n31:931-    env.tryWarmup            = function() calls.warmup = calls.warmup + 1 end\n33:933-    local fn, err = liftFunction(\"startRecording\", env)",
+        "is_error": false,
+        "tool_use_id": "toolu_01WhtF4JiX6o8dBUTamw2Mk6",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "caecddeb-823b-49cb-a2cb-808bdab2b9c5",
+  "promptId": "e9cbafa6-e5e9-4e4e-8cd9-dc62304a92b1",
+  "sessionId": "5741f5c3-6397-436d-9f65-9474862aa231",
+  "sourceToolAssistantUUID": "caecddeb-823b-49cb-a2cb-808bdab2b9c5",
+  "timestamp": "2026-08-24T03:29:42.989Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "3:903-              unpinIdle and unpinIdle.env.overlayPinned == false and unpinIdle.calls.hideOverlay == 1,\n22:922-    env.log                  = function() end\n23:923-    env.isRecording          = state.recording and true or false\n24:924-    env.isWarmingUp          = state.warmingUp and true or false\n25:925-    env.finalizationPending  = state.pending and true or false\n26:926-    env.warmupAttempt        = 7  -- non-zero, so the reset is observable\n27:927-    env.finalizeTimers       = { timer = timerStub(\"timer\"), watchdog = timerStub(\"watchdog\") }\n28:928-    env.doFinalTranscription = function() calls.final = calls.final + 1 end\n29:929-    env.setOverlayText       = function() calls.overlayText = calls.overlayText + 1 end\n30:930-    env.showOverlay          = function() calls.showOverlay = calls.showOverlay + 1 end\n31:931-    env.tryWarmup            = function() calls.warmup = calls.warmup + 1 end\n33:933-    local fn, err = liftFunction(\"startRecording\", env)"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "fec0cd0b-86c4-46f3-b0c7-73574aeaffc6",
+  "version": "2.1.240"
+}

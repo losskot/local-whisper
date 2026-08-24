@@ -1,0 +1,20 @@
+{
+  "attachment": {
+    "autoModeConsentFlow": false,
+    "bashFirst": true,
+    "bypass": false,
+    "steerOnly": true,
+    "type": "auto_mode"
+  },
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "parentUuid": "99dc900b-d3cb-4f83-9927-760b9100f343",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "timestamp": "2026-08-24T03:29:03.355Z",
+  "type": "attachment",
+  "userType": "external",
+  "uuid": "95355564-4e90-4a2f-8ed7-37632e210f51",
+  "version": "2.1.240"
+}

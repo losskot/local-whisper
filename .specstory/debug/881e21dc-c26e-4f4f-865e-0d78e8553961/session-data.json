@@ -8196,7 +8196,7 @@
     {
       "exchangeId": "881e21dc-c26e-4f4f-865e-0d78e8553961:3",
       "startTime": "2026-08-22T22:15:02.623Z",
-      "endTime": "2026-08-22T22:25:53.826Z",
+      "endTime": "2026-08-22T22:26:37.127Z",
       "messages": [
         {
           "id": "77a592e2-c7d5-43fc-9276-a8733a1be458",
@@ -9683,7 +9683,7 @@
         },
         {
           "id": "871237ee-0c66-4e07-89f3-cdd703478ebc",
-          "timestamp": "2026-08-22T22:25:53.826Z",
+          "timestamp": "2026-08-22T22:26:05.072Z",
           "role": "agent",
           "model": "claude-opus-5",
           "tool": {
@@ -9695,13 +9695,454 @@
               "command": "cd /Users/vitaliy/Documents/GitHub/local-whisper\ngit add -A\ngit commit -q -F - \u003c\u003c'MSG'\nRestore the streaming pipeline: transcribe while recording continues\n\nA three-minute dictation waited three minutes and then started transcribing.\nSegments were only dispatched after the key came up, so the wait scaled with\nthe recording instead of with the tail.\n\nThe pipeline existed once -- ac208cc, \"streaming pipeline: transcribe\nsegments live during recording\" -- and was deleted in ac4c275, the same\ndead-features cleanup that took splitAtSilence. Restored and adapted: API\nmode, the progress bar and the 55s silence split all postdate the original.\n\nstreamCheckAndDispatch() polls every 3s while recording. Once more than\nFINAL_SEGMENT_SECS of unclaimed chunks exist, it hands splitAtSilence's first\npause-bounded group to whisper immediately; doFinalTranscription() is left\nwith only the tail. Results are keyed by segment number, so segments that\nfinish out of order still concatenate in order.\n\nThe guard is strictly `\u003e FINAL_SEGMENT_SECS`: at exactly that many chunks\nsplitAtSilence returns the whole list as its trailing \"everything remaining\"\ngroup, which is not a silence-bounded cut and is still growing.\n\nMeasured first, because this feature could quietly undo the capture fix: with\ntwo whisper-cli runs overlapping a live recording, every chunk still came out\nexactly 1.000000s and the recorder reported 49.63s over ~50s of wall clock.\nAVAudioEngine's input tap is real-time scheduled and Metal work does not\nstarve it.\n\nemergencyStop() now resets the pipeline, otherwise segments already\ntranscribed would still be assembled and pasted a moment after the user asked\nit to stop. pipelineReset is forward-declared above emergencyStop -- the\npipeline itself must be defined below insertTranscribedText, and the `scope`\ncheck caught the nil-global that the naive ordering produced.\n\nTests: 92 pass, 5 new `pipeline` checks. Verified by mutation that they fail\non the three bugs that matter -- audio dropped (nextChunk +1), audio\ntranscribed twice (nextChunk -1), and live dispatch silently reverting to\ntranscribe-after-release.\n\nCo-Authored-By: Claude Opus 5 \u003cnoreply@anthropic.com\u003e\nMSG\ngit push 2\u003e\u00261 | tail -2; git status -sb | head -2",
               "description": "Commit and push the pipeline"
             },
-            "formattedMarkdown": "Commit and push the pipeline\n\n```bash\ncd /Users/vitaliy/Documents/GitHub/local-whisper\ngit add -A\ngit commit -q -F - \u003c\u003c'MSG'\nRestore the streaming pipeline: transcribe while recording continues\n\nA three-minute dictation waited three minutes and then started transcribing.\nSegments were only dispatched after the key came up, so the wait scaled with\nthe recording instead of with the tail.\n\nThe pipeline existed once -- ac208cc, \"streaming pipeline: transcribe\nsegments live during recording\" -- and was deleted in ac4c275, the same\ndead-features cleanup that took splitAtSilence. Restored and adapted: API\nmode, the progress bar and the 55s silence split all postdate the original.\n\nstreamCheckAndDispatch() polls every 3s while recording. Once more than\nFINAL_SEGMENT_SECS of unclaimed chunks exist, it hands splitAtSilence's first\npause-bounded group to whisper immediately; doFinalTranscription() is left\nwith only the tail. Results are keyed by segment number, so segments that\nfinish out of order still concatenate in order.\n\nThe guard is strictly `\u003e FINAL_SEGMENT_SECS`: at exactly that many chunks\nsplitAtSilence returns the whole list as its trailing \"everything remaining\"\ngroup, which is not a silence-bounded cut and is still growing.\n\nMeasured first, because this feature could quietly undo the capture fix: with\ntwo whisper-cli runs overlapping a live recording, every chunk still came out\nexactly 1.000000s and the recorder reported 49.63s over ~50s of wall clock.\nAVAudioEngine's input tap is real-time scheduled and Metal work does not\nstarve it.\n\nemergencyStop() now resets the pipeline, otherwise segments already\ntranscribed would still be assembled and pasted a moment after the user asked\nit to stop. pipelineReset is forward-declared above emergencyStop -- the\npipeline itself must be defined below insertTranscribedText, and the `scope`\ncheck caught the nil-global that the naive ordering produced.\n\nTests: 92 pass, 5 new `pipeline` checks. Verified by mutation that they fail\non the three bugs that matter -- audio dropped (nextChunk +1), audio\ntranscribed twice (nextChunk -1), and live dispatch silently reverting to\ntranscribe-after-release.\n\nCo-Authored-By: Claude Opus 5 \u003cnoreply@anthropic.com\u003e\nMSG\ngit push 2\u003e\u00261 | tail -2; git status -sb | head -2\n```\n"
+            "output": {
+              "content": "To https://github.com/losskot/local-whisper.git\n   6a7bf3b..9ceaf1a  main -\u003e main\n## main...origin/main",
+              "is_error": false
+            },
+            "formattedMarkdown": "Commit and push the pipeline\n\n```bash\ncd /Users/vitaliy/Documents/GitHub/local-whisper\ngit add -A\ngit commit -q -F - \u003c\u003c'MSG'\nRestore the streaming pipeline: transcribe while recording continues\n\nA three-minute dictation waited three minutes and then started transcribing.\nSegments were only dispatched after the key came up, so the wait scaled with\nthe recording instead of with the tail.\n\nThe pipeline existed once -- ac208cc, \"streaming pipeline: transcribe\nsegments live during recording\" -- and was deleted in ac4c275, the same\ndead-features cleanup that took splitAtSilence. Restored and adapted: API\nmode, the progress bar and the 55s silence split all postdate the original.\n\nstreamCheckAndDispatch() polls every 3s while recording. Once more than\nFINAL_SEGMENT_SECS of unclaimed chunks exist, it hands splitAtSilence's first\npause-bounded group to whisper immediately; doFinalTranscription() is left\nwith only the tail. Results are keyed by segment number, so segments that\nfinish out of order still concatenate in order.\n\nThe guard is strictly `\u003e FINAL_SEGMENT_SECS`: at exactly that many chunks\nsplitAtSilence returns the whole list as its trailing \"everything remaining\"\ngroup, which is not a silence-bounded cut and is still growing.\n\nMeasured first, because this feature could quietly undo the capture fix: with\ntwo whisper-cli runs overlapping a live recording, every chunk still came out\nexactly 1.000000s and the recorder reported 49.63s over ~50s of wall clock.\nAVAudioEngine's input tap is real-time scheduled and Metal work does not\nstarve it.\n\nemergencyStop() now resets the pipeline, otherwise segments already\ntranscribed would still be assembled and pasted a moment after the user asked\nit to stop. pipelineReset is forward-declared above emergencyStop -- the\npipeline itself must be defined below insertTranscribedText, and the `scope`\ncheck caught the nil-global that the naive ordering produced.\n\nTests: 92 pass, 5 new `pipeline` checks. Verified by mutation that they fail\non the three bugs that matter -- audio dropped (nextChunk +1), audio\ntranscribed twice (nextChunk -1), and live dispatch silently reverting to\ntranscribe-after-release.\n\nCo-Authored-By: Claude Opus 5 \u003cnoreply@anthropic.com\u003e\nMSG\ngit push 2\u003e\u00261 | tail -2; git status -sb | head -2\n```\n\n```text\nTo https://github.com/losskot/local-whisper.git\n   6a7bf3b..9ceaf1a  main -\u003e main\n## main...origin/main\n```\n"
           },
           "usage": {
             "inputTokens": 2,
             "outputTokens": 935,
             "cacheCreationInputTokens": 633,
             "cacheReadInputTokens": 329067
+          }
+        },
+        {
+          "id": "7beb682f-6da9-49f0-90fa-2ee9da79c352",
+          "timestamp": "2026-08-22T22:26:11.857Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 1715,
+            "cacheCreationInputTokens": 988,
+            "cacheReadInputTokens": 329700
+          }
+        },
+        {
+          "id": "e807bc87-4939-42d6-a297-42d6bfdcdc30",
+          "timestamp": "2026-08-22T22:26:37.127Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "content": [
+            {
+              "type": "text",
+              "text": "Готово, запушено.\n\n## Вы снова правы — это был регресс, а не отсутствие фичи\n\nКонвейер существовал: `ac208cc feat: streaming pipeline — transcribe segments live during recording`. И умер в том же `ac4c275` («remove dead features»), который убил `splitAtSilence`. Тот коммит вынес две вещи сразу, и вы обе заметили.\n\nВосстановил и адаптировал — API-режим, прогресс-бар и рез по тишине на 55 с появились уже **после** оригинала, так что старый код в лоб не вставлялся.\n\n## Как теперь работает\n\n`streamCheckAndDispatch()` каждые 3 с проверяет, накопилось ли больше 55 с непретендованных чанков. Как только да — берёт первую группу, обрезанную по паузе, и **сразу** отдаёт её в whisper, пока вы продолжаете говорить. После отпускания клавиши остаётся только хвост.\n\nДля ваших трёх минут: сегменты 1 и 2 транскрибируются во время записи, после отпускания ждёте один хвостовой вместо трёх.\n\nПорог строго `\u003e` 55, не `\u003e=`: ровно на 55 чанках `splitAtSilence` возвращает весь список как замыкающую группу «всё остальное» — это не рез по тишине, и она ещё растёт. Лишний чанк ожидания даёт настоящую границу.\n\nРезультаты складываются по номеру сегмента, поэтому если сегмент 2 закончится раньше сегмента 1 — текст всё равно соберётся в правильном порядке.\n\n## Проверил главный риск: захват под нагрузкой\n\nЭто могло тихо отменить весь предыдущий фикс, поэтому измерил, а не предположил. Запустил два `whisper-cli` поверх живой записи:\n\n```\n50 чанков, 49.626 с звука, каждый ровно 1.000000 с\n```\n\nЧанки 20–33 попали ровно на оба прогона whisper — все ровно по секунде. Ни одного дропа. Тап AVAudioEngine работает в real-time-приоритете, и работа Metal его не голодает.\n\n## Ещё раз пригодился scope-guard\n\nПервая версия падала бы на emergency stop: `pipelineReset` вызывался на строке 1190, а объявлялся на 1309 — тот самый nil-global без ошибки при загрузке. Тест поймал сразу:\n\n```\nFAIL  scope: no top-level local used before its declaration\n      pipelineReset used at L1190, declared at L1309\n```\n\nПочинил forward-декларацией. И `emergencyStop` теперь сбрасывает конвейер — иначе уже расшифрованные сегменты собрались бы и вставились через секунду после того, как вы нажали «стоп».\n\n## Тесты\n\n92 проверки, 5 новых на конвейер. Мутациями убедился, что они падают на трёх реальных багах: потеря секунды звука (`nextChunk +1`), двойная расшифровка секунды (`nextChunk −1`) и тихий возврат к «транскрипция только после отпускания» — то есть ровно ваш регресс.\n\nГлавный инвариант: **живой диспетчер и хвост вместе покрывают каждый чанк ровно один раз, по порядку**. Расхождение на один чанк даёт либо пропавшую, либо удвоенную секунду речи — и то и другое читается как нормальное предложение, поймать можно только по индексам.\n\n## Что осталось проверить вам\n\nТриггер синтетически не воспроизводится надёжно, поэтому живую диктовку через реальное нажатие я не прогнал. Логика покрыта юнит-тестами, риск с параллелизмом измерен — но одна ваша длинная запись это подтвердит. Сделайте — я сам посмотрю лог, там должно быть:\n\n```\nstream: dispatching seg 1 live during recording (N chunks, ...)\n```\n\nпоявившееся **до** `recording: stop`.\n\nОдин knob на будущее: если хотите первый сегмент ещё раньше, `FINAL_SEGMENT_SECS` можно опустить до ~35 — платой будет больше швов и меньше контекста на вызов whisper. Пока оставил 55, чтобы не менять качество расшифровки без вашего решения."
+            }
+          ],
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 1715,
+            "cacheCreationInputTokens": 988,
+            "cacheReadInputTokens": 329700
+          }
+        }
+      ]
+    },
+    {
+      "exchangeId": "881e21dc-c26e-4f4f-865e-0d78e8553961:4",
+      "startTime": "2026-08-24T03:29:03.359Z",
+      "endTime": "2026-08-24T03:30:49.803Z",
+      "messages": [
+        {
+          "id": "a94c90dc-bd48-4673-b919-05f904885591",
+          "timestamp": "2026-08-24T03:29:03.359Z",
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "\u003ctask-notification\u003e\n\u003ctask-id\u003eb92kvllge\u003c/task-id\u003e\n\u003ctool-use-id\u003etoolu_01RZHZvgvtv6CYcNs5UiwUec\u003c/tool-use-id\u003e\n\u003coutput-file\u003e/private/tmp/claude-502/-Users-vitaliy-Documents-GitHub-local-whisper/881e21dc-c26e-4f4f-865e-0d78e8553961/tasks/b92kvllge.output\u003c/output-file\u003e\n\u003cstatus\u003ecompleted\u003c/status\u003e\n\u003csummary\u003eBackground command \"Update docs and re-run tests\" completed (exit code 0)\u003c/summary\u003e\n\u003c/task-notification\u003e"
+            }
+          ]
+        },
+        {
+          "id": "a0013029-e649-4501-9730-fd8dbc160e2e",
+          "timestamp": "2026-08-24T03:29:16.465Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 619,
+            "cacheCreationInputTokens": 311421,
+            "cacheReadInputTokens": 24832
+          }
+        },
+        {
+          "id": "0edafed9-3a64-4343-9e58-13bab9ccb15e",
+          "timestamp": "2026-08-24T03:29:17.875Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "content": [
+            {
+              "type": "text",
+              "text": "Background notification only — that was the docs update, which I already verified (92/92 passing, pushed as `9ceaf1a`). Nothing new was requested.\n\nLet me confirm the tree isn't left dirty, since AGENTS.md requires `.specstory/` be committed rather than abandoned:"
+            }
+          ],
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 619,
+            "cacheCreationInputTokens": 311421,
+            "cacheReadInputTokens": 24832
+          }
+        },
+        {
+          "id": "573871a0-57ab-47dc-89fa-02e5432ecdfd",
+          "timestamp": "2026-08-24T03:29:20.891Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "tool": {
+            "name": "Bash",
+            "type": "shell",
+            "useId": "toolu_01AKrbBMwybtQvxDJ28QYaXP",
+            "input": {
+              "_cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+              "command": "git status -sb | head -5 \u0026\u0026 echo \"--- counts ---\" \u0026\u0026 git status --short | wc -l",
+              "description": "Check working tree state"
+            },
+            "output": {
+              "content": "## main...origin/main\n M .specstory/debug/881e21dc-c26e-4f4f-865e-0d78e8553961/session-data.json\n M .specstory/history/2026-08-17_01-25-52Z.md\n M .specstory/statistics.json\n M hammerspoon/init.lua\n--- counts ---\n      17",
+              "is_error": false
+            },
+            "formattedMarkdown": "Check working tree state\n\n`git status -sb | head -5 \u0026\u0026 echo \"--- counts ---\" \u0026\u0026 git status --short | wc -l`\n\n```text\n## main...origin/main\n M .specstory/debug/881e21dc-c26e-4f4f-865e-0d78e8553961/session-data.json\n M .specstory/history/2026-08-17_01-25-52Z.md\n M .specstory/statistics.json\n M hammerspoon/init.lua\n--- counts ---\n      17\n```\n"
+          },
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 619,
+            "cacheCreationInputTokens": 311421,
+            "cacheReadInputTokens": 24832
+          }
+        },
+        {
+          "id": "c986db4a-6bb5-44c1-a22d-d6d5a1f3e304",
+          "timestamp": "2026-08-24T03:29:27.930Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 495,
+            "cacheCreationInputTokens": 709,
+            "cacheReadInputTokens": 336253
+          }
+        },
+        {
+          "id": "38524115-d7c4-47bc-8b78-65b68aa19e95",
+          "timestamp": "2026-08-24T03:29:28.639Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "content": [
+            {
+              "type": "text",
+              "text": "`hammerspoon/init.lua` shows as modified after my push — I need to see what changed:"
+            }
+          ],
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 495,
+            "cacheCreationInputTokens": 709,
+            "cacheReadInputTokens": 336253
+          }
+        },
+        {
+          "id": "94e7e4b0-7eb5-4e91-ae01-e808c4f54cc8",
+          "timestamp": "2026-08-24T03:29:29.770Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "tool": {
+            "name": "Bash",
+            "type": "shell",
+            "useId": "toolu_01MEw2tbU8BfbFJNmKbiWb72",
+            "input": {
+              "_cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+              "command": "git diff --stat hammerspoon/init.lua tests/test_init.lua; echo \"=== diff ===\"; git diff hammerspoon/init.lua | head -60",
+              "description": "Inspect unexpected init.lua diff"
+            },
+            "output": {
+              "content": " hammerspoon/init.lua | 379 +++++++++++++++++++++++++++++++++++++--------------\n tests/test_init.lua  | 145 +++++++++++++++++++-\n 2 files changed, 419 insertions(+), 105 deletions(-)\n=== diff ===\ndiff --git a/hammerspoon/init.lua b/hammerspoon/init.lua\nindex 0f35c53..154b79b 100644\n--- a/hammerspoon/init.lua\n+++ b/hammerspoon/init.lua\n@@ -158,6 +158,13 @@ end\n \n os.execute(\"mkdir -p '\" .. WHISPER_TMP .. \"'\")\n \n+-- Every dictation records into its own CHUNK_DIR/g\u003cN\u003e subdirectory and owns its own segment\n+-- files, so a new recording can never delete audio a previous one is still transcribing.\n+-- Generation numbers restart at 1 on every load, so clear what an earlier instance left.\n+os.execute(\"rm -rf '\" .. CHUNK_DIR .. \"' '\" .. WHISPER_TMP .. \"'/pipe_seg_* '\" ..\n+           WHISPER_TMP .. \"'/pipe_concat_* 2\u003e/dev/null\")\n+os.execute(\"mkdir -p '\" .. CHUNK_DIR .. \"'\")\n+\n local function log(msg)\n     local f = io.open(LOG_FILE, \"a\")\n     if f then\n@@ -308,13 +315,16 @@ local function isHallucination(text)\n     return false\n end\n \n-local function getChunkFiles()\n+-- Chunks live in a per-dictation subdirectory of CHUNK_DIR (see pipeNewJob), so the caller\n+-- always names the recording it means. A dictation that is still being transcribed keeps its\n+-- own directory, which is what stops the next recording from deleting audio out from under it.\n+local function getChunkFiles(dir)\n     local chunks = {}\n-    local ok, iter, dir = pcall(hs.fs.dir, CHUNK_DIR)\n+    local ok, iter, d = pcall(hs.fs.dir, dir)\n     if not ok then return chunks end\n-    for file in iter, dir do\n+    for file in iter, d do\n         if file:match(\"^chunk_.*%.wav$\") then\n-            table.insert(chunks, CHUNK_DIR .. \"/\" .. file)\n+            table.insert(chunks, dir .. \"/\" .. file)\n         end\n     end\n     -- Sort by the numeric index, not lexicographically: the recorder's %03d overflows past\n@@ -922,6 +932,10 @@ local recordStartedAt = nil\n local recorderCaptured = nil\n local finalizationPending = false  -- true between stopRecording() and doFinalTranscription() actually starting\n local finalizeTimers = { timer = nil, watchdog = nil }\n+-- Declared here rather than next to the warmup code that drives it: the pipeline below asks\n+-- whether it is safe to type a finished transcript, and a reference to a local declared\n+-- further down would compile to a nil global read instead (see AGENTS.md).\n+local isWarmingUp = false\n \n -- Menu bar\n local menuBar = nil\n@@ -1192,8 +1206,10 @@ function emergencyStop()\n     if finalizeTimers.watchdog then finalizeTimers.watchdog:stop(); finalizeTimers.watchdog = nil end\n     stopRecordingIndicator()\n     -- Stop dispatching, and drop the segments already transcribed: emergency stop must not\n-    -- paste a partial transcript a moment later.\n-    pipelineReset()\n+    -- paste a partial transcript a moment later. This abandons every job still in flight,\n+    -- including one a newer recording detached, and rescues an already-finished transcript\n+    -- to the clipboard rather than dropping it on the floor.\n+    local rescued = pipelineReset()",
+              "is_error": false
+            },
+            "formattedMarkdown": "Inspect unexpected init.lua diff\n\n`git diff --stat hammerspoon/init.lua tests/test_init.lua; echo \"=== diff ===\"; git diff hammerspoon/init.lua | head -60`\n\n```text\n hammerspoon/init.lua | 379 +++++++++++++++++++++++++++++++++++++--------------\n tests/test_init.lua  | 145 +++++++++++++++++++-\n 2 files changed, 419 insertions(+), 105 deletions(-)\n=== diff ===\ndiff --git a/hammerspoon/init.lua b/hammerspoon/init.lua\nindex 0f35c53..154b79b 100644\n--- a/hammerspoon/init.lua\n+++ b/hammerspoon/init.lua\n@@ -158,6 +158,13 @@ end\n \n os.execute(\"mkdir -p '\" .. WHISPER_TMP .. \"'\")\n \n+-- Every dictation records into its own CHUNK_DIR/g\u003cN\u003e subdirectory and owns its own segment\n+-- files, so a new recording can never delete audio a previous one is still transcribing.\n+-- Generation numbers restart at 1 on every load, so clear what an earlier instance left.\n+os.execute(\"rm -rf '\" .. CHUNK_DIR .. \"' '\" .. WHISPER_TMP .. \"'/pipe_seg_* '\" ..\n+           WHISPER_TMP .. \"'/pipe_concat_* 2\u003e/dev/null\")\n+os.execute(\"mkdir -p '\" .. CHUNK_DIR .. \"'\")\n+\n local function log(msg)\n     local f = io.open(LOG_FILE, \"a\")\n     if f then\n@@ -308,13 +315,16 @@ local function isHallucination(text)\n     return false\n end\n \n-local function getChunkFiles()\n+-- Chunks live in a per-dictation subdirectory of CHUNK_DIR (see pipeNewJob), so the caller\n+-- always names the recording it means. A dictation that is still being transcribed keeps its\n+-- own directory, which is what stops the next recording from deleting audio out from under it.\n+local function getChunkFiles(dir)\n     local chunks = {}\n-    local ok, iter, dir = pcall(hs.fs.dir, CHUNK_DIR)\n+    local ok, iter, d = pcall(hs.fs.dir, dir)\n     if not ok then return chunks end\n-    for file in iter, dir do\n+    for file in iter, d do\n         if file:match(\"^chunk_.*%.wav$\") then\n-            table.insert(chunks, CHUNK_DIR .. \"/\" .. file)\n+            table.insert(chunks, dir .. \"/\" .. file)\n         end\n     end\n     -- Sort by the numeric index, not lexicographically: the recorder's %03d overflows past\n@@ -922,6 +932,10 @@ local recordStartedAt = nil\n local recorderCaptured = nil\n local finalizationPending = false  -- true between stopRecording() and doFinalTranscription() actually starting\n local finalizeTimers = { timer = nil, watchdog = nil }\n+-- Declared here rather than next to the warmup code that drives it: the pipeline below asks\n+-- whether it is safe to type a finished transcript, and a reference to a local declared\n+-- further down would compile to a nil global read instead (see AGENTS.md).\n+local isWarmingUp = false\n \n -- Menu bar\n local menuBar = nil\n@@ -1192,8 +1206,10 @@ function emergencyStop()\n     if finalizeTimers.watchdog then finalizeTimers.watchdog:stop(); finalizeTimers.watchdog = nil end\n     stopRecordingIndicator()\n     -- Stop dispatching, and drop the segments already transcribed: emergency stop must not\n-    -- paste a partial transcript a moment later.\n-    pipelineReset()\n+    -- paste a partial transcript a moment later. This abandons every job still in flight,\n+    -- including one a newer recording detached, and rescues an already-finished transcript\n+    -- to the clipboard rather than dropping it on the floor.\n+    local rescued = pipelineReset()\n```\n"
+          },
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 495,
+            "cacheCreationInputTokens": 709,
+            "cacheReadInputTokens": 336253
+          }
+        },
+        {
+          "id": "ef28cb9c-3de8-449d-bdc8-3d0654dc3d91",
+          "timestamp": "2026-08-24T03:29:42.788Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 1180,
+            "cacheCreationInputTokens": 1839,
+            "cacheReadInputTokens": 336962
+          }
+        },
+        {
+          "id": "ca324f19-50db-471b-af09-e38bbc98177d",
+          "timestamp": "2026-08-24T03:29:44.276Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "content": [
+            {
+              "type": "text",
+              "text": "This is not my work. Someone has substantially rewritten init.lua since my push — per-dictation generation directories, `getChunkFiles(dir)` parameterized, a rescue path in `pipelineReset()`. Let me see the full scope before touching anything:"
+            }
+          ],
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 1180,
+            "cacheCreationInputTokens": 1839,
+            "cacheReadInputTokens": 336962
+          }
+        },
+        {
+          "id": "e26a66ed-29cb-4636-bebb-29fefe44e26a",
+          "timestamp": "2026-08-24T03:29:51.726Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "tool": {
+            "name": "Bash",
+            "type": "shell",
+            "useId": "toolu_013bNwcwU43jHyhoj7TwWS5r",
+            "input": {
+              "_cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+              "command": "cd /Users/vitaliy/Documents/GitHub/local-whisper\necho \"=== new/changed function names in the working copy vs HEAD ===\"\ndiff \u003c(git show HEAD:hammerspoon/init.lua | grep -oE \"^(local )?function [a-zA-Z_]+|^local [a-zA-Z_]+ = function\" | sort -u) \\\n     \u003c(grep -oE \"^(local )?function [a-zA-Z_]+|^local [a-zA-Z_]+ = function\" hammerspoon/init.lua | sort -u)\necho \"=== pipeNewJob / generation / rescue references ===\"\ngrep -n \"pipeNewJob\\|jobs\\b\\|generation\\|rescued\\|detach\" hammerspoon/init.lua | head -20",
+              "description": "Survey the external changes"
+            },
+            "output": {
+              "content": "=== new/changed function names in the working copy vs HEAD ===\n44a45,50\n\u003e local function pipeCleanup\n\u003e local function pipeFlushPending\n\u003e local function pipeInsertIsSafe\n\u003e local function pipeNewJob\n\u003e local function pipeStartJob\n\u003e local function pipeTakePending\n=== pipeNewJob / generation / rescue references ===\n318:-- Chunks live in a per-dictation subdirectory of CHUNK_DIR (see pipeNewJob), so the caller\n1210:    -- including one a newer recording detached, and rescues an already-finished transcript\n1212:    local rescued = pipelineReset()\n1220:    hs.notify.new({ title = \"local-whisper\", informativeText = rescued and\n1333:local function pipeNewJob()\n1357:local pipe = pipeNewJob()\n1402:-- Called once per keypress, before the recorder starts. The previous job is *detached*, not\n1412:            log(\"pipeline: gen \" .. prev.gen .. \" still transcribing — detached, it delivers its own text\")\n1417:    pipe = pipeNewJob()\n1424:-- flight is abandoned — including one a newer recording detached. A transcript that already\n1506:    -- The progress bar and the overlay belong to the dictation in progress; a detached job\n1771:    -- no longer contaminate this recording (it writes into its own generation's directory),",
+              "is_error": false
+            },
+            "formattedMarkdown": "Survey the external changes\n\n```bash\ncd /Users/vitaliy/Documents/GitHub/local-whisper\necho \"=== new/changed function names in the working copy vs HEAD ===\"\ndiff \u003c(git show HEAD:hammerspoon/init.lua | grep -oE \"^(local )?function [a-zA-Z_]+|^local [a-zA-Z_]+ = function\" | sort -u) \\\n     \u003c(grep -oE \"^(local )?function [a-zA-Z_]+|^local [a-zA-Z_]+ = function\" hammerspoon/init.lua | sort -u)\necho \"=== pipeNewJob / generation / rescue references ===\"\ngrep -n \"pipeNewJob\\|jobs\\b\\|generation\\|rescued\\|detach\" hammerspoon/init.lua | head -20\n```\n\n```text\n=== new/changed function names in the working copy vs HEAD ===\n44a45,50\n\u003e local function pipeCleanup\n\u003e local function pipeFlushPending\n\u003e local function pipeInsertIsSafe\n\u003e local function pipeNewJob\n\u003e local function pipeStartJob\n\u003e local function pipeTakePending\n=== pipeNewJob / generation / rescue references ===\n318:-- Chunks live in a per-dictation subdirectory of CHUNK_DIR (see pipeNewJob), so the caller\n1210:    -- including one a newer recording detached, and rescues an already-finished transcript\n1212:    local rescued = pipelineReset()\n1220:    hs.notify.new({ title = \"local-whisper\", informativeText = rescued and\n1333:local function pipeNewJob()\n1357:local pipe = pipeNewJob()\n1402:-- Called once per keypress, before the recorder starts. The previous job is *detached*, not\n1412:            log(\"pipeline: gen \" .. prev.gen .. \" still transcribing — detached, it delivers its own text\")\n1417:    pipe = pipeNewJob()\n1424:-- flight is abandoned — including one a newer recording detached. A transcript that already\n1506:    -- The progress bar and the overlay belong to the dictation in progress; a detached job\n1771:    -- no longer contaminate this recording (it writes into its own generation's directory),\n```\n"
+          },
+          "pathHints": [
+            "E"
+          ],
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 1180,
+            "cacheCreationInputTokens": 1839,
+            "cacheReadInputTokens": 336962
+          }
+        },
+        {
+          "id": "8ad935a7-858d-4a1b-be6d-0a06e7f65f99",
+          "timestamp": "2026-08-24T03:30:00.267Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 804,
+            "cacheCreationInputTokens": 1642,
+            "cacheReadInputTokens": 338801
+          }
+        },
+        {
+          "id": "b56b54fd-3d16-4e35-b64f-8b4adf6a4d39",
+          "timestamp": "2026-08-24T03:30:01.679Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "content": [
+            {
+              "type": "text",
+              "text": "A coherent redesign — and it fixes a real gap in *my* implementation: my version shared one `CHUNK_DIR`, so a re-press would `rm -rf` chunks the previous dictation was still transcribing. This adds per-dictation generation dirs and detached jobs. Let me verify it's in a working state:"
+            }
+          ],
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 804,
+            "cacheCreationInputTokens": 1642,
+            "cacheReadInputTokens": 338801
+          }
+        },
+        {
+          "id": "9d06d0fe-fcfd-485f-b721-1f804080e1a6",
+          "timestamp": "2026-08-24T03:30:05.229Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "tool": {
+            "name": "Bash",
+            "type": "shell",
+            "useId": "toolu_01XCPk2JPhGzPVweJBZ75jTN",
+            "input": {
+              "_cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+              "command": "cd /Users/vitaliy/Documents/GitHub/local-whisper\nhs -c 'local f,e=loadfile(os.getenv(\"HOME\")..\"/Documents/GitHub/local-whisper/hammerspoon/init.lua\"); return f and \"SYNTAX OK\" or (\"ERR: \"..tostring(e))'\necho \"locals: $(grep -c '^local ' hammerspoon/init.lua)  (ceiling 200)\"",
+              "description": "Syntax check the external changes"
+            },
+            "output": {
+              "content": "SYNTAX OK\nlocals: 141  (ceiling 200)",
+              "is_error": false
+            },
+            "formattedMarkdown": "Syntax check the external changes\n\n```bash\ncd /Users/vitaliy/Documents/GitHub/local-whisper\nhs -c 'local f,e=loadfile(os.getenv(\"HOME\")..\"/Documents/GitHub/local-whisper/hammerspoon/init.lua\"); return f and \"SYNTAX OK\" or (\"ERR: \"..tostring(e))'\necho \"locals: $(grep -c '^local ' hammerspoon/init.lua)  (ceiling 200)\"\n```\n\n```text\nSYNTAX OK\nlocals: 141  (ceiling 200)\n```\n"
+          },
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 804,
+            "cacheCreationInputTokens": 1642,
+            "cacheReadInputTokens": 338801
+          }
+        },
+        {
+          "id": "ff41eaa3-c9cd-4a2f-baeb-64532095fcea",
+          "timestamp": "2026-08-24T03:30:11.525Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "tool": {
+            "name": "Bash",
+            "type": "shell",
+            "useId": "toolu_01DFJBPt9HcRZJkMWBz8Gaun",
+            "input": {
+              "_cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+              "command": "./tests/test_init.sh 2\u003e\u00261 | grep -iE \"FAIL|checks failed|All \" ",
+              "description": "Run test suite on external changes",
+              "run_in_background": true
+            },
+            "output": {
+              "content": "Command running in background with ID: bcsrz8dd1. Output is being written to: /private/tmp/claude-502/-Users-vitaliy-Documents-GitHub-local-whisper/881e21dc-c26e-4f4f-865e-0d78e8553961/tasks/bcsrz8dd1.output. You will be notified when it completes. To check interim output, use Read on that file path.",
+              "is_error": false
+            },
+            "formattedMarkdown": "Run test suite on external changes\n\n`./tests/test_init.sh 2\u003e\u00261 | grep -iE \"FAIL|checks failed|All \" `\n\n```text\nCommand running in background with ID: bcsrz8dd1. Output is being written to: /private/tmp/claude-502/-Users-vitaliy-Documents-GitHub-local-whisper/881e21dc-c26e-4f4f-865e-0d78e8553961/tasks/bcsrz8dd1.output. You will be notified when it completes. To check interim output, use Read on that file path.\n```\n"
+          },
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 163,
+            "cacheCreationInputTokens": 832,
+            "cacheReadInputTokens": 340443
+          }
+        },
+        {
+          "id": "c2e02f49-ed07-426c-b55d-94c31c66ba65",
+          "timestamp": "2026-08-24T03:30:16.300Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "tool": {
+            "name": "Bash",
+            "type": "shell",
+            "useId": "toolu_01Mxk8gxbrzdDN7K1UkQRDpL",
+            "input": {
+              "_cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+              "command": "until grep -qE \"checks (failed|passed)|All \" /private/tmp/claude-502/-Users-vitaliy-Documents-GitHub-local-whisper/881e21dc-c26e-4f4f-865e-0d78e8553961/tasks/bcsrz8dd1.output 2\u003e/dev/null; do sleep 3; done\ncat /private/tmp/claude-502/-Users-vitaliy-Documents-GitHub-local-whisper/881e21dc-c26e-4f4f-865e-0d78e8553961/tasks/bcsrz8dd1.output",
+              "description": "Wait for test results",
+              "run_in_background": true
+            },
+            "output": {
+              "content": "Command running in background with ID: bwij2t3cy. Output is being written to: /private/tmp/claude-502/-Users-vitaliy-Documents-GitHub-local-whisper/881e21dc-c26e-4f4f-865e-0d78e8553961/tasks/bwij2t3cy.output. You will be notified when it completes. To check interim output, use Read on that file path.",
+              "is_error": false
+            },
+            "formattedMarkdown": "Wait for test results\n\n```bash\nuntil grep -qE \"checks (failed|passed)|All \" /private/tmp/claude-502/-Users-vitaliy-Documents-GitHub-local-whisper/881e21dc-c26e-4f4f-865e-0d78e8553961/tasks/bcsrz8dd1.output 2\u003e/dev/null; do sleep 3; done\ncat /private/tmp/claude-502/-Users-vitaliy-Documents-GitHub-local-whisper/881e21dc-c26e-4f4f-865e-0d78e8553961/tasks/bcsrz8dd1.output\n```\n\n```text\nCommand running in background with ID: bwij2t3cy. Output is being written to: /private/tmp/claude-502/-Users-vitaliy-Documents-GitHub-local-whisper/881e21dc-c26e-4f4f-865e-0d78e8553961/tasks/bwij2t3cy.output. You will be notified when it completes. To check interim output, use Read on that file path.\n```\n"
+          },
+          "pathHints": [
+            "/dev/null"
+          ],
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 292,
+            "cacheCreationInputTokens": 269,
+            "cacheReadInputTokens": 341275
+          }
+        },
+        {
+          "id": "99b69643-fd72-440e-bd27-63ff9fb9bff7",
+          "timestamp": "2026-08-24T03:30:19.940Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "tool": {
+            "name": "Bash",
+            "type": "shell",
+            "useId": "toolu_01HcbZ5vMVz58sYmLeKReSVt",
+            "input": {
+              "_cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+              "command": "cat /private/tmp/claude-502/-Users-vitaliy-Documents-GitHub-local-whisper/881e21dc-c26e-4f4f-865e-0d78e8553961/tasks/bcsrz8dd1.output",
+              "description": "Read test results"
+            },
+            "output": {
+              "content": "  \u001b[0;32mPASS\u001b[0m  pipeline: segments are dispatched during recording, not all at the end\n  \u001b[0;32mPASS\u001b[0m  overlay: X while idle does not call emergencyStop\n  \u001b[0;32mPASS\u001b[0m  trigger: no modifiers at all does not fire\n\u001b[0;32m\u001b[1mAll 103 checks passed.\u001b[0m\n\n[exited with code 0]",
+              "is_error": false
+            },
+            "formattedMarkdown": "Read test results\n\n`cat /private/tmp/claude-502/-Users-vitaliy-Documents-GitHub-local-whisper/881e21dc-c26e-4f4f-865e-0d78e8553961/tasks/bcsrz8dd1.output`\n\n```text\n  PASS  pipeline: segments are dispatched during recording, not all at the end\n  PASS  overlay: X while idle does not call emergencyStop\n  PASS  trigger: no modifiers at all does not fire\n**All 103 checks passed.\n\n[exited with code 0]\n```\n"
+          },
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 150,
+            "cacheCreationInputTokens": 786,
+            "cacheReadInputTokens": 341544
+          }
+        },
+        {
+          "id": "95c7e823-1ad0-4855-b9e9-e471d7cd16fd",
+          "timestamp": "2026-08-24T03:30:40.316Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 1883,
+            "cacheCreationInputTokens": 638,
+            "cacheReadInputTokens": 342330
+          }
+        },
+        {
+          "id": "04cdb022-4765-41ab-b59b-c1b868671765",
+          "timestamp": "2026-08-24T03:30:45.933Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "content": [
+            {
+              "type": "text",
+              "text": "Verified green: **103 checks pass** (11 more than my 92 — new tests came with it), syntax OK, 141/200 locals.\n\nTo be clear about authorship: this isn't my work. I pushed `9ceaf1a` and these changes appeared in the tree afterward. Reading the diff, it adds:\n\n- **Per-dictation generation directories** (`CHUNK_DIR/g\u003cN\u003e`), with `getChunkFiles(dir)` now taking the directory explicitly\n- **Job detaching** — a new keypress detaches the previous job instead of killing it, so it \"delivers its own text\" rather than having its audio deleted mid-transcription\n- **`pipeInsertIsSafe`** plus `isWarmingUp` hoisted above the pipeline, so a finished transcript isn't typed into the middle of a new recording\n- **Rescue on emergency stop** — `pipelineReset()` now returns an already-finished transcript to the clipboard instead of dropping it\n\nIt fixes a genuine bug in what I shipped: my version shared a single `CHUNK_DIR`, so re-pressing the trigger ran `rm -rf CHUNK_DIR` while the previous dictation's pipeline was still transcribing those exact chunks. I handled the *recorder* race but not the *pipeline* one.\n\nI'm not going to commit it on my own initiative — it's a substantial rewrite I didn't author, and landing it would attribute it to me."
+            }
+          ],
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 1883,
+            "cacheCreationInputTokens": 638,
+            "cacheReadInputTokens": 342330
+          }
+        },
+        {
+          "id": "0e07713c-a029-4fa5-86e6-06486df7cf4c",
+          "timestamp": "2026-08-24T03:30:49.803Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "tool": {
+            "name": "AskUserQuestion",
+            "type": "generic",
+            "useId": "toolu_012EE6AFStnScwcEDCcxkE8j",
+            "input": {
+              "_cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+              "questions": [
+                {
+                  "header": "Uncommitted work",
+                  "multiSelect": false,
+                  "options": [
+                    {
+                      "description": "I don't touch it. Best if this is your own in-progress work, or another session is still editing it — committing now could land something half-finished.",
+                      "label": "Leave it alone"
+                    },
+                    {
+                      "description": "I stage it, write a commit message describing the generation-dir/detached-job design, and push to main. Tests are green, so it's safe to land.",
+                      "label": "Commit and push it"
+                    },
+                    {
+                      "description": "I read the whole diff carefully and report anything that looks wrong or risky before we decide whether to land it.",
+                      "label": "Review it first, then decide"
+                    }
+                  ],
+                  "question": "There's an uncommitted rewrite of the pipeline in the working tree that I didn't author (tests pass, 103/103). What should I do with it?"
+                }
+              ]
+            },
+            "formattedMarkdown": "**There's an uncommitted rewrite of the pipeline in the working tree that I didn't author (tests pass, 103/103). What should I do with it?**\n\nOptions:\n- **Leave it alone** - I don't touch it. Best if this is your own in-progress work, or another session is still editing it — committing now could land something half-finished.\n- **Commit and push it** - I stage it, write a commit message describing the generation-dir/detached-job design, and push to main. Tests are green, so it's safe to land.\n- **Review it first, then decide** - I read the whole diff carefully and report anything that looks wrong or risky before we decide whether to land it.\n\n"
+          },
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 1883,
+            "cacheCreationInputTokens": 638,
+            "cacheReadInputTokens": 342330
           }
         }
       ]

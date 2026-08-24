@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "600:-- Auto-reload: check mtime and reload if file changed\n636:local function reloadActionConfig()\n761:-- Global reload function (used by hotkey and menu bar)\n763:function WhisperActions.reload()\n764:    local cfg = reloadActionConfig()\n766:        hs.notify.new({ title = \"local-whisper\", informativeText = \"Action hooks reloaded\" }):send()\n1086:        fn = function() WhisperActions.reload() end,\n1100:    -- Clean up previous instance on reload\n1998:-- collectible. This is why the trigger worked for a few minutes after every reload and\n--- log tail:\n[05:31:44] final: START — total chunks=47, already streamed=0 seg(s), next unclaimed chunk=1\n[05:31:44] final: dispatching tail seg 1 → 47 chunks\n[05:31:44] pipeline: seg 1 concat 47 chunks (chunk_000.wav … chunk_046.wav)\n[05:31:44] final: total=1 seg(s), done=0\n[05:31:45] pipeline: seg 1 concat OK — wav size=1486658 bytes\n[05:31:45] pipeline: seg 1 starting whisper lang=auto model=ggml-large-v3-turbo-q5_0.bin\n--- chunks:\nchunk_000.wav\nchunk_001.wav\nchunk_002.wav\nchunk_003.wav\nchunk_004.wav\nchunk_005.wav\nchunk_006.wav\nchunk_007.wav\nchunk_008.wav\nchunk_009.wav",
+        "is_error": false,
+        "tool_use_id": "toolu_011QKV1amnrr1CTVSiHvyzCK",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "8c4af1cf-a9e6-4365-9a50-a5a4300453af",
+  "promptId": "e9cbafa6-e5e9-4e4e-8cd9-dc62304a92b1",
+  "sessionId": "5741f5c3-6397-436d-9f65-9474862aa231",
+  "sourceToolAssistantUUID": "8c4af1cf-a9e6-4365-9a50-a5a4300453af",
+  "timestamp": "2026-08-24T03:31:50.192Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "600:-- Auto-reload: check mtime and reload if file changed\n636:local function reloadActionConfig()\n761:-- Global reload function (used by hotkey and menu bar)\n763:function WhisperActions.reload()\n764:    local cfg = reloadActionConfig()\n766:        hs.notify.new({ title = \"local-whisper\", informativeText = \"Action hooks reloaded\" }):send()\n1086:        fn = function() WhisperActions.reload() end,\n1100:    -- Clean up previous instance on reload\n1998:-- collectible. This is why the trigger worked for a few minutes after every reload and\n--- log tail:\n[05:31:44] final: START — total chunks=47, already streamed=0 seg(s), next unclaimed chunk=1\n[05:31:44] final: dispatching tail seg 1 → 47 chunks\n[05:31:44] pipeline: seg 1 concat 47 chunks (chunk_000.wav … chunk_046.wav)\n[05:31:44] final: total=1 seg(s), done=0\n[05:31:45] pipeline: seg 1 concat OK — wav size=1486658 bytes\n[05:31:45] pipeline: seg 1 starting whisper lang=auto model=ggml-large-v3-turbo-q5_0.bin\n--- chunks:\nchunk_000.wav\nchunk_001.wav\nchunk_002.wav\nchunk_003.wav\nchunk_004.wav\nchunk_005.wav\nchunk_006.wav\nchunk_007.wav\nchunk_008.wav\nchunk_009.wav"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "427b1204-fd49-48dd-8906-5968e6b7b08f",
+  "version": "2.1.240"
+}

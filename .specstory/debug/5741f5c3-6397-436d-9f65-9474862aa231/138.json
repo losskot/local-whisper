@@ -1,0 +1,27 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "\u003ctool_use_error\u003eBlocked: sleep 25 followed by: cat \"/private/tmp/claude-502/-Users-vitaliy-Documents-GitHub-local-whisper/5741f5c3-6397-436d-9f65-9474862aa231/tasks/b4tc56u3e.output\". To wait for a condition, use Monitor with an until-loop (e.g. `until \u003ccheck\u003e; do sleep 2; done`). To wait for a command you started, use run_in_background: true. Do not chain shorter sleeps to work around this block.\u003c/tool_use_error\u003e",
+        "is_error": true,
+        "tool_use_id": "toolu_01Hff2XXcjmy4pgAJy4wnGyi",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "bef87cc0-0fc5-421d-af79-1234f9ba8239",
+  "promptId": "e9cbafa6-e5e9-4e4e-8cd9-dc62304a92b1",
+  "sessionId": "5741f5c3-6397-436d-9f65-9474862aa231",
+  "sourceToolAssistantUUID": "bef87cc0-0fc5-421d-af79-1234f9ba8239",
+  "timestamp": "2026-08-24T03:29:19.801Z",
+  "toolUseResult": "Error: Blocked: sleep 25 followed by: cat \"/private/tmp/claude-502/-Users-vitaliy-Documents-GitHub-local-whisper/5741f5c3-6397-436d-9f65-9474862aa231/tasks/b4tc56u3e.output\". To wait for a condition, use Monitor with an until-loop (e.g. `until \u003ccheck\u003e; do sleep 2; done`). To wait for a command you started, use run_in_background: true. Do not chain shorter sleeps to work around this block.",
+  "type": "user",
+  "userType": "external",
+  "uuid": "1b6fda16-5951-4dad-bc70-c0260e0ef035",
+  "version": "2.1.240"
+}

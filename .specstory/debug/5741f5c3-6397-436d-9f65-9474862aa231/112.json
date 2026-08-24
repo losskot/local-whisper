@@ -1,0 +1,34 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "patch5 ok\n\u001b[1mlocal-whisper init.lua test suite\u001b[0m\nTarget: \u001b[1mhammerspoon/init.lua\u001b[0m",
+        "is_error": false,
+        "tool_use_id": "toolu_01HmZM6oD146BB1FYXA2Y8wS",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "d4281223-808e-41c6-a6e5-0ead5ea86690",
+  "promptId": "e9cbafa6-e5e9-4e4e-8cd9-dc62304a92b1",
+  "sessionId": "5741f5c3-6397-436d-9f65-9474862aa231",
+  "sourceToolAssistantUUID": "d4281223-808e-41c6-a6e5-0ead5ea86690",
+  "timestamp": "2026-08-24T03:28:06.584Z",
+  "toolUseResult": {
+    "dangerouslyDisableSandbox": true,
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "patch5 ok\n\u001b[1mlocal-whisper init.lua test suite\u001b[0m\nTarget: \u001b[1mhammerspoon/init.lua\u001b[0m"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "2069bc51-3540-4992-b370-42be1dde1ebd",
+  "version": "2.1.240"
+}

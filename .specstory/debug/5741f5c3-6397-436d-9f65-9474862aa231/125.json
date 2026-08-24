@@ -1,0 +1,17 @@
+{
+  "attachment": {
+    "text": "\u003ctotal_tokens\u003e14852103 tokens left\u003c/total_tokens\u003e",
+    "type": "total_tokens_reminder"
+  },
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "parentUuid": "ec9f07f7-3f8f-44a0-a338-e4df1845490e",
+  "sessionId": "5741f5c3-6397-436d-9f65-9474862aa231",
+  "timestamp": "2026-08-24T03:28:50.392Z",
+  "type": "attachment",
+  "userType": "external",
+  "uuid": "e3a6a438-4fc7-40a2-a0cf-80bc81ca176c",
+  "version": "2.1.240"
+}

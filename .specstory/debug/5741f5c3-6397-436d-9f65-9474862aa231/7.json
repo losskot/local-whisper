@@ -1,0 +1,28 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "text": "Если я записал долгое сообщение, и оно транскрибируется, а я опять нажимаю на кнопочку запись и сообщение, не дождавшись, пока оно транскрибировалось, то у меня то сообщение, которое транскрибируется, полностью пропадает. Надо это исправить.",
+        "type": "text"
+      }
+    ],
+    "role": "user"
+  },
+  "origin": {
+    "kind": "human"
+  },
+  "parentUuid": null,
+  "permissionMode": "auto",
+  "promptId": "e9cbafa6-e5e9-4e4e-8cd9-dc62304a92b1",
+  "promptSource": "sdk",
+  "sessionId": "5741f5c3-6397-436d-9f65-9474862aa231",
+  "timestamp": "2026-08-24T03:12:13.232Z",
+  "type": "user",
+  "userType": "external",
+  "uuid": "c6bae056-5aed-47ee-8b2d-84915b854d09",
+  "version": "2.1.240"
+}

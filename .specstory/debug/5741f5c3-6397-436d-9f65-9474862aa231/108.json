@@ -1,0 +1,72 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_0136TBUCDtMwpAoC64TSs9Wv",
+        "input": {
+          "command": "cat \u003e /private/tmp/claude-502/-Users-vitaliy-Documents-GitHub-local-whisper/5741f5c3-6397-436d-9f65-9474862aa231/scratchpad/patch5.py \u003c\u003c'PYEOF'\nP = \"tests/test_init.lua\"\nsrc = open(P, encoding=\"utf-8\").read()\n\ndef rep(old, new, count=1):\n    global src\n    n = src.count(old)\n    assert n == count, \"anchor count %d (expected %d) for: %r\" % (n, count, old[:90])\n    src = src.replace(old, new, count)\n\n# 8d: the job now carries its generation and its own chunk directory.\nrep('''        env.pipe = { results = {}, nextChunk = 1, nextSeg = 1, total = 0, done = 0, finalizing = false }''',\n'''        env.pipe = { gen = 1, dir = dir, results = {}, nextChunk = 1, nextSeg = 1,\n                     total = 0, done = 0, finalizing = false }''')\n\nNEW_SECTIONS = '''--------------------------------------------------------------------------------\n-- 8e. A new recording must not swallow the dictation still being transcribed\n--------------------------------------------------------------------------------\n-- Pressing the trigger again while the previous dictation was still in whisper used to\n-- reset the one shared pipeline table and wipe the one shared chunk directory. Its finished\n-- segments were dropped from `results`, `finalizing` went back to false so nothing was ever\n-- assembled, and the concat of its remaining audio failed with ffmpeg exit 254 because the\n-- WAVs were gone. A 92-second dictation vanished with no error anywhere but those two lines.\n--\n-- Each keypress now owns a job. These checks pin the two halves of the contract: a job that\n-- finishes behind a newer recording keeps its text, and that text is delivered -- with the\n-- next insertion, oldest first, because the user is still holding the trigger combo when it\n-- arrives and both insertion modes post keystrokes.\n\ndo\n    local env = baseEnv()\n    env.log = function() end\n    env.overlay = nil\n    env.transcribedSecs = 0\n    env.barMaxSecs = 180\n    env.hs = {\n        notify = { new = function() return { send = function() end } end },\n        timer  = { doAfter = function() end },\n    }\n    local inserted = {}\n    env.insertTranscribedText = function(text, lang)\n        inserted[#inserted + 1] = { text = text, lang = lang }\n    end\n    env.hideProgressBar   = function() end\n    env.hideOverlay       = function() end\n    env.setOverlayText    = function() end\n    env.updateProgressBar = function() end\n    env.pipeCleanup       = function() end\n    env.pipeJobs = { live = {}, pending = {}, lastGen = 2 }\n    -- A recording is in progress, so a transcript landing now cannot be typed anywhere.\n    local insertSafe = false\n    env.pipeInsertIsSafe = function() return insertSafe end\n\n    local takePending = liftFunction(\"pipeTakePending\", env)\n    local finalize    = liftFunction(\"pipelineFinalize\", env)\n    local done        = liftFunction(\"onPipelineDone\", env)\n    check(\"detach: the pipeline finalizers are liftable and compile\",\n          takePending ~= nil and finalize ~= nil and done ~= nil,\n          \"could not lift pipeTakePending/pipelineFinalize/onPipelineDone\")\n\n    if takePending and finalize and done then\n        env.pipeTakePending  = takePending\n        env.pipelineFinalize = finalize\n\n        -- gen 1: released, still in whisper. gen 2: the recording started on top of it.\n        local old = { gen = 1, results = {}, lang = \"ru\", nextChunk = 1, nextSeg = 2,\n                      total = 1, done = 0, finalizing = true, inserted = false, abandoned = false }\n        local new = { gen = 2, results = {}, lang = nil, nextChunk = 1, nextSeg = 1,\n                      total = 0, done = 0, finalizing = false, inserted = false, abandoned = false }\n        env.pipeJobs.live[1] = old\n        env.pipeJobs.live[2] = new\n        env.pipe = new\n\n        done(old, 1, \"первое сообщение\", \"ru\", 30)\n        check(\"detach: a dictation that finishes behind a newer recording is not lost\",\n              #env.pipeJobs.pending == 1 and env.pipeJobs.pending[1].text == \"первое сообщение\",\n              #env.pipeJobs.pending .. \" queued -- the transcript was dropped on the floor\")\n        check(\"detach: it is not typed into the recording in progress\",\n              #inserted == 0,\n              \"inserted \" .. #inserted .. \" transcript(s) while the trigger was still held\")\n        check(\"detach: an older job's segments never move the current progress bar\",\n              env.transcribedSecs == 0,\n              \"transcribedSecs moved to \" .. tostring(env.transcribedSecs))\n\n        -- The new dictation finishes: both texts arrive together, oldest first.\n        insertSafe = true\n        new.total, new.finalizing = 1, true\n        done(new, 1, \"второе сообщение\", \"ru\", 10)\n        check(\"detach: the queued dictation is inserted with the next one, in spoken order\",\n              #inserted == 1 and inserted[1].text == \"первое сообщение второе сообщение\",\n              \"inserted \" .. #inserted .. \": '\" .. (inserted[1] and inserted[1].text or \"\") .. \"'\")\n        check(\"detach: the queue is emptied once it has been inserted\",\n              #env.pipeJobs.pending == 0,\n              #env.pipeJobs.pending .. \" still queued -- it would reappear on a later dictation\")\n\n        -- Emergency stop abandons every job; whatever comes back after it is dropped.\n        local stopped = { gen = 3, results = {}, total = 1, done = 0,\n                          finalizing = true, inserted = false, abandoned = true }\n        done(stopped, 1, \"не вставлять\", \"ru\", 5)\n        check(\"detach: a segment returning after an emergency stop is dropped\",\n              #inserted == 1 and stopped.results[1] == nil,\n              \"an abandoned job still delivered text\")\n    end\nend\n\n--------------------------------------------------------------------------------\n-- 8f. The two places that used to destroy a dictation in progress\n--------------------------------------------------------------------------------\n\ndo\n    local twStart, twEnd\n    for i, s in ipairs(stripped) do\n        if not twStart and s:match(\"^tryWarmup%s*=%s*function%s*%(\") then twStart = i end\n        if twStart and not twEnd and i \u003e twStart and s:match(\"^end%s*$\") then twEnd = i end\n    end\n    if not (twStart and twEnd) then\n        check(\"detach: tryWarmup() is locatable\", false, \"could not find tryWarmup = function()\")\n    else\n        local body = table.concat({ table.unpack(stripped, twStart, twEnd) }, \"\\\\n\")\n        check(\"detach: starting a recording does not reset the pipeline\",\n              body:find(\"pipelineReset\") == nil,\n              \"tryWarmup() calls pipelineReset() -- that wipes the results of a dictation \" ..\n              \"that is still being transcribed\")\n        local wipes = {}\n        for line in body:gmatch(\"[^\\\\n]+\") do\n            if line:find(\"rm %-rf\") then wipes[#wipes + 1] = line end\n        end\n        local perJob = #wipes \u003e 0\n        for _, line in ipairs(wipes) do\n            if not line:find(\"pipe%.dir\") then perJob = false end\n        end\n        check(\"detach: a new recording only clears its own chunk directory\",\n              perJob,\n              \"tryWarmup() clears \" .. (#wipes == 0 and \"nothing\" or table.concat(wipes, \" | \")) ..\n              \" -- clearing the shared directory deletes audio another dictation is still reading\")\n    end\n\n    local srcStart = extractFunction(\"startRecording\")\n    check(\"detach: startRecording() gives the keypress its own job\",\n          srcStart ~= nil and strip(srcStart):find(\"pipeStartJob\") ~= nil,\n          \"startRecording() does not call pipeStartJob() -- the new recording would share \" ..\n          \"state with the dictation still in flight\")\n\n    local dispatch = extractFunction(\"dispatchSegment\")\n    if not dispatch then\n        check(\"detach: dispatchSegment() is locatable\", false, \"could not find dispatchSegment()\")\n    else\n        local body = strip(dispatch)\n        check(\"detach: dispatchSegment() captures its job instead of reading `pipe` later\",\n              body:find(\"job%s*=%s*job%s+or%s+pipe\") ~= nil and\n              body:find(\"onPipelineDone%(job,\") ~= nil and\n              body:find(\"onPipelineDone%(segN\") == nil,\n              \"a whisper callback that reports into `pipe` writes into whatever dictation is \" ..\n              \"current when it finishes, not the one it belongs to\")\n    end\nend\n\n'''\n\nrep('''--------------------------------------------------------------------------------\n-- 9. Emergency stop cancels pending finalization\n--------------------------------------------------------------------------------''',\nNEW_SECTIONS + '''--------------------------------------------------------------------------------\n-- 9. Emergency stop cancels pending finalization\n--------------------------------------------------------------------------------''')\n\nopen(P, \"w\", encoding=\"utf-8\").write(src)\nprint(\"patch5 ok\")\nPYEOF\npython3 /private/tmp/claude-502/-Users-vitaliy-Documents-GitHub-local-whisper/5741f5c3-6397-436d-9f65-9474862aa231/scratchpad/patch5.py \u0026\u0026 ./tests/test_init.sh",
+          "description": "Add regression tests and run the suite"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011CeLrhJTH7KvXGi5FSbtgr",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 1367,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 1367,
+      "cache_read_input_tokens": 132785,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1367,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 1367,
+          "cache_read_input_tokens": 132785,
+          "input_tokens": 2,
+          "output_tokens": 9462,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 9462,
+      "output_tokens_details": {
+        "thinking_tokens": 6032
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "42bc6be4-4d42-41d3-bc6e-57ce411a0a70",
+  "requestId": "req_011CeLrhGj6L2jaZjwSmQFUz",
+  "sessionId": "5741f5c3-6397-436d-9f65-9474862aa231",
+  "timestamp": "2026-08-24T03:25:38.057Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "39b6dc6d-61af-4468-82d0-74c1202a9c55",
+  "version": "2.1.240"
+}

@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "patch6 ok\n838:        local calls  = { hide = 0, delete = 0, emergency = 0, hideOverlay = 0 }\n839-        local defer  = {}\n840-        local canvas = {\n841-            [1]    = { fillColor = {} },\n842-            hide   = function() calls.hide = calls.hide + 1 end,\n843-            delete = function() calls.delete = calls.delete + 1 end,\n844-        }\n845-        env.log           = function() end\n846-        env.isRecording   = opts.recording and true or false\n847-        env.overlayPinned = opts.pinned and true or false\n848-        env.overlay       = canvas\n--\n928:    local calls = { final = 0, warmup = 0, overlayText = 0, showOverlay = 0 }\n929-    local timerStub = function(tag)\n930-        return { stop = function() calls[\"stopped_\" .. tag] = true end }\n931-    end\n932-\n933-    env.log                  = function() end\n934-    env.isRecording          = state.recording and true or false\n935-    env.isWarmingUp          = state.warmingUp and true or false",
+        "is_error": false,
+        "tool_use_id": "toolu_01Q2D8TNzBYT9hASrTgAGENH",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "78ac32cd-a803-4248-bf7e-bc63fe0ee705",
+  "promptId": "e9cbafa6-e5e9-4e4e-8cd9-dc62304a92b1",
+  "sessionId": "5741f5c3-6397-436d-9f65-9474862aa231",
+  "sourceToolAssistantUUID": "78ac32cd-a803-4248-bf7e-bc63fe0ee705",
+  "timestamp": "2026-08-24T03:30:02.548Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "patch6 ok\n838:        local calls  = { hide = 0, delete = 0, emergency = 0, hideOverlay = 0 }\n839-        local defer  = {}\n840-        local canvas = {\n841-            [1]    = { fillColor = {} },\n842-            hide   = function() calls.hide = calls.hide + 1 end,\n843-            delete = function() calls.delete = calls.delete + 1 end,\n844-        }\n845-        env.log           = function() end\n846-        env.isRecording   = opts.recording and true or false\n847-        env.overlayPinned = opts.pinned and true or false\n848-        env.overlay       = canvas\n--\n928:    local calls = { final = 0, warmup = 0, overlayText = 0, showOverlay = 0 }\n929-    local timerStub = function(tag)\n930-        return { stop = function() calls[\"stopped_\" .. tag] = true end }\n931-    end\n932-\n933-    env.log                  = function() end\n934-    env.isRecording          = state.recording and true or false\n935-    env.isWarmingUp          = state.warmingUp and true or false"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "21ff98cf-9834-434e-b8a2-6ec65bd657a8",
+  "version": "2.1.240"
+}

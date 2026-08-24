@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "alive\n19914       00:06 /bin/zsh -c source /Users/vitaliy/.claude/shell-snapshots/snapshot-zsh-1787541140962-gx01o5.sh 2\u003e/dev/null || true \u0026\u0026 setopt NO_EXTENDED_GLOB NO_BARE_GLOB_QUAL 2\u003e/dev/null || true \u0026\u0026 { \\builtin unalias -- 'unsetenv'; \\builtin unset -f -- 'unsetenv'; } \u003e/dev/null 2\u003e\u00261 || true \u0026\u0026 eval 'kill -9 8518 19740 2\u003e/dev/null; sleep 1; (hs -c '\"'\"'return \"alive\"'\"'\"' \u0026) ; sleep 5; ps ax -o pid,etime,command | grep \"[h]s -c\" | head -3; echo \"probe done\"' \u003c /dev/null \u0026\u0026 pwd -P \u003e| /tmp/claude-fdf9-cwd\n19933       00:00 /bin/zsh -c source /Users/vitaliy/.claude/shell-snapshots/snapshot-zsh-1787541140962-gx01o5.sh 2\u003e/dev/null || true \u0026\u0026 setopt NO_EXTENDED_GLOB NO_BARE_GLOB_QUAL 2\u003e/dev/null || true \u0026\u0026 { \\builtin unalias -- 'unsetenv'; \\builtin unset -f -- 'unsetenv'; } \u003e/dev/null 2\u003e\u00261 || true \u0026\u0026 eval 'kill -9 8518 19740 2\u003e/dev/null; sleep 1; (hs -c '\"'\"'return \"alive\"'\"'\"' \u0026) ; sleep 5; ps ax -o pid,etime,command | grep \"[h]s -c\" | head -3; echo \"probe done\"' \u003c /dev/null \u0026\u0026 pwd -P \u003e| /tmp/claude-fdf9-cwd\nprobe done",
+        "is_error": false,
+        "tool_use_id": "toolu_01Mkh3xaAm2nve8RQ1kwza2L",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "853accda-3673-4b97-aa4e-1d02a4d711e2",
+  "promptId": "e9cbafa6-e5e9-4e4e-8cd9-dc62304a92b1",
+  "sessionId": "5741f5c3-6397-436d-9f65-9474862aa231",
+  "sourceToolAssistantUUID": "853accda-3673-4b97-aa4e-1d02a4d711e2",
+  "timestamp": "2026-08-24T03:29:08.317Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "alive\n19914       00:06 /bin/zsh -c source /Users/vitaliy/.claude/shell-snapshots/snapshot-zsh-1787541140962-gx01o5.sh 2\u003e/dev/null || true \u0026\u0026 setopt NO_EXTENDED_GLOB NO_BARE_GLOB_QUAL 2\u003e/dev/null || true \u0026\u0026 { \\builtin unalias -- 'unsetenv'; \\builtin unset -f -- 'unsetenv'; } \u003e/dev/null 2\u003e\u00261 || true \u0026\u0026 eval 'kill -9 8518 19740 2\u003e/dev/null; sleep 1; (hs -c '\"'\"'return \"alive\"'\"'\"' \u0026) ; sleep 5; ps ax -o pid,etime,command | grep \"[h]s -c\" | head -3; echo \"probe done\"' \u003c /dev/null \u0026\u0026 pwd -P \u003e| /tmp/claude-fdf9-cwd\n19933       00:00 /bin/zsh -c source /Users/vitaliy/.claude/shell-snapshots/snapshot-zsh-1787541140962-gx01o5.sh 2\u003e/dev/null || true \u0026\u0026 setopt NO_EXTENDED_GLOB NO_BARE_GLOB_QUAL 2\u003e/dev/null || true \u0026\u0026 { \\builtin unalias -- 'unsetenv'; \\builtin unset -f -- 'unsetenv'; } \u003e/dev/null 2\u003e\u00261 || true \u0026\u0026 eval 'kill -9 8518 19740 2\u003e/dev/null; sleep 1; (hs -c '\"'\"'return \"alive\"'\"'\"' \u0026) ; sleep 5; ps ax -o pid,etime,command | grep \"[h]s -c\" | head -3; echo \"probe done\"' \u003c /dev/null \u0026\u0026 pwd -P \u003e| /tmp/claude-fdf9-cwd\nprobe done"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "99b5975a-2a6c-49e2-92a2-3f7735ff6c85",
+  "version": "2.1.240"
+}

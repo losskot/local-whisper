@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "321:local function getChunkFiles(dir)\n1197:local pipelineReset\n1212:    local rescued = pipelineReset()\n1355:-- The dictation the trigger is currently driving. Reassigned per keypress by pipeStartJob;\n1357:local pipe = pipeNewJob()\n1361:local function pipeCleanup(job)\n1369:local function pipeTakePending()\n1384:local function pipeInsertIsSafe()\n1387:    local cur = pipeJobs.live[pipe.gen]\n1394:local function pipeFlushPending()\n1395:    local text, lang = pipeTakePending()\n1407:local function pipeStartJob()\n1408:    if pipe.timer then pipe.timer:stop(); pipe.timer = nil end\n1414:            pipeCleanup(prev)   -- nothing was ever dispatched from it: its audio is dead weight\n1417:    pipe = pipeNewJob()\n1418:    log(\"pipeline: gen \" .. pipe.gen .. \" started\")\n1426:pipelineReset = function()\n1430:        pipeCleanup(job)\n1432:    local queued = pipeTakePending()\n1450:    pipeCleanup(job)\n1455:    if job ~= pipe and not pipeInsertIsSafe() then\n1471:    local queued, queuedLang = pipeTakePending()\n1631:    local all = getChunkFiles(pipe.dir)\n1636:    for j = pipe.nextChunk, safeCount do table.insert(candidates, all[j]) end\n1646:    local segN = pipe.nextSeg\n1647:    pipe.nextSeg   = pipe.nextSeg + 1\n1648:    pipe.nextChunk = pipe.nextChunk + #firstGroup\n1649:    log(\"stream: gen \" .. pipe.gen .. \" dispatching seg \" .. segN .. \" live during recording (\" ..\n1650:        #firstGroup .. \" chunks, \" .. (#all - pipe.nextChunk + 1) .. \" still unclaimed)\")\n1660:    local all = getChunkFiles(job.dir)\n1669:        pipeCleanup(job)\n1673:        if not pipeFlushPending() then hideOverlay() end\n1697:        pipeCleanup(job)\n1699:        if not pipeFlushPending() then hideOverlay() end\n1738:    if pipe.timer then pipe.timer:stop() end\n1739:    pipe.timer = hs.timer.doEvery(3, streamCheckAndDispatch)\n1783:    os.execute(\"rm -rf '\" .. pipe.dir .. \"'\")\n1784:    os.execute(\"mkdir -p '\" .. pipe.dir .. \"'\")\n1787:    pipe.nextChunk = 1\n1788:    pipe.nextSeg   = 1\n1804:    local jobDir = pipe.dir\n1832:                for _, p in ipairs(getChunkFiles(jobDir)) do\n1897:    pipeStartJob()\n1918:        pipeFlushPending()\n--- locals:\n141\n--- syntax:\nSYNTAX OK",
+        "is_error": false,
+        "tool_use_id": "toolu_015yrQHTrwQ9QdzAYGQPAp4o",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "8ae3af3d-40c3-48c8-b575-a92d29871754",
+  "promptId": "e9cbafa6-e5e9-4e4e-8cd9-dc62304a92b1",
+  "sessionId": "5741f5c3-6397-436d-9f65-9474862aa231",
+  "sourceToolAssistantUUID": "8ae3af3d-40c3-48c8-b575-a92d29871754",
+  "timestamp": "2026-08-24T03:23:55.448Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "321:local function getChunkFiles(dir)\n1197:local pipelineReset\n1212:    local rescued = pipelineReset()\n1355:-- The dictation the trigger is currently driving. Reassigned per keypress by pipeStartJob;\n1357:local pipe = pipeNewJob()\n1361:local function pipeCleanup(job)\n1369:local function pipeTakePending()\n1384:local function pipeInsertIsSafe()\n1387:    local cur = pipeJobs.live[pipe.gen]\n1394:local function pipeFlushPending()\n1395:    local text, lang = pipeTakePending()\n1407:local function pipeStartJob()\n1408:    if pipe.timer then pipe.timer:stop(); pipe.timer = nil end\n1414:            pipeCleanup(prev)   -- nothing was ever dispatched from it: its audio is dead weight\n1417:    pipe = pipeNewJob()\n1418:    log(\"pipeline: gen \" .. pipe.gen .. \" started\")\n1426:pipelineReset = function()\n1430:        pipeCleanup(job)\n1432:    local queued = pipeTakePending()\n1450:    pipeCleanup(job)\n1455:    if job ~= pipe and not pipeInsertIsSafe() then\n1471:    local queued, queuedLang = pipeTakePending()\n1631:    local all = getChunkFiles(pipe.dir)\n1636:    for j = pipe.nextChunk, safeCount do table.insert(candidates, all[j]) end\n1646:    local segN = pipe.nextSeg\n1647:    pipe.nextSeg   = pipe.nextSeg + 1\n1648:    pipe.nextChunk = pipe.nextChunk + #firstGroup\n1649:    log(\"stream: gen \" .. pipe.gen .. \" dispatching seg \" .. segN .. \" live during recording (\" ..\n1650:        #firstGroup .. \" chunks, \" .. (#all - pipe.nextChunk + 1) .. \" still unclaimed)\")\n1660:    local all = getChunkFiles(job.dir)\n1669:        pipeCleanup(job)\n1673:        if not pipeFlushPending() then hideOverlay() end\n1697:        pipeCleanup(job)\n1699:        if not pipeFlushPending() then hideOverlay() end\n1738:    if pipe.timer then pipe.timer:stop() end\n1739:    pipe.timer = hs.timer.doEvery(3, streamCheckAndDispatch)\n1783:    os.execute(\"rm -rf '\" .. pipe.dir .. \"'\")\n1784:    os.execute(\"mkdir -p '\" .. pipe.dir .. \"'\")\n1787:    pipe.nextChunk = 1\n1788:    pipe.nextSeg   = 1\n1804:    local jobDir = pipe.dir\n1832:                for _, p in ipairs(getChunkFiles(jobDir)) do\n1897:    pipeStartJob()\n1918:        pipeFlushPending()\n--- locals:\n141\n--- syntax:\nSYNTAX OK"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "a2c3e348-4de8-44d6-a7bd-ddd1e6df7a51",
+  "version": "2.1.240"
+}

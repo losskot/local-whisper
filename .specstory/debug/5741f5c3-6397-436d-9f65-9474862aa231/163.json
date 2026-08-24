@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "12:  ↓  streaming pipeline: every 3s, dispatch any pause-bounded ≤55s segment already on disk\n42:- `$TMPDIR/whisper-dictate/chunks/` — recording segments (ephemeral)\n124:**Current count: ~134/200** — comfortable headroom after meeting mode, LLM refine, silence auto-stop and preferred languages were removed. Only *top-level* locals count against the limit; locals inside a function body belong to that function's own budget, so match the start of the line exactly:\n294:  That can leave two recorders writing into the same `chunks/` directory.\n356:| `pipeline` | live dispatch silently reverting to transcribe-after-release; the live dispatcher and the tail disagreeing by a chunk, so a second of speech is dropped or transcribed twice |",
+        "is_error": false,
+        "tool_use_id": "toolu_01V6kZvm3wjHPnT9eCGpnnnN",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "3e72a3d7-f024-4402-86f9-a63b59fff12f",
+  "promptId": "e9cbafa6-e5e9-4e4e-8cd9-dc62304a92b1",
+  "sessionId": "5741f5c3-6397-436d-9f65-9474862aa231",
+  "sourceToolAssistantUUID": "3e72a3d7-f024-4402-86f9-a63b59fff12f",
+  "timestamp": "2026-08-24T03:31:03.251Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "12:  ↓  streaming pipeline: every 3s, dispatch any pause-bounded ≤55s segment already on disk\n42:- `$TMPDIR/whisper-dictate/chunks/` — recording segments (ephemeral)\n124:**Current count: ~134/200** — comfortable headroom after meeting mode, LLM refine, silence auto-stop and preferred languages were removed. Only *top-level* locals count against the limit; locals inside a function body belong to that function's own budget, so match the start of the line exactly:\n294:  That can leave two recorders writing into the same `chunks/` directory.\n356:| `pipeline` | live dispatch silently reverting to transcribe-after-release; the live dispatcher and the tail disagreeing by a chunk, so a second of speech is dropped or transcribed twice |"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "3c830359-afc2-4472-976c-2e29d019694e",
+  "version": "2.1.240"
+}

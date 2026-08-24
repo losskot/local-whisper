@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "=== new/changed function names in the working copy vs HEAD ===\n44a45,50\n\u003e local function pipeCleanup\n\u003e local function pipeFlushPending\n\u003e local function pipeInsertIsSafe\n\u003e local function pipeNewJob\n\u003e local function pipeStartJob\n\u003e local function pipeTakePending\n=== pipeNewJob / generation / rescue references ===\n318:-- Chunks live in a per-dictation subdirectory of CHUNK_DIR (see pipeNewJob), so the caller\n1210:    -- including one a newer recording detached, and rescues an already-finished transcript\n1212:    local rescued = pipelineReset()\n1220:    hs.notify.new({ title = \"local-whisper\", informativeText = rescued and\n1333:local function pipeNewJob()\n1357:local pipe = pipeNewJob()\n1402:-- Called once per keypress, before the recorder starts. The previous job is *detached*, not\n1412:            log(\"pipeline: gen \" .. prev.gen .. \" still transcribing — detached, it delivers its own text\")\n1417:    pipe = pipeNewJob()\n1424:-- flight is abandoned — including one a newer recording detached. A transcript that already\n1506:    -- The progress bar and the overlay belong to the dictation in progress; a detached job\n1771:    -- no longer contaminate this recording (it writes into its own generation's directory),",
+        "is_error": false,
+        "tool_use_id": "toolu_013bNwcwU43jHyhoj7TwWS5r",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "e26a66ed-29cb-4636-bebb-29fefe44e26a",
+  "promptId": "10074a00-7a8e-4943-b88d-15cd2330c912",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "e26a66ed-29cb-4636-bebb-29fefe44e26a",
+  "timestamp": "2026-08-24T03:29:51.726Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "=== new/changed function names in the working copy vs HEAD ===\n44a45,50\n\u003e local function pipeCleanup\n\u003e local function pipeFlushPending\n\u003e local function pipeInsertIsSafe\n\u003e local function pipeNewJob\n\u003e local function pipeStartJob\n\u003e local function pipeTakePending\n=== pipeNewJob / generation / rescue references ===\n318:-- Chunks live in a per-dictation subdirectory of CHUNK_DIR (see pipeNewJob), so the caller\n1210:    -- including one a newer recording detached, and rescues an already-finished transcript\n1212:    local rescued = pipelineReset()\n1220:    hs.notify.new({ title = \"local-whisper\", informativeText = rescued and\n1333:local function pipeNewJob()\n1357:local pipe = pipeNewJob()\n1402:-- Called once per keypress, before the recorder starts. The previous job is *detached*, not\n1412:            log(\"pipeline: gen \" .. prev.gen .. \" still transcribing — detached, it delivers its own text\")\n1417:    pipe = pipeNewJob()\n1424:-- flight is abandoned — including one a newer recording detached. A transcript that already\n1506:    -- The progress bar and the overlay belong to the dictation in progress; a detached job\n1771:    -- no longer contaminate this recording (it writes into its own generation's directory),"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "56725800-824d-4943-bff5-2703bad60de1",
+  "version": "2.1.240"
+}

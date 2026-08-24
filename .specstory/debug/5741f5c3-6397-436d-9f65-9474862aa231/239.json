@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "posted\n-- Loading extension: screen\n-- Loading extension: application\n-- Loading extension: task\n=== log:\n[05:37:05] loaded (trigger=fnLeftCtrl, lang=auto, output=paste, model=large-v3-turbo-q5_0)\n[05:37:23] pipeline: gen 2 started\n[05:37:23] warmup: probing audio device...\n[05:37:23] warmup: attempt 1/10\n[05:37:23] recording: app=Royal TSX (com.lemonmojo.RoyalTSX.App)\n[05:37:23] warmup: device ready on attempt 1\n[05:37:23] recording: start (audio flowing)\n[05:37:24] recording: stop\n[05:37:24] recording: recorder exited 0\n[05:37:24] recording: captured 0.94s of 1.49s wall (63%)\n[05:37:25] final: gen 2 START — total chunks=1, already streamed=0 seg(s), next unclaimed chunk=1\n[05:37:25] final: not enough chunks, skipping\n=== chunk dirs:",
+        "is_error": false,
+        "tool_use_id": "toolu_01YBL23gLEaVotbdhqHjwdHf",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "16ffec60-4bf7-4185-89fa-a71b71eecbc7",
+  "promptId": "e9cbafa6-e5e9-4e4e-8cd9-dc62304a92b1",
+  "sessionId": "5741f5c3-6397-436d-9f65-9474862aa231",
+  "sourceToolAssistantUUID": "16ffec60-4bf7-4185-89fa-a71b71eecbc7",
+  "timestamp": "2026-08-24T03:37:31.504Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "posted\n-- Loading extension: screen\n-- Loading extension: application\n-- Loading extension: task\n=== log:\n[05:37:05] loaded (trigger=fnLeftCtrl, lang=auto, output=paste, model=large-v3-turbo-q5_0)\n[05:37:23] pipeline: gen 2 started\n[05:37:23] warmup: probing audio device...\n[05:37:23] warmup: attempt 1/10\n[05:37:23] recording: app=Royal TSX (com.lemonmojo.RoyalTSX.App)\n[05:37:23] warmup: device ready on attempt 1\n[05:37:23] recording: start (audio flowing)\n[05:37:24] recording: stop\n[05:37:24] recording: recorder exited 0\n[05:37:24] recording: captured 0.94s of 1.49s wall (63%)\n[05:37:25] final: gen 2 START — total chunks=1, already streamed=0 seg(s), next unclaimed chunk=1\n[05:37:25] final: not enough chunks, skipping\n=== chunk dirs:"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "2e2c4b06-0144-488d-bb20-6066ea282a55",
+  "version": "2.1.240"
+}

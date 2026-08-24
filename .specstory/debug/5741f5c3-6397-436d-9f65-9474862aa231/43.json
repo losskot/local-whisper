@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "TMPDIR_REAL=/var/folders/ph/3yv4hw8567g12wy09lntpvt40000gp/T/\ntotal 11984\ndrwxr-xr-x@   19 vitaliy  staff      608 Aug 24 05:12 .\ndrwx------@ 4244 vitaliy  staff   135808 Aug 24 05:15 ..\ndrwxr-xr-x@   48 vitaliy  staff     1536 Aug 24 05:13 chunks\ndrwxr-xr-x@    2 vitaliy  staff       64 Aug  6 03:35 chunks_prev\n-rw-r--r--@    1 vitaliy  staff     4324 Aug 24 05:13 pipe_concat_1.txt\n-rw-r--r--@    1 vitaliy  staff     3666 Aug 24 05:10 pipe_concat_2.txt\n-rw-r--r--@    1 vitaliy  staff     3572 Aug 23 00:42 pipe_concat_3.txt\n-rw-r--r--@    1 vitaliy  staff  1464728 Aug 24 05:13 pipe_seg_1.wav\n-rw-r--r--@    1 vitaliy  staff   247790 Aug 24 04:57 pipe_seg_2.wav\n-rw-r--r--@    1 vitaliy  staff  1197720 Aug 23 00:42 pipe_seg_3.wav\n-rw-r--r--@    1 vitaliy  staff  1664078 Aug 23 00:21 seg_1.wav\n-rw-r--r--@    1 vitaliy  staff  1045998 Aug 23 00:21 seg_2.wav\n-rw-r--r--@    1 vitaliy  staff    56728 Aug 23 00:04 seg_3.wav\n-rw-r--r--@    1 vitaliy  staff   212120 Aug 23 00:02 seg_4.wav\n-rw-r--r--@    1 vitaliy  staff     4888 Aug 23 00:21 seg_concat_1.txt\n-rw-r--r--@    1 vitaliy  staff     3102 Aug 23 00:21 seg_concat_2.txt\n-rw-r--r--@    1 vitaliy  staff      188 Aug 23 00:04 seg_concat_3.txt\n-rw-r--r--@    1 vitaliy  staff      658 Aug 23 00:02 seg_concat_4.txt\n-rw-r--r--@    1 vitaliy  staff   193227 Aug 24 05:13 whisper-dictate.log\n    1597 /var/folders/ph/3yv4hw8567g12wy09lntpvt40000gp/T/whisper-dictate/whisper-dictate.log",
+        "is_error": false,
+        "tool_use_id": "toolu_01DgwPorypx56xBcH2gD8sBy",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "02286689-38e7-45d9-85cf-b95965d781f1",
+  "promptId": "e9cbafa6-e5e9-4e4e-8cd9-dc62304a92b1",
+  "sessionId": "5741f5c3-6397-436d-9f65-9474862aa231",
+  "sourceToolAssistantUUID": "02286689-38e7-45d9-85cf-b95965d781f1",
+  "timestamp": "2026-08-24T03:15:10.062Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "TMPDIR_REAL=/var/folders/ph/3yv4hw8567g12wy09lntpvt40000gp/T/\ntotal 11984\ndrwxr-xr-x@   19 vitaliy  staff      608 Aug 24 05:12 .\ndrwx------@ 4244 vitaliy  staff   135808 Aug 24 05:15 ..\ndrwxr-xr-x@   48 vitaliy  staff     1536 Aug 24 05:13 chunks\ndrwxr-xr-x@    2 vitaliy  staff       64 Aug  6 03:35 chunks_prev\n-rw-r--r--@    1 vitaliy  staff     4324 Aug 24 05:13 pipe_concat_1.txt\n-rw-r--r--@    1 vitaliy  staff     3666 Aug 24 05:10 pipe_concat_2.txt\n-rw-r--r--@    1 vitaliy  staff     3572 Aug 23 00:42 pipe_concat_3.txt\n-rw-r--r--@    1 vitaliy  staff  1464728 Aug 24 05:13 pipe_seg_1.wav\n-rw-r--r--@    1 vitaliy  staff   247790 Aug 24 04:57 pipe_seg_2.wav\n-rw-r--r--@    1 vitaliy  staff  1197720 Aug 23 00:42 pipe_seg_3.wav\n-rw-r--r--@    1 vitaliy  staff  1664078 Aug 23 00:21 seg_1.wav\n-rw-r--r--@    1 vitaliy  staff  1045998 Aug 23 00:21 seg_2.wav\n-rw-r--r--@    1 vitaliy  staff    56728 Aug 23 00:04 seg_3.wav\n-rw-r--r--@    1 vitaliy  staff   212120 Aug 23 00:02 seg_4.wav\n-rw-r--r--@    1 vitaliy  staff     4888 Aug 23 00:21 seg_concat_1.txt\n-rw-r--r--@    1 vitaliy  staff     3102 Aug 23 00:21 seg_concat_2.txt\n-rw-r--r--@    1 vitaliy  staff      188 Aug 23 00:04 seg_concat_3.txt\n-rw-r--r--@    1 vitaliy  staff      658 Aug 23 00:02 seg_concat_4.txt\n-rw-r--r--@    1 vitaliy  staff   193227 Aug 24 05:13 whisper-dictate.log\n    1597 /var/folders/ph/3yv4hw8567g12wy09lntpvt40000gp/T/whisper-dictate/whisper-dictate.log"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "a0c91a6b-adc5-4983-a98c-297d41fede91",
+  "version": "2.1.240"
+}

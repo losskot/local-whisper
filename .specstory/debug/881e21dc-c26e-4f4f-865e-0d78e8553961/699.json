@@ -1,0 +1,64 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "text": "Verified green: **103 checks pass** (11 more than my 92 — new tests came with it), syntax OK, 141/200 locals.\n\nTo be clear about authorship: this isn't my work. I pushed `9ceaf1a` and these changes appeared in the tree afterward. Reading the diff, it adds:\n\n- **Per-dictation generation directories** (`CHUNK_DIR/g\u003cN\u003e`), with `getChunkFiles(dir)` now taking the directory explicitly\n- **Job detaching** — a new keypress detaches the previous job instead of killing it, so it \"delivers its own text\" rather than having its audio deleted mid-transcription\n- **`pipeInsertIsSafe`** plus `isWarmingUp` hoisted above the pipeline, so a finished transcript isn't typed into the middle of a new recording\n- **Rescue on emergency stop** — `pipelineReset()` now returns an already-finished transcript to the clipboard instead of dropping it\n\nIt fixes a genuine bug in what I shipped: my version shared a single `CHUNK_DIR`, so re-pressing the trigger ran `rm -rf CHUNK_DIR` while the previous dictation's pipeline was still transcribing those exact chunks. I handled the *recorder* race but not the *pipeline* one.\n\nI'm not going to commit it on my own initiative — it's a substantial rewrite I didn't author, and landing it would attribute it to me.",
+        "type": "text"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011CeLsBhinNzbRFhEKCwNUs",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 638,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 638,
+      "cache_read_input_tokens": 342330,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 638,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 638,
+          "cache_read_input_tokens": 342330,
+          "input_tokens": 2,
+          "output_tokens": 1883,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 1883,
+      "output_tokens_details": {
+        "thinking_tokens": 1102
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "95c7e823-1ad0-4855-b9e9-e471d7cd16fd",
+  "requestId": "req_011CeLsBdW2zTm6gohiKntjF",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "timestamp": "2026-08-24T03:30:45.933Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "04cdb022-4765-41ab-b59b-c1b868671765",
+  "version": "2.1.240"
+}

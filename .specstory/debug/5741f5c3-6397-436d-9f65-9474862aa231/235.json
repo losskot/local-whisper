@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "2026-08-24 05:37:05.578 hs[20440:40163011] *** CFMessagePort: dropping corrupt reply Mach message (0b000100)\nerror communicating with Hammerspoon: message port was invalidated\nerror unregistering CLI instance with Hammerspoon: message port invalid (transport errors are normal if Hammerspoon is reloading)\n=== chunks dir:\ntotal 0\ndrwxr-xr-x@  3 vitaliy  staff   96 Aug 24 05:37 .\ndrwxr-xr-x@ 13 vitaliy  staff  416 Aug 24 05:37 ..\ndrwxr-xr-x@  2 vitaliy  staff   64 Aug 24 05:37 g1\n=== log:\n[05:37:05] actions: loaded /Users/vitaliy/.hammerspoon/local_whisper_actions.lua\n[05:37:05] actions: enabled\n[05:37:05] loaded (trigger=fnLeftCtrl, lang=auto, output=paste, model=large-v3-turbo-q5_0)",
+        "is_error": false,
+        "tool_use_id": "toolu_01BkXvefDE35WFhcespQefbZ",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "99328830-b993-49df-988e-3f2d27a2b3d6",
+  "promptId": "e9cbafa6-e5e9-4e4e-8cd9-dc62304a92b1",
+  "sessionId": "5741f5c3-6397-436d-9f65-9474862aa231",
+  "sourceToolAssistantUUID": "99328830-b993-49df-988e-3f2d27a2b3d6",
+  "timestamp": "2026-08-24T03:37:11.553Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "2026-08-24 05:37:05.578 hs[20440:40163011] *** CFMessagePort: dropping corrupt reply Mach message (0b000100)\nerror communicating with Hammerspoon: message port was invalidated\nerror unregistering CLI instance with Hammerspoon: message port invalid (transport errors are normal if Hammerspoon is reloading)\n=== chunks dir:\ntotal 0\ndrwxr-xr-x@  3 vitaliy  staff   96 Aug 24 05:37 .\ndrwxr-xr-x@ 13 vitaliy  staff  416 Aug 24 05:37 ..\ndrwxr-xr-x@  2 vitaliy  staff   64 Aug 24 05:37 g1\n=== log:\n[05:37:05] actions: loaded /Users/vitaliy/.hammerspoon/local_whisper_actions.lua\n[05:37:05] actions: enabled\n[05:37:05] loaded (trigger=fnLeftCtrl, lang=auto, output=paste, model=large-v3-turbo-q5_0)"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "ff014ef8-fbeb-456f-b26c-7725246edfa3",
+  "version": "2.1.240"
+}

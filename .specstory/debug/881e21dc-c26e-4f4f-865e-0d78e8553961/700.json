@@ -1,0 +1,91 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_012EE6AFStnScwcEDCcxkE8j",
+        "input": {
+          "questions": [
+            {
+              "header": "Uncommitted work",
+              "multiSelect": false,
+              "options": [
+                {
+                  "description": "I don't touch it. Best if this is your own in-progress work, or another session is still editing it — committing now could land something half-finished.",
+                  "label": "Leave it alone"
+                },
+                {
+                  "description": "I stage it, write a commit message describing the generation-dir/detached-job design, and push to main. Tests are green, so it's safe to land.",
+                  "label": "Commit and push it"
+                },
+                {
+                  "description": "I read the whole diff carefully and report anything that looks wrong or risky before we decide whether to land it.",
+                  "label": "Review it first, then decide"
+                }
+              ],
+              "question": "There's an uncommitted rewrite of the pipeline in the working tree that I didn't author (tests pass, 103/103). What should I do with it?"
+            }
+          ]
+        },
+        "name": "AskUserQuestion",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011CeLsBhinNzbRFhEKCwNUs",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 638,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 638,
+      "cache_read_input_tokens": 342330,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 638,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 638,
+          "cache_read_input_tokens": 342330,
+          "input_tokens": 2,
+          "output_tokens": 1883,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 1883,
+      "output_tokens_details": {
+        "thinking_tokens": 1102
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "04cdb022-4765-41ab-b59b-c1b868671765",
+  "requestId": "req_011CeLsBdW2zTm6gohiKntjF",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "timestamp": "2026-08-24T03:30:49.803Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "0e07713c-a029-4fa5-86e6-06486df7cf4c",
+  "version": "2.1.240"
+}

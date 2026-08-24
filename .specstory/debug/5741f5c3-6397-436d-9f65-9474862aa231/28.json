@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "17:local WHISPER_TMP = TMPDIR .. \"/whisper-dictate\"\n18:local CHUNK_DIR = WHISPER_TMP .. \"/chunks\"\n92:local LOG_FILE = WHISPER_TMP .. \"/whisper-dictate.log\"\n159:os.execute(\"mkdir -p '\" .. WHISPER_TMP .. \"'\")\n311:local function getChunkFiles()\n313:    local ok, iter, dir = pcall(hs.fs.dir, CHUNK_DIR)\n317:            table.insert(chunks, CHUNK_DIR .. \"/\" .. file)\n683:        local stdinPath = WHISPER_TMP .. \"/action_stdin_\" .. token .. \".txt\"\n1382:    local concatFile = WHISPER_TMP .. \"/pipe_concat_\" .. segN .. \".txt\"\n1383:    local segWav     = WHISPER_TMP .. \"/pipe_seg_\" .. segN .. \".wav\"\n1477:    local all = getChunkFiles()\n1503:    local all = getChunkFiles()\n1611:    -- still writing when we clear CHUNK_DIR, its tail lands in the new recording's directory\n1621:    os.execute(\"rm -rf '\" .. CHUNK_DIR .. \"'\")\n1622:    os.execute(\"mkdir -p '\" .. CHUNK_DIR .. \"'\")\n1667:                for _, p in ipairs(getChunkFiles()) do\n1692:        { CHUNK_DIR, \"1\", \"16000\" })\n1763:    -- before wiping CHUNK_DIR out from under it.\n=== tests ===\n506:-- 8d. The streaming pipeline claims every chunk exactly once\n551:        env.getChunkFiles = function()\n558:        check(\"pipeline: streamCheckAndDispatch is liftable and compiles\", stream ~= nil, tostring(streamErr))\n564:            check(\"pipeline: nothing is dispatched before a full segment has accumulated\",\n565:                  env.pipe.nextSeg == 1,\n566:                  \"dispatched \" .. (env.pipe.nextSeg - 1) .. \" segment(s) too early\")\n574:            local streamedSegs = env.pipe.nextSeg - 1\n575:            check(\"pipeline: segments are dispatched during recording, not all at the end\",\n581:            for j = env.pipe.nextChunk, TOTAL do remaining[#remaining + 1] = paths[j] end\n583:                dispatched[env.pipe.nextSeg] = grp\n584:                env.pipe.nextSeg = env.pipe.nextSeg + 1\n589:            for n = 1, env.pipe.nextSeg - 1 do\n598:            check(\"pipeline: streamed segments plus the tail cover every chunk exactly once, in order\",\n603:            check(\"pipeline: no segment is dispatched empty\",\n605:                      for n = 1, env.pipe.nextSeg - 1 do",
+        "is_error": false,
+        "tool_use_id": "toolu_01Xm7S71cGLGcUj3jvaDvRwv",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "38f92285-47ca-4804-9818-bde020cec58b",
+  "promptId": "e9cbafa6-e5e9-4e4e-8cd9-dc62304a92b1",
+  "sessionId": "5741f5c3-6397-436d-9f65-9474862aa231",
+  "sourceToolAssistantUUID": "38f92285-47ca-4804-9818-bde020cec58b",
+  "timestamp": "2026-08-24T03:13:09.114Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "17:local WHISPER_TMP = TMPDIR .. \"/whisper-dictate\"\n18:local CHUNK_DIR = WHISPER_TMP .. \"/chunks\"\n92:local LOG_FILE = WHISPER_TMP .. \"/whisper-dictate.log\"\n159:os.execute(\"mkdir -p '\" .. WHISPER_TMP .. \"'\")\n311:local function getChunkFiles()\n313:    local ok, iter, dir = pcall(hs.fs.dir, CHUNK_DIR)\n317:            table.insert(chunks, CHUNK_DIR .. \"/\" .. file)\n683:        local stdinPath = WHISPER_TMP .. \"/action_stdin_\" .. token .. \".txt\"\n1382:    local concatFile = WHISPER_TMP .. \"/pipe_concat_\" .. segN .. \".txt\"\n1383:    local segWav     = WHISPER_TMP .. \"/pipe_seg_\" .. segN .. \".wav\"\n1477:    local all = getChunkFiles()\n1503:    local all = getChunkFiles()\n1611:    -- still writing when we clear CHUNK_DIR, its tail lands in the new recording's directory\n1621:    os.execute(\"rm -rf '\" .. CHUNK_DIR .. \"'\")\n1622:    os.execute(\"mkdir -p '\" .. CHUNK_DIR .. \"'\")\n1667:                for _, p in ipairs(getChunkFiles()) do\n1692:        { CHUNK_DIR, \"1\", \"16000\" })\n1763:    -- before wiping CHUNK_DIR out from under it.\n=== tests ===\n506:-- 8d. The streaming pipeline claims every chunk exactly once\n551:        env.getChunkFiles = function()\n558:        check(\"pipeline: streamCheckAndDispatch is liftable and compiles\", stream ~= nil, tostring(streamErr))\n564:            check(\"pipeline: nothing is dispatched before a full segment has accumulated\",\n565:                  env.pipe.nextSeg == 1,\n566:                  \"dispatched \" .. (env.pipe.nextSeg - 1) .. \" segment(s) too early\")\n574:            local streamedSegs = env.pipe.nextSeg - 1\n575:            check(\"pipeline: segments are dispatched during recording, not all at the end\",\n581:            for j = env.pipe.nextChunk, TOTAL do remaining[#remaining + 1] = paths[j] end\n583:                dispatched[env.pipe.nextSeg] = grp\n584:                env.pipe.nextSeg = env.pipe.nextSeg + 1\n589:            for n = 1, env.pipe.nextSeg - 1 do\n598:            check(\"pipeline: streamed segments plus the tail cover every chunk exactly once, in order\",\n603:            check(\"pipeline: no segment is dispatched empty\",\n605:                      for n = 1, env.pipe.nextSeg - 1 do"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "09a68e11-f963-4688-af24-2d850d0e624e",
+  "version": "2.1.240"
+}

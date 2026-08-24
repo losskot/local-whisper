@@ -1,0 +1,68 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "text": "Background notification only — that was the docs update, which I already verified (92/92 passing, pushed as `9ceaf1a`). Nothing new was requested.\n\nLet me confirm the tree isn't left dirty, since AGENTS.md requires `.specstory/` be committed rather than abandoned:",
+        "type": "text"
+      }
+    ],
+    "diagnostics": {
+      "cache_miss_reason": {
+        "type": "previous_message_not_found"
+      }
+    },
+    "id": "msg_011CeLs62NnPWEKLX4gmYrT9",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 311421,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 311421,
+      "cache_read_input_tokens": 24832,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 311421,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 311421,
+          "cache_read_input_tokens": 24832,
+          "input_tokens": 2,
+          "output_tokens": 619,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 619,
+      "output_tokens_details": {
+        "thinking_tokens": 393
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "a0013029-e649-4501-9730-fd8dbc160e2e",
+  "requestId": "req_011CeLs5zNEfoPQD5w27b1ig",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "timestamp": "2026-08-24T03:29:17.875Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "0edafed9-3a64-4343-9e58-13bab9ccb15e",
+  "version": "2.1.240"
+}

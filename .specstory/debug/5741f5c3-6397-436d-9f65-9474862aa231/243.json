@@ -1,0 +1,72 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01MYrTdquCycjo5RGKqDac5V",
+        "input": {
+          "command": "git add -A \u0026\u0026 git commit -q -F - \u003c\u003c'MSG' \u0026\u0026 git log --oneline -1\nKeep a dictation alive when the next recording starts\n\nPressing the trigger again while the previous dictation was still in whisper\nlost it whole. Two causes, both in the start-of-recording path:\n\n  * tryWarmup() called pipelineReset(), wiping `results` and putting\n    `finalizing` back to false — segments that came back afterwards were\n    written into the new dictation's state and never assembled.\n  * it also rm -rf'd the one shared chunks/ directory, deleting audio the\n    previous dictation's ffmpeg was still concatenating.\n\nA 92-second dictation vanished behind exactly two log lines: \"pipeline: seg 2\nconcat FAILED (code=254)\" and \"seg 2 complete (done=1/?)\".\n\nPipeline state is now per dictation. pipeNewJob() mints a job per keypress\nwith its own generation, chunk directory (chunks/g\u003cN\u003e), segment files and\nresults; pipeStartJob() detaches the previous job instead of resetting it, so\nit keeps transcribing and delivers its own text. Nothing in flight reads\n`pipe` any more — dispatchSegment captures its job, onPipelineDone and\npipelineFinalize take it as an argument — and the overlay and progress bar\nstay with the current job only.\n\nA detached job's transcript is queued rather than typed: it lands while the\nuser is still holding fn+ctrl, and both output modes post keystrokes. The next\ninsertion prepends it, so both dictations arrive in the order they were\nspoken; every path that produces no text of its own flushes the queue instead\nof stranding it. Emergency stop abandons every live job and rescues an\nalready-finished transcript to the clipboard.\n\nAudio is deleted only by the job that owns it (pipeCleanup), and the shared\nparent directory only at load.\n\n11 new checks cover the class: a job finishing behind a newer recording keeps\nits text, is not typed into the recording in progress, does not move its\nprogress bar, arrives with the next insertion oldest-first, and is dropped\nafter an emergency stop; plus the structural guards on tryWarmup, startRecording\nand dispatchSegment. 103 checks pass.\n\nCo-Authored-By: Claude Opus 5 \u003cnoreply@anthropic.com\u003e\nMSG",
+          "description": "Commit the fix"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011CeLsjUcduKdAjhEu4oCEG",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 1048,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 1048,
+      "cache_read_input_tokens": 182907,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1048,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 1048,
+          "cache_read_input_tokens": 182907,
+          "input_tokens": 2,
+          "output_tokens": 1781,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 1781,
+      "output_tokens_details": {
+        "thinking_tokens": 852
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "e9772333-17e7-444f-af0c-ad78cd12c397",
+  "requestId": "req_011CeLsjTF2tFzZLLqmzNMXK",
+  "sessionId": "5741f5c3-6397-436d-9f65-9474862aa231",
+  "timestamp": "2026-08-24T03:37:57.860Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "64a674e1-d4ec-417c-b70c-bb16b228792c",
+  "version": "2.1.240"
+}

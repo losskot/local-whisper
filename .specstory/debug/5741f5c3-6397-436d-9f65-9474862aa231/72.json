@@ -1,0 +1,72 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01B1hVkPaTaS5yDrACjRH776",
+        "input": {
+          "command": "sed -n 80,180p tests/test_init.lua",
+          "description": "Read liftFunction"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011CeLrPXT7nw6aDUGQurSQW",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 9493,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 9493,
+      "cache_read_input_tokens": 99255,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 9493,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 9493,
+          "cache_read_input_tokens": 99255,
+          "input_tokens": 2,
+          "output_tokens": 91,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 91,
+      "output_tokens_details": {
+        "thinking_tokens": 0
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "01af4181-63c8-4ae0-95b0-f2014548395f",
+  "requestId": "req_011CeLrPWR768rxetB5Dm8Yp",
+  "sessionId": "5741f5c3-6397-436d-9f65-9474862aa231",
+  "timestamp": "2026-08-24T03:19:56.886Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "b82089b4-3996-45f3-9ef0-c310dd761af4",
+  "version": "2.1.240"
+}

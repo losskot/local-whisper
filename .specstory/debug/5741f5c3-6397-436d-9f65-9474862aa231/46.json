@@ -1,0 +1,72 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01Szbv9qJBtFSsG8pvpUSTZb",
+        "input": {
+          "command": "TMPDIR_REAL=$(getconf DARWIN_USER_TEMP_DIR); tail -60 \"${TMPDIR_REAL}whisper-dictate/whisper-dictate.log\"",
+          "description": "Tail the log"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011CeLr2ZR6nAV1svnU4cHNs",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 1166,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 1166,
+      "cache_read_input_tokens": 76456,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1166,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 1166,
+          "cache_read_input_tokens": 76456,
+          "input_tokens": 2,
+          "output_tokens": 176,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 176,
+      "output_tokens_details": {
+        "thinking_tokens": 34
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "0995ea1c-4ffb-457e-aefd-ff5c02505495",
+  "requestId": "req_011CeLr2YfDAduYt4Znx1B8R",
+  "sessionId": "5741f5c3-6397-436d-9f65-9474862aa231",
+  "timestamp": "2026-08-24T03:15:13.324Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "fd823328-d147-40e5-ac24-e933af530383",
+  "version": "2.1.240"
+}

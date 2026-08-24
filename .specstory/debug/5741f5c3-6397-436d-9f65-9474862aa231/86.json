@@ -1,0 +1,72 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01YHWeoPaeTiQJTznfhMKZeW",
+        "input": {
+          "command": "cat \u003e /private/tmp/claude-502/-Users-vitaliy-Documents-GitHub-local-whisper/5741f5c3-6397-436d-9f65-9474862aa231/scratchpad/patch2.py \u003c\u003c'PYEOF'\nP = \"hammerspoon/init.lua\"\nsrc = open(P, encoding=\"utf-8\").read()\n\ndef rep(old, new, count=1):\n    global src\n    n = src.count(old)\n    assert n == count, \"anchor count %d (expected %d) for: %r\" % (n, count, old[:90])\n    src = src.replace(old, new, count)\n\nOLD_PIPE = '''-- Grouped into one table on purpose: init.lua is bounded by Lua's 200-locals-per-function\n-- ceiling, so related state goes in a table rather than eight bare locals.\nlocal pipe = {\n    results    = {},    -- [segN] = text, filled as each segment completes (order preserved)\n    lang       = nil,   -- first detected language across all segments\n    nextChunk  = 1,     -- 1-based index of the next chunk not yet claimed by a segment\n    nextSeg    = 1,     -- next segment number to assign\n    total      = 0,     -- fixed once recording stops and the tail is dispatched\n    done       = 0,     -- segments finished so far\n    finalizing = false, -- true once `total` is known\n    apiError   = nil,\n    timer      = nil,   -- polls during recording for a segment that is ready to dispatch\n}\n\n-- Assigned, not declared: the local is forward-declared above emergencyStop.\npipelineReset = function()\n    if pipe.timer then pipe.timer:stop(); pipe.timer = nil end\n    pipe.results    = {}\n    pipe.lang       = nil\n    pipe.nextChunk  = 1\n    pipe.nextSeg    = 1\n    pipe.total      = 0\n    pipe.done       = 0\n    pipe.finalizing = false\n    pipe.apiError   = nil\nend\n'''\n\nNEW_PIPE = '''-- Grouped into one table on purpose: init.lua is bounded by Lua's 200-locals-per-function\n-- ceiling, so related state goes in a table rather than eight bare locals.\n--\n-- State is *per dictation*, not global. Pressing the trigger again while the previous\n-- dictation is still being transcribed used to reset this table and wipe the shared chunk\n-- directory, which lost that dictation whole: its finished segments were dropped from\n-- `results`, `finalizing` went back to false so nothing was ever assembled, and the\n-- concat of its remaining audio failed with ffmpeg exit 254 because the WAVs were gone.\n-- Each keypress now gets its own job (own chunk directory, own segment files, own results)\n-- and an older job keeps transcribing and delivers its text on its own.\nlocal pipeJobs = {\n    live    = {},   -- [gen] = job, every job that can still produce text\n    pending = {},   -- finished transcripts waiting for a safe moment to be inserted\n    lastGen = 0,\n}\n\nlocal function pipeNewJob()\n    pipeJobs.lastGen = pipeJobs.lastGen + 1\n    local job = {\n        gen        = pipeJobs.lastGen,\n        dir        = CHUNK_DIR .. \"/g\" .. pipeJobs.lastGen,  -- this dictation's audio, nobody else's\n        results    = {},    -- [segN] = text, filled as each segment completes (order preserved)\n        lang       = nil,   -- first detected language across all segments\n        nextChunk  = 1,     -- 1-based index of the next chunk not yet claimed by a segment\n        nextSeg    = 1,     -- next segment number to assign\n        total      = 0,     -- fixed once recording stops and the tail is dispatched\n        done       = 0,     -- segments finished so far\n        finalizing = false, -- true once `total` is known\n        inserted   = false, -- true once its text was inserted or queued, so it happens once\n        abandoned  = false, -- emergency stop: its segments are dropped as they come back\n        apiError   = nil,\n        timer      = nil,   -- polls during recording for a segment that is ready to dispatch\n    }\n    pipeJobs.live[job.gen] = job\n    os.execute(\"mkdir -p '\" .. job.dir .. \"'\")\n    return job\nend\n\n-- The dictation the trigger is currently driving. Reassigned per keypress by pipeStartJob;\n-- everything already in flight holds its own job reference instead of reading this.\nlocal pipe = pipeNewJob()\n\n-- A job's audio and intermediates are removed only when nothing can still read them.\n-- Deleting them early is exactly the bug this rework fixes.\nlocal function pipeCleanup(job)\n    pipeJobs.live[job.gen] = nil\n    if job.timer then job.timer:stop(); job.timer = nil end\n    os.execute(\"rm -rf '\" .. job.dir .. \"' '\" .. WHISPER_TMP .. \"'/pipe_seg_g\" .. job.gen ..\n               \"_* '\" .. WHISPER_TMP .. \"'/pipe_concat_g\" .. job.gen .. \"_* 2\u003e/dev/null\")\nend\n\n-- Transcripts that finished while a newer recording was running, oldest first.\nlocal function pipeTakePending()\n    if #pipeJobs.pending == 0 then return nil, nil end\n    local parts, lang = {}, nil\n    for _, p in ipairs(pipeJobs.pending) do\n        table.insert(parts, p.text)\n        lang = lang or p.lang\n    end\n    for i = #pipeJobs.pending, 1, -1 do pipeJobs.pending[i] = nil end\n    return table.concat(parts, \" \"), lang\nend\n\n-- True when a finished transcript can be typed *right now*: nothing is recording, the\n-- trigger combo is not held (both insertion modes post keystrokes, and ⌘V or a letter\n-- landing inside a held fn+ctrl is not what the user asked for), and no dictation in\n-- progress owns the overlay.\nlocal function pipeInsertIsSafe()\n    if isRecording or isWarmingUp or finalizationPending then return false end\n    if triggerHeld() then return false end\n    local cur = pipeJobs.live[pipe.gen]\n    if cur and (cur.nextSeg \u003e 1 or cur.finalizing) then return false end\n    return true\nend\n\n-- Insert whatever earlier dictations left queued. Returns true if it inserted something, so\n-- callers that would otherwise just hide the overlay can tell.\nlocal function pipeFlushPending()\n    local text, lang = pipeTakePending()\n    if not text then return false end\n    log(\"pipeline: flushing a queued dictation (\" .. #text .. \" chars)\")\n    insertTranscribedText(text, lang)\n    return true\nend\n\n-- Called once per keypress, before the recorder starts. The previous job is *detached*, not\n-- reset: if its transcription is still running it keeps its results, its chunk directory and\n-- its segment files, and delivers its own text when it finishes. Reassigning `pipe` is safe\n-- only because nothing in flight reads it — dispatchSegment captures the job it belongs to\n-- and every callback below takes that job explicitly.\nlocal function pipeStartJob()\n    if pipe.timer then pipe.timer:stop(); pipe.timer = nil end\n    local prev = pipe\n    if pipeJobs.live[prev.gen] then\n        if prev.nextSeg \u003e 1 or prev.finalizing then\n            log(\"pipeline: gen \" .. prev.gen .. \" still transcribing — detached, it delivers its own text\")\n        else\n            pipeCleanup(prev)   -- nothing was ever dispatched from it: its audio is dead weight\n        end\n    end\n    pipe = pipeNewJob()\n    log(\"pipeline: gen \" .. pipe.gen .. \" started\")\nend\n\n-- Assigned, not declared: the local is forward-declared above emergencyStop.\n--\n-- Emergency stop means nothing from any of this reaches the cursor, so every job still in\n-- flight is abandoned — including one a newer recording detached. A transcript that already\n-- finished is not silently dropped: it goes to the clipboard, and the return value says so.\npipelineReset = function()\n    for gen, job in pairs(pipeJobs.live) do\n        job.abandoned = true\n        log(\"pipeline: gen \" .. gen .. \" abandoned\")\n        pipeCleanup(job)\n    end\n    local queued = pipeTakePending()\n    if not queued then return false end\n    hs.pasteboard.setContents(queued)\n    log(\"pipeline: a finished dictation was still queued — copied to the clipboard: '\" .. queued .. \"'\")\n    return true\nend\n'''\n\nrep(OLD_PIPE, NEW_PIPE)\nopen(P, \"w\", encoding=\"utf-8\").write(src)\nprint(\"patch2 ok\")\nPYEOF\npython3 /private/tmp/claude-502/-Users-vitaliy-Documents-GitHub-local-whisper/5741f5c3-6397-436d-9f65-9474862aa231/scratchpad/patch2.py",
+          "description": "Replace pipe state with per-dictation jobs"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011CeLrYEGm1TVQynAMWgnjN",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 1602,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 1602,
+      "cache_read_input_tokens": 119505,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1602,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 1602,
+          "cache_read_input_tokens": 119505,
+          "input_tokens": 2,
+          "output_tokens": 3181,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 3181,
+      "output_tokens_details": {
+        "thinking_tokens": 17
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "abf380a3-5913-4fb8-afcb-96b644cec161",
+  "requestId": "req_011CeLrYD9Hxdds8aZqqHjSw",
+  "sessionId": "5741f5c3-6397-436d-9f65-9474862aa231",
+  "timestamp": "2026-08-24T03:22:23.303Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "7c09feac-112e-4a42-83e5-66e7b95433b6",
+  "version": "2.1.240"
+}

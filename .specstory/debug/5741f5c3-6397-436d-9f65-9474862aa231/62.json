@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "369:-- 8b. Live capture never goes back through ffmpeg's avfoundation input\n371:-- ffmpeg's avfoundation indev hands over ~90% of the samples it captures: a fixed 20s\n379:-- so this only forbids pairing it with avfoundation.\n382:local usesAvfoundation = src:find('\"avfoundation\"', 1, true) ~= nil\n383:check(\"capture: init.lua does not capture through ffmpeg's avfoundation input\",\n385:      'found \"avfoundation\" as an argument -- that input device drops ~10% of the audio')\n388:      src:find(\"RECORDER_BIN\", 1, true) ~= nil,\n389:      \"RECORDER_BIN not referenced -- what is opening the microphone?\")\n392:      src:find(\"CAPTURED\", 1, true) ~= nil and recorderSrc:find(\"CAPTURED\", 1, true) ~= nil,\n393:      \"the CAPTURED handshake is how a future capture regression becomes visible in the log\")\n396:-- termination callback's `out` empty, so parsing CAPTURED *only* at termination reads nil\n400:    local capturedInStream = streamStart and src:find(\"CAPTURED%%s%+\", streamStart, false)\n401:    check(\"capture: CAPTURED is parsed in the streaming callback\",\n408:    check(\"capture: the CAPTURED match runs against an accumulated tail, not one delivery\",\n413:    check(\"capture: a missing CAPTURED line still logs a measurement\",\n414:          src:find(\"no CAPTURED line\", 1, true) ~= nil,",
+        "is_error": false,
+        "tool_use_id": "toolu_01UHnFJCrkRuqqT5qLwddUne",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "8937b275-af93-4441-977e-456dffc007a7",
+  "promptId": "e9cbafa6-e5e9-4e4e-8cd9-dc62304a92b1",
+  "sessionId": "5741f5c3-6397-436d-9f65-9474862aa231",
+  "sourceToolAssistantUUID": "8937b275-af93-4441-977e-456dffc007a7",
+  "timestamp": "2026-08-24T03:17:47.203Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "369:-- 8b. Live capture never goes back through ffmpeg's avfoundation input\n371:-- ffmpeg's avfoundation indev hands over ~90% of the samples it captures: a fixed 20s\n379:-- so this only forbids pairing it with avfoundation.\n382:local usesAvfoundation = src:find('\"avfoundation\"', 1, true) ~= nil\n383:check(\"capture: init.lua does not capture through ffmpeg's avfoundation input\",\n385:      'found \"avfoundation\" as an argument -- that input device drops ~10% of the audio')\n388:      src:find(\"RECORDER_BIN\", 1, true) ~= nil,\n389:      \"RECORDER_BIN not referenced -- what is opening the microphone?\")\n392:      src:find(\"CAPTURED\", 1, true) ~= nil and recorderSrc:find(\"CAPTURED\", 1, true) ~= nil,\n393:      \"the CAPTURED handshake is how a future capture regression becomes visible in the log\")\n396:-- termination callback's `out` empty, so parsing CAPTURED *only* at termination reads nil\n400:    local capturedInStream = streamStart and src:find(\"CAPTURED%%s%+\", streamStart, false)\n401:    check(\"capture: CAPTURED is parsed in the streaming callback\",\n408:    check(\"capture: the CAPTURED match runs against an accumulated tail, not one delivery\",\n413:    check(\"capture: a missing CAPTURED line still logs a measurement\",\n414:          src:find(\"no CAPTURED line\", 1, true) ~= nil,"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "d56e345c-5d45-421f-abee-cea379fa919a",
+  "version": "2.1.240"
+}

@@ -1,0 +1,72 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01Xu6judaxbF2ekHkN77GfGk",
+        "input": {
+          "command": "cat \u003e /private/tmp/claude-502/-Users-vitaliy-Documents-GitHub-local-whisper/5741f5c3-6397-436d-9f65-9474862aa231/scratchpad/patch7.py \u003c\u003c'PYEOF'\nP = \"AGENTS.md\"\nsrc = open(P, encoding=\"utf-8\").read()\n\ndef rep(old, new, count=1):\n    global src\n    n = src.count(old)\n    assert n == count, \"anchor count %d (expected %d) for: %r\" % (n, count, old[:90])\n    src = src.replace(old, new, count)\n\n# 1. Architecture: per-dictation isolation\nrep('''  ↓  (key released) → only the tail segment is left to transcribe''',\n'''  ↓  (key released) → only the tail segment is left to transcribe\n  ↓  a new keypress starts a *separate* dictation; the previous one keeps transcribing''')\n\nrep('''Transcription **is** pipelined: segments are sent to whisper while the user is still\ntalking, so the wait after release does not scale with the recording length. Text is still\nonly inserted once every segment is back — there are no live partials on screen.''',\n'''Transcription **is** pipelined: segments are sent to whisper while the user is still\ntalking, so the wait after release does not scale with the recording length. Text is still\nonly inserted once every segment is back — there are no live partials on screen. Dictations\nare also independent: pressing the trigger again while the previous one is still in whisper\nstarts a new one beside it instead of destroying it (see \"One job per keypress\" below).''')\n\n# 2. Key paths\nrep('''- `$TMPDIR/whisper-dictate/chunks/` — recording segments (ephemeral)''',\n'''- `$TMPDIR/whisper-dictate/chunks/g\u003cN\u003e/` — recording segments, one directory per dictation\n  (ephemeral; the parent is cleared at load, a generation's directory when it is done with)''')\n\n# 3. Locals count\nrep('''**Current count: ~134/200** — comfortable headroom after meeting mode, LLM refine, silence auto-stop and preferred languages were removed.''',\n'''**Current count: ~141/200** — comfortable headroom after meeting mode, LLM refine, silence auto-stop and preferred languages were removed.''')\n\n# 4. New pipeline subsection, after the streaming section's closing paragraph\nrep('''`emergencyStop()` calls `pipelineReset()` — otherwise segments already transcribed would\nstill be assembled and pasted a moment after the user asked for a stop. `pipelineReset` is\n**forward-declared above `emergencyStop`** because the pipeline itself has to be defined\nbelow `insertTranscribedText`; the `scope` check catches this exact mistake.''',\n'''`emergencyStop()` calls `pipelineReset()` — otherwise segments already transcribed would\nstill be assembled and pasted a moment after the user asked for a stop. `pipelineReset` is\n**forward-declared above `emergencyStop`** because the pipeline itself has to be defined\nbelow `insertTranscribedText`; the `scope` check catches this exact mistake.\n\n### One job per keypress — pipeline state is not global\n\nPressing the trigger again while the previous dictation was still being transcribed used to\nlose it **whole**. Two independent causes, both in the start-of-recording path:\n\n- `tryWarmup()` called `pipelineReset()`, which wiped `results` and put `finalizing` back to\n  false. Segments that came back afterwards were written into the *new* dictation's state and\n  never assembled — `onPipelineDone` returns early while `finalizing` is false.\n- it also `rm -rf`'d the one shared `chunks/` directory, deleting audio the previous\n  dictation's ffmpeg was still concatenating.\n\nBoth are visible in the log, and nowhere else — a 92-second dictation disappeared behind\nexactly these two lines:\n\n```\nfinal: START — total chunks=93, already streamed=1 seg(s), next unclaimed chunk=55\npipeline: seg 2 concat FAILED (code=254)     ← its WAVs were deleted mid-concat\npipeline: seg 2 complete (done=1/?)          ← \"?\" means finalizing went back to false\n```\n\nSo state is **per dictation**, not global. `pipeNewJob()` mints a job per keypress with its\nown generation number, chunk directory (`chunks/g\u003cN\u003e`), segment files (`pipe_seg_g\u003cN\u003e_*`) and\nresults; `pipe` means only \"the dictation the trigger is driving now\", and `pipeStartJob()`\n(called from `startRecording`) *detaches* the previous job instead of resetting it. The rules\nthat keep it that way:\n\n- **Nothing in flight may read `pipe`.** `dispatchSegment` captures its job (`job = job or\n  pipe`) and `onPipelineDone`/`pipelineFinalize` take it as an argument. A callback that reads\n  `pipe` when whisper answers writes into whatever dictation is current by then — which is\n  the original bug, restored.\n- **The overlay and the progress bar belong to the current job only** (`job == pipe`). A\n  detached job reporting in would otherwise move the bar of the recording in progress.\n- **A detached job's text is queued, not typed** (`pipeJobs.pending`, prepended by the next\n  insertion, oldest first). It finishes while the user is *holding* the trigger combo, and\n  both output modes post keystrokes — ⌘V or a letter landing inside a held fn+ctrl is not\n  what the user asked for. `pipeInsertIsSafe()` is the one place that decides; if the\n  recorder is idle when it lands, it goes in immediately instead.\n- **Every path that produces no text still flushes the queue** (`pipeFlushPending`): a\n  too-short recording, a cancelled warmup, an empty transcript. Otherwise a queued dictation\n  waits for a next one that may never come.\n- **Audio is deleted only by the job that owns it** — `pipeCleanup(job)` after it finalises or\n  is abandoned. Never clear the shared parent while any dictation is alive.\n\nEmergency stop abandons *every* live job, including a detached one, because \"stopped\" has to\nmean nothing more reaches the cursor. A transcript that had already finished is not dropped\nsilently: it goes to the clipboard and the notification says so.''')\n\n# 5. Simulation trap wording\nrep('''  That can leave two recorders writing into the same `chunks/` directory.''',\n'''  That can leave two recorders alive at once (each in its own generation's directory).''')\n\nopen(P, \"w\", encoding=\"utf-8\").write(src)\nprint(\"patch7 ok\")\nPYEOF\npython3 /private/tmp/claude-502/-Users-vitaliy-Documents-GitHub-local-whisper/5741f5c3-6397-436d-9f65-9474862aa231/scratchpad/patch7.py",
+          "description": "Document the job model in AGENTS.md"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011CeLschNtynXzdn7MWCaHo",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 1541,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 1541,
+      "cache_read_input_tokens": 176580,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1541,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 1541,
+          "cache_read_input_tokens": 176580,
+          "input_tokens": 2,
+          "output_tokens": 2392,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 2392,
+      "output_tokens_details": {
+        "thinking_tokens": 0
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "82a93700-f97a-4ad8-8c5d-e50c953f3ca3",
+  "requestId": "req_011CeLscfvLYQDwWyB2zTLwp",
+  "sessionId": "5741f5c3-6397-436d-9f65-9474862aa231",
+  "timestamp": "2026-08-24T03:36:29.052Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "9a878048-62cc-4c7d-a54e-270b0e3c1289",
+  "version": "2.1.240"
+}

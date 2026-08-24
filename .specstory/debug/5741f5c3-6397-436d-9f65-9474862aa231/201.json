@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "103\n0\nPASS\tdetach: the pipeline finalizers are liftable and compile\nPASS\tdetach: a dictation that finishes behind a newer recording is not lost\nPASS\tdetach: it is not typed into the recording in progress\nPASS\tdetach: an older job's segments never move the current progress bar\nPASS\tdetach: the queued dictation is inserted with the next one, in spoken order\nPASS\tdetach: the queue is emptied once it has been inserted\nPASS\tdetach: a segment returning after an emergency stop is dropped\nPASS\tdetach: starting a recording does not reset the pipeline\nPASS\tdetach: a new recording only clears its own chunk directory\nPASS\tdetach: startRecording() gives the keypress its own job\nPASS\tdetach: dispatchSegment() captures its job instead of reading `pipe` later",
+        "is_error": false,
+        "tool_use_id": "toolu_01Dy96cTQc5SjXaTKps6H3Cs",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "dac2146e-c7f8-4970-9fb6-7a88aa0ced38",
+  "promptId": "e9cbafa6-e5e9-4e4e-8cd9-dc62304a92b1",
+  "sessionId": "5741f5c3-6397-436d-9f65-9474862aa231",
+  "sourceToolAssistantUUID": "dac2146e-c7f8-4970-9fb6-7a88aa0ced38",
+  "timestamp": "2026-08-24T03:32:43.411Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "103\n0\nPASS\tdetach: the pipeline finalizers are liftable and compile\nPASS\tdetach: a dictation that finishes behind a newer recording is not lost\nPASS\tdetach: it is not typed into the recording in progress\nPASS\tdetach: an older job's segments never move the current progress bar\nPASS\tdetach: the queued dictation is inserted with the next one, in spoken order\nPASS\tdetach: the queue is emptied once it has been inserted\nPASS\tdetach: a segment returning after an emergency stop is dropped\nPASS\tdetach: starting a recording does not reset the pipeline\nPASS\tdetach: a new recording only clears its own chunk directory\nPASS\tdetach: startRecording() gives the keypress its own job\nPASS\tdetach: dispatchSegment() captures its job instead of reading `pipe` later"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "9c022edb-64a1-4209-a38f-8864380f8105",
+  "version": "2.1.240"
+}

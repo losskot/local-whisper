@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "1496:        log(\"pipeline: seg \" .. segN .. \" ERROR opening concat file: \" .. tostring(ferr))\n1505:    log(\"pipeline: seg \" .. segN .. \" concat \" .. nChunks .. \" chunks (\" .. gfirst .. \" … \" .. glast .. \")\")\n1509:            log(\"pipeline: seg \" .. segN .. \" concat FAILED (code=\" .. tostring(code) .. \")\")\n1514:        log(\"pipeline: seg \" .. segN .. \" concat OK — wav size=\" .. wavSize .. \" bytes\")\n1518:                log(\"pipeline: seg \" .. segN .. \" accepted: '\" .. text:sub(1, 120) .. \"'\")\n1520:                log(\"pipeline: seg \" .. segN .. \" REJECTED (empty or hallucination): '\" .. text:sub(1, 80) .. \"'\")\n1531:            log(\"pipeline: seg \" .. segN .. \" starting API transcription lang=\" .. effectiveLang)\n1534:                    log(\"pipeline: seg \" .. segN .. \" API error: \" .. errMsg)\n1545:        log(\"pipeline: seg \" .. segN .. \" starting whisper lang=\" .. effectiveLang ..\n1552:                log(\"pipeline: seg \" .. segN .. \" whisper(auto) exit=\" .. tostring(code2) ..\n1555:                    log(\"pipeline: seg \" .. segN .. \" whisper FAILED (auto)\")\n1560:                log(\"pipeline: seg \" .. segN .. \" auto-detected: \" .. tostring(detected))\n1567:                log(\"pipeline: seg \" .. segN .. \" whisper(\" .. effectiveLang .. \") exit=\" .. tostring(code2) ..\n1570:                    log(\"pipeline: seg \" .. segN .. \" whisper FAILED\")",
+        "is_error": false,
+        "tool_use_id": "toolu_0168DnKkk89ucHLJQvbAXAu9",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "7e817d04-ef7d-4ccf-b43c-56ab7a6c91b8",
+  "promptId": "e9cbafa6-e5e9-4e4e-8cd9-dc62304a92b1",
+  "sessionId": "5741f5c3-6397-436d-9f65-9474862aa231",
+  "sourceToolAssistantUUID": "7e817d04-ef7d-4ccf-b43c-56ab7a6c91b8",
+  "timestamp": "2026-08-24T03:23:03.308Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "1496:        log(\"pipeline: seg \" .. segN .. \" ERROR opening concat file: \" .. tostring(ferr))\n1505:    log(\"pipeline: seg \" .. segN .. \" concat \" .. nChunks .. \" chunks (\" .. gfirst .. \" … \" .. glast .. \")\")\n1509:            log(\"pipeline: seg \" .. segN .. \" concat FAILED (code=\" .. tostring(code) .. \")\")\n1514:        log(\"pipeline: seg \" .. segN .. \" concat OK — wav size=\" .. wavSize .. \" bytes\")\n1518:                log(\"pipeline: seg \" .. segN .. \" accepted: '\" .. text:sub(1, 120) .. \"'\")\n1520:                log(\"pipeline: seg \" .. segN .. \" REJECTED (empty or hallucination): '\" .. text:sub(1, 80) .. \"'\")\n1531:            log(\"pipeline: seg \" .. segN .. \" starting API transcription lang=\" .. effectiveLang)\n1534:                    log(\"pipeline: seg \" .. segN .. \" API error: \" .. errMsg)\n1545:        log(\"pipeline: seg \" .. segN .. \" starting whisper lang=\" .. effectiveLang ..\n1552:                log(\"pipeline: seg \" .. segN .. \" whisper(auto) exit=\" .. tostring(code2) ..\n1555:                    log(\"pipeline: seg \" .. segN .. \" whisper FAILED (auto)\")\n1560:                log(\"pipeline: seg \" .. segN .. \" auto-detected: \" .. tostring(detected))\n1567:                log(\"pipeline: seg \" .. segN .. \" whisper(\" .. effectiveLang .. \") exit=\" .. tostring(code2) ..\n1570:                    log(\"pipeline: seg \" .. segN .. \" whisper FAILED\")"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "fed937a4-6594-47b5-b4ed-8e201c4648b5",
+  "version": "2.1.240"
+}

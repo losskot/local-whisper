@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "local function triggerHeld()\n    local raw = hs.eventtap.checkKeyboardModifiers(true)._raw or 0\n    return (raw \u0026 trigger.heldMask) == trigger.heldMask\nend\n\n--------------------------------------------------------------------------------\n-- Utilities\n--------------------------------------------------------------------------------\n\nos.execute(\"mkdir -p '\" .. WHISPER_TMP .. \"'\")\n\nlocal function log(msg)\n    local f = io.open(LOG_FILE, \"a\")\n    if f then\n        f:write(os.date(\"[%H:%M:%S] \") .. msg .. \"\\n\")\n        f:close()\n    end\nend\n\n-- Compile tools/lw-record.swift → RECORDER_BIN if it is missing or older than its source.\n-- Runs at load time, never on a keypress, so a rebuild can't delay a recording. The repo\n-----\n    end\n    -- Also filter anything in brackets/parens (whisper noise markers)\n    if lower:match(\"^%[.*%]$\") or lower:match(\"^%(.*%)$\") then return true end\n    return false\nend\n\nlocal function getChunkFiles()\n    local chunks = {}\n    local ok, iter, dir = pcall(hs.fs.dir, CHUNK_DIR)\n    if not ok then return chunks end\n    for file in iter, dir do\n        if file:match(\"^chunk_.*%.wav$\") then\n            table.insert(chunks, CHUNK_DIR .. \"/\" .. file)\n        end\n    end\n    -- Sort by the numeric index, not lexicographically: the recorder's %03d overflows past\n    -- 999 (\"chunk_1000.wav\" sorts before \"chunk_999.wav\" as a string), which would splice the\n    -- tail of any recording longer than ~16m40s into the middle of the transcript.\n    table.sort(chunks, function(a, b)\n        local ia = tonumber(a:match(\"chunk_(%d+)%.wav$\")) or 0\n        local ib = tonumber(b:match(\"chunk_(%d+)%.wav$\")) or 0\n----- locals:\n134",
+        "is_error": false,
+        "tool_use_id": "toolu_01B52i9xeQdtU5ipVxeYPwWu",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "1ccc31b2-f4f5-454c-bb9f-6c84799ae373",
+  "promptId": "e9cbafa6-e5e9-4e4e-8cd9-dc62304a92b1",
+  "sessionId": "5741f5c3-6397-436d-9f65-9474862aa231",
+  "sourceToolAssistantUUID": "1ccc31b2-f4f5-454c-bb9f-6c84799ae373",
+  "timestamp": "2026-08-24T03:18:12.676Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "local function triggerHeld()\n    local raw = hs.eventtap.checkKeyboardModifiers(true)._raw or 0\n    return (raw \u0026 trigger.heldMask) == trigger.heldMask\nend\n\n--------------------------------------------------------------------------------\n-- Utilities\n--------------------------------------------------------------------------------\n\nos.execute(\"mkdir -p '\" .. WHISPER_TMP .. \"'\")\n\nlocal function log(msg)\n    local f = io.open(LOG_FILE, \"a\")\n    if f then\n        f:write(os.date(\"[%H:%M:%S] \") .. msg .. \"\\n\")\n        f:close()\n    end\nend\n\n-- Compile tools/lw-record.swift → RECORDER_BIN if it is missing or older than its source.\n-- Runs at load time, never on a keypress, so a rebuild can't delay a recording. The repo\n-----\n    end\n    -- Also filter anything in brackets/parens (whisper noise markers)\n    if lower:match(\"^%[.*%]$\") or lower:match(\"^%(.*%)$\") then return true end\n    return false\nend\n\nlocal function getChunkFiles()\n    local chunks = {}\n    local ok, iter, dir = pcall(hs.fs.dir, CHUNK_DIR)\n    if not ok then return chunks end\n    for file in iter, dir do\n        if file:match(\"^chunk_.*%.wav$\") then\n            table.insert(chunks, CHUNK_DIR .. \"/\" .. file)\n        end\n    end\n    -- Sort by the numeric index, not lexicographically: the recorder's %03d overflows past\n    -- 999 (\"chunk_1000.wav\" sorts before \"chunk_999.wav\" as a string), which would splice the\n    -- tail of any recording longer than ~16m40s into the middle of the transcript.\n    table.sort(chunks, function(a, b)\n        local ia = tonumber(a:match(\"chunk_(%d+)%.wav$\")) or 0\n        local ib = tonumber(b:match(\"chunk_(%d+)%.wav$\")) or 0\n----- locals:\n134"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "474638d7-8fc2-47f1-90fc-bbb1ed2b7402",
+  "version": "2.1.240"
+}

@@ -76,6 +76,14 @@ end
 local stripped = {}
 for i, l in ipairs(lines) do stripped[i] = strip(l) end
 
+-- strip() is line-oriented on purpose: in a Lua pattern `.` matches newlines, so running it
+-- over a whole function body would delete everything after its first `--` comment.
+local function stripBlock(text)
+    local out = {}
+    for line in (text .. "\n"):gmatch("([^\n]*)\n") do out[#out + 1] = strip(line) end
+    return table.concat(out, "\n")
+end
+
 -- Word-boundary match for an identifier.
 local function usesName(line, name)
     return line:find("%f[%w_]" .. name .. "%f[^%w_]") ~= nil
@@ -545,7 +553,8 @@ do
         local dispatched = {}
         env.dispatchSegment = function(segN, group) dispatched[segN] = group end
         env.isRecording = true
-        env.pipe = { results = {}, nextChunk = 1, nextSeg = 1, total = 0, done = 0, finalizing = false }
+        env.pipe = { gen = 1, dir = dir, results = {}, nextChunk = 1, nextSeg = 1,
+                     total = 0, done = 0, finalizing = false }
 
         local visible = 0
         env.getChunkFiles = function()
@@ -612,6 +621,151 @@ do
     end
 
     os.execute("rm -rf '" .. dir .. "'")
+end
+
+--------------------------------------------------------------------------------
+-- 8e. A new recording must not swallow the dictation still being transcribed
+--------------------------------------------------------------------------------
+-- Pressing the trigger again while the previous dictation was still in whisper used to
+-- reset the one shared pipeline table and wipe the one shared chunk directory. Its finished
+-- segments were dropped from `results`, `finalizing` went back to false so nothing was ever
+-- assembled, and the concat of its remaining audio failed with ffmpeg exit 254 because the
+-- WAVs were gone. A 92-second dictation vanished with no error anywhere but those two lines.
+--
+-- Each keypress now owns a job. These checks pin the two halves of the contract: a job that
+-- finishes behind a newer recording keeps its text, and that text is delivered -- with the
+-- next insertion, oldest first, because the user is still holding the trigger combo when it
+-- arrives and both insertion modes post keystrokes.
+
+do
+    local env = baseEnv()
+    env.log = function() end
+    env.overlay = nil
+    env.transcribedSecs = 0
+    env.barMaxSecs = 180
+    env.hs = {
+        notify = { new = function() return { send = function() end } end },
+        timer  = { doAfter = function() end },
+    }
+    local inserted = {}
+    env.insertTranscribedText = function(text, lang)
+        inserted[#inserted + 1] = { text = text, lang = lang }
+    end
+    env.hideProgressBar   = function() end
+    env.hideOverlay       = function() end
+    env.setOverlayText    = function() end
+    env.updateProgressBar = function() end
+    env.pipeCleanup       = function() end
+    env.pipeJobs = { live = {}, pending = {}, lastGen = 2 }
+    -- A recording is in progress, so a transcript landing now cannot be typed anywhere.
+    local insertSafe = false
+    env.pipeInsertIsSafe = function() return insertSafe end
+
+    local takePending = liftFunction("pipeTakePending", env)
+    local finalize    = liftFunction("pipelineFinalize", env)
+    local done        = liftFunction("onPipelineDone", env)
+    check("detach: the pipeline finalizers are liftable and compile",
+          takePending ~= nil and finalize ~= nil and done ~= nil,
+          "could not lift pipeTakePending/pipelineFinalize/onPipelineDone")
+
+    if takePending and finalize and done then
+        env.pipeTakePending  = takePending
+        env.pipelineFinalize = finalize
+
+        -- gen 1: released, still in whisper. gen 2: the recording started on top of it.
+        local old = { gen = 1, results = {}, lang = "ru", nextChunk = 1, nextSeg = 2,
+                      total = 1, done = 0, finalizing = true, inserted = false, abandoned = false }
+        local new = { gen = 2, results = {}, lang = nil, nextChunk = 1, nextSeg = 1,
+                      total = 0, done = 0, finalizing = false, inserted = false, abandoned = false }
+        env.pipeJobs.live[1] = old
+        env.pipeJobs.live[2] = new
+        env.pipe = new
+
+        done(old, 1, "первое сообщение", "ru", 30)
+        check("detach: a dictation that finishes behind a newer recording is not lost",
+              #env.pipeJobs.pending == 1 and env.pipeJobs.pending[1].text == "первое сообщение",
+              #env.pipeJobs.pending .. " queued -- the transcript was dropped on the floor")
+        check("detach: it is not typed into the recording in progress",
+              #inserted == 0,
+              "inserted " .. #inserted .. " transcript(s) while the trigger was still held")
+        check("detach: an older job's segments never move the current progress bar",
+              env.transcribedSecs == 0,
+              "transcribedSecs moved to " .. tostring(env.transcribedSecs))
+
+        -- The new dictation finishes: both texts arrive together, oldest first.
+        insertSafe = true
+        new.total, new.finalizing = 1, true
+        done(new, 1, "второе сообщение", "ru", 10)
+        check("detach: the queued dictation is inserted with the next one, in spoken order",
+              #inserted == 1 and inserted[1].text == "первое сообщение второе сообщение",
+              "inserted " .. #inserted .. ": '" .. (inserted[1] and inserted[1].text or "") .. "'")
+        check("detach: the queue is emptied once it has been inserted",
+              #env.pipeJobs.pending == 0,
+              #env.pipeJobs.pending .. " still queued -- it would reappear on a later dictation")
+
+        -- Emergency stop abandons every job; whatever comes back after it is dropped.
+        local stopped = { gen = 3, results = {}, total = 1, done = 0,
+                          finalizing = true, inserted = false, abandoned = true }
+        done(stopped, 1, "не вставлять", "ru", 5)
+        check("detach: a segment returning after an emergency stop is dropped",
+              #inserted == 1 and stopped.results[1] == nil,
+              "an abandoned job still delivered text")
+    end
+end
+
+--------------------------------------------------------------------------------
+-- 8f. The two places that used to destroy a dictation in progress
+--------------------------------------------------------------------------------
+
+do
+    local twStart, twEnd
+    for i, s in ipairs(stripped) do
+        if not twStart and s:match("^tryWarmup%s*=%s*function%s*%(") then twStart = i end
+        if twStart and not twEnd and i > twStart and s:match("^end%s*$") then twEnd = i end
+    end
+    if not (twStart and twEnd) then
+        check("detach: tryWarmup() is locatable", false, "could not find tryWarmup = function()")
+    else
+        local body = table.concat({ table.unpack(stripped, twStart, twEnd) }, "\n")
+        -- The wipe scan runs on the raw lines: the path it deletes lives inside a string
+        -- literal, and strip() blanks those.
+        local rawBody = table.concat({ table.unpack(lines, twStart, twEnd) }, "\n")
+        check("detach: starting a recording does not reset the pipeline",
+              body:find("pipelineReset") == nil,
+              "tryWarmup() calls pipelineReset() -- that wipes the results of a dictation " ..
+              "that is still being transcribed")
+        local wipes = {}
+        for line in rawBody:gmatch("[^\n]+") do
+            if line:find("rm %-rf") then wipes[#wipes + 1] = line end
+        end
+        local perJob = #wipes > 0
+        for _, line in ipairs(wipes) do
+            if not line:find("pipe%.dir") then perJob = false end
+        end
+        check("detach: a new recording only clears its own chunk directory",
+              perJob,
+              "tryWarmup() clears " .. (#wipes == 0 and "nothing" or table.concat(wipes, " | ")) ..
+              " -- clearing the shared directory deletes audio another dictation is still reading")
+    end
+
+    local srcStart = extractFunction("startRecording")
+    check("detach: startRecording() gives the keypress its own job",
+          srcStart ~= nil and stripBlock(srcStart):find("pipeStartJob") ~= nil,
+          "startRecording() does not call pipeStartJob() -- the new recording would share " ..
+          "state with the dictation still in flight")
+
+    local dispatch = extractFunction("dispatchSegment")
+    if not dispatch then
+        check("detach: dispatchSegment() is locatable", false, "could not find dispatchSegment()")
+    else
+        local body = stripBlock(dispatch)
+        check("detach: dispatchSegment() captures its job instead of reading `pipe` later",
+              body:find("job%s*=%s*job%s+or%s+pipe") ~= nil and
+              body:find("onPipelineDone%(job,") ~= nil and
+              body:find("onPipelineDone%(segN") == nil,
+              "a whisper callback that reports into `pipe` writes into whatever dictation is " ..
+              "current when it finishes, not the one it belongs to")
+    end
 end
 
 --------------------------------------------------------------------------------
@@ -771,7 +925,7 @@ end
 
 local function pressTrigger(state)
     local env   = baseEnv()
-    local calls = { final = 0, warmup = 0, overlayText = 0, showOverlay = 0 }
+    local calls = { final = 0, warmup = 0, overlayText = 0, showOverlay = 0, newJob = 0 }
     local timerStub = function(tag)
         return { stop = function() calls["stopped_" .. tag] = true end }
     end
@@ -786,6 +940,7 @@ local function pressTrigger(state)
     env.setOverlayText       = function() calls.overlayText = calls.overlayText + 1 end
     env.showOverlay          = function() calls.showOverlay = calls.showOverlay + 1 end
     env.tryWarmup            = function() calls.warmup = calls.warmup + 1 end
+    env.pipeStartJob         = function() calls.newJob = calls.newJob + 1 end
 
     local fn, err = liftFunction("startRecording", env)
     if not fn then return nil, err end
