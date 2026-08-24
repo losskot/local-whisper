@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "-- Loading extension: axuielement\nno focused element",
+        "is_error": false,
+        "tool_use_id": "toolu_013FopoS7UAYDR11ZDEWq5yN",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "1ca2e1a4-8068-42a1-811c-37d5af19611c",
+  "promptId": "0871342d-3020-4172-a2c1-ab54a6234ac2",
+  "sessionId": "54bfbd56-fc25-436e-b6a0-a48ef272d56e",
+  "sourceToolAssistantUUID": "1ca2e1a4-8068-42a1-811c-37d5af19611c",
+  "timestamp": "2026-08-24T03:44:41.131Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "-- Loading extension: axuielement\nno focused element"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "008dc63d-458d-441a-983c-cf916113e849",
+  "version": "2.1.240"
+}

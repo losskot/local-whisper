@@ -1,0 +1,41 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "[main 66ba38d] Fix hs CLI hang: run in background, kill after DONE sentinel\n 2 files changed, 26 insertions(+), 1 deletion(-)",
+        "is_error": false,
+        "tool_use_id": "toolu_01KmtiTR7hNsk6mcsgLgSMLp",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "a25d7c58-096d-4894-9de2-d4058d4d18a3",
+  "promptId": "704d7fd5-955b-4241-aa67-1bf4377cd080",
+  "sessionId": "5741f5c3-6397-436d-9f65-9474862aa231",
+  "slug": "jaunty-sauteeing-aho",
+  "sourceToolAssistantUUID": "a25d7c58-096d-4894-9de2-d4058d4d18a3",
+  "timestamp": "2026-08-24T03:44:38.310Z",
+  "toolUseResult": {
+    "gitOperation": {
+      "commit": {
+        "branch": "main",
+        "kind": "committed",
+        "sha": "66ba38d"
+      }
+    },
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "[main 66ba38d] Fix hs CLI hang: run in background, kill after DONE sentinel\n 2 files changed, 26 insertions(+), 1 deletion(-)"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "bdeb89fb-968f-4275-bbb4-dcded4f88e66",
+  "version": "2.1.240"
+}

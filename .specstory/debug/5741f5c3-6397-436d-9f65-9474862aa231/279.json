@@ -1,0 +1,28 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "text": "И hs-клиент здесь регулярно не завершается - how can we fix it??",
+        "type": "text"
+      }
+    ],
+    "role": "user"
+  },
+  "origin": {
+    "kind": "human"
+  },
+  "parentUuid": "1db1e14c-d557-419a-a85b-8a4a4492514c",
+  "permissionMode": "auto",
+  "promptId": "704d7fd5-955b-4241-aa67-1bf4377cd080",
+  "promptSource": "sdk",
+  "sessionId": "5741f5c3-6397-436d-9f65-9474862aa231",
+  "timestamp": "2026-08-24T03:40:43.028Z",
+  "type": "user",
+  "userType": "external",
+  "uuid": "577db785-bfb7-46c1-890d-68bcd0406fec",
+  "version": "2.1.240"
+}

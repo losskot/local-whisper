@@ -1,0 +1,75 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "high",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01Bg6y5RvF4PbfDFHAjPMy1R",
+        "input": {
+          "file_path": "/Users/vitaliy/Documents/GitHub/local-whisper/tests/test_init.sh",
+          "new_string": "# hs evaluates in the running Hammerspoon process and does not inherit this shell's\n# environment, so pass the paths as globals rather than env vars.\n# Run in background: hs often hangs on IPC cleanup after the Lua completes. We wait\n# for the DONE sentinel the test suite writes, then kill hs ourselves.\n\"$HS_BIN\" -c \"_G.LW_TARGET='$TARGET'; _G.LW_OUT='$OUT'; dofile('$SCRIPT_DIR/test_init.lua')\" \\\n    \u003e/dev/null 2\u003e\u00261 \u0026\nHS_PID=$!\n\nDEADLINE=120  # seconds\nELAPSED=0\nwhile [[ $ELAPSED -lt $DEADLINE ]]; do\n    sleep 0.2\n    ELAPSED=$(( ELAPSED + 1 ))\n    if grep -q $'^DONE\\t' \"$OUT\" 2\u003e/dev/null; then\n        break\n    fi\ndone\n\nkill \"$HS_PID\" 2\u003e/dev/null || true\nwait \"$HS_PID\" 2\u003e/dev/null || true\n\nif [[ $ELAPSED -ge $DEADLINE ]]; then\n    echo -e \"${RED}Error: test suite timed out after ${DEADLINE}s.${NC}\"\n    echo \"Check that $SCRIPT_DIR/test_init.lua loads cleanly.\"\n    exit 1\nfi\n\nif [[ ! -s \"$OUT\" ]]; then\n    echo -e \"${RED}Error: the test suite produced no output.${NC}\"\n    echo \"Check that $SCRIPT_DIR/test_init.lua loads cleanly.\"\n    exit 1\nfi",
+          "old_string": "# hs evaluates in the running Hammerspoon process and does not inherit this shell's\n# environment, so pass the paths as globals rather than env vars.\n\"$HS_BIN\" -c \"_G.LW_TARGET='$TARGET'; _G.LW_OUT='$OUT'; dofile('$SCRIPT_DIR/test_init.lua')\" \u003e/dev/null 2\u003e\u00261\n\nif [[ ! -s \"$OUT\" ]]; then\n    echo -e \"${RED}Error: the test suite produced no output.${NC}\"\n    echo \"Check that $SCRIPT_DIR/test_init.lua loads cleanly.\"\n    exit 1\nfi",
+          "replace_all": false
+        },
+        "name": "Edit",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011CeLtDAQ3iosXMANVTdf6Q",
+    "model": "claude-sonnet-4-6",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 181,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 181,
+      "cache_read_input_tokens": 55136,
+      "inference_geo": "not_available",
+      "input_tokens": 1,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 181,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 181,
+          "cache_read_input_tokens": 55136,
+          "input_tokens": 1,
+          "output_tokens": 656,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 656,
+      "output_tokens_details": {
+        "thinking_tokens": 0
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "58f1d928-d78d-4c04-bf7d-fffbf6d4600c",
+  "requestId": "req_011CeLtD9aS9wfrDrmrvh1Ny",
+  "sessionId": "5741f5c3-6397-436d-9f65-9474862aa231",
+  "slug": "jaunty-sauteeing-aho",
+  "timestamp": "2026-08-24T03:43:57.206Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "73f02f42-acd4-4f38-a754-144565862b48",
+  "version": "2.1.240"
+}

@@ -1,0 +1,66 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "high",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "signature": "Er0JCqoBCBEYAipA+6beJLAyh/kK9tsSTXbjhDmNjRPnPoSuVjdo6Fy3bsWt/ADVZIxJW1WwE0CSKs/Nvnz6WY8lMG0g6FI/knjP0jIRY2xhdWRlLXNvbm5ldC00LTY4AEIIdGhpbmtpbmdaJDgyZjUwOWIxLTc0MWEtNDUzOC1iNzI1LWU1ZTVmZWNmNjU3OHIQIlvkLJFsRTmWM8G03u6obYgBAagBlPyu1AawAQISDIjsUR42CWATfGA5PxoM7cOgBcVfYWyZGJCNIjCUhJ1gqn+nAeXqpbAEGU8Swrd24VU9p6dnkROwzhNVq5iqelbQ7DHrhtSLEuHrsWAqvwfQ2QlTM5AyMhUxX3UyU+lrW0rEHrpRoqM3GYmhhx58qqzzRHm/4MfoWj/RxtBbvBFOfSsfy1wOjjLZgQj6AGpjw3BmcOVC9yy7QhJUeJHVs/Q1Fpj2LRdy1KkEWznvWfHhrNwhi8pP1bjR/ylpCO5vSFyYzsCNTBw8mLiMaKzYCvcmsWoVH06Rj7dZWyLmTE6Nn+NBSGF2VBplzaxVdO0G5XtnNs5Jecc1C0W4kKwa38R/VGw6etgzE+E7+ZecC4YOgLIzlzjmQVujNRJii4F4ESjl3oGeM3biyJ400yss9deYCgXGUpBmtemjV4jgQSdWgvrmbxzWMHWVVHLkxRJh9j7in9ZYDCFQ+lv0MYoLK8hz4p/0jek4M9X2cRec4mwhekqlo2fB+f6yziVOcpb4bmnVd4j0ohEkR8NffJ0xNyhb4Q7Ee1h3G2unsP0sxsZ5SfEtRN2b+xhA3dkkzj1I/O/Wbnth34L0/jhqg2w8TcsFSHeNjVkS5n40MGkNlF7K3DpHmWrzh1qiZu52WL+lElH/7dAt7NvkcTYkUGf1+xmgu38x+XGWEJOvorHn3q3rr/INMuU7iP8HJxxdw5e8caPn4tQELX/jGnQHDxnCb9NtjHFHTZrm1bFlZ3Q5TSniGqFzdZv4OH4rOxblZzuFjb2CAsKaN74JhzAs/opgdMlZwSS/cHA5wnt00wHULufpcMDeKQelJ0BzVprybhlV35s3o9UzSrlbqmMLRh5OW+nccl7mJZnHtfu18jK0hFLqDvPiU/Tw+6w3PUcmzB+jjcPQevgw5Obu0IAiqLR8sXPmM5gGCRargjSbK5I3ZBEKpfQFZXv8VBUVhkEklqnlsFqBogbyCVmyt9JMOWZlTJR3MMvIEpANnlLSna21OGMjxi/ty/DYNDmiwi/M/0mQAEHPbTYXhd51XheTLujtR5mePgPukCVnUw1TnEVOXjjcRFW38lYIBi17kZwqGKJvh1TJ5a834foIUrMGpVm9Q+MKyU75UWd4pfvvyWRnsuEOK+5tldQmj46y4BFy0T6BTJqhx8sHGBGGwnVxTVvjU8MWUngal9ESggdb432rHoZCGZcmXRk1MRERXzhJbykd0cXRsiY49cEbxK74jCESG1uMJVSzr/VBYwVVkWjVahTrNr8XDVho69CAqtSnny+/UA9D9pUDuVauqtosP1O92evRsbwYYNPRJSh7RhQUMit8/yb9pWXU2AOiatzw71EwjBcIsYkjWndUBZtNMi4NDd4TSajsrYpFS25i8dzHwhgB",
+        "thinking": "Completed in 1.3 seconds - much better! But there's 1 failure with an empty name (just \"FAIL  \"). That's the DONE sentinel line being printed as a failure. Wait, no - the `DONE` line has `status=\"DONE\"`, not FAIL. But we also have those 3 original failures. And the last line shows 1 failure with empty name.\n\nWait, let me think. The DONE line is `DONE\\t\\t\\n`, so when the shell reads it:\nstatus becomes \"DONE\", name and detail become empty. Looking at the pass/fail logic, anything not \"PASS\" falls into the else branch and gets counted as a failure -- so DONE is being miscounted as a failure with no name. I need to add an explicit check for the sentinel value before that branch, or change how it's parsed.\n\nThe simplest fix is to just skip the DONE line entirely in the parsing loop, so I'll update that logic.",
+        "type": "thinking"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011CeLtEnVyABLEJDy9K8Xr4",
+    "model": "claude-sonnet-4-6",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 787,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 787,
+      "cache_read_input_tokens": 56438,
+      "inference_geo": "not_available",
+      "input_tokens": 1,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 787,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 787,
+          "cache_read_input_tokens": 56438,
+          "input_tokens": 1,
+          "output_tokens": 474,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 474,
+      "output_tokens_details": {
+        "thinking_tokens": 324
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "1649dbb7-12b9-4569-b9f3-78a7041bf128",
+  "requestId": "req_011CeLtEmj6GvComNwsHKaLd",
+  "sessionId": "5741f5c3-6397-436d-9f65-9474862aa231",
+  "slug": "jaunty-sauteeing-aho",
+  "timestamp": "2026-08-24T03:44:20.297Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "a13a18a9-7bda-4ce7-880e-d5d74f5f1f80",
+  "version": "2.1.240"
+}

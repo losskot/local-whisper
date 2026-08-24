@@ -1,0 +1,34 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": " .../session-data.json                              |   708 +-\n .../session-data.json                              | 10151 -------------------\n .specstory/history/2026-08-17_01-25-52Z.md         |   101 +-\n .specstory/history/2026-08-24_03-12-13Z.md         |   542 +-\n .specstory/statistics.json                         |    27 +-\n tests/test_init.lua                                |     1 +\n tests/test_init.sh                                 |    26 +-\n 7 files changed, 1390 insertions(+), 10166 deletions(-)",
+        "is_error": false,
+        "tool_use_id": "toolu_01DHc3stfNXNiZxgXjifssAd",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "96d78d15-afbf-48d1-bf71-2631f1c15c08",
+  "promptId": "704d7fd5-955b-4241-aa67-1bf4377cd080",
+  "sessionId": "5741f5c3-6397-436d-9f65-9474862aa231",
+  "slug": "jaunty-sauteeing-aho",
+  "sourceToolAssistantUUID": "96d78d15-afbf-48d1-bf71-2631f1c15c08",
+  "timestamp": "2026-08-24T03:44:31.526Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": " .../session-data.json                              |   708 +-\n .../session-data.json                              | 10151 -------------------\n .specstory/history/2026-08-17_01-25-52Z.md         |   101 +-\n .specstory/history/2026-08-24_03-12-13Z.md         |   542 +-\n .specstory/statistics.json                         |    27 +-\n tests/test_init.lua                                |     1 +\n tests/test_init.sh                                 |    26 +-\n 7 files changed, 1390 insertions(+), 10166 deletions(-)"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "fb7d4392-49ae-47a1-8231-a3951e798be5",
+  "version": "2.1.240"
+}

@@ -1,0 +1,17 @@
+{
+  "content": "\u003clocal-command-stdout\u003eCurrent model: Opus 5 (effort: xhigh)\nUsage: /model \u003cname\u003e. Available: sonnet, opus, haiku, fable, best, sonnet[1m], opus[1m], fable[1m], opusplan, default, or a full model ID.\u003c/local-command-stdout\u003e",
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isMeta": false,
+  "isSidechain": false,
+  "level": "info",
+  "parentUuid": "0f796da9-6c8c-41ad-aca2-b6ee526382af",
+  "sessionId": "5741f5c3-6397-436d-9f65-9474862aa231",
+  "subtype": "local_command",
+  "timestamp": "2026-08-24T03:39:38.113Z",
+  "type": "system",
+  "userType": "external",
+  "uuid": "5bec1b11-15a5-4220-9c44-e7587563be5e",
+  "version": "2.1.240"
+}

@@ -1,0 +1,29 @@
+{
+  "attachment": {
+    "addedLines": [
+      "TodoWrite"
+    ],
+    "addedNames": [
+      "TodoWrite"
+    ],
+    "needsAuthMcpServers": [
+      "claude.ai Slack",
+      "plugin:atlassian:atlassian"
+    ],
+    "pendingMcpServers": [],
+    "readdedNames": [],
+    "removedNames": [],
+    "type": "deferred_tools_delta"
+  },
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "parentUuid": "577db785-bfb7-46c1-890d-68bcd0406fec",
+  "sessionId": "5741f5c3-6397-436d-9f65-9474862aa231",
+  "timestamp": "2026-08-24T03:40:43.025Z",
+  "type": "attachment",
+  "userType": "external",
+  "uuid": "ecb3b070-63bd-4e74-aa63-9c9d38cc1a00",
+  "version": "2.1.240"
+}

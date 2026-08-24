@@ -1,0 +1,18 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": "\u003ccommand-name\u003e/model\u003c/command-name\u003e\n            \u003ccommand-message\u003emodel\u003c/command-message\u003e\n            \u003ccommand-args\u003eclaude-sonnet-4-6\u003c/command-args\u003e",
+    "role": "user"
+  },
+  "parentUuid": "5898942e-cf48-4671-a9d2-5c1b03c5af6f",
+  "promptId": "25635fda-f81e-4187-90db-a8ce7f2c1586",
+  "sessionId": "5741f5c3-6397-436d-9f65-9474862aa231",
+  "timestamp": "2026-08-24T03:40:10.852Z",
+  "type": "user",
+  "userType": "external",
+  "uuid": "7757884d-51ca-4106-b59b-573c50d7278c",
+  "version": "2.1.240"
+}

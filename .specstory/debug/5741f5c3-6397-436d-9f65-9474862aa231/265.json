@@ -1,0 +1,64 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "text": "Готово, запушено. `/model` и `/mode` — это команды клиента, они до меня не доходят как задача; если хотел переключить модель, выбери её в открывшемся меню.\n\n## Что было не так\n\nВ логе видно ровно твой случай (05:10:42, диктовка на 92 секунды):\n\n```\nfinal: dispatching tail seg 2 → 39 chunks\nwarmup: probing audio device...          ← новое нажатие\npipeline: seg 2 concat FAILED (code=254) ← ffmpeg остался без файлов\npipeline: seg 2 complete (done=1/?)      ← \"?\" = finalizing сброшен, ничего не собралось\n```\n\nДве независимые причины, обе в старте записи:\n\n1. `tryWarmup()` вызывал `pipelineReset()` — обнулял `results` и `finalizing`, поэтому сегменты, вернувшиеся из whisper позже, писались в состояние **новой** диктовки и никогда не собирались в текст.\n2. Он же делал `rm -rf` общего каталога `chunks/` — удалял аудио, которое предыдущая диктовка ещё склеивала.\n\n## Что сделано\n\nСостояние конвейера теперь **на диктовку, а не общее** ([init.lua](hammerspoon/init.lua)): каждое нажатие получает свой job — свою генерацию, свой каталог `chunks/g\u003cN\u003e`, свои сегментные файлы и свои результаты. `pipeStartJob()` **отцепляет** предыдущий job вместо сброса: он продолжает транскрибироваться и сам доставляет текст. Ничто «в полёте» больше не читает `pipe` — `dispatchSegment` захватывает свой job, `onPipelineDone`/`pipelineFinalize` получают его аргументом.\n\nТекст отцепленной диктовки **ставится в очередь, а не печатается сразу**: он приходит в момент, когда ты держишь fn+ctrl, а вставка в обоих режимах шлёт нажатия клавиш (⌘V или буквы внутрь зажатого комбо). Следующая вставка добавляет его **впереди**, так что обе диктовки приходят в порядке произнесения. Если новая запись оказалась пустой/слишком короткой/отменённой — очередь всё равно сливается, а не зависает. Emergency stop бросает все job'ы, но уже готовый текст кладёт в буфер обмена и говорит об этом в уведомлении.\n\n## Проверено\n\n- **103 проверки, 0 падений**, включая 11 новых (`detach: …`) на этот класс бага.\n- Рантайм после `hs.reload()`: нажатие → `pipeline: gen 2 started` → запись в свой каталог → `final: gen 2 START` → каталог убран за собой.\n- Чего проверить не смог: реальное наложение двух долгих диктовок — синтетическое нажатие живёт ~1с (поллер релиза), это ограничение описано в AGENTS.md. Проверь сам: надиктуй длинное, и не дожидаясь — второе. В логе должно появиться `gen N queued behind the current dictation` и затем `prepended a queued dictation`.\n\nДва замечания: `bd` нет в PATH, поэтому issue не создавал. И `hs`-клиент здесь регулярно не завершается после выполнения (один висел сутки и блокировал очередь) — я это описал в AGENTS.md вместе с обходом.",
+        "type": "text"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011CeLspTamNUNaLZb6ezaXU",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "end_turn",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 282,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 282,
+      "cache_read_input_tokens": 186930,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 282,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 282,
+          "cache_read_input_tokens": 186930,
+          "input_tokens": 2,
+          "output_tokens": 1169,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 1169,
+      "output_tokens_details": {
+        "thinking_tokens": 0
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "fff8b4c8-d068-4b18-99a0-b132ae26af29",
+  "requestId": "req_011CeLspRV1Nhd2Y57HWxuva",
+  "sessionId": "5741f5c3-6397-436d-9f65-9474862aa231",
+  "timestamp": "2026-08-24T03:39:01.338Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "37a0457a-0908-41fb-b34b-6e3f67a895b5",
+  "version": "2.1.240"
+}

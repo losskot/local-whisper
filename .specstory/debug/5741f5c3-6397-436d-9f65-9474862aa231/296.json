@@ -1,0 +1,34 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "18:--   LW_OUT     path to write results to (default: /tmp/lw_test_init.txt)\n22:local OUT    = _G.LW_OUT or \"/tmp/lw_test_init.txt\"\n47:    local f = io.open(path, \"r\")\n57:    local f = io.open(OUT, \"w\")\n442:        local f = io.open(path, \"wb\")\n529:        local f = io.open(path, \"wb\")\n1317:local out = io.open(OUT, \"w\")",
+        "is_error": false,
+        "tool_use_id": "toolu_01LhXqUzSL2fZQMfCgVVZBda",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "986172cf-8b2d-4a83-9ad9-3ae3f6db5d7a",
+  "promptId": "704d7fd5-955b-4241-aa67-1bf4377cd080",
+  "sessionId": "5741f5c3-6397-436d-9f65-9474862aa231",
+  "slug": "jaunty-sauteeing-aho",
+  "sourceToolAssistantUUID": "986172cf-8b2d-4a83-9ad9-3ae3f6db5d7a",
+  "timestamp": "2026-08-24T03:43:32.248Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "18:--   LW_OUT     path to write results to (default: /tmp/lw_test_init.txt)\n22:local OUT    = _G.LW_OUT or \"/tmp/lw_test_init.txt\"\n47:    local f = io.open(path, \"r\")\n57:    local f = io.open(OUT, \"w\")\n442:        local f = io.open(path, \"wb\")\n529:        local f = io.open(path, \"wb\")\n1317:local out = io.open(OUT, \"w\")"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "a181d5a5-0a33-40e3-92ad-058d5d45e18d",
+  "version": "2.1.240"
+}

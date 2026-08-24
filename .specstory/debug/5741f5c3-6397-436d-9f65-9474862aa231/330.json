@@ -1,0 +1,75 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "high",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01MKU78cYFzBD6nYB9XDXKwY",
+        "input": {
+          "file_path": "/Users/vitaliy/Documents/GitHub/local-whisper/tests/test_init.sh",
+          "new_string": "while IFS=$'\\t' read -r status name detail; do\n    [[ -z \"$status\" ]] \u0026\u0026 continue\n    [[ \"$status\" == \"DONE\" ]] \u0026\u0026 continue\n    if [[ \"$status\" == \"PASS\" ]]; then",
+          "old_string": "while IFS=$'\\t' read -r status name detail; do\n    [[ -z \"$status\" ]] \u0026\u0026 continue\n    if [[ \"$status\" == \"PASS\" ]]; then",
+          "replace_all": false
+        },
+        "name": "Edit",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011CeLtFb88xfuDyfM2yt5Ka",
+    "model": "claude-sonnet-4-6",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 679,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 679,
+      "cache_read_input_tokens": 57225,
+      "inference_geo": "not_available",
+      "input_tokens": 1,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 679,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 679,
+          "cache_read_input_tokens": 57225,
+          "input_tokens": 1,
+          "output_tokens": 215,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 215,
+      "output_tokens_details": {
+        "thinking_tokens": 0
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "d28c0448-5896-4e04-8923-54e44f623aeb",
+  "requestId": "req_011CeLtFaMFiYzxtdsvpmHEk",
+  "sessionId": "5741f5c3-6397-436d-9f65-9474862aa231",
+  "slug": "jaunty-sauteeing-aho",
+  "timestamp": "2026-08-24T03:44:23.147Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "a2d4cbb5-3535-43b3-94e0-b51b739d4c53",
+  "version": "2.1.240"
+}

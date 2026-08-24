@@ -1,0 +1,28 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "text": "Я хочу сделать, чтобы при отпускании клавиш записи голоса мы сохраняли идентификатор того места, в котором стоит курсор и в котором планировалась вставка надиктованного текста. И перед непосредственно вставкой надиктованного текста надо проверять текущее место, где стоит курсор, и если его идентификатор не совпадает, то делать вставку только в буфер обмена и вместо одного сигнала давать два сигнала. Вставки звуковых.",
+        "type": "text"
+      }
+    ],
+    "role": "user"
+  },
+  "origin": {
+    "kind": "human"
+  },
+  "parentUuid": null,
+  "permissionMode": "auto",
+  "promptId": "0871342d-3020-4172-a2c1-ab54a6234ac2",
+  "promptSource": "sdk",
+  "sessionId": "54bfbd56-fc25-436e-b6a0-a48ef272d56e",
+  "timestamp": "2026-08-24T03:43:45.336Z",
+  "type": "user",
+  "userType": "external",
+  "uuid": "6a58bfe3-5694-407a-b9d3-f969c96543ce",
+  "version": "2.1.240"
+}

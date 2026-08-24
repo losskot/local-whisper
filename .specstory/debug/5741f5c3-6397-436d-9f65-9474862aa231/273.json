@@ -1,0 +1,17 @@
+{
+  "content": "\u003clocal-command-stdout\u003eSet model to Sonnet 4.6 for this session only\u003c/local-command-stdout\u003e",
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isMeta": false,
+  "isSidechain": false,
+  "level": "info",
+  "parentUuid": "7757884d-51ca-4106-b59b-573c50d7278c",
+  "sessionId": "5741f5c3-6397-436d-9f65-9474862aa231",
+  "subtype": "local_command",
+  "timestamp": "2026-08-24T03:40:12.008Z",
+  "type": "system",
+  "userType": "external",
+  "uuid": "1db1e14c-d557-419a-a85b-8a4a4492514c",
+  "version": "2.1.240"
+}

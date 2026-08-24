@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "203:-- Play a system sound by name. getByFile returns nil if the file is missing or AudioToolbox\n206:local function playSound(name, volume)\n207:    local ok, snd = pcall(hs.sound.getByFile, \"/System/Library/Sounds/\" .. name .. \".aiff\")\n209:        log(\"sound: could not load \" .. name)\n1289:    playSound(\"Glass\")\n1735:    playSound(\"Pop\")\n1752:local warmupTick = hs.sound.getByFile(\"/System/Library/Sounds/Tink.aiff\")\n1878:            playSound(\"Basso\")\n1957:    playSound(\"Tink\")",
+        "is_error": false,
+        "tool_use_id": "toolu_014ACytEeJkJY3xCtLoQXqNf",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "60c06247-72b1-4079-b551-67e3156e92b0",
+  "promptId": "0871342d-3020-4172-a2c1-ab54a6234ac2",
+  "sessionId": "54bfbd56-fc25-436e-b6a0-a48ef272d56e",
+  "sourceToolAssistantUUID": "60c06247-72b1-4079-b551-67e3156e92b0",
+  "timestamp": "2026-08-24T03:43:52.638Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "203:-- Play a system sound by name. getByFile returns nil if the file is missing or AudioToolbox\n206:local function playSound(name, volume)\n207:    local ok, snd = pcall(hs.sound.getByFile, \"/System/Library/Sounds/\" .. name .. \".aiff\")\n209:        log(\"sound: could not load \" .. name)\n1289:    playSound(\"Glass\")\n1735:    playSound(\"Pop\")\n1752:local warmupTick = hs.sound.getByFile(\"/System/Library/Sounds/Tink.aiff\")\n1878:            playSound(\"Basso\")\n1957:    playSound(\"Tink\")"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "374a5eaf-e33c-4b8b-8f05-223c105ddfd2",
+  "version": "2.1.240"
+}

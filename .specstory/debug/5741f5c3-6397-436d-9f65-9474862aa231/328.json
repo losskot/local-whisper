@@ -1,0 +1,34 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "PASS=0\nFAIL=0\nwhile IFS=$'\\t' read -r status name detail; do\n    [[ -z \"$status\" ]] \u0026\u0026 continue\n    if [[ \"$status\" == \"PASS\" ]]; then\n        PASS=$((PASS + 1))\n        echo -e \"  ${GREEN}PASS${NC}  $name\"\n    else\n        FAIL=$((FAIL + 1))\n        echo -e \"  ${RED}FAIL${NC}  $name\"\n        [[ -n \"$detail\" ]] \u0026\u0026 echo -e \"        ${YELLOW}$detail${NC}\"\n    fi\ndone \u003c \"$OUT\"\n\nTOTAL=$((PASS + FAIL))",
+        "is_error": false,
+        "tool_use_id": "toolu_01CeNWUKXT4wv7wrrUz9ms6Z",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "d04d0f54-6ada-4132-9814-9d6682d4ffae",
+  "promptId": "704d7fd5-955b-4241-aa67-1bf4377cd080",
+  "sessionId": "5741f5c3-6397-436d-9f65-9474862aa231",
+  "slug": "jaunty-sauteeing-aho",
+  "sourceToolAssistantUUID": "d04d0f54-6ada-4132-9814-9d6682d4ffae",
+  "timestamp": "2026-08-24T03:44:20.338Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "PASS=0\nFAIL=0\nwhile IFS=$'\\t' read -r status name detail; do\n    [[ -z \"$status\" ]] \u0026\u0026 continue\n    if [[ \"$status\" == \"PASS\" ]]; then\n        PASS=$((PASS + 1))\n        echo -e \"  ${GREEN}PASS${NC}  $name\"\n    else\n        FAIL=$((FAIL + 1))\n        echo -e \"  ${RED}FAIL${NC}  $name\"\n        [[ -n \"$detail\" ]] \u0026\u0026 echo -e \"        ${YELLOW}$detail${NC}\"\n    fi\ndone \u003c \"$OUT\"\n\nTOTAL=$((PASS + FAIL))"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "00740723-7123-41b1-a5dc-b301dfc45745",
+  "version": "2.1.240"
+}

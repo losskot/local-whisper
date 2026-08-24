@@ -1,0 +1,34 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "  \u001b[0;32mPASS\u001b[0m  trigger: triggerPressed is liftable and compiles\n  \u001b[0;32mPASS\u001b[0m  trigger: the full combo fires\n  \u001b[0;32mPASS\u001b[0m  trigger: no modifiers at all does not fire\n  \u001b[0;32mPASS\u001b[0m  trigger: no single half of the combo fires on its own\n  \u001b[0;32mPASS\u001b[0m  trigger: the trigger is an actual combo (more than one modifier bit)\n  \u001b[0;32mPASS\u001b[0m  trigger: unrelated modifiers held at the same time do not block it\n  \u001b[0;32mPASS\u001b[0m  trigger: the right-hand twin of the modifier does not fire\n  \u001b[0;32mPASS\u001b[0m  trigger: the trigger defines a separate heldMask for polling\n  \u001b[0;32mPASS\u001b[0m  trigger: heldMask contains no device-specific bit (the poll API drops them)\n  \u001b[0;32mPASS\u001b[0m  trigger: heldMask describes the same combo as mask\n  \u001b[0;32mPASS\u001b[0m  trigger: triggerHeld is liftable and compiles\n  \u001b[0;32mPASS\u001b[0m  trigger: triggerHeld is true for the flags the poll API really returns\n  \u001b[0;32mPASS\u001b[0m  trigger: triggerHeld asks for the raw flag word\n  \u001b[0;32mPASS\u001b[0m  trigger: releasing either modifier reads as released\n  \u001b[0;32mPASS\u001b[0m  trigger: nothing held reads as released\n  \u001b[0;32mPASS\u001b[0m  trigger: the eventtap matches through triggerPressed(event:rawFlags())\n  \u001b[0;32mPASS\u001b[0m  trigger: the release poller re-checks the trigger through triggerHeld()\n  \u001b[0;31mFAIL\u001b[0m  \n\n\u001b[0;31m\u001b[1m1 of 104 checks failed.\u001b[0m\n./tests/test_init.sh 2\u003e\u00261  0.09s user 0.04s system 10% cpu 1.302 total\ntail -20  0.00s user 0.00s system 0% cpu 1.299 total",
+        "is_error": false,
+        "tool_use_id": "toolu_01AiSUWGTsHaqAdaVCzF4eCN",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "49ac7371-4f87-451a-b129-b741955f0226",
+  "promptId": "704d7fd5-955b-4241-aa67-1bf4377cd080",
+  "sessionId": "5741f5c3-6397-436d-9f65-9474862aa231",
+  "slug": "jaunty-sauteeing-aho",
+  "sourceToolAssistantUUID": "49ac7371-4f87-451a-b129-b741955f0226",
+  "timestamp": "2026-08-24T03:44:09.434Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "  \u001b[0;32mPASS\u001b[0m  trigger: triggerPressed is liftable and compiles\n  \u001b[0;32mPASS\u001b[0m  trigger: the full combo fires\n  \u001b[0;32mPASS\u001b[0m  trigger: no modifiers at all does not fire\n  \u001b[0;32mPASS\u001b[0m  trigger: no single half of the combo fires on its own\n  \u001b[0;32mPASS\u001b[0m  trigger: the trigger is an actual combo (more than one modifier bit)\n  \u001b[0;32mPASS\u001b[0m  trigger: unrelated modifiers held at the same time do not block it\n  \u001b[0;32mPASS\u001b[0m  trigger: the right-hand twin of the modifier does not fire\n  \u001b[0;32mPASS\u001b[0m  trigger: the trigger defines a separate heldMask for polling\n  \u001b[0;32mPASS\u001b[0m  trigger: heldMask contains no device-specific bit (the poll API drops them)\n  \u001b[0;32mPASS\u001b[0m  trigger: heldMask describes the same combo as mask\n  \u001b[0;32mPASS\u001b[0m  trigger: triggerHeld is liftable and compiles\n  \u001b[0;32mPASS\u001b[0m  trigger: triggerHeld is true for the flags the poll API really returns\n  \u001b[0;32mPASS\u001b[0m  trigger: triggerHeld asks for the raw flag word\n  \u001b[0;32mPASS\u001b[0m  trigger: releasing either modifier reads as released\n  \u001b[0;32mPASS\u001b[0m  trigger: nothing held reads as released\n  \u001b[0;32mPASS\u001b[0m  trigger: the eventtap matches through triggerPressed(event:rawFlags())\n  \u001b[0;32mPASS\u001b[0m  trigger: the release poller re-checks the trigger through triggerHeld()\n  \u001b[0;31mFAIL\u001b[0m  \n\n\u001b[0;31m\u001b[1m1 of 104 checks failed.\u001b[0m\n./tests/test_init.sh 2\u003e\u00261  0.09s user 0.04s system 10% cpu 1.302 total\ntail -20  0.00s user 0.00s system 0% cpu 1.299 total"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "cc3b0a67-eff2-4f7c-8b98-df856ec54af8",
+  "version": "2.1.240"
+}

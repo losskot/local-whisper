@@ -1,0 +1,32 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "Wasted call — file unchanged since your last Read. Refer to that earlier tool_result instead.",
+        "tool_use_id": "toolu_019nxDhcsZQofnBCNcKrNtUe",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "1eb2e23c-1ec8-4ea5-ac6c-6923c09a9cbc",
+  "promptId": "704d7fd5-955b-4241-aa67-1bf4377cd080",
+  "sessionId": "5741f5c3-6397-436d-9f65-9474862aa231",
+  "slug": "jaunty-sauteeing-aho",
+  "sourceToolAssistantUUID": "1eb2e23c-1ec8-4ea5-ac6c-6923c09a9cbc",
+  "timestamp": "2026-08-24T03:43:47.374Z",
+  "toolUseResult": {
+    "file": {
+      "filePath": "/Users/vitaliy/Documents/GitHub/local-whisper/tests/test_init.sh"
+    },
+    "type": "file_unchanged"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "cd9692cb-5eee-475a-8e4e-b70624c6fb1e",
+  "version": "2.1.240"
+}

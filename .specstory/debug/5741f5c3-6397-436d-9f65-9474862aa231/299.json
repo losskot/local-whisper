@@ -1,0 +1,34 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "          \"release poller body: \" .. tostring(pollSrc and pollSrc:sub(1, 120)))\nend\n\n--------------------------------------------------------------------------------\n-- Emit results\n--------------------------------------------------------------------------------\n\nlocal out = io.open(OUT, \"w\")\nfor _, r in ipairs(results) do\n    out:write((r.passed and \"PASS\" or \"FAIL\") .. \"\\t\" .. r.name .. \"\\t\" .. r.detail .. \"\\n\")\nend\nout:close()",
+        "is_error": false,
+        "tool_use_id": "toolu_01BBMsLTLs3DSHc8fGJCDnrH",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "7557521e-f5b2-4c50-9ab3-6518da2132fd",
+  "promptId": "704d7fd5-955b-4241-aa67-1bf4377cd080",
+  "sessionId": "5741f5c3-6397-436d-9f65-9474862aa231",
+  "slug": "jaunty-sauteeing-aho",
+  "sourceToolAssistantUUID": "7557521e-f5b2-4c50-9ab3-6518da2132fd",
+  "timestamp": "2026-08-24T03:43:34.279Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "          \"release poller body: \" .. tostring(pollSrc and pollSrc:sub(1, 120)))\nend\n\n--------------------------------------------------------------------------------\n-- Emit results\n--------------------------------------------------------------------------------\n\nlocal out = io.open(OUT, \"w\")\nfor _, r in ipairs(results) do\n    out:write((r.passed and \"PASS\" or \"FAIL\") .. \"\\t\" .. r.name .. \"\\t\" .. r.detail .. \"\\n\")\nend\nout:close()"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "53c01e81-f898-4391-95c5-5dfbde220f04",
+  "version": "2.1.240"
+}

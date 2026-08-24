@@ -1,0 +1,73 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "high",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01BBMsLTLs3DSHc8fGJCDnrH",
+        "input": {
+          "command": "sed -n '1310,1340p' /Users/vitaliy/Documents/GitHub/local-whisper/tests/test_init.lua",
+          "description": "Read the output section at end of test_init.lua"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011CeLtC3aFZdNdCxDwJYxTz",
+    "model": "claude-sonnet-4-6",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 300,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 300,
+      "cache_read_input_tokens": 53729,
+      "inference_geo": "not_available",
+      "input_tokens": 1,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 300,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 300,
+          "cache_read_input_tokens": 53729,
+          "input_tokens": 1,
+          "output_tokens": 113,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 113,
+      "output_tokens_details": {
+        "thinking_tokens": 0
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "df1d1cc7-ad75-4837-95da-0a2f775c3045",
+  "requestId": "req_011CeLtC2pMuD68KW48DJrpR",
+  "sessionId": "5741f5c3-6397-436d-9f65-9474862aa231",
+  "slug": "jaunty-sauteeing-aho",
+  "timestamp": "2026-08-24T03:43:34.235Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "7557521e-f5b2-4c50-9ab3-6518da2132fd",
+  "version": "2.1.240"
+}

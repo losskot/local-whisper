@@ -1,0 +1,51 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "The user answered: \"There's an uncommitted rewrite of the pipeline in the working tree that I didn't author (tests pass, 103/103). What should I do with it?\"=\"Какая твоя задача и почему ты оказался работающим чатом? Ты был законченным чатом два дня. Что вообще происходит и почему ты активный?\". Read the answers carefully — they may request clarification, changes, or that you not proceed — and follow what they actually say.",
+        "tool_use_id": "toolu_012EE6AFStnScwcEDCcxkE8j",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "0e07713c-a029-4fa5-86e6-06486df7cf4c",
+  "promptId": "10074a00-7a8e-4943-b88d-15cd2330c912",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "0e07713c-a029-4fa5-86e6-06486df7cf4c",
+  "timestamp": "2026-08-24T03:42:10.443Z",
+  "toolUseResult": {
+    "answers": {
+      "There's an uncommitted rewrite of the pipeline in the working tree that I didn't author (tests pass, 103/103). What should I do with it?": "Какая твоя задача и почему ты оказался работающим чатом? Ты был законченным чатом два дня. Что вообще происходит и почему ты активный?"
+    },
+    "questions": [
+      {
+        "header": "Uncommitted work",
+        "multiSelect": false,
+        "options": [
+          {
+            "description": "I don't touch it. Best if this is your own in-progress work, or another session is still editing it — committing now could land something half-finished.",
+            "label": "Leave it alone"
+          },
+          {
+            "description": "I stage it, write a commit message describing the generation-dir/detached-job design, and push to main. Tests are green, so it's safe to land.",
+            "label": "Commit and push it"
+          },
+          {
+            "description": "I read the whole diff carefully and report anything that looks wrong or risky before we decide whether to land it.",
+            "label": "Review it first, then decide"
+          }
+        ],
+        "question": "There's an uncommitted rewrite of the pipeline in the working tree that I didn't author (tests pass, 103/103). What should I do with it?"
+      }
+    ]
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "641da32e-a3ed-4f34-a243-5834a2338ddd",
+  "version": "2.1.240"
+}

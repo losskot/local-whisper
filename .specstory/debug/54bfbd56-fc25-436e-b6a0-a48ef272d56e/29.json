@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "bd not found\nbeads not found\nexit=1",
+        "is_error": false,
+        "tool_use_id": "toolu_01JRSWJZs44hW34kg3acdXXN",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "e78ec6ad-29a7-4609-af72-e5d70e248cca",
+  "promptId": "0871342d-3020-4172-a2c1-ab54a6234ac2",
+  "sessionId": "54bfbd56-fc25-436e-b6a0-a48ef272d56e",
+  "sourceToolAssistantUUID": "e78ec6ad-29a7-4609-af72-e5d70e248cca",
+  "timestamp": "2026-08-24T03:44:38.609Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "bd not found\nbeads not found\nexit=1"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "edcf7b5b-d04e-4df0-9931-8d5e25282f38",
+  "version": "2.1.240"
+}

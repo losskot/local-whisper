@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "=== HEAD (last thing I pushed) ===\n9eb6bad 2026-08-24 05:38:36 +0200 specstory: session history\n=== file mtimes ===\n2026-08-24 05:33:13  hammerspoon/init.lua\n2026-08-24 05:30:11  tests/test_init.lua\n=== now ===\n2026-08-24 05:42:33\n=== reflog: anything after my push? ===\n9eb6bad HEAD@{2026-08-24 05:38:36 +0200}: commit: specstory: session history\n702cee9 HEAD@{2026-08-24 05:38:20 +0200}: commit: specstory: session history for the dictation-overlap fix\n9d7fd6d HEAD@{2026-08-24 05:38:00 +0200}: commit: Keep a dictation alive when the next recording starts",
+        "is_error": false,
+        "tool_use_id": "toolu_015kSPcctGtLvAsc3bwL7xZy",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "2d99d2de-a39b-4e76-907b-9b92a84526ed",
+  "promptId": "10074a00-7a8e-4943-b88d-15cd2330c912",
+  "sessionId": "881e21dc-c26e-4f4f-865e-0d78e8553961",
+  "sourceToolAssistantUUID": "2d99d2de-a39b-4e76-907b-9b92a84526ed",
+  "timestamp": "2026-08-24T03:42:33.104Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "=== HEAD (last thing I pushed) ===\n9eb6bad 2026-08-24 05:38:36 +0200 specstory: session history\n=== file mtimes ===\n2026-08-24 05:33:13  hammerspoon/init.lua\n2026-08-24 05:30:11  tests/test_init.lua\n=== now ===\n2026-08-24 05:42:33\n=== reflog: anything after my push? ===\n9eb6bad HEAD@{2026-08-24 05:38:36 +0200}: commit: specstory: session history\n702cee9 HEAD@{2026-08-24 05:38:20 +0200}: commit: specstory: session history for the dictation-overlap fix\n9d7fd6d HEAD@{2026-08-24 05:38:00 +0200}: commit: Keep a dictation alive when the next recording starts"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "0400c14d-a09e-4275-8004-8e156e3388e7",
+  "version": "2.1.240"
+}

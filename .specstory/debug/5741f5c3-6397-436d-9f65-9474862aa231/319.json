@@ -1,0 +1,34 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "48:# for the DONE sentinel the test suite writes, then kill hs ourselves.\n58:    if grep -q $'^DONE\\t' \"$OUT\" 2\u003e/dev/null; then\n80:while IFS=$'\\t' read -r status name detail; do\n82:    if [[ \"$status\" == \"PASS\" ]]; then",
+        "is_error": false,
+        "tool_use_id": "toolu_01AaAt2LFhsRFjBbFc3GHBnY",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "b6339d37-55d8-4fe9-92e3-87a145443417",
+  "promptId": "704d7fd5-955b-4241-aa67-1bf4377cd080",
+  "sessionId": "5741f5c3-6397-436d-9f65-9474862aa231",
+  "slug": "jaunty-sauteeing-aho",
+  "sourceToolAssistantUUID": "b6339d37-55d8-4fe9-92e3-87a145443417",
+  "timestamp": "2026-08-24T03:44:01.450Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "48:# for the DONE sentinel the test suite writes, then kill hs ourselves.\n58:    if grep -q $'^DONE\\t' \"$OUT\" 2\u003e/dev/null; then\n80:while IFS=$'\\t' read -r status name detail; do\n82:    if [[ \"$status\" == \"PASS\" ]]; then"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "844f2613-a2ee-4d6b-a8c2-5fb1054d0a1f",
+  "version": "2.1.240"
+}

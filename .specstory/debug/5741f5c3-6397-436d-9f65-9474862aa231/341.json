@@ -1,0 +1,73 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "high",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01KmtiTR7hNsk6mcsgLgSMLp",
+        "input": {
+          "command": "git add tests/test_init.lua tests/test_init.sh \u0026\u0026 git commit -m \"$(cat \u003c\u003c'EOF'\nFix hs CLI hang: run in background, kill after DONE sentinel\n\nhs -c hangs after completing because the IPC socket doesn't close\ncleanly once Lua returns. The test results were already written to the\noutput file, but the process would block indefinitely.\n\nFix: run hs in background, have test_init.lua write a DONE sentinel\nas the last output line, poll for it (up to 120s), then kill hs.\nTests now complete in \u003c1s instead of hanging.\n\nCo-Authored-By: Claude Sonnet 4.6 \u003cnoreply@anthropic.com\u003e\nEOF\n)\"",
+          "description": "Commit the hs hang fix"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011CeLtGRhP6AAZhzvBGZuAj",
+    "model": "claude-sonnet-4-6",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 420,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 420,
+      "cache_read_input_tokens": 58610,
+      "inference_geo": "not_available",
+      "input_tokens": 1,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 420,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 420,
+          "cache_read_input_tokens": 58610,
+          "input_tokens": 1,
+          "output_tokens": 248,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 248,
+      "output_tokens_details": {
+        "thinking_tokens": 0
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "e4c85e51-a78b-450a-baee-3b90dda80bf5",
+  "requestId": "req_011CeLtGQYBbGnpJRfFi37dG",
+  "sessionId": "5741f5c3-6397-436d-9f65-9474862aa231",
+  "slug": "jaunty-sauteeing-aho",
+  "timestamp": "2026-08-24T03:44:36.969Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "a25d7c58-096d-4894-9de2-d4058d4d18a3",
+  "version": "2.1.240"
+}

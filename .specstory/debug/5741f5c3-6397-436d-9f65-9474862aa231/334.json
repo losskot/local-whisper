@@ -1,0 +1,34 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "  \u001b[0;32mPASS\u001b[0m  trigger: triggerHeld is true for the flags the poll API really returns\n  \u001b[0;32mPASS\u001b[0m  trigger: triggerHeld asks for the raw flag word\n  \u001b[0;32mPASS\u001b[0m  trigger: releasing either modifier reads as released\n  \u001b[0;32mPASS\u001b[0m  trigger: nothing held reads as released\n  \u001b[0;32mPASS\u001b[0m  trigger: the eventtap matches through triggerPressed(event:rawFlags())\n  \u001b[0;32mPASS\u001b[0m  trigger: the release poller re-checks the trigger through triggerHeld()\n\n\u001b[0;32m\u001b[1mAll 103 checks passed.\u001b[0m\n./tests/test_init.sh 2\u003e\u00261  0.05s user 0.06s system 15% cpu 0.716 total\ntail -8  0.00s user 0.00s system 0% cpu 0.716 total",
+        "is_error": false,
+        "tool_use_id": "toolu_013HnVTDnHYp7wLwwQcE1MSy",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "5e52d70b-9902-4d17-9a54-80d4e33a094b",
+  "promptId": "704d7fd5-955b-4241-aa67-1bf4377cd080",
+  "sessionId": "5741f5c3-6397-436d-9f65-9474862aa231",
+  "slug": "jaunty-sauteeing-aho",
+  "sourceToolAssistantUUID": "5e52d70b-9902-4d17-9a54-80d4e33a094b",
+  "timestamp": "2026-08-24T03:44:28.516Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "  \u001b[0;32mPASS\u001b[0m  trigger: triggerHeld is true for the flags the poll API really returns\n  \u001b[0;32mPASS\u001b[0m  trigger: triggerHeld asks for the raw flag word\n  \u001b[0;32mPASS\u001b[0m  trigger: releasing either modifier reads as released\n  \u001b[0;32mPASS\u001b[0m  trigger: nothing held reads as released\n  \u001b[0;32mPASS\u001b[0m  trigger: the eventtap matches through triggerPressed(event:rawFlags())\n  \u001b[0;32mPASS\u001b[0m  trigger: the release poller re-checks the trigger through triggerHeld()\n\n\u001b[0;32m\u001b[1mAll 103 checks passed.\u001b[0m\n./tests/test_init.sh 2\u003e\u00261  0.05s user 0.06s system 15% cpu 0.716 total\ntail -8  0.00s user 0.00s system 0% cpu 0.716 total"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "d764949c-a4b1-42c8-ae21-89142ce239a0",
+  "version": "2.1.240"
+}

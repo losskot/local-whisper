@@ -1,0 +1,68 @@
+{
+  "compactMetadata": {
+    "cumulativeDroppedTokens": 180127,
+    "durationMs": 115629,
+    "postTokens": 9219,
+    "preTokens": 189346,
+    "preservedMessages": {
+      "allUuids": [
+        "37a0457a-0908-41fb-b34b-6e3f67a895b5",
+        "a7a1bb09-360f-4d21-b92f-70f0acaa786d",
+        "c56d9f30-2eef-40e6-8507-192e8fd21a06",
+        "526ad1f6-dfde-4def-a7c7-03451cc6c71d",
+        "987f546b-c29c-4690-9ffb-32a0a193fc00",
+        "0f796da9-6c8c-41ad-aca2-b6ee526382af",
+        "5bec1b11-15a5-4220-9c44-e7587563be5e",
+        "5898942e-cf48-4671-a9d2-5c1b03c5af6f",
+        "7757884d-51ca-4106-b59b-573c50d7278c",
+        "1db1e14c-d557-419a-a85b-8a4a4492514c",
+        "577db785-bfb7-46c1-890d-68bcd0406fec",
+        "ecb3b070-63bd-4e74-aa63-9c9d38cc1a00",
+        "4bb183fd-4d81-49c4-9bdc-ef2fb7d13da3",
+        "368fcae7-b80e-45b3-bd7d-b0440cff6729",
+        "a15f24f6-979a-4414-b3a3-e8053adeecba"
+      ],
+      "anchorUuid": "a04cc8ac-949c-49ae-98c5-5f3dece3dabb",
+      "uuids": [
+        "37a0457a-0908-41fb-b34b-6e3f67a895b5",
+        "a7a1bb09-360f-4d21-b92f-70f0acaa786d",
+        "c56d9f30-2eef-40e6-8507-192e8fd21a06",
+        "526ad1f6-dfde-4def-a7c7-03451cc6c71d",
+        "987f546b-c29c-4690-9ffb-32a0a193fc00",
+        "0f796da9-6c8c-41ad-aca2-b6ee526382af",
+        "5bec1b11-15a5-4220-9c44-e7587563be5e",
+        "5898942e-cf48-4671-a9d2-5c1b03c5af6f",
+        "7757884d-51ca-4106-b59b-573c50d7278c",
+        "1db1e14c-d557-419a-a85b-8a4a4492514c",
+        "577db785-bfb7-46c1-890d-68bcd0406fec",
+        "ecb3b070-63bd-4e74-aa63-9c9d38cc1a00",
+        "4bb183fd-4d81-49c4-9bdc-ef2fb7d13da3",
+        "368fcae7-b80e-45b3-bd7d-b0440cff6729",
+        "a15f24f6-979a-4414-b3a3-e8053adeecba"
+      ]
+    },
+    "preservedSegment": {
+      "anchorUuid": "a04cc8ac-949c-49ae-98c5-5f3dece3dabb",
+      "headUuid": "37a0457a-0908-41fb-b34b-6e3f67a895b5",
+      "tailUuid": "a15f24f6-979a-4414-b3a3-e8053adeecba"
+    },
+    "trigger": "auto"
+  },
+  "content": "Conversation compacted",
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isMeta": false,
+  "isSidechain": false,
+  "level": "info",
+  "logicalParentUuid": "a15f24f6-979a-4414-b3a3-e8053adeecba",
+  "parentUuid": null,
+  "sessionId": "5741f5c3-6397-436d-9f65-9474862aa231",
+  "slug": "jaunty-sauteeing-aho",
+  "subtype": "compact_boundary",
+  "timestamp": "2026-08-24T03:42:38.673Z",
+  "type": "system",
+  "userType": "external",
+  "uuid": "ce55f998-05db-40a9-bf0c-3c4eb249e66e",
+  "version": "2.1.240"
+}
