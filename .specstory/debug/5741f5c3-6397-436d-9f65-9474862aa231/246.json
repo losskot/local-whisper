@@ -1,0 +1,28 @@
+{
+  "attachment": {
+    "commandMode": "prompt",
+    "origin": {
+      "kind": "human"
+    },
+    "prompt": [
+      {
+        "text": "/mode claude-sonnet-4-6",
+        "type": "text"
+      }
+    ],
+    "source_uuid": "ca386fd3-f214-4dac-84f4-9d0d13a291f5",
+    "timestamp": "2026-08-24T03:38:01.898Z",
+    "type": "queued_command"
+  },
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "parentUuid": "71e59234-5826-4462-99f0-48f27046d77b",
+  "sessionId": "5741f5c3-6397-436d-9f65-9474862aa231",
+  "timestamp": "2026-08-24T03:38:01.898Z",
+  "type": "attachment",
+  "userType": "external",
+  "uuid": "95595e4a-2d36-4ee9-8ea1-7e4961892f66",
+  "version": "2.1.240"
+}

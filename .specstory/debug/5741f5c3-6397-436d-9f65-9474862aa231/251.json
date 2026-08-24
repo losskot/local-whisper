@@ -1,0 +1,72 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01722FXBm7eKrNjkZw9yzZs2",
+        "input": {
+          "command": "git add -A \u0026\u0026 git commit -q -m \"specstory: session history for the dictation-overlap fix\n\nCo-Authored-By: Claude Opus 5 \u003cnoreply@anthropic.com\u003e\" \u0026\u0026 git pull --rebase -q \u0026\u0026 git push -q \u0026\u0026 git status -sb | head -2",
+          "description": "Commit specstory and push"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011CeLsncit5oUWrFGCXPy9f",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 351,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 351,
+      "cache_read_input_tokens": 185761,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 351,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 351,
+          "cache_read_input_tokens": 185761,
+          "input_tokens": 2,
+          "output_tokens": 209,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 209,
+      "output_tokens_details": {
+        "thinking_tokens": 47
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "f8935de7-c91e-4f68-8a04-d860a7de4a69",
+  "requestId": "req_011CeLsnbNWyY9qUoPjFjdRm",
+  "sessionId": "5741f5c3-6397-436d-9f65-9474862aa231",
+  "timestamp": "2026-08-24T03:38:17.926Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "6d4d5e3b-6ad0-4e45-abba-ab61baa4705c",
+  "version": "2.1.240"
+}

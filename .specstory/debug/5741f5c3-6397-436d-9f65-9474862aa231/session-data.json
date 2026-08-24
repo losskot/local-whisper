@@ -12,7 +12,7 @@
     {
       "exchangeId": "5741f5c3-6397-436d-9f65-9474862aa231:0",
       "startTime": "2026-08-24T03:12:13.232Z",
-      "endTime": "2026-08-24T03:37:57.860Z",
+      "endTime": "2026-08-24T03:38:17.926Z",
       "messages": [
         {
           "id": "c6bae056-5aed-47ee-8b2d-84915b854d09",
@@ -2425,7 +2425,7 @@
         },
         {
           "id": "64a674e1-d4ec-417c-b70c-bb16b228792c",
-          "timestamp": "2026-08-24T03:37:57.860Z",
+          "timestamp": "2026-08-24T03:38:01.078Z",
           "role": "agent",
           "model": "claude-opus-5",
           "tool": {
@@ -2437,13 +2437,82 @@
               "command": "git add -A \u0026\u0026 git commit -q -F - \u003c\u003c'MSG' \u0026\u0026 git log --oneline -1\nKeep a dictation alive when the next recording starts\n\nPressing the trigger again while the previous dictation was still in whisper\nlost it whole. Two causes, both in the start-of-recording path:\n\n  * tryWarmup() called pipelineReset(), wiping `results` and putting\n    `finalizing` back to false — segments that came back afterwards were\n    written into the new dictation's state and never assembled.\n  * it also rm -rf'd the one shared chunks/ directory, deleting audio the\n    previous dictation's ffmpeg was still concatenating.\n\nA 92-second dictation vanished behind exactly two log lines: \"pipeline: seg 2\nconcat FAILED (code=254)\" and \"seg 2 complete (done=1/?)\".\n\nPipeline state is now per dictation. pipeNewJob() mints a job per keypress\nwith its own generation, chunk directory (chunks/g\u003cN\u003e), segment files and\nresults; pipeStartJob() detaches the previous job instead of resetting it, so\nit keeps transcribing and delivers its own text. Nothing in flight reads\n`pipe` any more — dispatchSegment captures its job, onPipelineDone and\npipelineFinalize take it as an argument — and the overlay and progress bar\nstay with the current job only.\n\nA detached job's transcript is queued rather than typed: it lands while the\nuser is still holding fn+ctrl, and both output modes post keystrokes. The next\ninsertion prepends it, so both dictations arrive in the order they were\nspoken; every path that produces no text of its own flushes the queue instead\nof stranding it. Emergency stop abandons every live job and rescues an\nalready-finished transcript to the clipboard.\n\nAudio is deleted only by the job that owns it (pipeCleanup), and the shared\nparent directory only at load.\n\n11 new checks cover the class: a job finishing behind a newer recording keeps\nits text, is not typed into the recording in progress, does not move its\nprogress bar, arrives with the next insertion oldest-first, and is dropped\nafter an emergency stop; plus the structural guards on tryWarmup, startRecording\nand dispatchSegment. 103 checks pass.\n\nCo-Authored-By: Claude Opus 5 \u003cnoreply@anthropic.com\u003e\nMSG",
               "description": "Commit the fix"
             },
-            "formattedMarkdown": "Commit the fix\n\n```bash\ngit add -A \u0026\u0026 git commit -q -F - \u003c\u003c'MSG' \u0026\u0026 git log --oneline -1\nKeep a dictation alive when the next recording starts\n\nPressing the trigger again while the previous dictation was still in whisper\nlost it whole. Two causes, both in the start-of-recording path:\n\n  * tryWarmup() called pipelineReset(), wiping `results` and putting\n    `finalizing` back to false — segments that came back afterwards were\n    written into the new dictation's state and never assembled.\n  * it also rm -rf'd the one shared chunks/ directory, deleting audio the\n    previous dictation's ffmpeg was still concatenating.\n\nA 92-second dictation vanished behind exactly two log lines: \"pipeline: seg 2\nconcat FAILED (code=254)\" and \"seg 2 complete (done=1/?)\".\n\nPipeline state is now per dictation. pipeNewJob() mints a job per keypress\nwith its own generation, chunk directory (chunks/g\u003cN\u003e), segment files and\nresults; pipeStartJob() detaches the previous job instead of resetting it, so\nit keeps transcribing and delivers its own text. Nothing in flight reads\n`pipe` any more — dispatchSegment captures its job, onPipelineDone and\npipelineFinalize take it as an argument — and the overlay and progress bar\nstay with the current job only.\n\nA detached job's transcript is queued rather than typed: it lands while the\nuser is still holding fn+ctrl, and both output modes post keystrokes. The next\ninsertion prepends it, so both dictations arrive in the order they were\nspoken; every path that produces no text of its own flushes the queue instead\nof stranding it. Emergency stop abandons every live job and rescues an\nalready-finished transcript to the clipboard.\n\nAudio is deleted only by the job that owns it (pipeCleanup), and the shared\nparent directory only at load.\n\n11 new checks cover the class: a job finishing behind a newer recording keeps\nits text, is not typed into the recording in progress, does not move its\nprogress bar, arrives with the next insertion oldest-first, and is dropped\nafter an emergency stop; plus the structural guards on tryWarmup, startRecording\nand dispatchSegment. 103 checks pass.\n\nCo-Authored-By: Claude Opus 5 \u003cnoreply@anthropic.com\u003e\nMSG\n```\n"
+            "output": {
+              "content": "9d7fd6d Keep a dictation alive when the next recording starts",
+              "is_error": false
+            },
+            "formattedMarkdown": "Commit the fix\n\n```bash\ngit add -A \u0026\u0026 git commit -q -F - \u003c\u003c'MSG' \u0026\u0026 git log --oneline -1\nKeep a dictation alive when the next recording starts\n\nPressing the trigger again while the previous dictation was still in whisper\nlost it whole. Two causes, both in the start-of-recording path:\n\n  * tryWarmup() called pipelineReset(), wiping `results` and putting\n    `finalizing` back to false — segments that came back afterwards were\n    written into the new dictation's state and never assembled.\n  * it also rm -rf'd the one shared chunks/ directory, deleting audio the\n    previous dictation's ffmpeg was still concatenating.\n\nA 92-second dictation vanished behind exactly two log lines: \"pipeline: seg 2\nconcat FAILED (code=254)\" and \"seg 2 complete (done=1/?)\".\n\nPipeline state is now per dictation. pipeNewJob() mints a job per keypress\nwith its own generation, chunk directory (chunks/g\u003cN\u003e), segment files and\nresults; pipeStartJob() detaches the previous job instead of resetting it, so\nit keeps transcribing and delivers its own text. Nothing in flight reads\n`pipe` any more — dispatchSegment captures its job, onPipelineDone and\npipelineFinalize take it as an argument — and the overlay and progress bar\nstay with the current job only.\n\nA detached job's transcript is queued rather than typed: it lands while the\nuser is still holding fn+ctrl, and both output modes post keystrokes. The next\ninsertion prepends it, so both dictations arrive in the order they were\nspoken; every path that produces no text of its own flushes the queue instead\nof stranding it. Emergency stop abandons every live job and rescues an\nalready-finished transcript to the clipboard.\n\nAudio is deleted only by the job that owns it (pipeCleanup), and the shared\nparent directory only at load.\n\n11 new checks cover the class: a job finishing behind a newer recording keeps\nits text, is not typed into the recording in progress, does not move its\nprogress bar, arrives with the next insertion oldest-first, and is dropped\nafter an emergency stop; plus the structural guards on tryWarmup, startRecording\nand dispatchSegment. 103 checks pass.\n\nCo-Authored-By: Claude Opus 5 \u003cnoreply@anthropic.com\u003e\nMSG\n```\n\n```text\n9d7fd6d Keep a dictation alive when the next recording starts\n```\n"
           },
           "usage": {
             "inputTokens": 2,
             "outputTokens": 1781,
             "cacheCreationInputTokens": 1048,
             "cacheReadInputTokens": 182907
+          }
+        },
+        {
+          "id": "450d7fdb-075f-42e0-9d52-ba649294d720",
+          "timestamp": "2026-08-24T03:38:14.182Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "tool": {
+            "name": "Bash",
+            "type": "shell",
+            "useId": "toolu_01DkycKBCx5zFpyb9UTpvGnY",
+            "input": {
+              "_cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+              "command": "git pull --rebase -q 2\u003e\u00261 | tail -3; git push -q 2\u003e\u00261 | tail -3; git status -sb | head -3",
+              "description": "Pull, push and verify"
+            },
+            "output": {
+              "content": "error: cannot pull with rebase: You have unstaged changes.\nerror: Please commit or stash them.\n## main...origin/main\n M .specstory/debug/5741f5c3-6397-436d-9f65-9474862aa231/session-data.json\n M .specstory/history/2026-08-24_03-12-13Z.md",
+              "is_error": false
+            },
+            "formattedMarkdown": "Pull, push and verify\n\n`git pull --rebase -q 2\u003e\u00261 | tail -3; git push -q 2\u003e\u00261 | tail -3; git status -sb | head -3`\n\n```text\nerror: cannot pull with rebase: You have unstaged changes.\nerror: Please commit or stash them.\n## main...origin/main\n M .specstory/debug/5741f5c3-6397-436d-9f65-9474862aa231/session-data.json\n M .specstory/history/2026-08-24_03-12-13Z.md\n```\n"
+          },
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 120,
+            "cacheCreationInputTokens": 1806,
+            "cacheReadInputTokens": 183955
+          }
+        },
+        {
+          "id": "f8935de7-c91e-4f68-8a04-d860a7de4a69",
+          "timestamp": "2026-08-24T03:38:17.338Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 209,
+            "cacheCreationInputTokens": 351,
+            "cacheReadInputTokens": 185761
+          }
+        },
+        {
+          "id": "6d4d5e3b-6ad0-4e45-abba-ab61baa4705c",
+          "timestamp": "2026-08-24T03:38:17.926Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "tool": {
+            "name": "Bash",
+            "type": "shell",
+            "useId": "toolu_01722FXBm7eKrNjkZw9yzZs2",
+            "input": {
+              "_cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+              "command": "git add -A \u0026\u0026 git commit -q -m \"specstory: session history for the dictation-overlap fix\n\nCo-Authored-By: Claude Opus 5 \u003cnoreply@anthropic.com\u003e\" \u0026\u0026 git pull --rebase -q \u0026\u0026 git push -q \u0026\u0026 git status -sb | head -2",
+              "description": "Commit specstory and push"
+            },
+            "formattedMarkdown": "Commit specstory and push\n\n```bash\ngit add -A \u0026\u0026 git commit -q -m \"specstory: session history for the dictation-overlap fix\n\nCo-Authored-By: Claude Opus 5 \u003cnoreply@anthropic.com\u003e\" \u0026\u0026 git pull --rebase -q \u0026\u0026 git push -q \u0026\u0026 git status -sb | head -2\n```\n"
+          },
+          "pathHints": [
+            " \u0026\u0026 git pull --rebase -q \u0026\u0026 git push -q \u0026\u0026 git status -sb | head -2"
+          ],
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 209,
+            "cacheCreationInputTokens": 351,
+            "cacheReadInputTokens": 185761
           }
         }
       ]

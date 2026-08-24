@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "9d7fd6d Keep a dictation alive when the next recording starts",
+        "is_error": false,
+        "tool_use_id": "toolu_01MYrTdquCycjo5RGKqDac5V",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "64a674e1-d4ec-417c-b70c-bb16b228792c",
+  "promptId": "e9cbafa6-e5e9-4e4e-8cd9-dc62304a92b1",
+  "sessionId": "5741f5c3-6397-436d-9f65-9474862aa231",
+  "sourceToolAssistantUUID": "64a674e1-d4ec-417c-b70c-bb16b228792c",
+  "timestamp": "2026-08-24T03:38:01.078Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "9d7fd6d Keep a dictation alive when the next recording starts"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "9ef41aee-59a5-403f-878b-bb32311a1f42",
+  "version": "2.1.240"
+}
