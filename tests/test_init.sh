@@ -44,7 +44,30 @@ echo ""
 
 # hs evaluates in the running Hammerspoon process and does not inherit this shell's
 # environment, so pass the paths as globals rather than env vars.
-"$HS_BIN" -c "_G.LW_TARGET='$TARGET'; _G.LW_OUT='$OUT'; dofile('$SCRIPT_DIR/test_init.lua')" >/dev/null 2>&1
+# Run in background: hs often hangs on IPC cleanup after the Lua completes. We wait
+# for the DONE sentinel the test suite writes, then kill hs ourselves.
+"$HS_BIN" -c "_G.LW_TARGET='$TARGET'; _G.LW_OUT='$OUT'; dofile('$SCRIPT_DIR/test_init.lua')" \
+    >/dev/null 2>&1 &
+HS_PID=$!
+
+DEADLINE=120  # seconds
+ELAPSED=0
+while [[ $ELAPSED -lt $DEADLINE ]]; do
+    sleep 0.2
+    ELAPSED=$(( ELAPSED + 1 ))
+    if grep -q $'^DONE\t' "$OUT" 2>/dev/null; then
+        break
+    fi
+done
+
+kill "$HS_PID" 2>/dev/null || true
+wait "$HS_PID" 2>/dev/null || true
+
+if [[ $ELAPSED -ge $DEADLINE ]]; then
+    echo -e "${RED}Error: test suite timed out after ${DEADLINE}s.${NC}"
+    echo "Check that $SCRIPT_DIR/test_init.lua loads cleanly."
+    exit 1
+fi
 
 if [[ ! -s "$OUT" ]]; then
     echo -e "${RED}Error: the test suite produced no output.${NC}"
@@ -56,6 +79,7 @@ PASS=0
 FAIL=0
 while IFS=$'\t' read -r status name detail; do
     [[ -z "$status" ]] && continue
+    [[ "$status" == "DONE" ]] && continue
     if [[ "$status" == "PASS" ]]; then
         PASS=$((PASS + 1))
         echo -e "  ${GREEN}PASS${NC}  $name"

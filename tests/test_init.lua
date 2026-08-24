@@ -1318,4 +1318,5 @@ local out = io.open(OUT, "w")
 for _, r in ipairs(results) do
     out:write((r.passed and "PASS" or "FAIL") .. "\t" .. r.name .. "\t" .. r.detail .. "\n")
 end
+out:write("DONE\t\t\n")
 out:close()
