@@ -1,0 +1,28 @@
+{
+  "attachment": {
+    "commandMode": "prompt",
+    "origin": {
+      "kind": "human"
+    },
+    "prompt": [
+      {
+        "text": "/model",
+        "type": "text"
+      }
+    ],
+    "source_uuid": "ad2ca9a6-08ba-47ed-b7c2-218d798e8144",
+    "timestamp": "2026-08-24T03:38:28.901Z",
+    "type": "queued_command"
+  },
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "parentUuid": "f952c0a2-4ad9-4057-8ed2-c9100e221c46",
+  "sessionId": "5741f5c3-6397-436d-9f65-9474862aa231",
+  "timestamp": "2026-08-24T03:38:28.901Z",
+  "type": "attachment",
+  "userType": "external",
+  "uuid": "6dd9fdb9-46fa-4b6d-bdcc-6d94da8b9f21",
+  "version": "2.1.240"
+}

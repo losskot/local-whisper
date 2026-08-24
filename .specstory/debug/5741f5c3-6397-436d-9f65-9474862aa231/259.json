@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": " D .specstory/debug/5741f5c3-6397-436d-9f65-9474862aa231/session-data.json\n M .specstory/history/2026-08-24_03-12-13Z.md\n M .specstory/statistics.json\n?? .specstory/debug/5741f5c3-6397-436d-9f65-9474862aa231/252.json\n?? .specstory/debug/5741f5c3-6397-436d-9f65-9474862aa231/253.json",
+        "is_error": false,
+        "tool_use_id": "toolu_012YCQjWVvf6LvcVuq9EYmEb",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "f67e1f01-c776-440b-b086-1b6380e4ebd6",
+  "promptId": "e9cbafa6-e5e9-4e4e-8cd9-dc62304a92b1",
+  "sessionId": "5741f5c3-6397-436d-9f65-9474862aa231",
+  "sourceToolAssistantUUID": "f67e1f01-c776-440b-b086-1b6380e4ebd6",
+  "timestamp": "2026-08-24T03:38:29.140Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": " D .specstory/debug/5741f5c3-6397-436d-9f65-9474862aa231/session-data.json\n M .specstory/history/2026-08-24_03-12-13Z.md\n M .specstory/statistics.json\n?? .specstory/debug/5741f5c3-6397-436d-9f65-9474862aa231/252.json\n?? .specstory/debug/5741f5c3-6397-436d-9f65-9474862aa231/253.json"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "f952c0a2-4ad9-4057-8ed2-c9100e221c46",
+  "version": "2.1.240"
+}

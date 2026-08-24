@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "On branch main\nYour branch is up to date with 'origin/main'.\n\nChanges not staged for commit:\n702cee9 specstory: session history for the dictation-overlap fix\n9d7fd6d Keep a dictation alive when the next recording starts\n9ceaf1a Restore the streaming pipeline: transcribe while recording continues",
+        "is_error": false,
+        "tool_use_id": "toolu_01Tf7RfiyQeSWqxx45NJmQRF",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "73023551-82ee-4563-9947-0650bd3cb478",
+  "promptId": "e9cbafa6-e5e9-4e4e-8cd9-dc62304a92b1",
+  "sessionId": "5741f5c3-6397-436d-9f65-9474862aa231",
+  "sourceToolAssistantUUID": "73023551-82ee-4563-9947-0650bd3cb478",
+  "timestamp": "2026-08-24T03:38:26.738Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "On branch main\nYour branch is up to date with 'origin/main'.\n\nChanges not staged for commit:\n702cee9 specstory: session history for the dictation-overlap fix\n9d7fd6d Keep a dictation alive when the next recording starts\n9ceaf1a Restore the streaming pipeline: transcribe while recording continues"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "e12d8572-bed6-496a-b542-ad7041044842",
+  "version": "2.1.240"
+}
