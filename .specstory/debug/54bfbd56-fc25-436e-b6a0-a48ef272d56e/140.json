@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "On branch main\nYour branch is up to date with 'origin/main'.\n\nChanges not staged for commit:\n  (use \"git add \u003cfile\u003e...\" to update what will be committed)\n56f4fb3 specstory: session history\n71620ea Insert only where the dictation was aimed\n6561348 specstory: session history",
+        "is_error": false,
+        "tool_use_id": "toolu_01WkB2rEdNadL5M9SFtQw3zQ",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "9a3fe9d0-ce94-4961-b62a-df541fe466d4",
+  "promptId": "adbb2826-8b89-485d-b617-b75f37459d44",
+  "sessionId": "54bfbd56-fc25-436e-b6a0-a48ef272d56e",
+  "sourceToolAssistantUUID": "9a3fe9d0-ce94-4961-b62a-df541fe466d4",
+  "timestamp": "2026-08-27T17:44:47.005Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "On branch main\nYour branch is up to date with 'origin/main'.\n\nChanges not staged for commit:\n  (use \"git add \u003cfile\u003e...\" to update what will be committed)\n56f4fb3 specstory: session history\n71620ea Insert only where the dictation was aimed\n6561348 specstory: session history"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "01a5169f-0783-4298-86cf-73ba74a3a729",
+  "version": "2.1.246"
+}
