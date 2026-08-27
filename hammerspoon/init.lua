@@ -583,6 +583,46 @@ local function captureActiveApp()
     end
 end
 
+-- Where the dictated text is meant to land.
+--
+-- Whisper answers seconds after the key comes up, and in those seconds the user may have
+-- clicked into another field, switched a tab or moved to another app. Typing there is worse
+-- than not typing at all: the text lands in a chat, a search box or a terminal that was
+-- never the target, and there is no undo for keystrokes someone else's app received. So the
+-- destination is identified at release and re-checked right before insertion (finishInsertion).
+--
+-- It is a *signature*, not an object reference: AX hands back a fresh element on every query,
+-- and Electron apps (VS Code among them) expose no focused element at all -- there the app,
+-- the window id and the window title are all there is to go on. Volatile attributes are left
+-- out on purpose (window frame, the field's own value): they change while the user keeps
+-- working in exactly the right place, and a false alarm costs a manual paste every time.
+--
+-- Returns nil if AX is unavailable or an app is unresponsive -- no identifier at all means
+-- the check is skipped, which is the pre-existing behaviour rather than a wrong verdict.
+local function focusTargetId()
+    local parts = {}
+    local ok = pcall(function()
+        local app = hs.application.frontmostApplication()
+        parts[#parts + 1] = app and (app:bundleID() or app:name() or "?") or "?"
+        parts[#parts + 1] = app and tostring(app:pid()) or "?"
+
+        local win = hs.window.focusedWindow()
+        parts[#parts + 1] = win and tostring(win:id()) or "-"
+        parts[#parts + 1] = (win and win:title()) or ""
+
+        local ae   = app and hs.axuielement.applicationElement(app)
+        local elem = ae and ae:attributeValue("AXFocusedUIElement")
+        if elem then
+            for _, attr in ipairs({ "AXRole", "AXSubrole", "AXIdentifier", "AXDOMIdentifier", "AXTitle" }) do
+                local v = elem:attributeValue(attr)
+                parts[#parts + 1] = (type(v) == "string") and v or ""
+            end
+        end
+    end)
+    if not ok then return nil end
+    return table.concat(parts, "|")
+end
+
 --------------------------------------------------------------------------------
 -- Optional post-dictation action hooks (user config)
 --------------------------------------------------------------------------------
@@ -1242,9 +1282,23 @@ local function insertTextAtCursor(text, mode)
 end
 
 -- Finish insertion after all processing (post-process, hooks)
-local function finishInsertion(text, detectedLang)
+local function finishInsertion(text, detectedLang, target)
+    -- The cursor may have moved while whisper was working. If the place the text was meant
+    -- for is no longer focused, nothing is typed: the transcript goes to the clipboard and
+    -- the user gets two chimes instead of one.
+    local mode, misdirected = getOutputMode(), false
+    if target and mode ~= "copy" then
+        local now = focusTargetId()
+        if now and now ~= target then
+            misdirected = true
+            mode = "copy"
+            log("insert: focus moved since the key was released -- clipboard only\n" ..
+                "  target: " .. target .. "\n  now:    " .. now)
+        end
+    end
+
     -- Build action context and run pre-insert hooks
-    local ctx = buildActionContext(normalizeText(text), detectedLang or getLang(), getOutputMode())
+    local ctx = buildActionContext(normalizeText(text), detectedLang or getLang(), mode)
     runPreInsertActions(ctx)
 
     local finalText = normalizeText(ctx.text)
@@ -1285,13 +1339,18 @@ local function finishInsertion(text, detectedLang)
 
     local display = finalText
     if detectedLang then display = display .. " [" .. detectedLang:upper() .. "]" end
+    if misdirected then display = "CLIPBOARD: " .. display end
     setOverlayText(display)
     playSound("Glass")
-    hs.timer.doAfter(OVERLAY_LINGER, hideOverlay)
+    if misdirected then
+        -- Two chimes, not one: nothing was typed, the text is waiting on the clipboard.
+        hs.timer.doAfter(0.35, function() playSound("Glass") end)
+    end
+    hs.timer.doAfter(misdirected and (OVERLAY_LINGER + 1.5) or OVERLAY_LINGER, hideOverlay)
 end
 
 -- Insert transcribed text at cursor, with post-processing and action hooks
-local function insertTranscribedText(text, detectedLang)
+local function insertTranscribedText(text, detectedLang, target)
     if text == "" or isHallucination(text) then
         hideOverlay()
         return
@@ -1301,7 +1360,7 @@ local function insertTranscribedText(text, detectedLang)
     text = postProcess(text, capturedAppBundleID)
     if text == "" then hideOverlay(); return end
 
-    finishInsertion(text, detectedLang)
+    finishInsertion(text, detectedLang, target)
 end
 
 -- Max seconds per whisper call — keeps each segment within whisper's sweet spot
@@ -1338,6 +1397,7 @@ local function pipeNewJob()
         dir        = CHUNK_DIR .. "/g" .. pipeJobs.lastGen,  -- this dictation's audio, nobody else's
         results    = {},    -- [segN] = text, filled as each segment completes (order preserved)
         lang       = nil,   -- first detected language across all segments
+        target     = nil,   -- focusTargetId() of where the text belongs, taken at key release
         nextChunk  = 1,     -- 1-based index of the next chunk not yet claimed by a segment
         nextSeg    = 1,     -- next segment number to assign
         total      = 0,     -- fixed once recording stops and the tail is dispatched
@@ -1368,14 +1428,18 @@ end
 
 -- Transcripts that finished while a newer recording was running, oldest first.
 local function pipeTakePending()
-    if #pipeJobs.pending == 0 then return nil, nil end
+    if #pipeJobs.pending == 0 then return nil, nil, nil end
     local parts, lang = {}, nil
+    local target = pipeJobs.pending[1].target
     for _, p in ipairs(pipeJobs.pending) do
         table.insert(parts, p.text)
         lang = lang or p.lang
+        -- Dictations aimed at different places have no single destination left between them:
+        -- "" matches no focus, so the whole batch takes the clipboard route.
+        if p.target ~= target then target = "" end
     end
     for i = #pipeJobs.pending, 1, -1 do pipeJobs.pending[i] = nil end
-    return table.concat(parts, " "), lang
+    return table.concat(parts, " "), lang, target
 end
 
 -- True when a finished transcript can be typed *right now*: nothing is recording, the
@@ -1393,10 +1457,10 @@ end
 -- Insert whatever earlier dictations left queued. Returns true if it inserted something, so
 -- callers that would otherwise just hide the overlay can tell.
 local function pipeFlushPending()
-    local text, lang = pipeTakePending()
+    local text, lang, target = pipeTakePending()
     if not text then return false end
     log("pipeline: flushing a queued dictation (" .. #text .. " chars)")
-    insertTranscribedText(text, lang)
+    insertTranscribedText(text, lang, target)
     return true
 end
 
@@ -1455,7 +1519,7 @@ local function pipelineFinalize(job)
     -- in progress — so queue it. The next insertion carries it, in the order it was spoken.
     if job ~= pipe and not pipeInsertIsSafe() then
         if finalText ~= "" then
-            table.insert(pipeJobs.pending, { text = finalText, lang = job.lang })
+            table.insert(pipeJobs.pending, { text = finalText, lang = job.lang, target = job.target })
             log("pipeline: gen " .. job.gen .. " queued behind the current dictation (" ..
                 #pipeJobs.pending .. " pending)")
         end
@@ -1465,10 +1529,12 @@ local function pipelineFinalize(job)
     if job ~= pipe then
         -- Nothing is recording and nothing else owns the overlay: deliver it on its own.
         log("pipeline: gen " .. job.gen .. " inserting late — the recorder is idle")
-        if finalText ~= "" then insertTranscribedText(finalText, job.lang) end
+        if finalText ~= "" then insertTranscribedText(finalText, job.lang, job.target) end
         return
     end
 
+    -- The queued text rides along to this dictation's destination: the user is standing in
+    -- it right now, having just spoken into it. Its own target is deliberately dropped.
     local queued, queuedLang = pipeTakePending()
     if queued then
         finalText = (finalText ~= "") and (queued .. " " .. finalText) or queued
@@ -1491,7 +1557,7 @@ local function pipelineFinalize(job)
     transcribedSecs = barMaxSecs
     if overlay then updateProgressBar() end
     hs.timer.doAfter(0.4, hideProgressBar)
-    insertTranscribedText(finalText, job.lang)
+    insertTranscribedText(finalText, job.lang, job.target)
 end
 
 -- chunkCount drives the progress bar, which measures transcribed seconds against
@@ -1923,6 +1989,11 @@ local function stopRecording()
     if not isRecording then return end
     isRecording = false
     log("recording: stop")
+
+    -- Pin down where this dictation is meant to go, while the user is still there. It is
+    -- re-checked just before insertion; if it moved, the text goes to the clipboard.
+    pipe.target = focusTargetId()
+    log("insert: target at release: " .. tostring(pipe.target))
 
     stopRecordingIndicator()
     updateMenuBar()

@@ -140,6 +140,12 @@ Click **Output** in the menu bar to cycle through three modes:
 | **TYPE** | Types text character-by-character using keystroke events. Works in apps that block paste. Note: Cyrillic/non-ASCII may not work correctly in some apps. |
 | **COPY** | Writes text to clipboard via `pbcopy` but does **not** send `Cmd+V`. Useful when working in **Microsoft Remote Desktop** or other remote-desktop/VM apps where clipboard sync to the guest OS is asynchronous — dictate, wait a moment for the clipboard to sync, then press `Ctrl+V` manually in the Windows window. |
 
+**In every mode, the text only goes where you aimed it.** The spot your cursor was in when
+you released the keys is remembered, and checked again just before the text is inserted. If
+you clicked elsewhere, switched tabs or changed apps while whisper was still working, nothing
+is typed: the transcript goes to the clipboard, you hear **two** chimes instead of one, and
+the overlay shows `CLIPBOARD:` — paste it wherever you actually want it.
+
 ## Custom vocabulary prompt
 
 Create `~/.local-whisper/prompt` with terms whisper should recognize better:
@@ -211,6 +217,7 @@ Trigger combo hold/release (detected by Hammerspoon eventtap on raw device flags
   → join the segment texts, drop whisper's known silence hallucinations
   → Post-processing: remove fillers, capitalize, app-aware adjustments
   → Voice command hooks: beforeInsert → actions → text insertion → afterInsert
+  → the cursor spot recorded at key release is re-checked; if it moved, clipboard only
   → Text inserted at cursor via paste (Cmd+V), keystroke, or clipboard-only (COPY mode)
 ```
 

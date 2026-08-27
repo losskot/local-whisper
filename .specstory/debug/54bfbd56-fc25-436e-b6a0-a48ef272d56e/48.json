@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "-- Sandbox helpers (behavioral tests)\n--------------------------------------------------------------------------------\n-- Functions are lifted out of the source under test and executed against stubbed\n-- globals, so the tests exercise the real implementation rather than a copy that\n-- drifts. Every name the lifted function closes over in init.lua resolves to the\n-- sandbox _ENV here, which is what makes the stubs and the after-the-fact state\n-- assertions work.\n\nlocal function baseEnv()\n    return {\n        math = math, string = string, table = table, os = os,\n        tostring = tostring, tonumber = tonumber, type = type,\n        ipairs = ipairs, pairs = pairs, select = select,\n    }\nend\n\nlocal function loadIn(chunk, env, name)\n    return load(chunk, name or \"sandbox\", \"t\", env)\nend\n\n-- Source text of a top-level `local function NAME(...) ... end`, located by its\n-- declaration and terminated by the matching column-0 `end`.\nlocal function extractFunction(name)\n    local startLine\n    for i, s in ipairs(stripped) do\n        if s:match(\"^local%s+function%s+\" .. name .. \"%s*%(\") then startLine = i break end\n    end\n    if not startLine then return nil end\n    for i = startLine + 1, #lines do\n        if stripped[i]:match(\"^end%s*$\") then\n            return table.concat({ table.unpack(lines, startLine, i) }, \"\\n\")\n        end\n    end\n    return nil\nend\n\n-- Load a lifted `local function` and return it, bound to `env`.\nlocal function liftFunction(name, env)\n    local fnSrc = extractFunction(name)\n    if not fnSrc then return nil, \"could not locate local function \" .. name .. \"()\" end\n    local factory, err = loadIn(fnSrc .. \"\\nreturn \" .. name, env, name)\n    if not factory then return nil, tostring(err) end\n    return factory()\nend\n\n--------------------------------------------------------------------------------\n=== detach section\n667:    check(\"detach: the pipeline finalizers are liftable and compile\",\n685:        check(\"detach: a dictation that finishes behind a newer recording is not lost\",\n688:        check(\"detach: it is not typed into the recording in progress\",\n691:        check(\"detach: an older job's segments never move the current progress bar\",\n699:        check(\"detach: the queued dictation is inserted with the next one, in spoken order\",\n702:        check(\"detach: the queue is emptied once it has been inserted\",\n710:        check(\"detach: a segment returning after an emergency stop is dropped\",\n727:        check(\"detach: tryWarmup() is locatable\", false, \"could not find tryWarmup = function()\")\n733:        check(\"detach: starting a recording does not reset the pipeline\",\n745:        check(\"detach: a new recording only clears its own chunk directory\",",
+        "is_error": false,
+        "tool_use_id": "toolu_01LnWJKU3Zzf1eaGcqD7LCJe",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "42dc3acf-4b61-4d32-a4df-234ab9e11adc",
+  "promptId": "0871342d-3020-4172-a2c1-ab54a6234ac2",
+  "sessionId": "54bfbd56-fc25-436e-b6a0-a48ef272d56e",
+  "sourceToolAssistantUUID": "42dc3acf-4b61-4d32-a4df-234ab9e11adc",
+  "timestamp": "2026-08-24T03:46:15.594Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "-- Sandbox helpers (behavioral tests)\n--------------------------------------------------------------------------------\n-- Functions are lifted out of the source under test and executed against stubbed\n-- globals, so the tests exercise the real implementation rather than a copy that\n-- drifts. Every name the lifted function closes over in init.lua resolves to the\n-- sandbox _ENV here, which is what makes the stubs and the after-the-fact state\n-- assertions work.\n\nlocal function baseEnv()\n    return {\n        math = math, string = string, table = table, os = os,\n        tostring = tostring, tonumber = tonumber, type = type,\n        ipairs = ipairs, pairs = pairs, select = select,\n    }\nend\n\nlocal function loadIn(chunk, env, name)\n    return load(chunk, name or \"sandbox\", \"t\", env)\nend\n\n-- Source text of a top-level `local function NAME(...) ... end`, located by its\n-- declaration and terminated by the matching column-0 `end`.\nlocal function extractFunction(name)\n    local startLine\n    for i, s in ipairs(stripped) do\n        if s:match(\"^local%s+function%s+\" .. name .. \"%s*%(\") then startLine = i break end\n    end\n    if not startLine then return nil end\n    for i = startLine + 1, #lines do\n        if stripped[i]:match(\"^end%s*$\") then\n            return table.concat({ table.unpack(lines, startLine, i) }, \"\\n\")\n        end\n    end\n    return nil\nend\n\n-- Load a lifted `local function` and return it, bound to `env`.\nlocal function liftFunction(name, env)\n    local fnSrc = extractFunction(name)\n    if not fnSrc then return nil, \"could not locate local function \" .. name .. \"()\" end\n    local factory, err = loadIn(fnSrc .. \"\\nreturn \" .. name, env, name)\n    if not factory then return nil, tostring(err) end\n    return factory()\nend\n\n--------------------------------------------------------------------------------\n=== detach section\n667:    check(\"detach: the pipeline finalizers are liftable and compile\",\n685:        check(\"detach: a dictation that finishes behind a newer recording is not lost\",\n688:        check(\"detach: it is not typed into the recording in progress\",\n691:        check(\"detach: an older job's segments never move the current progress bar\",\n699:        check(\"detach: the queued dictation is inserted with the next one, in spoken order\",\n702:        check(\"detach: the queue is emptied once it has been inserted\",\n710:        check(\"detach: a segment returning after an emergency stop is dropped\",\n727:        check(\"detach: tryWarmup() is locatable\", false, \"could not find tryWarmup = function()\")\n733:        check(\"detach: starting a recording does not reset the pipeline\",\n745:        check(\"detach: a new recording only clears its own chunk directory\","
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "261c8ad0-9a69-4749-8238-570662178c2f",
+  "version": "2.1.240"
+}

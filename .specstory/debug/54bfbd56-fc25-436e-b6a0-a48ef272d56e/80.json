@@ -1,0 +1,63 @@
+{
+  "apiErrorStatus": 429,
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "error": "rate_limit",
+  "gitBranch": "main",
+  "isApiErrorMessage": true,
+  "isSidechain": false,
+  "message": {
+    "container": null,
+    "content": [
+      {
+        "text": "You've hit your session limit · resets 7am (Europe/Zagreb)",
+        "type": "text"
+      }
+    ],
+    "context_management": null,
+    "diagnostics": null,
+    "id": "2c17547c-2432-4114-b7bc-8332fbd18233",
+    "model": "\u003csynthetic\u003e",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "stop_sequence",
+    "stop_sequence": "",
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "inference_geo": null,
+      "input_tokens": 0,
+      "iterations": null,
+      "output_tokens": 0,
+      "output_tokens_details": null,
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": null,
+      "speed": null
+    }
+  },
+  "parentUuid": "2384ee33-3d2d-43b9-ac06-a802674ac804",
+  "quotaLimits": {
+    "isUsingOverage": false,
+    "overageDisabledReason": "org_level_disabled",
+    "overageStatus": "rejected",
+    "rateLimitType": "five_hour",
+    "resetsAt": 1787547600,
+    "status": "rejected",
+    "unifiedRateLimitFallbackAvailable": false
+  },
+  "requestId": "req_011CeLtbbWGKEhuQAu4VjRk9",
+  "sessionId": "54bfbd56-fc25-436e-b6a0-a48ef272d56e",
+  "timestamp": "2026-08-24T03:48:52.665Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "21a55d5e-e094-4eea-8b49-26f0ccf1b2dd",
+  "version": "2.1.240"
+}

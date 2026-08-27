@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "139:| **PASTE** | Writes text to clipboard via `pbcopy`, then sends `Cmd+V` automatically. Default for normal use. |\n141:| **COPY** | Writes text to clipboard via `pbcopy` but does **not** send `Cmd+V`. Useful when working in **Microsoft Remote Desktop** or other remote-desktop/VM apps where clipboard sync to the guest OS is asynchronous — dictate, wait a moment for the clipboard to sync, then press `Ctrl+V` manually in the Windows window. |\n214:  → Text inserted at cursor via paste (Cmd+V), keystroke, or clipboard-only (COPY mode)",
+        "is_error": false,
+        "tool_use_id": "toolu_01Rram8RTAgyPVJpXDxybZhT",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "f9741c08-5482-45ce-8d12-4a8ff79f559c",
+  "promptId": "adbb2826-8b89-485d-b617-b75f37459d44",
+  "sessionId": "54bfbd56-fc25-436e-b6a0-a48ef272d56e",
+  "sourceToolAssistantUUID": "f9741c08-5482-45ce-8d12-4a8ff79f559c",
+  "timestamp": "2026-08-27T17:43:55.400Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "139:| **PASTE** | Writes text to clipboard via `pbcopy`, then sends `Cmd+V` automatically. Default for normal use. |\n141:| **COPY** | Writes text to clipboard via `pbcopy` but does **not** send `Cmd+V`. Useful when working in **Microsoft Remote Desktop** or other remote-desktop/VM apps where clipboard sync to the guest OS is asynchronous — dictate, wait a moment for the clipboard to sync, then press `Ctrl+V` manually in the Windows window. |\n214:  → Text inserted at cursor via paste (Cmd+V), keystroke, or clipboard-only (COPY mode)"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "7a79cb62-4d06-4a1b-b31f-ec60b53a7178",
+  "version": "2.1.246"
+}

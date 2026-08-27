@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "RoyalTSX\n-- Some applications have alternate names which can also be checked if you enable Spotlight support with `hs.application.enableSpotlightForNameSearches(true)`.\nhs.axuielement: AXOutline (0x9bc8d25b8) role=AXOutline",
+        "is_error": false,
+        "tool_use_id": "toolu_01GnVqrpdLJ9rmpQGxTFuTX1",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "0988252b-46bf-41fb-8ec4-cb493ff6dcb9",
+  "promptId": "0871342d-3020-4172-a2c1-ab54a6234ac2",
+  "sessionId": "54bfbd56-fc25-436e-b6a0-a48ef272d56e",
+  "sourceToolAssistantUUID": "0988252b-46bf-41fb-8ec4-cb493ff6dcb9",
+  "timestamp": "2026-08-24T03:45:10.781Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "RoyalTSX\n-- Some applications have alternate names which can also be checked if you enable Spotlight support with `hs.application.enableSpotlightForNameSearches(true)`.\nhs.axuielement: AXOutline (0x9bc8d25b8) role=AXOutline"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "0b53a8d0-afca-4d09-89e0-2d4124a7ab99",
+  "version": "2.1.240"
+}

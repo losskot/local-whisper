@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "-- Loading extension: window\nid=106088 title=work app=com.lemonmojo.RoyalTSX.App role=AXWindow subrole=AXStandardWindow",
+        "is_error": false,
+        "tool_use_id": "toolu_015uCKLVf2GWf1BzESRFKA4m",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "eb7550b1-35c0-4d7c-b8b2-c7efc858cf4f",
+  "promptId": "0871342d-3020-4172-a2c1-ab54a6234ac2",
+  "sessionId": "54bfbd56-fc25-436e-b6a0-a48ef272d56e",
+  "sourceToolAssistantUUID": "eb7550b1-35c0-4d7c-b8b2-c7efc858cf4f",
+  "timestamp": "2026-08-24T03:45:07.199Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "-- Loading extension: window\nid=106088 title=work app=com.lemonmojo.RoyalTSX.App role=AXWindow subrole=AXStandardWindow"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "af2f142c-9151-470b-bbf7-ea4f1dd5d425",
+  "version": "2.1.240"
+}

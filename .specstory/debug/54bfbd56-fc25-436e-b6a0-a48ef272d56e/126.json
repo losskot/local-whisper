@@ -1,0 +1,72 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01WWwh17PnEN714q6yh3F7tq",
+        "input": {
+          "command": "git add -A \u0026\u0026 git commit -q -F - \u003c\u003c'MSG' \u0026\u0026 git log --oneline -1\nInsert only where the dictation was aimed\n\nWhisper answers seconds after the key comes up, and in those seconds the cursor\nmay have moved — another field, another tab, another app. The text was typed\nthere anyway, and keystrokes another app accepted have no undo.\n\nstopRecording() now pins the destination at release (focusTargetId(): bundle ID,\npid, focused-window id and title, plus the focused element's role/subrole/\nidentifier/title when the app exposes one — Electron apps expose none), and\nfinishInsertion() re-checks it right before inserting. On a mismatch nothing is\ntyped: output is forced to clipboard-only, two chimes play instead of one, and\nthe overlay marks the text CLIPBOARD:.\n\nThe target is per job like the rest of the pipeline, so a dictation that\nfinishes behind a newer recording is judged against the place it was spoken\ninto; queued dictations aimed at different places collapse to the clipboard\nroute. A nil target (AX unavailable) skips the check rather than refusing to\ntype. Measured 1.8 ms average per call.\n\nCo-Authored-By: Claude Opus 5 \u003cnoreply@anthropic.com\u003e\nMSG",
+          "description": "Commit the change"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011CeTfizZ4CZPCW35goWquH",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 735,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 735,
+      "cache_read_input_tokens": 105983,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 735,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 735,
+          "cache_read_input_tokens": 105983,
+          "input_tokens": 2,
+          "output_tokens": 484,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 484,
+      "output_tokens_details": {
+        "thinking_tokens": 0
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "c131d493-35f9-47ce-82ff-ca14778776a9",
+  "requestId": "req_011CeTfiyQrJQiyKYjzSViXh",
+  "sessionId": "54bfbd56-fc25-436e-b6a0-a48ef272d56e",
+  "timestamp": "2026-08-27T17:44:20.421Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "c8cab608-5da1-45ad-b35e-9f336523368c",
+  "version": "2.1.246"
+}

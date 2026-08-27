@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "mutants written\n  \u001b[0;31mFAIL\u001b[0m  focus: a cursor that moved gets the clipboard, not keystrokes\n\u001b[0;31m\u001b[1m1 of 112 checks failed.\u001b[0m\n--- mutant 2 ---\n  \u001b[0;31mFAIL\u001b[0m  focus: stopRecording pins the destination when the key comes up\n\u001b[0;31m\u001b[1m1 of 112 checks failed.\u001b[0m",
+        "is_error": false,
+        "tool_use_id": "toolu_01QuycHmSeoa73UcxrnkzUeC",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "0d202226-00ed-4715-9460-3ac1a31bf24a",
+  "promptId": "adbb2826-8b89-485d-b617-b75f37459d44",
+  "sessionId": "54bfbd56-fc25-436e-b6a0-a48ef272d56e",
+  "sourceToolAssistantUUID": "0d202226-00ed-4715-9460-3ac1a31bf24a",
+  "timestamp": "2026-08-27T17:42:32.395Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "mutants written\n  \u001b[0;31mFAIL\u001b[0m  focus: a cursor that moved gets the clipboard, not keystrokes\n\u001b[0;31m\u001b[1m1 of 112 checks failed.\u001b[0m\n--- mutant 2 ---\n  \u001b[0;31mFAIL\u001b[0m  focus: stopRecording pins the destination when the key comes up\n\u001b[0;31m\u001b[1m1 of 112 checks failed.\u001b[0m"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "365f381c-7509-41c3-9cd9-cf7dfee7f10f",
+  "version": "2.1.246"
+}

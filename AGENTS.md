@@ -15,7 +15,7 @@ Hammerspoon eventtap (trigger combo hold/release, matched on raw device flags)
   ↓  a new keypress starts a *separate* dictation; the previous one keeps transcribing
   → Post-processing (filler removal, app-aware capitalize)
   → Action hooks (voice commands, note-taking, app launching)
-  → Text insertion at cursor (paste or keystroke)
+  → Text insertion at cursor (paste or keystroke — clipboard only if the cursor moved)
   → Overlay + menu bar updates
 ```
 
@@ -267,6 +267,45 @@ Emergency stop abandons *every* live job, including a detached one, because "sto
 mean nothing more reaches the cursor. A transcript that had already finished is not dropped
 silently: it goes to the clipboard and the notification says so.
 
+### The text only goes where it was aimed
+
+Whisper answers seconds after the key comes up, and in those seconds the user may have
+clicked into another field, switched a browser tab or moved to another app. Typing there is
+worse than not typing at all: a paragraph lands in a chat, a terminal or a search box, and
+there is no undo for keystrokes another app already accepted.
+
+So `stopRecording()` pins the destination at release — `pipe.target = focusTargetId()` — and
+`finishInsertion()` re-checks it immediately before inserting. On a mismatch the output mode
+is forced to `copy` (clipboard only, nothing typed, no Enter) and **two** chimes play instead
+of one, so "nothing was typed" is audible without looking at the screen. The overlay prefixes
+the text with `CLIPBOARD:` and lingers 1.5s longer.
+
+`focusTargetId()` is a **signature, not an object reference**: AX hands back a fresh element
+on every query. It concatenates bundle ID, pid, focused-window id, window title and — when
+the app exposes one — the focused element's role, subrole, `AXIdentifier`, `AXDOMIdentifier`
+and title. Electron apps expose no focused element at all (measured: VS Code returns nil for
+`AXFocusedUIElement`), which is why the window id and title carry the check there — without
+the title, switching editor tabs inside one window would go unnoticed.
+
+Two rules hold it together:
+
+- **Volatile attributes stay out.** Window frame and the field's own value both change while
+  the user keeps working in exactly the right place, and every false alarm costs a manual
+  paste. What is in is stable for the few seconds that matter.
+- **No identifier means no verdict.** `focusTargetId()` returns nil if AX is unavailable or an
+  app is unresponsive, and a nil target skips the check entirely rather than refusing to type.
+
+The target is **per job**, like everything else in the pipeline: it rides on the job through
+`pipelineFinalize` and through `pipeJobs.pending`, so a dictation that finishes behind a newer
+recording is still judged against the place *it* was spoken into. Queued dictations aimed at
+different places collapse to `""`, which matches no focus — the whole batch takes the
+clipboard route. The one deliberate exception is text queued from an *older* dictation being
+prepended to the current one: it rides along to the current job's destination, because the
+user is standing in it right now, having just spoken into it.
+
+Cost at the two call sites is negligible — measured 1.8 ms average, 15 ms worst over ten warm
+calls (~100 ms once, the first time `hs.axuielement` loads).
+
 ### Mixed-language speech (surzhyk, ru/uk/en)
 
 Whisper decodes each window into exactly one language — there is no mixed mode. Left alone it
@@ -417,6 +456,7 @@ implementation:
 | `split` | a segment boundary cutting mid-word instead of at a pause, and — the invariant that matters most — regrouping losing or duplicating a chunk |
 | `pipeline` | live dispatch silently reverting to transcribe-after-release; the live dispatcher and the tail disagreeing by a chunk, so a second of speech is dropped or transcribed twice |
 | `detach` | a new recording destroying the dictation still being transcribed — reset pipeline state, a wiped shared chunk directory, a whisper callback reporting into whatever job is current, or a finished transcript typed into a held trigger combo |
+| `focus` | a transcript typed into whatever is focused when whisper answers rather than the place it was dictated into — the destination not captured at release, not carried by the job, or a mismatch still typing instead of taking the clipboard |
 | `emergencyStop` | emergency stop not cancelling a pending finalization |
 | `overlay` | clicking the X mid-recording leaving ffmpeg running; deleting the canvas from inside its own mouse callback; unpinning hiding the overlay while still recording |
 | `startRecording` | a re-press inside the finalization window flushing the old dictation but swallowing the new keypress |

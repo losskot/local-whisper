@@ -12,7 +12,7 @@
     {
       "exchangeId": "54bfbd56-fc25-436e-b6a0-a48ef272d56e:0",
       "startTime": "2026-08-24T03:43:45.336Z",
-      "endTime": "2026-08-24T03:44:41.131Z",
+      "endTime": "2026-08-24T03:48:52.665Z",
       "messages": [
         {
           "id": "6a58bfe3-5694-407a-b9d3-f969c96543ce",
@@ -290,6 +290,940 @@
             "outputTokens": 474,
             "cacheCreationInputTokens": 5022,
             "cacheReadInputTokens": 61413
+          }
+        },
+        {
+          "id": "d5bffe6b-4b96-45b3-8d26-3f7107a0eea3",
+          "timestamp": "2026-08-24T03:44:46.281Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 459,
+            "cacheCreationInputTokens": 585,
+            "cacheReadInputTokens": 66435
+          }
+        },
+        {
+          "id": "d26fe38a-8ad0-442d-ab08-780b4adf33ee",
+          "timestamp": "2026-08-24T03:44:50.535Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "tool": {
+            "name": "Bash",
+            "type": "shell",
+            "useId": "toolu_016ZDgJg4aL2cKPNLggLo4X5",
+            "input": {
+              "_cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+              "command": "hs -c 'local app = hs.application.frontmostApplication()\nlocal ae = hs.axuielement.applicationElement(app)\nlocal fe = ae and ae:attributeValue(\"AXFocusedUIElement\")\nlocal w  = ae and ae:attributeValue(\"AXFocusedWindow\")\nreturn string.format(\"app=%s pid=%s fe=%s wtitle=%s\", app:name(), tostring(app:pid()), tostring(fe), tostring(w and w:attributeValue(\"AXTitle\")))' 2\u003e\u00261 | tail -3",
+              "description": "Probe focused element via application element"
+            },
+            "output": {
+              "content": "app=Code pid=6568 fe=nil wtitle=Сообщение теряется при п… — local-whisper — Sane AZ",
+              "is_error": false
+            },
+            "formattedMarkdown": "Probe focused element via application element\n\n```bash\nhs -c 'local app = hs.application.frontmostApplication()\nlocal ae = hs.axuielement.applicationElement(app)\nlocal fe = ae and ae:attributeValue(\"AXFocusedUIElement\")\nlocal w  = ae and ae:attributeValue(\"AXFocusedWindow\")\nreturn string.format(\"app=%s pid=%s fe=%s wtitle=%s\", app:name(), tostring(app:pid()), tostring(fe), tostring(w and w:attributeValue(\"AXTitle\")))' 2\u003e\u00261 | tail -3\n```\n\n```text\napp=Code pid=6568 fe=nil wtitle=Сообщение теряется при п… — local-whisper — Sane AZ\n```\n"
+          },
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 459,
+            "cacheCreationInputTokens": 585,
+            "cacheReadInputTokens": 66435
+          }
+        },
+        {
+          "id": "c9b89ff4-eb2a-44ee-8057-0d92aa09dc17",
+          "timestamp": "2026-08-24T03:45:02.589Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 1095,
+            "cacheCreationInputTokens": 532,
+            "cacheReadInputTokens": 67020
+          }
+        },
+        {
+          "id": "eb7550b1-35c0-4d7c-b8b2-c7efc858cf4f",
+          "timestamp": "2026-08-24T03:45:07.199Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "tool": {
+            "name": "Bash",
+            "type": "shell",
+            "useId": "toolu_015uCKLVf2GWf1BzESRFKA4m",
+            "input": {
+              "_cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+              "command": "hs -c 'local w = hs.window.focusedWindow()\nreturn string.format(\"id=%s title=%s app=%s role=%s subrole=%s\", tostring(w and w:id()), tostring(w and w:title()), tostring(w and w:application():bundleID()), tostring(w and w:role()), tostring(w and w:subrole()))' 2\u003e\u00261 | tail -2",
+              "description": "Probe focused window id"
+            },
+            "output": {
+              "content": "-- Loading extension: window\nid=106088 title=work app=com.lemonmojo.RoyalTSX.App role=AXWindow subrole=AXStandardWindow",
+              "is_error": false
+            },
+            "formattedMarkdown": "Probe focused window id\n\n```bash\nhs -c 'local w = hs.window.focusedWindow()\nreturn string.format(\"id=%s title=%s app=%s role=%s subrole=%s\", tostring(w and w:id()), tostring(w and w:title()), tostring(w and w:application():bundleID()), tostring(w and w:role()), tostring(w and w:subrole()))' 2\u003e\u00261 | tail -2\n```\n\n```text\n-- Loading extension: window\nid=106088 title=work app=com.lemonmojo.RoyalTSX.App role=AXWindow subrole=AXStandardWindow\n```\n"
+          },
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 1095,
+            "cacheCreationInputTokens": 532,
+            "cacheReadInputTokens": 67020
+          }
+        },
+        {
+          "id": "0988252b-46bf-41fb-8ec4-cb493ff6dcb9",
+          "timestamp": "2026-08-24T03:45:10.781Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "tool": {
+            "name": "Bash",
+            "type": "shell",
+            "useId": "toolu_01GnVqrpdLJ9rmpQGxTFuTX1",
+            "input": {
+              "_cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+              "command": "osascript -e 'tell application \"System Events\" to name of first process whose frontmost is true' ; hs -c 'local app=hs.application.get(\"Finder\"); local ae=hs.axuielement.applicationElement(app); local fe=ae and ae:attributeValue(\"AXFocusedUIElement\"); return tostring(fe) .. \" role=\" .. tostring(fe and fe:attributeValue(\"AXRole\"))' 2\u003e\u00261 | tail -2",
+              "description": "Probe Finder focused element"
+            },
+            "output": {
+              "content": "RoyalTSX\n-- Some applications have alternate names which can also be checked if you enable Spotlight support with `hs.application.enableSpotlightForNameSearches(true)`.\nhs.axuielement: AXOutline (0x9bc8d25b8) role=AXOutline",
+              "is_error": false
+            },
+            "formattedMarkdown": "Probe Finder focused element\n\n`osascript -e 'tell application \"System Events\" to name of first process whose frontmost is true' ; hs -c 'local app=hs.application.get(\"Finder\"); local ae=hs.axuielement.applicationElement(app); local fe=ae and ae:attributeValue(\"AXFocusedUIElement\"); return tostring(fe) .. \" role=\" .. tostring(fe and fe:attributeValue(\"AXRole\"))' 2\u003e\u00261 | tail -2`\n\n```text\nRoyalTSX\n-- Some applications have alternate names which can also be checked if you enable Spotlight support with `hs.application.enableSpotlightForNameSearches(true)`.\nhs.axuielement: AXOutline (0x9bc8d25b8) role=AXOutline\n```\n"
+          },
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 1095,
+            "cacheCreationInputTokens": 532,
+            "cacheReadInputTokens": 67020
+          }
+        },
+        {
+          "id": "0620dfd6-1d7a-4fa0-9ac0-34d7bdab91d0",
+          "timestamp": "2026-08-24T03:46:11.224Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 4436,
+            "cacheCreationInputTokens": 1325,
+            "cacheReadInputTokens": 67552
+          }
+        },
+        {
+          "id": "ee72653e-5ebf-42ea-865e-3b26733e356a",
+          "timestamp": "2026-08-24T03:46:12.109Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "tool": {
+            "name": "Bash",
+            "type": "shell",
+            "useId": "toolu_01FkPShuPQwP3tQ2og8j55F5",
+            "input": {
+              "_cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+              "command": "wc -l tests/test_init.lua tests/test_init.sh; grep -n 'check(\\|^local function \\|^-- ' tests/test_init.lua | head -80",
+              "description": "Inspect test suite structure"
+            },
+            "output": {
+              "content": "    1322 tests/test_init.lua\n     101 tests/test_init.sh\n    1423 total\n1:-- test_init.lua — structural and behavioral tests for hammerspoon/init.lua\n3:-- Run via tests/test_init.sh (which drives it through the Hammerspoon `hs` CLI,\n4:-- since there is no standalone Lua interpreter in this stack).\n6:-- These tests guard the bug classes that have actually bitten this file:\n7:--   * a top-level local referenced by an earlier-defined function, which silently\n8:--     compiles to a nil global instead of capturing the local\n9:--   * the Lua 200-local-per-function ceiling\n10:--   * unguarded hs.sound.getByFile(...):play(), which throws and aborts its callback\n11:--   * chunk filenames sorted as strings, which reorders audio past chunk 999\n12:--   * a modifier-combo trigger matched with `flags \u0026 mask \u003e 0`, which fires on half\n13:--     the combo -- every Ctrl-C would start a recording\n14:--   * removed subsystems (meeting mode, LLM refine, silence auto-stop, ...) creeping back\n16:-- Config (set as globals by the runner; `hs` does not inherit the caller's environment):\n17:--   LW_TARGET  path to the init.lua under test (default: repo copy)\n18:--   LW_OUT     path to write results to (default: /tmp/lw_test_init.txt)\n25:-- Harness\n30:local function record(name, passed, detail)\n38:local function check(name, passed, detail)\n43:-- Source loading + lexical helpers\n46:local function readSource(path)\n68:-- Blank out string literals and comments so scans don't match inside them.\n69:local function strip(line)\n79:-- strip() is line-oriented on purpose: in a Lua pattern `.` matches newlines, so running it\n80:-- over a whole function body would delete everything after its first `--` comment.\n81:local function stripBlock(text)\n87:-- Word-boundary match for an identifier.\n88:local function usesName(line, name)\n92:-- Blank out identifier occurrences that are not variable *reads*, so the\n93:-- use-before-declaration scan doesn't fire on them:\n94:--   * field access / method call  -- obj.name, obj:name\n95:--   * assignment targets and table-constructor keys -- name = ..., { name = ... }\n96:-- A read of `name` on the right-hand side survives, which is what the scan wants.\n97:local function readsOnly(s)\n105:-- Sandbox helpers (behavioral tests)\n107:-- Functions are lifted out of the source under test and executed against stubbed\n108:-- globals, so the tests exercise the real implementation rather than a copy that\n109:-- drifts. Every name the lifted function closes over in init.lua resolves to the\n110:-- sandbox _ENV here, which is what makes the stubs and the after-the-fact state\n111:-- assertions work.\n113:local function baseEnv()\n121:local function loadIn(chunk, env, name)\n125:-- Source text of a top-level `local function NAME(...) ... end`, located by its\n126:-- declaration and terminated by the matching column-0 `end`.\n127:local function extractFunction(name)\n141:-- Load a lifted `local function` and return it, bound to `env`.\n142:local function liftFunction(name, env)\n151:-- 1. Syntax\n155:check(\"syntax: file compiles\", chunk ~= nil, tostring(loadErr))\n158:-- 2. Lua 200-local-per-function ceiling (AGENTS.md hard limit)\n165:check(\"locals: top-level count within Lua's 200 ceiling\",\n170:-- 3. No top-level local referenced before it is declared\n172:-- A `local` is only in scope after its declaration. A function defined earlier that\n173:-- references the name does NOT capture it -- the reference compiles to a global read\n174:-- that is nil at runtime, with no load-time error. This produced three live bugs in\n175:-- the overlay code (X button, unpin, menu-bar pinning).\n177:-- Collect top-level declarations: name -\u003e first declaring line.\n193:-- A name is \"shadowed\" before line `upto` if some earlier line binds it as a local,\n194:-- a function parameter, or a loop variable -- in which case an earlier textual use\n195:-- refers to that binding, not to the top-level one, and is not a bug.\n196:local function shadowedBefore(name, upto)\n217:check(\"scope: no top-level local used before its declaration\",\n222:-- 4. No unguarded system-sound playback\n224:-- hs.sound.getByFile returns nil when the file is missing or AudioToolbox fails to\n225:-- load it; indexing that nil throws and aborts whatever callback is mid-flight,\n226:-- which previously stranded the overlay on screen. All playback goes through\n227:-- playSound(), which nil-checks.\n235:check(\"sound: no unguarded getByFile():play()\",\n240:-- 5. Deleted subsystems stay deleted\n242:-- Each of these was removed deliberately. Patterns run against the stripped source,\n243:-- so a mention in a comment or a string literal does not trip them -- only real code.\n269:    check(sub.name .. \": no \" .. sub.what .. \" code remains\",\n275:-- 6. No unintended top-level globals\n277:-- AGENTS.md: never leak state into Hammerspoon's shared _ENV, where another config\n278:-- or Spoon can collide with it. A short allowlist covers the deliberate ones.\n287:-- `decls` holds every top-level local, including forward declarations. Assigning to\n288:-- one of those (e.g. `hideOverlay = function() ... end`) writes the local, not a global.\n301:check(\"globals: no unintended top-level globals\",\n306:-- 7. Chunk ordering (behavioral -- exercises the real comparator)\n308:-- The comparator is extracted from the source under test rather than reimplemented,\n309:-- so this test tracks the real implementation instead of a copy that can drift.",
+              "is_error": false
+            },
+            "formattedMarkdown": "Inspect test suite structure\n\n`wc -l tests/test_init.lua tests/test_init.sh; grep -n 'check(\\|^local function \\|^-- ' tests/test_init.lua | head -80`\n\n```text\n    1322 tests/test_init.lua\n     101 tests/test_init.sh\n    1423 total\n1:-- test_init.lua — structural and behavioral tests for hammerspoon/init.lua\n3:-- Run via tests/test_init.sh (which drives it through the Hammerspoon `hs` CLI,\n4:-- since there is no standalone Lua interpreter in this stack).\n6:-- These tests guard the bug classes that have actually bitten this file:\n7:--   * a top-level local referenced by an earlier-defined function, which silently\n8:--     compiles to a nil global instead of capturing the local\n9:--   * the Lua 200-local-per-function ceiling\n10:--   * unguarded hs.sound.getByFile(...):play(), which throws and aborts its callback\n11:--   * chunk filenames sorted as strings, which reorders audio past chunk 999\n12:--   * a modifier-combo trigger matched with `flags \u0026 mask \u003e 0`, which fires on half\n13:--     the combo -- every Ctrl-C would start a recording\n14:--   * removed subsystems (meeting mode, LLM refine, silence auto-stop, ...) creeping back\n16:-- Config (set as globals by the runner; `hs` does not inherit the caller's environment):\n17:--   LW_TARGET  path to the init.lua under test (default: repo copy)\n18:--   LW_OUT     path to write results to (default: /tmp/lw_test_init.txt)\n25:-- Harness\n30:local function record(name, passed, detail)\n38:local function check(name, passed, detail)\n43:-- Source loading + lexical helpers\n46:local function readSource(path)\n68:-- Blank out string literals and comments so scans don't match inside them.\n69:local function strip(line)\n79:-- strip() is line-oriented on purpose: in a Lua pattern `.` matches newlines, so running it\n80:-- over a whole function body would delete everything after its first `--` comment.\n81:local function stripBlock(text)\n87:-- Word-boundary match for an identifier.\n88:local function usesName(line, name)\n92:-- Blank out identifier occurrences that are not variable *reads*, so the\n93:-- use-before-declaration scan doesn't fire on them:\n94:--   * field access / method call  -- obj.name, obj:name\n95:--   * assignment targets and table-constructor keys -- name = ..., { name = ... }\n96:-- A read of `name` on the right-hand side survives, which is what the scan wants.\n97:local function readsOnly(s)\n105:-- Sandbox helpers (behavioral tests)\n107:-- Functions are lifted out of the source under test and executed against stubbed\n108:-- globals, so the tests exercise the real implementation rather than a copy that\n109:-- drifts. Every name the lifted function closes over in init.lua resolves to the\n110:-- sandbox _ENV here, which is what makes the stubs and the after-the-fact state\n111:-- assertions work.\n113:local function baseEnv()\n121:local function loadIn(chunk, env, name)\n125:-- Source text of a top-level `local function NAME(...) ... end`, located by its\n126:-- declaration and terminated by the matching column-0 `end`.\n127:local function extractFunction(name)\n141:-- Load a lifted `local function` and return it, bound to `env`.\n142:local function liftFunction(name, env)\n151:-- 1. Syntax\n155:check(\"syntax: file compiles\", chunk ~= nil, tostring(loadErr))\n158:-- 2. Lua 200-local-per-function ceiling (AGENTS.md hard limit)\n165:check(\"locals: top-level count within Lua's 200 ceiling\",\n170:-- 3. No top-level local referenced before it is declared\n172:-- A `local` is only in scope after its declaration. A function defined earlier that\n173:-- references the name does NOT capture it -- the reference compiles to a global read\n174:-- that is nil at runtime, with no load-time error. This produced three live bugs in\n175:-- the overlay code (X button, unpin, menu-bar pinning).\n177:-- Collect top-level declarations: name -\u003e first declaring line.\n193:-- A name is \"shadowed\" before line `upto` if some earlier line binds it as a local,\n194:-- a function parameter, or a loop variable -- in which case an earlier textual use\n195:-- refers to that binding, not to the top-level one, and is not a bug.\n196:local function shadowedBefore(name, upto)\n217:check(\"scope: no top-level local used before its declaration\",\n222:-- 4. No unguarded system-sound playback\n224:-- hs.sound.getByFile returns nil when the file is missing or AudioToolbox fails to\n225:-- load it; indexing that nil throws and aborts whatever callback is mid-flight,\n226:-- which previously stranded the overlay on screen. All playback goes through\n227:-- playSound(), which nil-checks.\n235:check(\"sound: no unguarded getByFile():play()\",\n240:-- 5. Deleted subsystems stay deleted\n242:-- Each of these was removed deliberately. Patterns run against the stripped source,\n243:-- so a mention in a comment or a string literal does not trip them -- only real code.\n269:    check(sub.name .. \": no \" .. sub.what .. \" code remains\",\n275:-- 6. No unintended top-level globals\n277:-- AGENTS.md: never leak state into Hammerspoon's shared _ENV, where another config\n278:-- or Spoon can collide with it. A short allowlist covers the deliberate ones.\n287:-- `decls` holds every top-level local, including forward declarations. Assigning to\n288:-- one of those (e.g. `hideOverlay = function() ... end`) writes the local, not a global.\n301:check(\"globals: no unintended top-level globals\",\n306:-- 7. Chunk ordering (behavioral -- exercises the real comparator)\n308:-- The comparator is extracted from the source under test rather than reimplemented,\n309:-- so this test tracks the real implementation instead of a copy that can drift.\n```\n"
+          },
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 4436,
+            "cacheCreationInputTokens": 1325,
+            "cacheReadInputTokens": 67552
+          }
+        },
+        {
+          "id": "d53a9ba1-9c35-4bfe-aee9-65f2c98b92d2",
+          "timestamp": "2026-08-24T03:46:14.951Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 189,
+            "cacheCreationInputTokens": 6493,
+            "cacheReadInputTokens": 68877
+          }
+        },
+        {
+          "id": "42dc3acf-4b61-4d32-a4df-234ab9e11adc",
+          "timestamp": "2026-08-24T03:46:15.594Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "tool": {
+            "name": "Bash",
+            "type": "shell",
+            "useId": "toolu_01LnWJKU3Zzf1eaGcqD7LCJe",
+            "input": {
+              "_cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+              "command": "sed -n 105,150p tests/test_init.lua; echo '=== detach section'; grep -n 'detach' tests/test_init.lua | head",
+              "description": "Read lift helpers and locate detach tests"
+            },
+            "output": {
+              "content": "-- Sandbox helpers (behavioral tests)\n--------------------------------------------------------------------------------\n-- Functions are lifted out of the source under test and executed against stubbed\n-- globals, so the tests exercise the real implementation rather than a copy that\n-- drifts. Every name the lifted function closes over in init.lua resolves to the\n-- sandbox _ENV here, which is what makes the stubs and the after-the-fact state\n-- assertions work.\n\nlocal function baseEnv()\n    return {\n        math = math, string = string, table = table, os = os,\n        tostring = tostring, tonumber = tonumber, type = type,\n        ipairs = ipairs, pairs = pairs, select = select,\n    }\nend\n\nlocal function loadIn(chunk, env, name)\n    return load(chunk, name or \"sandbox\", \"t\", env)\nend\n\n-- Source text of a top-level `local function NAME(...) ... end`, located by its\n-- declaration and terminated by the matching column-0 `end`.\nlocal function extractFunction(name)\n    local startLine\n    for i, s in ipairs(stripped) do\n        if s:match(\"^local%s+function%s+\" .. name .. \"%s*%(\") then startLine = i break end\n    end\n    if not startLine then return nil end\n    for i = startLine + 1, #lines do\n        if stripped[i]:match(\"^end%s*$\") then\n            return table.concat({ table.unpack(lines, startLine, i) }, \"\\n\")\n        end\n    end\n    return nil\nend\n\n-- Load a lifted `local function` and return it, bound to `env`.\nlocal function liftFunction(name, env)\n    local fnSrc = extractFunction(name)\n    if not fnSrc then return nil, \"could not locate local function \" .. name .. \"()\" end\n    local factory, err = loadIn(fnSrc .. \"\\nreturn \" .. name, env, name)\n    if not factory then return nil, tostring(err) end\n    return factory()\nend\n\n--------------------------------------------------------------------------------\n=== detach section\n667:    check(\"detach: the pipeline finalizers are liftable and compile\",\n685:        check(\"detach: a dictation that finishes behind a newer recording is not lost\",\n688:        check(\"detach: it is not typed into the recording in progress\",\n691:        check(\"detach: an older job's segments never move the current progress bar\",\n699:        check(\"detach: the queued dictation is inserted with the next one, in spoken order\",\n702:        check(\"detach: the queue is emptied once it has been inserted\",\n710:        check(\"detach: a segment returning after an emergency stop is dropped\",\n727:        check(\"detach: tryWarmup() is locatable\", false, \"could not find tryWarmup = function()\")\n733:        check(\"detach: starting a recording does not reset the pipeline\",\n745:        check(\"detach: a new recording only clears its own chunk directory\",",
+              "is_error": false
+            },
+            "formattedMarkdown": "Read lift helpers and locate detach tests\n\n`sed -n 105,150p tests/test_init.lua; echo '=== detach section'; grep -n 'detach' tests/test_init.lua | head`\n\n```text\n-- Sandbox helpers (behavioral tests)\n--------------------------------------------------------------------------------\n-- Functions are lifted out of the source under test and executed against stubbed\n-- globals, so the tests exercise the real implementation rather than a copy that\n-- drifts. Every name the lifted function closes over in init.lua resolves to the\n-- sandbox _ENV here, which is what makes the stubs and the after-the-fact state\n-- assertions work.\n\nlocal function baseEnv()\n    return {\n        math = math, string = string, table = table, os = os,\n        tostring = tostring, tonumber = tonumber, type = type,\n        ipairs = ipairs, pairs = pairs, select = select,\n    }\nend\n\nlocal function loadIn(chunk, env, name)\n    return load(chunk, name or \"sandbox\", \"t\", env)\nend\n\n-- Source text of a top-level `local function NAME(...) ... end`, located by its\n-- declaration and terminated by the matching column-0 `end`.\nlocal function extractFunction(name)\n    local startLine\n    for i, s in ipairs(stripped) do\n        if s:match(\"^local%s+function%s+\" .. name .. \"%s*%(\") then startLine = i break end\n    end\n    if not startLine then return nil end\n    for i = startLine + 1, #lines do\n        if stripped[i]:match(\"^end%s*$\") then\n            return table.concat({ table.unpack(lines, startLine, i) }, \"\\n\")\n        end\n    end\n    return nil\nend\n\n-- Load a lifted `local function` and return it, bound to `env`.\nlocal function liftFunction(name, env)\n    local fnSrc = extractFunction(name)\n    if not fnSrc then return nil, \"could not locate local function \" .. name .. \"()\" end\n    local factory, err = loadIn(fnSrc .. \"\\nreturn \" .. name, env, name)\n    if not factory then return nil, tostring(err) end\n    return factory()\nend\n\n--------------------------------------------------------------------------------\n=== detach section\n667:    check(\"detach: the pipeline finalizers are liftable and compile\",\n685:        check(\"detach: a dictation that finishes behind a newer recording is not lost\",\n688:        check(\"detach: it is not typed into the recording in progress\",\n691:        check(\"detach: an older job's segments never move the current progress bar\",\n699:        check(\"detach: the queued dictation is inserted with the next one, in spoken order\",\n702:        check(\"detach: the queue is emptied once it has been inserted\",\n710:        check(\"detach: a segment returning after an emergency stop is dropped\",\n727:        check(\"detach: tryWarmup() is locatable\", false, \"could not find tryWarmup = function()\")\n733:        check(\"detach: starting a recording does not reset the pipeline\",\n745:        check(\"detach: a new recording only clears its own chunk directory\",\n```\n"
+          },
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 189,
+            "cacheCreationInputTokens": 6493,
+            "cacheReadInputTokens": 68877
+          }
+        },
+        {
+          "id": "083cf34a-0733-464c-abb8-ab2dc0e22e21",
+          "timestamp": "2026-08-24T03:46:17.508Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "tool": {
+            "name": "Bash",
+            "type": "shell",
+            "useId": "toolu_012m26pHvDZadPaGXn7krs5g",
+            "input": {
+              "_cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+              "command": "sed -n 620,760p tests/test_init.lua",
+              "description": "Read detach behavioral tests"
+            },
+            "output": {
+              "content": "        end\n    end\n\n    os.execute(\"rm -rf '\" .. dir .. \"'\")\nend\n\n--------------------------------------------------------------------------------\n-- 8e. A new recording must not swallow the dictation still being transcribed\n--------------------------------------------------------------------------------\n-- Pressing the trigger again while the previous dictation was still in whisper used to\n-- reset the one shared pipeline table and wipe the one shared chunk directory. Its finished\n-- segments were dropped from `results`, `finalizing` went back to false so nothing was ever\n-- assembled, and the concat of its remaining audio failed with ffmpeg exit 254 because the\n-- WAVs were gone. A 92-second dictation vanished with no error anywhere but those two lines.\n--\n-- Each keypress now owns a job. These checks pin the two halves of the contract: a job that\n-- finishes behind a newer recording keeps its text, and that text is delivered -- with the\n-- next insertion, oldest first, because the user is still holding the trigger combo when it\n-- arrives and both insertion modes post keystrokes.\n\ndo\n    local env = baseEnv()\n    env.log = function() end\n    env.overlay = nil\n    env.transcribedSecs = 0\n    env.barMaxSecs = 180\n    env.hs = {\n        notify = { new = function() return { send = function() end } end },\n        timer  = { doAfter = function() end },\n    }\n    local inserted = {}\n    env.insertTranscribedText = function(text, lang)\n        inserted[#inserted + 1] = { text = text, lang = lang }\n    end\n    env.hideProgressBar   = function() end\n    env.hideOverlay       = function() end\n    env.setOverlayText    = function() end\n    env.updateProgressBar = function() end\n    env.pipeCleanup       = function() end\n    env.pipeJobs = { live = {}, pending = {}, lastGen = 2 }\n    -- A recording is in progress, so a transcript landing now cannot be typed anywhere.\n    local insertSafe = false\n    env.pipeInsertIsSafe = function() return insertSafe end\n\n    local takePending = liftFunction(\"pipeTakePending\", env)\n    local finalize    = liftFunction(\"pipelineFinalize\", env)\n    local done        = liftFunction(\"onPipelineDone\", env)\n    check(\"detach: the pipeline finalizers are liftable and compile\",\n          takePending ~= nil and finalize ~= nil and done ~= nil,\n          \"could not lift pipeTakePending/pipelineFinalize/onPipelineDone\")\n\n    if takePending and finalize and done then\n        env.pipeTakePending  = takePending\n        env.pipelineFinalize = finalize\n\n        -- gen 1: released, still in whisper. gen 2: the recording started on top of it.\n        local old = { gen = 1, results = {}, lang = \"ru\", nextChunk = 1, nextSeg = 2,\n                      total = 1, done = 0, finalizing = true, inserted = false, abandoned = false }\n        local new = { gen = 2, results = {}, lang = nil, nextChunk = 1, nextSeg = 1,\n                      total = 0, done = 0, finalizing = false, inserted = false, abandoned = false }\n        env.pipeJobs.live[1] = old\n        env.pipeJobs.live[2] = new\n        env.pipe = new\n\n        done(old, 1, \"первое сообщение\", \"ru\", 30)\n        check(\"detach: a dictation that finishes behind a newer recording is not lost\",\n              #env.pipeJobs.pending == 1 and env.pipeJobs.pending[1].text == \"первое сообщение\",\n              #env.pipeJobs.pending .. \" queued -- the transcript was dropped on the floor\")\n        check(\"detach: it is not typed into the recording in progress\",\n              #inserted == 0,\n              \"inserted \" .. #inserted .. \" transcript(s) while the trigger was still held\")\n        check(\"detach: an older job's segments never move the current progress bar\",\n              env.transcribedSecs == 0,\n              \"transcribedSecs moved to \" .. tostring(env.transcribedSecs))\n\n        -- The new dictation finishes: both texts arrive together, oldest first.\n        insertSafe = true\n        new.total, new.finalizing = 1, true\n        done(new, 1, \"второе сообщение\", \"ru\", 10)\n        check(\"detach: the queued dictation is inserted with the next one, in spoken order\",\n              #inserted == 1 and inserted[1].text == \"первое сообщение второе сообщение\",\n              \"inserted \" .. #inserted .. \": '\" .. (inserted[1] and inserted[1].text or \"\") .. \"'\")\n        check(\"detach: the queue is emptied once it has been inserted\",\n              #env.pipeJobs.pending == 0,\n              #env.pipeJobs.pending .. \" still queued -- it would reappear on a later dictation\")\n\n        -- Emergency stop abandons every job; whatever comes back after it is dropped.\n        local stopped = { gen = 3, results = {}, total = 1, done = 0,\n                          finalizing = true, inserted = false, abandoned = true }\n        done(stopped, 1, \"не вставлять\", \"ru\", 5)\n        check(\"detach: a segment returning after an emergency stop is dropped\",\n              #inserted == 1 and stopped.results[1] == nil,\n              \"an abandoned job still delivered text\")\n    end\nend\n\n--------------------------------------------------------------------------------\n-- 8f. The two places that used to destroy a dictation in progress\n--------------------------------------------------------------------------------\n\ndo\n    local twStart, twEnd\n    for i, s in ipairs(stripped) do\n        if not twStart and s:match(\"^tryWarmup%s*=%s*function%s*%(\") then twStart = i end\n        if twStart and not twEnd and i \u003e twStart and s:match(\"^end%s*$\") then twEnd = i end\n    end\n    if not (twStart and twEnd) then\n        check(\"detach: tryWarmup() is locatable\", false, \"could not find tryWarmup = function()\")\n    else\n        local body = table.concat({ table.unpack(stripped, twStart, twEnd) }, \"\\n\")\n        -- The wipe scan runs on the raw lines: the path it deletes lives inside a string\n        -- literal, and strip() blanks those.\n        local rawBody = table.concat({ table.unpack(lines, twStart, twEnd) }, \"\\n\")\n        check(\"detach: starting a recording does not reset the pipeline\",\n              body:find(\"pipelineReset\") == nil,\n              \"tryWarmup() calls pipelineReset() -- that wipes the results of a dictation \" ..\n              \"that is still being transcribed\")\n        local wipes = {}\n        for line in rawBody:gmatch(\"[^\\n]+\") do\n            if line:find(\"rm %-rf\") then wipes[#wipes + 1] = line end\n        end\n        local perJob = #wipes \u003e 0\n        for _, line in ipairs(wipes) do\n            if not line:find(\"pipe%.dir\") then perJob = false end\n        end\n        check(\"detach: a new recording only clears its own chunk directory\",\n              perJob,\n              \"tryWarmup() clears \" .. (#wipes == 0 and \"nothing\" or table.concat(wipes, \" | \")) ..\n              \" -- clearing the shared directory deletes audio another dictation is still reading\")\n    end\n\n    local srcStart = extractFunction(\"startRecording\")\n    check(\"detach: startRecording() gives the keypress its own job\",\n          srcStart ~= nil and stripBlock(srcStart):find(\"pipeStartJob\") ~= nil,\n          \"startRecording() does not call pipeStartJob() -- the new recording would share \" ..\n          \"state with the dictation still in flight\")\n\n    local dispatch = extractFunction(\"dispatchSegment\")\n    if not dispatch then\n        check(\"detach: dispatchSegment() is locatable\", false, \"could not find dispatchSegment()\")\n    else",
+              "is_error": false
+            },
+            "formattedMarkdown": "Read detach behavioral tests\n\n`sed -n 620,760p tests/test_init.lua`\n\n```text\n        end\n    end\n\n    os.execute(\"rm -rf '\" .. dir .. \"'\")\nend\n\n--------------------------------------------------------------------------------\n-- 8e. A new recording must not swallow the dictation still being transcribed\n--------------------------------------------------------------------------------\n-- Pressing the trigger again while the previous dictation was still in whisper used to\n-- reset the one shared pipeline table and wipe the one shared chunk directory. Its finished\n-- segments were dropped from `results`, `finalizing` went back to false so nothing was ever\n-- assembled, and the concat of its remaining audio failed with ffmpeg exit 254 because the\n-- WAVs were gone. A 92-second dictation vanished with no error anywhere but those two lines.\n--\n-- Each keypress now owns a job. These checks pin the two halves of the contract: a job that\n-- finishes behind a newer recording keeps its text, and that text is delivered -- with the\n-- next insertion, oldest first, because the user is still holding the trigger combo when it\n-- arrives and both insertion modes post keystrokes.\n\ndo\n    local env = baseEnv()\n    env.log = function() end\n    env.overlay = nil\n    env.transcribedSecs = 0\n    env.barMaxSecs = 180\n    env.hs = {\n        notify = { new = function() return { send = function() end } end },\n        timer  = { doAfter = function() end },\n    }\n    local inserted = {}\n    env.insertTranscribedText = function(text, lang)\n        inserted[#inserted + 1] = { text = text, lang = lang }\n    end\n    env.hideProgressBar   = function() end\n    env.hideOverlay       = function() end\n    env.setOverlayText    = function() end\n    env.updateProgressBar = function() end\n    env.pipeCleanup       = function() end\n    env.pipeJobs = { live = {}, pending = {}, lastGen = 2 }\n    -- A recording is in progress, so a transcript landing now cannot be typed anywhere.\n    local insertSafe = false\n    env.pipeInsertIsSafe = function() return insertSafe end\n\n    local takePending = liftFunction(\"pipeTakePending\", env)\n    local finalize    = liftFunction(\"pipelineFinalize\", env)\n    local done        = liftFunction(\"onPipelineDone\", env)\n    check(\"detach: the pipeline finalizers are liftable and compile\",\n          takePending ~= nil and finalize ~= nil and done ~= nil,\n          \"could not lift pipeTakePending/pipelineFinalize/onPipelineDone\")\n\n    if takePending and finalize and done then\n        env.pipeTakePending  = takePending\n        env.pipelineFinalize = finalize\n\n        -- gen 1: released, still in whisper. gen 2: the recording started on top of it.\n        local old = { gen = 1, results = {}, lang = \"ru\", nextChunk = 1, nextSeg = 2,\n                      total = 1, done = 0, finalizing = true, inserted = false, abandoned = false }\n        local new = { gen = 2, results = {}, lang = nil, nextChunk = 1, nextSeg = 1,\n                      total = 0, done = 0, finalizing = false, inserted = false, abandoned = false }\n        env.pipeJobs.live[1] = old\n        env.pipeJobs.live[2] = new\n        env.pipe = new\n\n        done(old, 1, \"первое сообщение\", \"ru\", 30)\n        check(\"detach: a dictation that finishes behind a newer recording is not lost\",\n              #env.pipeJobs.pending == 1 and env.pipeJobs.pending[1].text == \"первое сообщение\",\n              #env.pipeJobs.pending .. \" queued -- the transcript was dropped on the floor\")\n        check(\"detach: it is not typed into the recording in progress\",\n              #inserted == 0,\n              \"inserted \" .. #inserted .. \" transcript(s) while the trigger was still held\")\n        check(\"detach: an older job's segments never move the current progress bar\",\n              env.transcribedSecs == 0,\n              \"transcribedSecs moved to \" .. tostring(env.transcribedSecs))\n\n        -- The new dictation finishes: both texts arrive together, oldest first.\n        insertSafe = true\n        new.total, new.finalizing = 1, true\n        done(new, 1, \"второе сообщение\", \"ru\", 10)\n        check(\"detach: the queued dictation is inserted with the next one, in spoken order\",\n              #inserted == 1 and inserted[1].text == \"первое сообщение второе сообщение\",\n              \"inserted \" .. #inserted .. \": '\" .. (inserted[1] and inserted[1].text or \"\") .. \"'\")\n        check(\"detach: the queue is emptied once it has been inserted\",\n              #env.pipeJobs.pending == 0,\n              #env.pipeJobs.pending .. \" still queued -- it would reappear on a later dictation\")\n\n        -- Emergency stop abandons every job; whatever comes back after it is dropped.\n        local stopped = { gen = 3, results = {}, total = 1, done = 0,\n                          finalizing = true, inserted = false, abandoned = true }\n        done(stopped, 1, \"не вставлять\", \"ru\", 5)\n        check(\"detach: a segment returning after an emergency stop is dropped\",\n              #inserted == 1 and stopped.results[1] == nil,\n              \"an abandoned job still delivered text\")\n    end\nend\n\n--------------------------------------------------------------------------------\n-- 8f. The two places that used to destroy a dictation in progress\n--------------------------------------------------------------------------------\n\ndo\n    local twStart, twEnd\n    for i, s in ipairs(stripped) do\n        if not twStart and s:match(\"^tryWarmup%s*=%s*function%s*%(\") then twStart = i end\n        if twStart and not twEnd and i \u003e twStart and s:match(\"^end%s*$\") then twEnd = i end\n    end\n    if not (twStart and twEnd) then\n        check(\"detach: tryWarmup() is locatable\", false, \"could not find tryWarmup = function()\")\n    else\n        local body = table.concat({ table.unpack(stripped, twStart, twEnd) }, \"\\n\")\n        -- The wipe scan runs on the raw lines: the path it deletes lives inside a string\n        -- literal, and strip() blanks those.\n        local rawBody = table.concat({ table.unpack(lines, twStart, twEnd) }, \"\\n\")\n        check(\"detach: starting a recording does not reset the pipeline\",\n              body:find(\"pipelineReset\") == nil,\n              \"tryWarmup() calls pipelineReset() -- that wipes the results of a dictation \" ..\n              \"that is still being transcribed\")\n        local wipes = {}\n        for line in rawBody:gmatch(\"[^\\n]+\") do\n            if line:find(\"rm %-rf\") then wipes[#wipes + 1] = line end\n        end\n        local perJob = #wipes \u003e 0\n        for _, line in ipairs(wipes) do\n            if not line:find(\"pipe%.dir\") then perJob = false end\n        end\n        check(\"detach: a new recording only clears its own chunk directory\",\n              perJob,\n              \"tryWarmup() clears \" .. (#wipes == 0 and \"nothing\" or table.concat(wipes, \" | \")) ..\n              \" -- clearing the shared directory deletes audio another dictation is still reading\")\n    end\n\n    local srcStart = extractFunction(\"startRecording\")\n    check(\"detach: startRecording() gives the keypress its own job\",\n          srcStart ~= nil and stripBlock(srcStart):find(\"pipeStartJob\") ~= nil,\n          \"startRecording() does not call pipeStartJob() -- the new recording would share \" ..\n          \"state with the dictation still in flight\")\n\n    local dispatch = extractFunction(\"dispatchSegment\")\n    if not dispatch then\n        check(\"detach: dispatchSegment() is locatable\", false, \"could not find dispatchSegment()\")\n    else\n```\n"
+          },
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 94,
+            "cacheCreationInputTokens": 1139,
+            "cacheReadInputTokens": 75370
+          }
+        },
+        {
+          "id": "a45ed6c2-1fc0-4454-ae9a-e79b527507cd",
+          "timestamp": "2026-08-24T03:46:25.290Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 587,
+            "cacheCreationInputTokens": 2768,
+            "cacheReadInputTokens": 76509
+          }
+        },
+        {
+          "id": "693f6743-e69d-4dc8-ac8a-caa0d9edb3a6",
+          "timestamp": "2026-08-24T03:46:25.843Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "tool": {
+            "name": "Bash",
+            "type": "shell",
+            "useId": "toolu_01U5CuXMNiRfnDE9MSVv2oaP",
+            "input": {
+              "_cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+              "command": "sed -n 642,720p hammerspoon/init.lua",
+              "description": "Read buildActionContext"
+            },
+            "output": {
+              "content": "local function buildActionContext(text, lang, mode)\n    local ctx = {\n        text = text,\n        textLower = text:lower(),\n        originalText = text,\n        lang = lang,\n        outputMode = mode,\n        appName = capturedAppName,\n        appBundleID = capturedAppBundleID,\n        insert = true,\n        inserted = false,\n        handled = false,\n        timestamp = os.time(),\n        isoTime = os.date(\"!%Y-%m-%dT%H:%M:%SZ\"),\n    }\n\n    function ctx:setText(newText)\n        if type(newText) ~= \"string\" then return end\n        self.text = normalizeText(newText)\n        self.textLower = self.text:lower()\n    end\n\n    function ctx:disableInsert()\n        self.insert = false\n    end\n\n    function ctx:enableInsert()\n        self.insert = true\n    end\n\n    function ctx:launchApp(appName)\n        if type(appName) ~= \"string\" or appName == \"\" then return false end\n        return hs.application.launchOrFocus(appName)\n    end\n\n    function ctx:appendToFile(path, line)\n        local resolved = expandPath(path)\n        if not resolved or resolved == \"\" then return false, \"invalid path\" end\n        if not ensureParentDir(resolved) then return false, \"mkdir failed\" end\n        local f = io.open(resolved, \"a\")\n        if not f then return false, \"open failed\" end\n        f:write(tostring(line or self.text or \"\") .. \"\\n\")\n        f:close()\n        return true\n    end\n\n    function ctx:runShell(command, inputText)\n        if type(command) ~= \"string\" or command == \"\" then\n            return false, \"\", \"invalid command\", 1\n        end\n        local token = tostring(os.time()) .. \"_\" .. tostring(math.random(1000000))\n        local stdinPath = WHISPER_TMP .. \"/action_stdin_\" .. token .. \".txt\"\n        writeFile(stdinPath, tostring(inputText or self.text or \"\"))\n        local output, ok, kind, rc = hs.execute(command .. \" \u003c \" .. shellQuote(stdinPath), true)\n        os.remove(stdinPath)\n        return ok, output, kind, rc\n    end\n\n    function ctx:keystroke(mods, key)\n        hs.eventtap.keyStroke(mods or {}, key)\n    end\n\n    function ctx:notify(message)\n        hs.notify.new({ title = \"local-whisper\", informativeText = tostring(message) }):send()\n    end\n\n    function ctx:log(message)\n        log(\"action: \" .. tostring(message))\n    end\n\n    return ctx\nend\n\nlocal function runActionList(actions, ctx)\n    if type(actions) ~= \"table\" then return end\n    for i, action in ipairs(actions) do\n        if ctx.handled then break end\n        if type(action) == \"function\" then\n            safeHookCall(\"actions[\" .. i .. \"]\", action, ctx)",
+              "is_error": false
+            },
+            "formattedMarkdown": "Read buildActionContext\n\n`sed -n 642,720p hammerspoon/init.lua`\n\n```text\nlocal function buildActionContext(text, lang, mode)\n    local ctx = {\n        text = text,\n        textLower = text:lower(),\n        originalText = text,\n        lang = lang,\n        outputMode = mode,\n        appName = capturedAppName,\n        appBundleID = capturedAppBundleID,\n        insert = true,\n        inserted = false,\n        handled = false,\n        timestamp = os.time(),\n        isoTime = os.date(\"!%Y-%m-%dT%H:%M:%SZ\"),\n    }\n\n    function ctx:setText(newText)\n        if type(newText) ~= \"string\" then return end\n        self.text = normalizeText(newText)\n        self.textLower = self.text:lower()\n    end\n\n    function ctx:disableInsert()\n        self.insert = false\n    end\n\n    function ctx:enableInsert()\n        self.insert = true\n    end\n\n    function ctx:launchApp(appName)\n        if type(appName) ~= \"string\" or appName == \"\" then return false end\n        return hs.application.launchOrFocus(appName)\n    end\n\n    function ctx:appendToFile(path, line)\n        local resolved = expandPath(path)\n        if not resolved or resolved == \"\" then return false, \"invalid path\" end\n        if not ensureParentDir(resolved) then return false, \"mkdir failed\" end\n        local f = io.open(resolved, \"a\")\n        if not f then return false, \"open failed\" end\n        f:write(tostring(line or self.text or \"\") .. \"\\n\")\n        f:close()\n        return true\n    end\n\n    function ctx:runShell(command, inputText)\n        if type(command) ~= \"string\" or command == \"\" then\n            return false, \"\", \"invalid command\", 1\n        end\n        local token = tostring(os.time()) .. \"_\" .. tostring(math.random(1000000))\n        local stdinPath = WHISPER_TMP .. \"/action_stdin_\" .. token .. \".txt\"\n        writeFile(stdinPath, tostring(inputText or self.text or \"\"))\n        local output, ok, kind, rc = hs.execute(command .. \" \u003c \" .. shellQuote(stdinPath), true)\n        os.remove(stdinPath)\n        return ok, output, kind, rc\n    end\n\n    function ctx:keystroke(mods, key)\n        hs.eventtap.keyStroke(mods or {}, key)\n    end\n\n    function ctx:notify(message)\n        hs.notify.new({ title = \"local-whisper\", informativeText = tostring(message) }):send()\n    end\n\n    function ctx:log(message)\n        log(\"action: \" .. tostring(message))\n    end\n\n    return ctx\nend\n\nlocal function runActionList(actions, ctx)\n    if type(actions) ~= \"table\" then return end\n    for i, action in ipairs(actions) do\n        if ctx.handled then break end\n        if type(action) == \"function\" then\n            safeHookCall(\"actions[\" .. i .. \"]\", action, ctx)\n```\n"
+          },
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 587,
+            "cacheCreationInputTokens": 2768,
+            "cacheReadInputTokens": 76509
+          }
+        },
+        {
+          "id": "4279e1ef-da7f-4c6b-bb43-aecd4260c456",
+          "timestamp": "2026-08-24T03:46:59.115Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 4875,
+            "cacheCreationInputTokens": 1566,
+            "cacheReadInputTokens": 79277
+          }
+        },
+        {
+          "id": "2b9b3599-1aa9-4181-bf3d-b5cd94eb97e9",
+          "timestamp": "2026-08-24T03:47:00.376Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "content": [
+            {
+              "type": "text",
+              "text": "Есть план. Сначала зафиксирую: `bd` не найден в PATH (`bd not found`) — issue не завожу, работаю дальше, как требует AGENTS.md."
+            }
+          ],
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 4875,
+            "cacheCreationInputTokens": 1566,
+            "cacheReadInputTokens": 79277
+          }
+        },
+        {
+          "id": "f42ba1a7-36fa-4dd2-8841-cee1c76eb7db",
+          "timestamp": "2026-08-24T03:47:20.732Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "tool": {
+            "name": "Bash",
+            "type": "shell",
+            "useId": "toolu_012aUwwfXZbqZZSMoZqWGgDt",
+            "input": {
+              "_cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+              "command": "python3 - \u003c\u003c'PY'\nimport io\np='hammerspoon/init.lua'\ns=io.open(p,encoding='utf-8').read()\norig=s\n\n# 1. focusTargetId() — right after captureActiveApp()\nanchor = '''    else\n        capturedAppName = nil\n        capturedAppBundleID = nil\n    end\nend\n'''\nassert s.count(anchor)==1\nnew_fn = anchor + '''\n-- Where the dictated text is meant to land.\n--\n-- Whisper answers seconds after the key comes up, and in those seconds the user may have\n-- clicked into another field, switched a tab or moved to another app. Typing there is worse\n-- than not typing at all: the text lands in a chat, a search box or a terminal that was\n-- never the target, and there is no undo for keystrokes someone else's app received. So the\n-- destination is identified at release and re-checked right before insertion (finishInsertion).\n--\n-- It is a *signature*, not an object reference: AX hands back a fresh element on every query,\n-- and Electron apps (VS Code among them) expose no focused element at all -- there the app,\n-- the window id and the window title are all there is to go on. Volatile attributes are left\n-- out on purpose (window frame, the field's own value): they change while the user keeps\n-- working in exactly the right place, and a false alarm costs a manual paste every time.\n--\n-- Returns nil if AX is unavailable or an app is unresponsive -- no identifier at all means\n-- the check is skipped, which is the pre-existing behaviour rather than a wrong verdict.\nlocal function focusTargetId()\n    local parts = {}\n    local ok = pcall(function()\n        local app = hs.application.frontmostApplication()\n        parts[#parts + 1] = app and (app:bundleID() or app:name() or \"?\") or \"?\"\n        parts[#parts + 1] = app and tostring(app:pid()) or \"?\"\n\n        local win = hs.window.focusedWindow()\n        parts[#parts + 1] = win and tostring(win:id()) or \"-\"\n        parts[#parts + 1] = (win and win:title()) or \"\"\n\n        local ae   = app and hs.axuielement.applicationElement(app)\n        local elem = ae and ae:attributeValue(\"AXFocusedUIElement\")\n        if elem then\n            for _, attr in ipairs({ \"AXRole\", \"AXSubrole\", \"AXIdentifier\", \"AXDOMIdentifier\", \"AXTitle\" }) do\n                local v = elem:attributeValue(attr)\n                parts[#parts + 1] = (type(v) == \"string\") and v or \"\"\n            end\n        end\n    end)\n    if not ok then return nil end\n    return table.concat(parts, \"|\")\nend\n'''\ns = s.replace(anchor, new_fn, 1)\n\n# 2. finishInsertion\nold = '''local function finishInsertion(text, detectedLang)\n    -- Build action context and run pre-insert hooks\n    local ctx = buildActionContext(normalizeText(text), detectedLang or getLang(), getOutputMode())'''\nnew = '''local function finishInsertion(text, detectedLang, target)\n    -- The cursor may have moved while whisper was working. If the place the text was meant\n    -- for is no longer focused, nothing is typed: the transcript goes to the clipboard and\n    -- the user gets two chimes instead of one.\n    local mode, misdirected = getOutputMode(), false\n    if target and mode ~= \"copy\" then\n        local now = focusTargetId()\n        if now and now ~= target then\n            misdirected = true\n            mode = \"copy\"\n            log(\"insert: focus moved since the key was released -- clipboard only\\\\n\" ..\n                \"  target: \" .. target .. \"\\\\n  now:    \" .. now)\n        end\n    end\n\n    -- Build action context and run pre-insert hooks\n    local ctx = buildActionContext(normalizeText(text), detectedLang or getLang(), mode)'''\nassert s.count(old)==1\ns=s.replace(old,new,1)\n\nold = '''    local display = finalText\n    if detectedLang then display = display .. \" [\" .. detectedLang:upper() .. \"]\" end\n    setOverlayText(display)\n    playSound(\"Glass\")\n    hs.timer.doAfter(OVERLAY_LINGER, hideOverlay)\nend'''\nnew = '''    local display = finalText\n    if detectedLang then display = display .. \" [\" .. detectedLang:upper() .. \"]\" end\n    if misdirected then display = \"CLIPBOARD: \" .. display end\n    setOverlayText(display)\n    playSound(\"Glass\")\n    if misdirected then\n        -- Two chimes, not one: nothing was typed, the text is waiting on the clipboard.\n        hs.timer.doAfter(0.35, function() playSound(\"Glass\") end)\n    end\n    hs.timer.doAfter(misdirected and (OVERLAY_LINGER + 1.5) or OVERLAY_LINGER, hideOverlay)\nend'''\nassert s.count(old)==1\ns=s.replace(old,new,1)\n\n# 3. insertTranscribedText\nold = '''local function insertTranscribedText(text, detectedLang)\n    if text == \"\" or isHallucination(text) then\n        hideOverlay()\n        return\n    end\n\n    -- Apply app-aware post-processing\n    text = postProcess(text, capturedAppBundleID)\n    if text == \"\" then hideOverlay(); return end\n\n    finishInsertion(text, detectedLang)\nend'''\nnew = '''local function insertTranscribedText(text, detectedLang, target)\n    if text == \"\" or isHallucination(text) then\n        hideOverlay()\n        return\n    end\n\n    -- Apply app-aware post-processing\n    text = postProcess(text, capturedAppBundleID)\n    if text == \"\" then hideOverlay(); return end\n\n    finishInsertion(text, detectedLang, target)\nend'''\nassert s.count(old)==1\ns=s.replace(old,new,1)\n\nio.open(p,'w',encoding='utf-8').write(s)\nprint(\"part 1 ok\", len(orig), '-\u003e', len(s))\nPY",
+              "description": "Add focusTargetId and wire it into insertion"
+            },
+            "output": {
+              "content": "part 1 ok 87023 -\u003e 90069",
+              "is_error": false
+            },
+            "formattedMarkdown": "Add focusTargetId and wire it into insertion\n\n```bash\npython3 - \u003c\u003c'PY'\nimport io\np='hammerspoon/init.lua'\ns=io.open(p,encoding='utf-8').read()\norig=s\n\n# 1. focusTargetId() — right after captureActiveApp()\nanchor = '''    else\n        capturedAppName = nil\n        capturedAppBundleID = nil\n    end\nend\n'''\nassert s.count(anchor)==1\nnew_fn = anchor + '''\n-- Where the dictated text is meant to land.\n--\n-- Whisper answers seconds after the key comes up, and in those seconds the user may have\n-- clicked into another field, switched a tab or moved to another app. Typing there is worse\n-- than not typing at all: the text lands in a chat, a search box or a terminal that was\n-- never the target, and there is no undo for keystrokes someone else's app received. So the\n-- destination is identified at release and re-checked right before insertion (finishInsertion).\n--\n-- It is a *signature*, not an object reference: AX hands back a fresh element on every query,\n-- and Electron apps (VS Code among them) expose no focused element at all -- there the app,\n-- the window id and the window title are all there is to go on. Volatile attributes are left\n-- out on purpose (window frame, the field's own value): they change while the user keeps\n-- working in exactly the right place, and a false alarm costs a manual paste every time.\n--\n-- Returns nil if AX is unavailable or an app is unresponsive -- no identifier at all means\n-- the check is skipped, which is the pre-existing behaviour rather than a wrong verdict.\nlocal function focusTargetId()\n    local parts = {}\n    local ok = pcall(function()\n        local app = hs.application.frontmostApplication()\n        parts[#parts + 1] = app and (app:bundleID() or app:name() or \"?\") or \"?\"\n        parts[#parts + 1] = app and tostring(app:pid()) or \"?\"\n\n        local win = hs.window.focusedWindow()\n        parts[#parts + 1] = win and tostring(win:id()) or \"-\"\n        parts[#parts + 1] = (win and win:title()) or \"\"\n\n        local ae   = app and hs.axuielement.applicationElement(app)\n        local elem = ae and ae:attributeValue(\"AXFocusedUIElement\")\n        if elem then\n            for _, attr in ipairs({ \"AXRole\", \"AXSubrole\", \"AXIdentifier\", \"AXDOMIdentifier\", \"AXTitle\" }) do\n                local v = elem:attributeValue(attr)\n                parts[#parts + 1] = (type(v) == \"string\") and v or \"\"\n            end\n        end\n    end)\n    if not ok then return nil end\n    return table.concat(parts, \"|\")\nend\n'''\ns = s.replace(anchor, new_fn, 1)\n\n# 2. finishInsertion\nold = '''local function finishInsertion(text, detectedLang)\n    -- Build action context and run pre-insert hooks\n    local ctx = buildActionContext(normalizeText(text), detectedLang or getLang(), getOutputMode())'''\nnew = '''local function finishInsertion(text, detectedLang, target)\n    -- The cursor may have moved while whisper was working. If the place the text was meant\n    -- for is no longer focused, nothing is typed: the transcript goes to the clipboard and\n    -- the user gets two chimes instead of one.\n    local mode, misdirected = getOutputMode(), false\n    if target and mode ~= \"copy\" then\n        local now = focusTargetId()\n        if now and now ~= target then\n            misdirected = true\n            mode = \"copy\"\n            log(\"insert: focus moved since the key was released -- clipboard only\\\\n\" ..\n                \"  target: \" .. target .. \"\\\\n  now:    \" .. now)\n        end\n    end\n\n    -- Build action context and run pre-insert hooks\n    local ctx = buildActionContext(normalizeText(text), detectedLang or getLang(), mode)'''\nassert s.count(old)==1\ns=s.replace(old,new,1)\n\nold = '''    local display = finalText\n    if detectedLang then display = display .. \" [\" .. detectedLang:upper() .. \"]\" end\n    setOverlayText(display)\n    playSound(\"Glass\")\n    hs.timer.doAfter(OVERLAY_LINGER, hideOverlay)\nend'''\nnew = '''    local display = finalText\n    if detectedLang then display = display .. \" [\" .. detectedLang:upper() .. \"]\" end\n    if misdirected then display = \"CLIPBOARD: \" .. display end\n    setOverlayText(display)\n    playSound(\"Glass\")\n    if misdirected then\n        -- Two chimes, not one: nothing was typed, the text is waiting on the clipboard.\n        hs.timer.doAfter(0.35, function() playSound(\"Glass\") end)\n    end\n    hs.timer.doAfter(misdirected and (OVERLAY_LINGER + 1.5) or OVERLAY_LINGER, hideOverlay)\nend'''\nassert s.count(old)==1\ns=s.replace(old,new,1)\n\n# 3. insertTranscribedText\nold = '''local function insertTranscribedText(text, detectedLang)\n    if text == \"\" or isHallucination(text) then\n        hideOverlay()\n        return\n    end\n\n    -- Apply app-aware post-processing\n    text = postProcess(text, capturedAppBundleID)\n    if text == \"\" then hideOverlay(); return end\n\n    finishInsertion(text, detectedLang)\nend'''\nnew = '''local function insertTranscribedText(text, detectedLang, target)\n    if text == \"\" or isHallucination(text) then\n        hideOverlay()\n        return\n    end\n\n    -- Apply app-aware post-processing\n    text = postProcess(text, capturedAppBundleID)\n    if text == \"\" then hideOverlay(); return end\n\n    finishInsertion(text, detectedLang, target)\nend'''\nassert s.count(old)==1\ns=s.replace(old,new,1)\n\nio.open(p,'w',encoding='utf-8').write(s)\nprint(\"part 1 ok\", len(orig), '-\u003e', len(s))\nPY\n```\n\n```text\npart 1 ok 87023 -\u003e 90069\n```\n"
+          },
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 4875,
+            "cacheCreationInputTokens": 1566,
+            "cacheReadInputTokens": 79277
+          }
+        },
+        {
+          "id": "03fb3794-629f-421e-83d4-970a0f756383",
+          "timestamp": "2026-08-24T03:47:40.591Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "tool": {
+            "name": "Bash",
+            "type": "shell",
+            "useId": "toolu_01U9qP5vMvDKswY4NsD8MQKi",
+            "input": {
+              "_cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+              "command": "python3 - \u003c\u003c'PY'\nimport io\np='hammerspoon/init.lua'\ns=io.open(p,encoding='utf-8').read()\n\n# 4. job carries its destination\nold = '''        lang       = nil,   -- first detected language across all segments'''\nnew = '''        lang       = nil,   -- first detected language across all segments\n        target     = nil,   -- focusTargetId() of where the text belongs, taken at key release'''\nassert s.count(old)==1\ns=s.replace(old,new,1)\n\n# 5. pipeTakePending carries the destination too\nold = '''local function pipeTakePending()\n    if #pipeJobs.pending == 0 then return nil, nil end\n    local parts, lang = {}, nil\n    for _, p in ipairs(pipeJobs.pending) do\n        table.insert(parts, p.text)\n        lang = lang or p.lang\n    end\n    for i = #pipeJobs.pending, 1, -1 do pipeJobs.pending[i] = nil end\n    return table.concat(parts, \" \"), lang\nend'''\nnew = '''local function pipeTakePending()\n    if #pipeJobs.pending == 0 then return nil, nil, nil end\n    local parts, lang = {}, nil\n    local target = pipeJobs.pending[1].target\n    for _, p in ipairs(pipeJobs.pending) do\n        table.insert(parts, p.text)\n        lang = lang or p.lang\n        -- Dictations aimed at different places have no single destination left between them:\n        -- \"\" matches no focus, so the whole batch takes the clipboard route.\n        if p.target ~= target then target = \"\" end\n    end\n    for i = #pipeJobs.pending, 1, -1 do pipeJobs.pending[i] = nil end\n    return table.concat(parts, \" \"), lang, target\nend'''\nassert s.count(old)==1\ns=s.replace(old,new,1)\n\n# 6. pipeFlushPending\nold = '''    local text, lang = pipeTakePending()\n    if not text then return false end\n    log(\"pipeline: flushing a queued dictation (\" .. #text .. \" chars)\")\n    insertTranscribedText(text, lang)'''\nnew = '''    local text, lang, target = pipeTakePending()\n    if not text then return false end\n    log(\"pipeline: flushing a queued dictation (\" .. #text .. \" chars)\")\n    insertTranscribedText(text, lang, target)'''\nassert s.count(old)==1\ns=s.replace(old,new,1)\n\n# 7. pipelineFinalize: queue entry keeps its destination\nold = '''            table.insert(pipeJobs.pending, { text = finalText, lang = job.lang })'''\nnew = '''            table.insert(pipeJobs.pending, { text = finalText, lang = job.lang, target = job.target })'''\nassert s.count(old)==1\ns=s.replace(old,new,1)\n\nold = '''        log(\"pipeline: gen \" .. job.gen .. \" inserting late -- the recorder is idle\")\n        if finalText ~= \"\" then insertTranscribedText(finalText, job.lang) end'''\nif s.count(old)!=1:\n    old = old.replace('--','—')  # em dash in source\nnew = '''        log(\"pipeline: gen \" .. job.gen .. \" inserting late — the recorder is idle\")\n        if finalText ~= \"\" then insertTranscribedText(finalText, job.lang, job.target) end'''\nassert s.count(old)==1, repr(old)\ns=s.replace(old,new,1)\n\n# combined insert: the queued text rides along to the *current* dictation's destination\nold = '''    local queued, queuedLang = pipeTakePending()'''\nnew = '''    -- The queued text rides along to this dictation's destination: the user is standing in\n    -- it right now, having just spoken into it. Its own target is deliberately dropped.\n    local queued, queuedLang = pipeTakePending()'''\nassert s.count(old)==1\ns=s.replace(old,new,1)\n\nold = '''    hs.timer.doAfter(0.4, hideProgressBar)\n    insertTranscribedText(finalText, job.lang)'''\nnew = '''    hs.timer.doAfter(0.4, hideProgressBar)\n    insertTranscribedText(finalText, job.lang, job.target)'''\nassert s.count(old)==1\ns=s.replace(old,new,1)\n\n# 8. capture at key release\nold = '''    if not isRecording then return end\n    isRecording = false\n    log(\"recording: stop\")'''\nnew = '''    if not isRecording then return end\n    isRecording = false\n    log(\"recording: stop\")\n\n    -- Pin down where this dictation is meant to go, while the user is still there. It is\n    -- re-checked just before insertion; if it moved, the text goes to the clipboard.\n    pipe.target = focusTargetId()\n    log(\"insert: target at release: \" .. tostring(pipe.target))'''\nassert s.count(old)==1\ns=s.replace(old,new,1)\n\nio.open(p,'w',encoding='utf-8').write(s)\nprint(\"part 2 ok\")\nPY\ngrep -c '^local ' hammerspoon/init.lua",
+              "description": "Thread the target through the pipeline and capture at release"
+            },
+            "output": {
+              "content": "part 2 ok\n142",
+              "is_error": false
+            },
+            "formattedMarkdown": "Thread the target through the pipeline and capture at release\n\n```bash\npython3 - \u003c\u003c'PY'\nimport io\np='hammerspoon/init.lua'\ns=io.open(p,encoding='utf-8').read()\n\n# 4. job carries its destination\nold = '''        lang       = nil,   -- first detected language across all segments'''\nnew = '''        lang       = nil,   -- first detected language across all segments\n        target     = nil,   -- focusTargetId() of where the text belongs, taken at key release'''\nassert s.count(old)==1\ns=s.replace(old,new,1)\n\n# 5. pipeTakePending carries the destination too\nold = '''local function pipeTakePending()\n    if #pipeJobs.pending == 0 then return nil, nil end\n    local parts, lang = {}, nil\n    for _, p in ipairs(pipeJobs.pending) do\n        table.insert(parts, p.text)\n        lang = lang or p.lang\n    end\n    for i = #pipeJobs.pending, 1, -1 do pipeJobs.pending[i] = nil end\n    return table.concat(parts, \" \"), lang\nend'''\nnew = '''local function pipeTakePending()\n    if #pipeJobs.pending == 0 then return nil, nil, nil end\n    local parts, lang = {}, nil\n    local target = pipeJobs.pending[1].target\n    for _, p in ipairs(pipeJobs.pending) do\n        table.insert(parts, p.text)\n        lang = lang or p.lang\n        -- Dictations aimed at different places have no single destination left between them:\n        -- \"\" matches no focus, so the whole batch takes the clipboard route.\n        if p.target ~= target then target = \"\" end\n    end\n    for i = #pipeJobs.pending, 1, -1 do pipeJobs.pending[i] = nil end\n    return table.concat(parts, \" \"), lang, target\nend'''\nassert s.count(old)==1\ns=s.replace(old,new,1)\n\n# 6. pipeFlushPending\nold = '''    local text, lang = pipeTakePending()\n    if not text then return false end\n    log(\"pipeline: flushing a queued dictation (\" .. #text .. \" chars)\")\n    insertTranscribedText(text, lang)'''\nnew = '''    local text, lang, target = pipeTakePending()\n    if not text then return false end\n    log(\"pipeline: flushing a queued dictation (\" .. #text .. \" chars)\")\n    insertTranscribedText(text, lang, target)'''\nassert s.count(old)==1\ns=s.replace(old,new,1)\n\n# 7. pipelineFinalize: queue entry keeps its destination\nold = '''            table.insert(pipeJobs.pending, { text = finalText, lang = job.lang })'''\nnew = '''            table.insert(pipeJobs.pending, { text = finalText, lang = job.lang, target = job.target })'''\nassert s.count(old)==1\ns=s.replace(old,new,1)\n\nold = '''        log(\"pipeline: gen \" .. job.gen .. \" inserting late -- the recorder is idle\")\n        if finalText ~= \"\" then insertTranscribedText(finalText, job.lang) end'''\nif s.count(old)!=1:\n    old = old.replace('--','—')  # em dash in source\nnew = '''        log(\"pipeline: gen \" .. job.gen .. \" inserting late — the recorder is idle\")\n        if finalText ~= \"\" then insertTranscribedText(finalText, job.lang, job.target) end'''\nassert s.count(old)==1, repr(old)\ns=s.replace(old,new,1)\n\n# combined insert: the queued text rides along to the *current* dictation's destination\nold = '''    local queued, queuedLang = pipeTakePending()'''\nnew = '''    -- The queued text rides along to this dictation's destination: the user is standing in\n    -- it right now, having just spoken into it. Its own target is deliberately dropped.\n    local queued, queuedLang = pipeTakePending()'''\nassert s.count(old)==1\ns=s.replace(old,new,1)\n\nold = '''    hs.timer.doAfter(0.4, hideProgressBar)\n    insertTranscribedText(finalText, job.lang)'''\nnew = '''    hs.timer.doAfter(0.4, hideProgressBar)\n    insertTranscribedText(finalText, job.lang, job.target)'''\nassert s.count(old)==1\ns=s.replace(old,new,1)\n\n# 8. capture at key release\nold = '''    if not isRecording then return end\n    isRecording = false\n    log(\"recording: stop\")'''\nnew = '''    if not isRecording then return end\n    isRecording = false\n    log(\"recording: stop\")\n\n    -- Pin down where this dictation is meant to go, while the user is still there. It is\n    -- re-checked just before insertion; if it moved, the text goes to the clipboard.\n    pipe.target = focusTargetId()\n    log(\"insert: target at release: \" .. tostring(pipe.target))'''\nassert s.count(old)==1\ns=s.replace(old,new,1)\n\nio.open(p,'w',encoding='utf-8').write(s)\nprint(\"part 2 ok\")\nPY\ngrep -c '^local ' hammerspoon/init.lua\n```\n\n```text\npart 2 ok\n142\n```\n"
+          },
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 1804,
+            "cacheCreationInputTokens": 4892,
+            "cacheReadInputTokens": 80843
+          }
+        },
+        {
+          "id": "5faf4252-0795-48d5-8342-094a0e5974c0",
+          "timestamp": "2026-08-24T03:47:43.964Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 255,
+            "cacheCreationInputTokens": 1834,
+            "cacheReadInputTokens": 85735
+          }
+        },
+        {
+          "id": "5eb5b912-d978-4822-9ef1-e60066a43974",
+          "timestamp": "2026-08-24T03:47:47.512Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "tool": {
+            "name": "Bash",
+            "type": "shell",
+            "useId": "toolu_01G4Csc3nZnFYtW2r7ms6zmr",
+            "input": {
+              "_cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+              "command": "hs -c 'local f,e=loadfile(os.getenv(\"HOME\")..\"/Documents/GitHub/local-whisper/hammerspoon/init.lua\"); return f and \"SYNTAX OK\" or (\"ERR: \"..tostring(e))' 2\u003e\u00261 | tail -2",
+              "description": "Syntax check init.lua"
+            },
+            "output": {
+              "content": "SYNTAX OK",
+              "is_error": false
+            },
+            "formattedMarkdown": "Syntax check init.lua\n\n`hs -c 'local f,e=loadfile(os.getenv(\"HOME\")..\"/Documents/GitHub/local-whisper/hammerspoon/init.lua\"); return f and \"SYNTAX OK\" or (\"ERR: \"..tostring(e))' 2\u003e\u00261 | tail -2`\n\n```text\nSYNTAX OK\n```\n"
+          },
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 255,
+            "cacheCreationInputTokens": 1834,
+            "cacheReadInputTokens": 85735
+          }
+        },
+        {
+          "id": "2c137fb3-a21a-48b5-8db5-e2a33827f4d3",
+          "timestamp": "2026-08-24T03:47:59.324Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 856,
+            "cacheCreationInputTokens": 292,
+            "cacheReadInputTokens": 87569
+          }
+        },
+        {
+          "id": "3803fe9b-b4ef-4adf-8d37-2dcd5312ea00",
+          "timestamp": "2026-08-24T03:48:00.125Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "tool": {
+            "name": "Bash",
+            "type": "shell",
+            "useId": "toolu_016i4oT4519aBCTXHbmxrkS7",
+            "input": {
+              "_cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+              "command": "grep -n '^-- [0-9]' tests/test_init.lua | tail -20; echo '=== tail'; sed -n 1240,1322p tests/test_init.lua",
+              "description": "Find test sections and file tail"
+            },
+            "output": {
+              "content": "151:-- 1. Syntax\n158:-- 2. Lua 200-local-per-function ceiling (AGENTS.md hard limit)\n170:-- 3. No top-level local referenced before it is declared\n222:-- 4. No unguarded system-sound playback\n240:-- 5. Deleted subsystems stay deleted\n275:-- 6. No unintended top-level globals\n306:-- 7. Chunk ordering (behavioral -- exercises the real comparator)\n357:-- 8. Chunk filename pattern stays in sync between writer and reader\n377:-- 8b. Live capture never goes back through ffmpeg's avfoundation input\n427:-- 8c. Segment splitting cuts at a pause and never loses a chunk\n514:-- 8d. The streaming pipeline claims every chunk exactly once\n627:-- 8e. A new recording must not swallow the dictation still being transcribed\n717:-- 8f. The two places that used to destroy a dictation in progress\n772:-- 9. Emergency stop cancels pending finalization\n796:-- 10. Overlay state is declared above the callback that closes over it\n821:-- 11. Overlay click behavior (behavioral -- runs the real mouse callback)\n920:-- 12. startRecording re-press recovery (behavioral)\n997:-- 13. Progress bar reaches 100% (behavioral)\n1096:-- 14. Long-lived system objects are rooted against the garbage collector\n1139:-- 15. Trigger matching (behavioral -- runs the real triggerPressed/triggerHeld)\n=== tail\n                                trig.heldMask, trig.heldMask \u0026 DEVICE_BITS))\n\n            -- The generic counterpart must describe the same physical combo: same number\n            -- of modifiers, and each device bit answered by its generic bit.\n            local function bits(mask)\n                local n, b = 0, 1\n                while b \u003c= mask do\n                    if (mask \u0026 b) ~= 0 then n = n + 1 end\n                    b = b \u003c\u003c 1\n                end\n                return n\n            end\n            check(\"trigger: heldMask describes the same combo as mask\",\n                  bits(trig.heldMask) == bits(trig.mask),\n                  string.format(\"mask=0x%x has %d modifier(s), heldMask=0x%x has %d\",\n                                trig.mask, bits(trig.mask), trig.heldMask, bits(trig.heldMask)))\n        end\n\n        local held, hErr = liftFunction(\"triggerHeld\", baseEnv())\n        check(\"trigger: triggerHeld is liftable and compiles\", held ~= nil, tostring(hErr))\n\n        if held and type(trig.heldMask) == \"number\" then\n            local liveFlags, rawArg = 0, nil\n            local hEnv = baseEnv()\n            hEnv.trigger        = trig\n            hEnv.triggerPressed = pressed\n            hEnv.hs = { eventtap = { checkKeyboardModifiers = function(raw)\n                rawArg = raw\n                return { _raw = liveFlags }\n            end } }\n            held = liftFunction(\"triggerHeld\", hEnv)\n\n            -- What the real API actually returns while the combo is down: generic bits only.\n            liveFlags = trig.heldMask\n            check(\"trigger: triggerHeld is true for the flags the poll API really returns\",\n                  held() == true,\n                  string.format(\"held() = false for _raw=0x%x — the poller would stop the recording immediately\",\n                                trig.heldMask))\n            check(\"trigger: triggerHeld asks for the raw flag word\",\n                  rawArg == true,\n                  \"checkKeyboardModifiers() called with \" .. tostring(rawArg) .. \", want true\")\n\n            -- Releasing either half must end the recording.\n            local released = {}\n            local bit = 1\n            while bit \u003c= trig.heldMask do\n                if (trig.heldMask \u0026 bit) ~= 0 and bit ~= trig.heldMask then\n                    liveFlags = trig.heldMask \u0026 ~bit\n                    if held() then released[#released + 1] = string.format(\"0x%x\", bit) end\n                end\n                bit = bit \u003c\u003c 1\n            end\n            check(\"trigger: releasing either modifier reads as released\",\n                  #released == 0,\n                  \"still held after releasing: \" .. table.concat(released, \", \"))\n\n            liveFlags = 0\n            check(\"trigger: nothing held reads as released\", held() == false, \"held() = true with no modifiers\")\n        end\n    end\n\n    -- Wiring: both paths must go through the helpers above rather than re-deriving\n    -- the match inline, which is how the two failure modes got in last time.\n    check(\"trigger: the eventtap matches through triggerPressed(event:rawFlags())\",\n          src:find(\"triggerPressed%s*%(%s*event:rawFlags%s*%(%s*%)%s*%)\") ~= nil,\n          \"the flagsChanged handler does not call triggerPressed(event:rawFlags())\")\n\n    local pollSrc = src:match(\"releasePoller%s*=%s*hs%.timer%.doEvery%s*(%b())\")\n    check(\"trigger: the release poller re-checks the trigger through triggerHeld()\",\n          pollSrc ~= nil and pollSrc:find(\"triggerHeld\") ~= nil,\n          \"release poller body: \" .. tostring(pollSrc and pollSrc:sub(1, 120)))\nend\n\n--------------------------------------------------------------------------------\n-- Emit results\n--------------------------------------------------------------------------------\n\nlocal out = io.open(OUT, \"w\")\nfor _, r in ipairs(results) do\n    out:write((r.passed and \"PASS\" or \"FAIL\") .. \"\\t\" .. r.name .. \"\\t\" .. r.detail .. \"\\n\")\nend\nout:write(\"DONE\\t\\t\\n\")\nout:close()",
+              "is_error": false
+            },
+            "formattedMarkdown": "Find test sections and file tail\n\n`grep -n '^-- [0-9]' tests/test_init.lua | tail -20; echo '=== tail'; sed -n 1240,1322p tests/test_init.lua`\n\n```text\n151:-- 1. Syntax\n158:-- 2. Lua 200-local-per-function ceiling (AGENTS.md hard limit)\n170:-- 3. No top-level local referenced before it is declared\n222:-- 4. No unguarded system-sound playback\n240:-- 5. Deleted subsystems stay deleted\n275:-- 6. No unintended top-level globals\n306:-- 7. Chunk ordering (behavioral -- exercises the real comparator)\n357:-- 8. Chunk filename pattern stays in sync between writer and reader\n377:-- 8b. Live capture never goes back through ffmpeg's avfoundation input\n427:-- 8c. Segment splitting cuts at a pause and never loses a chunk\n514:-- 8d. The streaming pipeline claims every chunk exactly once\n627:-- 8e. A new recording must not swallow the dictation still being transcribed\n717:-- 8f. The two places that used to destroy a dictation in progress\n772:-- 9. Emergency stop cancels pending finalization\n796:-- 10. Overlay state is declared above the callback that closes over it\n821:-- 11. Overlay click behavior (behavioral -- runs the real mouse callback)\n920:-- 12. startRecording re-press recovery (behavioral)\n997:-- 13. Progress bar reaches 100% (behavioral)\n1096:-- 14. Long-lived system objects are rooted against the garbage collector\n1139:-- 15. Trigger matching (behavioral -- runs the real triggerPressed/triggerHeld)\n=== tail\n                                trig.heldMask, trig.heldMask \u0026 DEVICE_BITS))\n\n            -- The generic counterpart must describe the same physical combo: same number\n            -- of modifiers, and each device bit answered by its generic bit.\n            local function bits(mask)\n                local n, b = 0, 1\n                while b \u003c= mask do\n                    if (mask \u0026 b) ~= 0 then n = n + 1 end\n                    b = b \u003c\u003c 1\n                end\n                return n\n            end\n            check(\"trigger: heldMask describes the same combo as mask\",\n                  bits(trig.heldMask) == bits(trig.mask),\n                  string.format(\"mask=0x%x has %d modifier(s), heldMask=0x%x has %d\",\n                                trig.mask, bits(trig.mask), trig.heldMask, bits(trig.heldMask)))\n        end\n\n        local held, hErr = liftFunction(\"triggerHeld\", baseEnv())\n        check(\"trigger: triggerHeld is liftable and compiles\", held ~= nil, tostring(hErr))\n\n        if held and type(trig.heldMask) == \"number\" then\n            local liveFlags, rawArg = 0, nil\n            local hEnv = baseEnv()\n            hEnv.trigger        = trig\n            hEnv.triggerPressed = pressed\n            hEnv.hs = { eventtap = { checkKeyboardModifiers = function(raw)\n                rawArg = raw\n                return { _raw = liveFlags }\n            end } }\n            held = liftFunction(\"triggerHeld\", hEnv)\n\n            -- What the real API actually returns while the combo is down: generic bits only.\n            liveFlags = trig.heldMask\n            check(\"trigger: triggerHeld is true for the flags the poll API really returns\",\n                  held() == true,\n                  string.format(\"held() = false for _raw=0x%x — the poller would stop the recording immediately\",\n                                trig.heldMask))\n            check(\"trigger: triggerHeld asks for the raw flag word\",\n                  rawArg == true,\n                  \"checkKeyboardModifiers() called with \" .. tostring(rawArg) .. \", want true\")\n\n            -- Releasing either half must end the recording.\n            local released = {}\n            local bit = 1\n            while bit \u003c= trig.heldMask do\n                if (trig.heldMask \u0026 bit) ~= 0 and bit ~= trig.heldMask then\n                    liveFlags = trig.heldMask \u0026 ~bit\n                    if held() then released[#released + 1] = string.format(\"0x%x\", bit) end\n                end\n                bit = bit \u003c\u003c 1\n            end\n            check(\"trigger: releasing either modifier reads as released\",\n                  #released == 0,\n                  \"still held after releasing: \" .. table.concat(released, \", \"))\n\n            liveFlags = 0\n            check(\"trigger: nothing held reads as released\", held() == false, \"held() = true with no modifiers\")\n        end\n    end\n\n    -- Wiring: both paths must go through the helpers above rather than re-deriving\n    -- the match inline, which is how the two failure modes got in last time.\n    check(\"trigger: the eventtap matches through triggerPressed(event:rawFlags())\",\n          src:find(\"triggerPressed%s*%(%s*event:rawFlags%s*%(%s*%)%s*%)\") ~= nil,\n          \"the flagsChanged handler does not call triggerPressed(event:rawFlags())\")\n\n    local pollSrc = src:match(\"releasePoller%s*=%s*hs%.timer%.doEvery%s*(%b())\")\n    check(\"trigger: the release poller re-checks the trigger through triggerHeld()\",\n          pollSrc ~= nil and pollSrc:find(\"triggerHeld\") ~= nil,\n          \"release poller body: \" .. tostring(pollSrc and pollSrc:sub(1, 120)))\nend\n\n--------------------------------------------------------------------------------\n-- Emit results\n--------------------------------------------------------------------------------\n\nlocal out = io.open(OUT, \"w\")\nfor _, r in ipairs(results) do\n    out:write((r.passed and \"PASS\" or \"FAIL\") .. \"\\t\" .. r.name .. \"\\t\" .. r.detail .. \"\\n\")\nend\nout:write(\"DONE\\t\\t\\n\")\nout:close()\n```\n"
+          },
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 856,
+            "cacheCreationInputTokens": 292,
+            "cacheReadInputTokens": 87569
+          }
+        },
+        {
+          "id": "0d7948ab-1326-461b-b9b7-c5ecda13905b",
+          "timestamp": "2026-08-24T03:48:24.333Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 1912,
+            "cacheCreationInputTokens": 2812,
+            "cacheReadInputTokens": 87861
+          }
+        },
+        {
+          "id": "48d4e7fa-d475-4714-a7c2-cf72403c50e8",
+          "timestamp": "2026-08-24T03:48:25.190Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "tool": {
+            "name": "Bash",
+            "type": "shell",
+            "useId": "toolu_01FjmoNEeQaNaFDcXdo2fXB7",
+            "input": {
+              "_cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+              "command": "sed -n 19,68p tests/test_init.lua",
+              "description": "Check test globals src/lines/stripped"
+            },
+            "output": {
+              "content": "local HOME   = os.getenv(\"HOME\")\nlocal TARGET = _G.LW_TARGET or (HOME .. \"/Documents/GitHub/local-whisper/hammerspoon/init.lua\")\nlocal OUT    = _G.LW_OUT or \"/tmp/lw_test_init.txt\"\n\n--------------------------------------------------------------------------------\n-- Harness\n--------------------------------------------------------------------------------\n\nlocal results = {}\n\nlocal function record(name, passed, detail)\n    results[#results + 1] = {\n        name   = name,\n        passed = passed and true or false,\n        detail = detail or \"\",\n    }\nend\n\nlocal function check(name, passed, detail)\n    record(name, passed, passed and \"\" or (detail or \"\"))\nend\n\n--------------------------------------------------------------------------------\n-- Source loading + lexical helpers\n--------------------------------------------------------------------------------\n\nlocal function readSource(path)\n    local f = io.open(path, \"r\")\n    if not f then return nil end\n    local src = f:read(\"*a\")\n    f:close()\n    return src\nend\n\nlocal src = readSource(TARGET)\nif not src then\n    record(\"source readable\", false, \"cannot open \" .. TARGET)\n    local f = io.open(OUT, \"w\")\n    f:write(\"FAIL\\tsource readable\\tcannot open \" .. TARGET .. \"\\n\")\n    f:close()\n    return\nend\n\nlocal lines = {}\nfor line in (src .. \"\\n\"):gmatch(\"([^\\n]*)\\n\") do\n    lines[#lines + 1] = line\nend\n\n-- Blank out string literals and comments so scans don't match inside them.",
+              "is_error": false
+            },
+            "formattedMarkdown": "Check test globals src/lines/stripped\n\n`sed -n 19,68p tests/test_init.lua`\n\n```text\nlocal HOME   = os.getenv(\"HOME\")\nlocal TARGET = _G.LW_TARGET or (HOME .. \"/Documents/GitHub/local-whisper/hammerspoon/init.lua\")\nlocal OUT    = _G.LW_OUT or \"/tmp/lw_test_init.txt\"\n\n--------------------------------------------------------------------------------\n-- Harness\n--------------------------------------------------------------------------------\n\nlocal results = {}\n\nlocal function record(name, passed, detail)\n    results[#results + 1] = {\n        name   = name,\n        passed = passed and true or false,\n        detail = detail or \"\",\n    }\nend\n\nlocal function check(name, passed, detail)\n    record(name, passed, passed and \"\" or (detail or \"\"))\nend\n\n--------------------------------------------------------------------------------\n-- Source loading + lexical helpers\n--------------------------------------------------------------------------------\n\nlocal function readSource(path)\n    local f = io.open(path, \"r\")\n    if not f then return nil end\n    local src = f:read(\"*a\")\n    f:close()\n    return src\nend\n\nlocal src = readSource(TARGET)\nif not src then\n    record(\"source readable\", false, \"cannot open \" .. TARGET)\n    local f = io.open(OUT, \"w\")\n    f:write(\"FAIL\\tsource readable\\tcannot open \" .. TARGET .. \"\\n\")\n    f:close()\n    return\nend\n\nlocal lines = {}\nfor line in (src .. \"\\n\"):gmatch(\"([^\\n]*)\\n\") do\n    lines[#lines + 1] = line\nend\n\n-- Blank out string literals and comments so scans don't match inside them.\n```\n"
+          },
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 1912,
+            "cacheCreationInputTokens": 2812,
+            "cacheReadInputTokens": 87861
+          }
+        },
+        {
+          "id": "0f3f8ea7-83a3-44d7-987a-196fbf2f8294",
+          "timestamp": "2026-08-24T03:48:52.009Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "tool": {
+            "name": "Bash",
+            "type": "shell",
+            "useId": "toolu_01SUd3iLX8T2wmWz4Mp4KZq3",
+            "input": {
+              "_cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+              "command": "python3 - \u003c\u003c'PY'\nimport io\np='tests/test_init.lua'\ns=io.open(p,encoding='utf-8').read()\nanchor = '''--------------------------------------------------------------------------------\n-- Emit results\n--------------------------------------------------------------------------------'''\nassert s.count(anchor)==1\n\nsection = r'''--------------------------------------------------------------------------------\n-- 16. The text lands where it was aimed (behavioral -- runs the real finishInsertion)\n--------------------------------------------------------------------------------\n-- Whisper answers seconds after the key comes up, and a cursor that moved in between used\n-- to receive the text anyway: a paragraph typed into a chat, a terminal or a search box,\n-- with no undo for keystrokes another app already accepted. The destination is pinned at\n-- release (focusTargetId) and re-checked right before insertion. A mismatch means clipboard\n-- only -- and two chimes instead of one, because \"nothing was typed\" has to be audible\n-- without looking at the screen.\n\ndo\n    local env = baseEnv()\n    local HERE  = \"com.editor|1|100|Doc.txt|AXTextArea||||\"\n    local THERE = \"com.chat|2|200|Chat|AXTextField||||\"\n    local focusNow = HERE\n    local inserts, sounds = {}, {}\n\n    env.log                  = function() end\n    env.getLang              = function() return \"ru\" end\n    env.getEnterMode         = function() return false end\n    env.getOutputMode        = function() return \"paste\" end\n    env.focusTargetId        = function() return focusNow end\n    env.normalizeText        = function(t) return t end\n    env.buildActionContext   = function(text, lang, mode)\n        return { text = text, originalText = text, lang = lang, outputMode = mode,\n                 insert = true, inserted = false }\n    end\n    env.runPreInsertActions  = function() end\n    env.runPostInsertActions = function() end\n    env.insertTextAtCursor   = function(text, mode) inserts[#inserts + 1] = { text = text, mode = mode } end\n    env.playSound            = function(name) sounds[#sounds + 1] = name end\n    env.setOverlayText       = function() end\n    env.hideOverlay          = function() end\n    env.saveRecentDictations = function() end\n    env.recentDictations     = {}\n    env.MAX_RECENT           = 10\n    env.capturedAppName      = \"Editor\"\n    env.OVERLAY_LINGER       = 0.5\n    -- Deferred work runs inline, so the second chime is counted where it is scheduled.\n    env.hs = { timer = { doAfter = function(_, fn) if fn then fn() end end } }\n\n    local finish, fErr = liftFunction(\"finishInsertion\", env)\n    check(\"focus: finishInsertion is liftable and compiles\", finish ~= nil, tostring(fErr))\n\n    if finish then\n        finish(\"привет\", \"ru\", HERE)\n        check(\"focus: an unmoved cursor still receives the text\",\n              #inserts == 1 and inserts[1].mode == \"paste\",\n              \"inserted \" .. #inserts .. \" time(s), mode=\" .. tostring(inserts[1] and inserts[1].mode))\n        check(\"focus: one chime when the text went where it was aimed\",\n              #sounds == 1, #sounds .. \" sound(s) played\")\n\n        inserts, sounds = {}, {}\n        focusNow = THERE\n        finish(\"привет\", \"ru\", HERE)\n        check(\"focus: a cursor that moved gets the clipboard, not keystrokes\",\n              #inserts == 1 and inserts[1].mode == \"copy\",\n              \"mode=\" .. tostring(inserts[1] and inserts[1].mode) ..\n              \" -- the text was typed into whatever is focused now\")\n        check(\"focus: two chimes say nothing was typed\",\n              #sounds == 2, #sounds .. \" sound(s) played, want 2\")\n\n        -- No destination recorded (AX unavailable, or a path that never captured one):\n        -- behave exactly as before the check existed rather than refusing to type.\n        inserts, sounds = {}, {}\n        finish(\"привет\", \"ru\", nil)\n        check(\"focus: no recorded destination still types, as before\",\n              #inserts == 1 and inserts[1].mode == \"paste\" and #sounds == 1,\n              \"mode=\" .. tostring(inserts[1] and inserts[1].mode) .. \", \" .. #sounds .. \" sound(s)\")\n    end\n\n    -- Wiring: the destination is only worth checking if it is captured at release and\n    -- carried by the job all the way to the insertion, including through the queue.\n    local stopSrc = extractFunction(\"stopRecording\")\n    check(\"focus: stopRecording pins the destination when the key comes up\",\n          stopSrc ~= nil and stripBlock(stopSrc):find(\"focusTargetId\") ~= nil,\n          \"stopRecording() never calls focusTargetId() -- nothing is recorded to check against\")\n\n    local bare = {}\n    for _, s in ipairs(stripped) do\n        if not s:match(\"function%s+insertTranscribedText\") then\n            local argsSrc = s:match(\"insertTranscribedText%s*(%b())\")\n            if argsSrc then\n                local commas = select(2, argsSrc:gsub(\",\", \"\"))\n                if commas \u003c 2 then bare[#bare + 1] = s:match(\"^%s*(.-)%s*$\") end\n            end\n        end\n    end\n    check(\"focus: every insertion carries the destination it was aimed at\",\n          #bare == 0,\n          \"called without a target: \" .. table.concat(bare, \" | \"))\n\n    check(\"focus: a dictation waiting in the queue keeps its own destination\",\n          src:find(\"pipeJobs%.pending%s*,%s*{[^}]*target\") ~= nil,\n          \"queued transcripts drop their target -- a late insertion would type into \" ..\n          \"whatever window happens to be focused when it lands\")\nend\n\n'''\ns = s.replace(anchor, section + anchor, 1)\nio.open(p,'w',encoding='utf-8').write(s)\nprint(\"ok\")\nPY\n./tests/test_init.sh 2\u003e\u00261 | tail -25",
+              "description": "Add focus test section and run the suite"
+            },
+            "output": {
+              "content": "ok\n  \u001b[0;32mPASS\u001b[0m  trigger: no single half of the combo fires on its own\n  \u001b[0;32mPASS\u001b[0m  trigger: the trigger is an actual combo (more than one modifier bit)\n  \u001b[0;32mPASS\u001b[0m  trigger: unrelated modifiers held at the same time do not block it\n  \u001b[0;32mPASS\u001b[0m  trigger: the right-hand twin of the modifier does not fire\n  \u001b[0;32mPASS\u001b[0m  trigger: the trigger defines a separate heldMask for polling\n  \u001b[0;32mPASS\u001b[0m  trigger: heldMask contains no device-specific bit (the poll API drops them)\n  \u001b[0;32mPASS\u001b[0m  trigger: heldMask describes the same combo as mask\n  \u001b[0;32mPASS\u001b[0m  trigger: triggerHeld is liftable and compiles\n  \u001b[0;32mPASS\u001b[0m  trigger: triggerHeld is true for the flags the poll API really returns\n  \u001b[0;32mPASS\u001b[0m  trigger: triggerHeld asks for the raw flag word\n  \u001b[0;32mPASS\u001b[0m  trigger: releasing either modifier reads as released\n  \u001b[0;32mPASS\u001b[0m  trigger: nothing held reads as released\n  \u001b[0;32mPASS\u001b[0m  trigger: the eventtap matches through triggerPressed(event:rawFlags())\n  \u001b[0;32mPASS\u001b[0m  trigger: the release poller re-checks the trigger through triggerHeld()\n  \u001b[0;32mPASS\u001b[0m  focus: finishInsertion is liftable and compiles\n  \u001b[0;32mPASS\u001b[0m  focus: an unmoved cursor still receives the text\n  \u001b[0;32mPASS\u001b[0m  focus: one chime when the text went where it was aimed\n  \u001b[0;32mPASS\u001b[0m  focus: a cursor that moved gets the clipboard, not keystrokes\n  \u001b[0;32mPASS\u001b[0m  focus: two chimes say nothing was typed\n  \u001b[0;32mPASS\u001b[0m  focus: no recorded destination still types, as before\n  \u001b[0;32mPASS\u001b[0m  focus: stopRecording pins the destination when the key comes up\n  \u001b[0;32mPASS\u001b[0m  focus: every insertion carries the destination it was aimed at\n  \u001b[0;32mPASS\u001b[0m  focus: a dictation waiting in the queue keeps its own destination\n\n\u001b[0;32m\u001b[1mAll 112 checks passed.\u001b[0m",
+              "is_error": false
+            },
+            "formattedMarkdown": "Add focus test section and run the suite\n\n```bash\npython3 - \u003c\u003c'PY'\nimport io\np='tests/test_init.lua'\ns=io.open(p,encoding='utf-8').read()\nanchor = '''--------------------------------------------------------------------------------\n-- Emit results\n--------------------------------------------------------------------------------'''\nassert s.count(anchor)==1\n\nsection = r'''--------------------------------------------------------------------------------\n-- 16. The text lands where it was aimed (behavioral -- runs the real finishInsertion)\n--------------------------------------------------------------------------------\n-- Whisper answers seconds after the key comes up, and a cursor that moved in between used\n-- to receive the text anyway: a paragraph typed into a chat, a terminal or a search box,\n-- with no undo for keystrokes another app already accepted. The destination is pinned at\n-- release (focusTargetId) and re-checked right before insertion. A mismatch means clipboard\n-- only -- and two chimes instead of one, because \"nothing was typed\" has to be audible\n-- without looking at the screen.\n\ndo\n    local env = baseEnv()\n    local HERE  = \"com.editor|1|100|Doc.txt|AXTextArea||||\"\n    local THERE = \"com.chat|2|200|Chat|AXTextField||||\"\n    local focusNow = HERE\n    local inserts, sounds = {}, {}\n\n    env.log                  = function() end\n    env.getLang              = function() return \"ru\" end\n    env.getEnterMode         = function() return false end\n    env.getOutputMode        = function() return \"paste\" end\n    env.focusTargetId        = function() return focusNow end\n    env.normalizeText        = function(t) return t end\n    env.buildActionContext   = function(text, lang, mode)\n        return { text = text, originalText = text, lang = lang, outputMode = mode,\n                 insert = true, inserted = false }\n    end\n    env.runPreInsertActions  = function() end\n    env.runPostInsertActions = function() end\n    env.insertTextAtCursor   = function(text, mode) inserts[#inserts + 1] = { text = text, mode = mode } end\n    env.playSound            = function(name) sounds[#sounds + 1] = name end\n    env.setOverlayText       = function() end\n    env.hideOverlay          = function() end\n    env.saveRecentDictations = function() end\n    env.recentDictations     = {}\n    env.MAX_RECENT           = 10\n    env.capturedAppName      = \"Editor\"\n    env.OVERLAY_LINGER       = 0.5\n    -- Deferred work runs inline, so the second chime is counted where it is scheduled.\n    env.hs = { timer = { doAfter = function(_, fn) if fn then fn() end end } }\n\n    local finish, fErr = liftFunction(\"finishInsertion\", env)\n    check(\"focus: finishInsertion is liftable and compiles\", finish ~= nil, tostring(fErr))\n\n    if finish then\n        finish(\"привет\", \"ru\", HERE)\n        check(\"focus: an unmoved cursor still receives the text\",\n              #inserts == 1 and inserts[1].mode == \"paste\",\n              \"inserted \" .. #inserts .. \" time(s), mode=\" .. tostring(inserts[1] and inserts[1].mode))\n        check(\"focus: one chime when the text went where it was aimed\",\n              #sounds == 1, #sounds .. \" sound(s) played\")\n\n        inserts, sounds = {}, {}\n        focusNow = THERE\n        finish(\"привет\", \"ru\", HERE)\n        check(\"focus: a cursor that moved gets the clipboard, not keystrokes\",\n              #inserts == 1 and inserts[1].mode == \"copy\",\n              \"mode=\" .. tostring(inserts[1] and inserts[1].mode) ..\n              \" -- the text was typed into whatever is focused now\")\n        check(\"focus: two chimes say nothing was typed\",\n              #sounds == 2, #sounds .. \" sound(s) played, want 2\")\n\n        -- No destination recorded (AX unavailable, or a path that never captured one):\n        -- behave exactly as before the check existed rather than refusing to type.\n        inserts, sounds = {}, {}\n        finish(\"привет\", \"ru\", nil)\n        check(\"focus: no recorded destination still types, as before\",\n              #inserts == 1 and inserts[1].mode == \"paste\" and #sounds == 1,\n              \"mode=\" .. tostring(inserts[1] and inserts[1].mode) .. \", \" .. #sounds .. \" sound(s)\")\n    end\n\n    -- Wiring: the destination is only worth checking if it is captured at release and\n    -- carried by the job all the way to the insertion, including through the queue.\n    local stopSrc = extractFunction(\"stopRecording\")\n    check(\"focus: stopRecording pins the destination when the key comes up\",\n          stopSrc ~= nil and stripBlock(stopSrc):find(\"focusTargetId\") ~= nil,\n          \"stopRecording() never calls focusTargetId() -- nothing is recorded to check against\")\n\n    local bare = {}\n    for _, s in ipairs(stripped) do\n        if not s:match(\"function%s+insertTranscribedText\") then\n            local argsSrc = s:match(\"insertTranscribedText%s*(%b())\")\n            if argsSrc then\n                local commas = select(2, argsSrc:gsub(\",\", \"\"))\n                if commas \u003c 2 then bare[#bare + 1] = s:match(\"^%s*(.-)%s*$\") end\n            end\n        end\n    end\n    check(\"focus: every insertion carries the destination it was aimed at\",\n          #bare == 0,\n          \"called without a target: \" .. table.concat(bare, \" | \"))\n\n    check(\"focus: a dictation waiting in the queue keeps its own destination\",\n          src:find(\"pipeJobs%.pending%s*,%s*{[^}]*target\") ~= nil,\n          \"queued transcripts drop their target -- a late insertion would type into \" ..\n          \"whatever window happens to be focused when it lands\")\nend\n\n'''\ns = s.replace(anchor, section + anchor, 1)\nio.open(p,'w',encoding='utf-8').write(s)\nprint(\"ok\")\nPY\n./tests/test_init.sh 2\u003e\u00261 | tail -25\n```\n\n```text\nok\n  PASS  trigger: no single half of the combo fires on its own\n  PASS  trigger: the trigger is an actual combo (more than one modifier bit)\n  PASS  trigger: unrelated modifiers held at the same time do not block it\n  PASS  trigger: the right-hand twin of the modifier does not fire\n  PASS  trigger: the trigger defines a separate heldMask for polling\n  PASS  trigger: heldMask contains no device-specific bit (the poll API drops them)\n  PASS  trigger: heldMask describes the same combo as mask\n  PASS  trigger: triggerHeld is liftable and compiles\n  PASS  trigger: triggerHeld is true for the flags the poll API really returns\n  PASS  trigger: triggerHeld asks for the raw flag word\n  PASS  trigger: releasing either modifier reads as released\n  PASS  trigger: nothing held reads as released\n  PASS  trigger: the eventtap matches through triggerPressed(event:rawFlags())\n  PASS  trigger: the release poller re-checks the trigger through triggerHeld()\n  PASS  focus: finishInsertion is liftable and compiles\n  PASS  focus: an unmoved cursor still receives the text\n  PASS  focus: one chime when the text went where it was aimed\n  PASS  focus: a cursor that moved gets the clipboard, not keystrokes\n  PASS  focus: two chimes say nothing was typed\n  PASS  focus: no recorded destination still types, as before\n  PASS  focus: stopRecording pins the destination when the key comes up\n  PASS  focus: every insertion carries the destination it was aimed at\n  PASS  focus: a dictation waiting in the queue keeps its own destination\n\n**All 112 checks passed.\n```\n"
+          },
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 2138,
+            "cacheCreationInputTokens": 2460,
+            "cacheReadInputTokens": 90673
+          }
+        },
+        {
+          "id": "21a55d5e-e094-4eea-8b49-26f0ccf1b2dd",
+          "timestamp": "2026-08-24T03:48:52.665Z",
+          "role": "agent",
+          "model": "\u003csynthetic\u003e",
+          "content": [
+            {
+              "type": "text",
+              "text": "You've hit your session limit · resets 7am (Europe/Zagreb)"
+            }
+          ],
+          "usage": {}
+        }
+      ]
+    },
+    {
+      "exchangeId": "54bfbd56-fc25-436e-b6a0-a48ef272d56e:1",
+      "startTime": "2026-08-27T17:41:43.846Z",
+      "endTime": "2026-08-27T17:41:43.846Z",
+      "messages": [
+        {
+          "id": "7963cd2a-6a23-4f71-9248-d52a5305cba0",
+          "timestamp": "2026-08-27T17:41:43.846Z",
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "Continue from where you left off."
+            }
+          ]
+        },
+        {
+          "id": "f9f1652f-e421-475d-b431-8bd874d4f6bb",
+          "timestamp": "2026-08-27T17:41:43.846Z",
+          "role": "agent",
+          "model": "\u003csynthetic\u003e",
+          "content": [
+            {
+              "type": "text",
+              "text": "No response requested."
+            }
+          ],
+          "usage": {}
+        }
+      ]
+    },
+    {
+      "exchangeId": "54bfbd56-fc25-436e-b6a0-a48ef272d56e:2",
+      "startTime": "2026-08-27T17:42:09.688Z",
+      "endTime": "2026-08-27T17:44:20.421Z",
+      "messages": [
+        {
+          "id": "51de1f25-5acb-4cf9-949f-7919f6821f70",
+          "timestamp": "2026-08-27T17:42:09.688Z",
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "resume"
+            }
+          ]
+        },
+        {
+          "id": "2d5600bb-6bdd-43fb-9fc6-3b0417dedc02",
+          "timestamp": "2026-08-27T17:42:19.837Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 965,
+            "cacheCreationInputTokens": 70366,
+            "cacheReadInputTokens": 26965
+          }
+        },
+        {
+          "id": "0d202226-00ed-4715-9460-3ac1a31bf24a",
+          "timestamp": "2026-08-27T17:42:32.395Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "tool": {
+            "name": "Bash",
+            "type": "shell",
+            "useId": "toolu_01QuycHmSeoa73UcxrnkzUeC",
+            "input": {
+              "_cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+              "command": "SP=/private/tmp/claude-502/-Users-vitaliy-Documents-GitHub-local-whisper/54bfbd56-fc25-436e-b6a0-a48ef272d56e/scratchpad \u0026\u0026 mkdir -p \"$SP\" \u0026\u0026 python3 - \u003c\u003c'PY'\nimport io\nsrc=io.open('hammerspoon/init.lua',encoding='utf-8').read()\n# mutation: the check exists but the mode is never switched to clipboard\nmut=src.replace('''            misdirected = true\n            mode = \"copy\"''','''            misdirected = true''',1)\nassert mut!=src\nio.open('/private/tmp/claude-502/-Users-vitaliy-Documents-GitHub-local-whisper/54bfbd56-fc25-436e-b6a0-a48ef272d56e/scratchpad/mut_nocopy.lua','w',encoding='utf-8').write(mut)\n# mutation: target never captured at release\nmut2=src.replace('    pipe.target = focusTargetId()\\n','    pipe.target = nil\\n',1)\nassert mut2!=src\nio.open('/private/tmp/claude-502/-Users-vitaliy-Documents-GitHub-local-whisper/54bfbd56-fc25-436e-b6a0-a48ef272d56e/scratchpad/mut_nocapture.lua','w',encoding='utf-8').write(mut2)\nprint('mutants written')\nPY\n./tests/test_init.sh \"$SP/mut_nocopy.lua\" 2\u003e\u00261 | grep -E \"FAIL|checks (passed|failed)|failed\\.\" | head -10\necho '--- mutant 2 ---'\n./tests/test_init.sh \"$SP/mut_nocapture.lua\" 2\u003e\u00261 | grep -E \"FAIL|checks (passed|failed)|failed\\.\" | head -10",
+              "description": "Verify the new guards fail on mutated copies"
+            },
+            "output": {
+              "content": "mutants written\n  \u001b[0;31mFAIL\u001b[0m  focus: a cursor that moved gets the clipboard, not keystrokes\n\u001b[0;31m\u001b[1m1 of 112 checks failed.\u001b[0m\n--- mutant 2 ---\n  \u001b[0;31mFAIL\u001b[0m  focus: stopRecording pins the destination when the key comes up\n\u001b[0;31m\u001b[1m1 of 112 checks failed.\u001b[0m",
+              "is_error": false
+            },
+            "formattedMarkdown": "Verify the new guards fail on mutated copies\n\n```bash\nSP=/private/tmp/claude-502/-Users-vitaliy-Documents-GitHub-local-whisper/54bfbd56-fc25-436e-b6a0-a48ef272d56e/scratchpad \u0026\u0026 mkdir -p \"$SP\" \u0026\u0026 python3 - \u003c\u003c'PY'\nimport io\nsrc=io.open('hammerspoon/init.lua',encoding='utf-8').read()\n# mutation: the check exists but the mode is never switched to clipboard\nmut=src.replace('''            misdirected = true\n            mode = \"copy\"''','''            misdirected = true''',1)\nassert mut!=src\nio.open('/private/tmp/claude-502/-Users-vitaliy-Documents-GitHub-local-whisper/54bfbd56-fc25-436e-b6a0-a48ef272d56e/scratchpad/mut_nocopy.lua','w',encoding='utf-8').write(mut)\n# mutation: target never captured at release\nmut2=src.replace('    pipe.target = focusTargetId()\\n','    pipe.target = nil\\n',1)\nassert mut2!=src\nio.open('/private/tmp/claude-502/-Users-vitaliy-Documents-GitHub-local-whisper/54bfbd56-fc25-436e-b6a0-a48ef272d56e/scratchpad/mut_nocapture.lua','w',encoding='utf-8').write(mut2)\nprint('mutants written')\nPY\n./tests/test_init.sh \"$SP/mut_nocopy.lua\" 2\u003e\u00261 | grep -E \"FAIL|checks (passed|failed)|failed\\.\" | head -10\necho '--- mutant 2 ---'\n./tests/test_init.sh \"$SP/mut_nocapture.lua\" 2\u003e\u00261 | grep -E \"FAIL|checks (passed|failed)|failed\\.\" | head -10\n```\n\n```text\nmutants written\n  FAIL  focus: a cursor that moved gets the clipboard, not keystrokes\n**1 of 112 checks failed.\n--- mutant 2 ---\n  FAIL  focus: stopRecording pins the destination when the key comes up\n**1 of 112 checks failed.\n```\n"
+          },
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 965,
+            "cacheCreationInputTokens": 70366,
+            "cacheReadInputTokens": 26965
+          }
+        },
+        {
+          "id": "308da808-bb7e-4209-9908-884b844f7136",
+          "timestamp": "2026-08-27T17:42:38.143Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 331,
+            "cacheCreationInputTokens": 1554,
+            "cacheReadInputTokens": 97331
+          }
+        },
+        {
+          "id": "a8f25561-3456-4a66-a034-3d1f16b54424",
+          "timestamp": "2026-08-27T17:42:44.896Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "tool": {
+            "name": "Bash",
+            "type": "shell",
+            "useId": "toolu_01YB8bvuXTXgFomg7XdpsX6s",
+            "input": {
+              "_cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+              "command": "hs -c \"hs.reload()\" 2\u003e\u00261 | tail -1; sleep 3; hs -c 'return \"alive: \" .. tostring(hs.settings and \"ok\")' 2\u003e\u00261 | tail -1",
+              "description": "Reload Hammerspoon and confirm it came back"
+            },
+            "output": {
+              "content": "error unregistering CLI instance with Hammerspoon: message port invalid (transport errors are normal if Hammerspoon is reloading)\nalive: ok",
+              "is_error": false
+            },
+            "formattedMarkdown": "Reload Hammerspoon and confirm it came back\n\n`hs -c \"hs.reload()\" 2\u003e\u00261 | tail -1; sleep 3; hs -c 'return \"alive: \" .. tostring(hs.settings and \"ok\")' 2\u003e\u00261 | tail -1`\n\n```text\nerror unregistering CLI instance with Hammerspoon: message port invalid (transport errors are normal if Hammerspoon is reloading)\nalive: ok\n```\n"
+          },
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 331,
+            "cacheCreationInputTokens": 1554,
+            "cacheReadInputTokens": 97331
+          }
+        },
+        {
+          "id": "09092016-9553-4f81-96b6-42b7766e0a7b",
+          "timestamp": "2026-08-27T17:42:50.156Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "tool": {
+            "name": "Bash",
+            "type": "shell",
+            "useId": "toolu_01MgeV7hGNCMqQGyNeGeLcmh",
+            "input": {
+              "_cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+              "command": "TMPDIR_REAL=$(getconf DARWIN_USER_TEMP_DIR) \u0026\u0026 tail -8 \"${TMPDIR_REAL}whisper-dictate/whisper-dictate.log\"",
+              "description": "Check the log after reload"
+            },
+            "output": {
+              "content": "[19:42:40] warmup: probing audio device...\n[19:42:40] warmup: attempt 1/10\n[19:42:40] recording: app=Claude (com.anthropic.claudefordesktop)\n[19:42:41] warmup: device ready on attempt 1\n[19:42:41] recording: start (audio flowing)\n[19:42:42] actions: loaded /Users/vitaliy/.hammerspoon/local_whisper_actions.lua\n[19:42:42] actions: enabled\n[19:42:42] loaded (trigger=fnLeftCtrl, lang=auto, output=paste, model=large-v3-turbo-q5_0)",
+              "is_error": false
+            },
+            "formattedMarkdown": "Check the log after reload\n\n`TMPDIR_REAL=$(getconf DARWIN_USER_TEMP_DIR) \u0026\u0026 tail -8 \"${TMPDIR_REAL}whisper-dictate/whisper-dictate.log\"`\n\n```text\n[19:42:40] warmup: probing audio device...\n[19:42:40] warmup: attempt 1/10\n[19:42:40] recording: app=Claude (com.anthropic.claudefordesktop)\n[19:42:41] warmup: device ready on attempt 1\n[19:42:41] recording: start (audio flowing)\n[19:42:42] actions: loaded /Users/vitaliy/.hammerspoon/local_whisper_actions.lua\n[19:42:42] actions: enabled\n[19:42:42] loaded (trigger=fnLeftCtrl, lang=auto, output=paste, model=large-v3-turbo-q5_0)\n```\n"
+          },
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 776,
+            "cacheCreationInputTokens": 411,
+            "cacheReadInputTokens": 98885
+          }
+        },
+        {
+          "id": "8b141f7e-0bb8-44d3-8fe6-e813cfed2d90",
+          "timestamp": "2026-08-27T17:42:57.381Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "tool": {
+            "name": "Bash",
+            "type": "shell",
+            "useId": "toolu_019r7vvds1H1ExRAUrVxcDKk",
+            "input": {
+              "_cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+              "command": "hs -c 'local function focusTargetId()\n    local parts = {}\n    local ok = pcall(function()\n        local app = hs.application.frontmostApplication()\n        parts[#parts + 1] = app and (app:bundleID() or app:name() or \"?\") or \"?\"\n        parts[#parts + 1] = app and tostring(app:pid()) or \"?\"\n        local win = hs.window.focusedWindow()\n        parts[#parts + 1] = win and tostring(win:id()) or \"-\"\n        parts[#parts + 1] = (win and win:title()) or \"\"\n        local ae   = app and hs.axuielement.applicationElement(app)\n        local elem = ae and ae:attributeValue(\"AXFocusedUIElement\")\n        if elem then\n            for _, attr in ipairs({ \"AXRole\", \"AXSubrole\", \"AXIdentifier\", \"AXDOMIdentifier\", \"AXTitle\" }) do\n                local v = elem:attributeValue(attr)\n                parts[#parts + 1] = (type(v) == \"string\") and v or \"\"\n            end\n        end\n    end)\n    if not ok then return nil end\n    return table.concat(parts, \"|\")\nend\nlocal t0 = hs.timer.absoluteTime()\nlocal a = focusTargetId()\nlocal dt = (hs.timer.absoluteTime() - t0) / 1e6\nhs.application.get(\"Finder\"):activate()\nlocal b = focusTargetId()\nreturn string.format(\"first=%s (%.1f ms)\\nafterFinder=%s\\ndiffer=%s\", tostring(a), dt, tostring(b), tostring(a ~= b))' 2\u003e\u00261 | tail -5",
+              "description": "Run focusTargetId in the live runtime and check it changes with focus"
+            },
+            "output": {
+              "content": "-- Loading extension: axuielement\n-- Some applications have alternate names which can also be checked if you enable Spotlight support with `hs.application.enableSpotlightForNameSearches(true)`.\nfirst=com.microsoft.VSCode|8512|130369|Запись голоса с отслежив… — local-whisper — Sane AZ (102.4 ms)\nafterFinder=com.apple.finder|700|127481|rdp-cloudflare|AXOutline||ListView||\ndiffer=true",
+              "is_error": false
+            },
+            "formattedMarkdown": "Run focusTargetId in the live runtime and check it changes with focus\n\n```bash\nhs -c 'local function focusTargetId()\n    local parts = {}\n    local ok = pcall(function()\n        local app = hs.application.frontmostApplication()\n        parts[#parts + 1] = app and (app:bundleID() or app:name() or \"?\") or \"?\"\n        parts[#parts + 1] = app and tostring(app:pid()) or \"?\"\n        local win = hs.window.focusedWindow()\n        parts[#parts + 1] = win and tostring(win:id()) or \"-\"\n        parts[#parts + 1] = (win and win:title()) or \"\"\n        local ae   = app and hs.axuielement.applicationElement(app)\n        local elem = ae and ae:attributeValue(\"AXFocusedUIElement\")\n        if elem then\n            for _, attr in ipairs({ \"AXRole\", \"AXSubrole\", \"AXIdentifier\", \"AXDOMIdentifier\", \"AXTitle\" }) do\n                local v = elem:attributeValue(attr)\n                parts[#parts + 1] = (type(v) == \"string\") and v or \"\"\n            end\n        end\n    end)\n    if not ok then return nil end\n    return table.concat(parts, \"|\")\nend\nlocal t0 = hs.timer.absoluteTime()\nlocal a = focusTargetId()\nlocal dt = (hs.timer.absoluteTime() - t0) / 1e6\nhs.application.get(\"Finder\"):activate()\nlocal b = focusTargetId()\nreturn string.format(\"first=%s (%.1f ms)\\nafterFinder=%s\\ndiffer=%s\", tostring(a), dt, tostring(b), tostring(a ~= b))' 2\u003e\u00261 | tail -5\n```\n\n```text\n-- Loading extension: axuielement\n-- Some applications have alternate names which can also be checked if you enable Spotlight support with `hs.application.enableSpotlightForNameSearches(true)`.\nfirst=com.microsoft.VSCode|8512|130369|Запись голоса с отслежив… — local-whisper — Sane AZ (102.4 ms)\nafterFinder=com.apple.finder|700|127481|rdp-cloudflare|AXOutline||ListView||\ndiffer=true\n```\n"
+          },
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 776,
+            "cacheCreationInputTokens": 411,
+            "cacheReadInputTokens": 98885
+          }
+        },
+        {
+          "id": "af0acd37-b527-4df9-90b7-ad67a5d55a85",
+          "timestamp": "2026-08-27T17:43:03.705Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 899,
+            "cacheCreationInputTokens": 1238,
+            "cacheReadInputTokens": 99296
+          }
+        },
+        {
+          "id": "632e0a31-5c34-4b49-9991-0e496b5cc0e9",
+          "timestamp": "2026-08-27T17:43:10.310Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "tool": {
+            "name": "Bash",
+            "type": "shell",
+            "useId": "toolu_012mkqy1tc25ZJLiekNKAMqX",
+            "input": {
+              "_cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+              "command": "hs -c 'local function sig()\n    local parts = {}\n    pcall(function()\n        local app = hs.application.frontmostApplication()\n        parts[#parts+1] = app and (app:bundleID() or app:name() or \"?\") or \"?\"\n        parts[#parts+1] = app and tostring(app:pid()) or \"?\"\n        local win = hs.window.focusedWindow()\n        parts[#parts+1] = win and tostring(win:id()) or \"-\"\n        parts[#parts+1] = (win and win:title()) or \"\"\n        local ae = app and hs.axuielement.applicationElement(app)\n        local elem = ae and ae:attributeValue(\"AXFocusedUIElement\")\n        if elem then\n            for _, a in ipairs({\"AXRole\",\"AXSubrole\",\"AXIdentifier\",\"AXDOMIdentifier\",\"AXTitle\"}) do\n                local v = elem:attributeValue(a)\n                parts[#parts+1] = (type(v)==\"string\") and v or \"\"\n            end\n        end\n    end)\n    return table.concat(parts, \"|\")\nend\nlocal worst, total = 0, 0\nfor i = 1, 10 do\n  local t = hs.timer.absoluteTime(); sig(); local d = (hs.timer.absoluteTime()-t)/1e6\n  total = total + d; if d \u003e worst then worst = d end\nend\nreturn string.format(\"warm: avg %.1f ms, worst %.1f ms\", total/10, worst)' 2\u003e\u00261 | tail -1",
+              "description": "Measure warm cost of the signature"
+            },
+            "output": {
+              "content": "warm: avg 1.8 ms, worst 15.2 ms",
+              "is_error": false
+            },
+            "formattedMarkdown": "Measure warm cost of the signature\n\n```bash\nhs -c 'local function sig()\n    local parts = {}\n    pcall(function()\n        local app = hs.application.frontmostApplication()\n        parts[#parts+1] = app and (app:bundleID() or app:name() or \"?\") or \"?\"\n        parts[#parts+1] = app and tostring(app:pid()) or \"?\"\n        local win = hs.window.focusedWindow()\n        parts[#parts+1] = win and tostring(win:id()) or \"-\"\n        parts[#parts+1] = (win and win:title()) or \"\"\n        local ae = app and hs.axuielement.applicationElement(app)\n        local elem = ae and ae:attributeValue(\"AXFocusedUIElement\")\n        if elem then\n            for _, a in ipairs({\"AXRole\",\"AXSubrole\",\"AXIdentifier\",\"AXDOMIdentifier\",\"AXTitle\"}) do\n                local v = elem:attributeValue(a)\n                parts[#parts+1] = (type(v)==\"string\") and v or \"\"\n            end\n        end\n    end)\n    return table.concat(parts, \"|\")\nend\nlocal worst, total = 0, 0\nfor i = 1, 10 do\n  local t = hs.timer.absoluteTime(); sig(); local d = (hs.timer.absoluteTime()-t)/1e6\n  total = total + d; if d \u003e worst then worst = d end\nend\nreturn string.format(\"warm: avg %.1f ms, worst %.1f ms\", total/10, worst)' 2\u003e\u00261 | tail -1\n```\n\n```text\nwarm: avg 1.8 ms, worst 15.2 ms\n```\n"
+          },
+          "pathHints": [
+            "worst"
+          ],
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 899,
+            "cacheCreationInputTokens": 1238,
+            "cacheReadInputTokens": 99296
+          }
+        },
+        {
+          "id": "f393d35b-161e-4446-8d13-c6584194ed03",
+          "timestamp": "2026-08-27T17:43:13.767Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 259,
+            "cacheCreationInputTokens": 950,
+            "cacheReadInputTokens": 100534
+          }
+        },
+        {
+          "id": "b3af8ca0-6e49-4176-86f8-cd5fdea70afc",
+          "timestamp": "2026-08-27T17:43:16.264Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "tool": {
+            "name": "Bash",
+            "type": "shell",
+            "useId": "toolu_01BRUCnJ5TDBVRqfa1SqfdXF",
+            "input": {
+              "_cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+              "command": "grep -n \"Mixed-language speech\\|^| \\`detach\\`\\|^| \\`emergencyStop\\`\\|→ Text insertion at cursor\" AGENTS.md",
+              "description": "Locate AGENTS.md anchors"
+            },
+            "output": {
+              "content": "18:  → Text insertion at cursor (paste or keystroke)\n270:### Mixed-language speech (surzhyk, ru/uk/en)\n419:| `detach` | a new recording destroying the dictation still being transcribed — reset pipeline state, a wiped shared chunk directory, a whisper callback reporting into whatever job is current, or a finished transcript typed into a held trigger combo |\n420:| `emergencyStop` | emergency stop not cancelling a pending finalization |",
+              "is_error": false
+            },
+            "formattedMarkdown": "Locate AGENTS.md anchors\n\n`grep -n \"Mixed-language speech\\|^| \\`detach\\`\\|^| \\`emergencyStop\\`\\|→ Text insertion at cursor\" AGENTS.md`\n\n```text\n18:  → Text insertion at cursor (paste or keystroke)\n270:### Mixed-language speech (surzhyk, ru/uk/en)\n419:| `detach` | a new recording destroying the dictation still being transcribed — reset pipeline state, a wiped shared chunk directory, a whisper callback reporting into whatever job is current, or a finished transcript typed into a held trigger combo |\n420:| `emergencyStop` | emergency stop not cancelling a pending finalization |\n```\n"
+          },
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 259,
+            "cacheCreationInputTokens": 950,
+            "cacheReadInputTokens": 100534
+          }
+        },
+        {
+          "id": "c26694a5-4a8c-4be4-955d-8cd0852d567d",
+          "timestamp": "2026-08-27T17:43:36.152Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "tool": {
+            "name": "Bash",
+            "type": "shell",
+            "useId": "toolu_01GdagKEX83ehZiExBiBRamR",
+            "input": {
+              "_cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+              "command": "python3 - \u003c\u003c'PY'\nimport io\np='AGENTS.md'\ns=io.open(p,encoding='utf-8').read()\n\nold = \"  → Text insertion at cursor (paste or keystroke)\"\nnew = \"  → Text insertion at cursor (paste or keystroke — clipboard only if the cursor moved)\"\nassert s.count(old)==1\ns=s.replace(old,new,1)\n\nanchor = \"### Mixed-language speech (surzhyk, ru/uk/en)\"\nsection = '''### The text only goes where it was aimed\n\nWhisper answers seconds after the key comes up, and in those seconds the user may have\nclicked into another field, switched a browser tab or moved to another app. Typing there is\nworse than not typing at all: a paragraph lands in a chat, a terminal or a search box, and\nthere is no undo for keystrokes another app already accepted.\n\nSo `stopRecording()` pins the destination at release — `pipe.target = focusTargetId()` — and\n`finishInsertion()` re-checks it immediately before inserting. On a mismatch the output mode\nis forced to `copy` (clipboard only, nothing typed, no Enter) and **two** chimes play instead\nof one, so \"nothing was typed\" is audible without looking at the screen. The overlay prefixes\nthe text with `CLIPBOARD:` and lingers 1.5s longer.\n\n`focusTargetId()` is a **signature, not an object reference**: AX hands back a fresh element\non every query. It concatenates bundle ID, pid, focused-window id, window title and — when\nthe app exposes one — the focused element's role, subrole, `AXIdentifier`, `AXDOMIdentifier`\nand title. Electron apps expose no focused element at all (measured: VS Code returns nil for\n`AXFocusedUIElement`), which is why the window id and title carry the check there — without\nthe title, switching editor tabs inside one window would go unnoticed.\n\nTwo rules hold it together:\n\n- **Volatile attributes stay out.** Window frame and the field's own value both change while\n  the user keeps working in exactly the right place, and every false alarm costs a manual\n  paste. What is in is stable for the few seconds that matter.\n- **No identifier means no verdict.** `focusTargetId()` returns nil if AX is unavailable or an\n  app is unresponsive, and a nil target skips the check entirely rather than refusing to type.\n\nThe target is **per job**, like everything else in the pipeline: it rides on the job through\n`pipelineFinalize` and through `pipeJobs.pending`, so a dictation that finishes behind a newer\nrecording is still judged against the place *it* was spoken into. Queued dictations aimed at\ndifferent places collapse to `\"\"`, which matches no focus — the whole batch takes the\nclipboard route. The one deliberate exception is text queued from an *older* dictation being\nprepended to the current one: it rides along to the current job's destination, because the\nuser is standing in it right now, having just spoken into it.\n\nCost at the two call sites is negligible — measured 1.8 ms average, 15 ms worst over ten warm\ncalls (~100 ms once, the first time `hs.axuielement` loads).\n\n'''\nassert s.count(anchor)==1\ns=s.replace(anchor, section+anchor, 1)\n\nold = \"| `emergencyStop` | emergency stop not cancelling a pending finalization |\"\nnew = (\"| `focus` | a transcript typed into whatever is focused when whisper answers rather than the place it was dictated into — the destination not captured at release, not carried by the job, or a mismatch still typing instead of taking the clipboard |\\n\"\n       + old)\nassert s.count(old)==1\ns=s.replace(old,new,1)\nio.open(p,'w',encoding='utf-8').write(s)\nprint('AGENTS.md updated')\nPY",
+              "description": "Document the feature in AGENTS.md"
+            },
+            "output": {
+              "content": "AGENTS.md updated",
+              "is_error": false
+            },
+            "formattedMarkdown": "Document the feature in AGENTS.md\n\n```bash\npython3 - \u003c\u003c'PY'\nimport io\np='AGENTS.md'\ns=io.open(p,encoding='utf-8').read()\n\nold = \"  → Text insertion at cursor (paste or keystroke)\"\nnew = \"  → Text insertion at cursor (paste or keystroke — clipboard only if the cursor moved)\"\nassert s.count(old)==1\ns=s.replace(old,new,1)\n\nanchor = \"### Mixed-language speech (surzhyk, ru/uk/en)\"\nsection = '''### The text only goes where it was aimed\n\nWhisper answers seconds after the key comes up, and in those seconds the user may have\nclicked into another field, switched a browser tab or moved to another app. Typing there is\nworse than not typing at all: a paragraph lands in a chat, a terminal or a search box, and\nthere is no undo for keystrokes another app already accepted.\n\nSo `stopRecording()` pins the destination at release — `pipe.target = focusTargetId()` — and\n`finishInsertion()` re-checks it immediately before inserting. On a mismatch the output mode\nis forced to `copy` (clipboard only, nothing typed, no Enter) and **two** chimes play instead\nof one, so \"nothing was typed\" is audible without looking at the screen. The overlay prefixes\nthe text with `CLIPBOARD:` and lingers 1.5s longer.\n\n`focusTargetId()` is a **signature, not an object reference**: AX hands back a fresh element\non every query. It concatenates bundle ID, pid, focused-window id, window title and — when\nthe app exposes one — the focused element's role, subrole, `AXIdentifier`, `AXDOMIdentifier`\nand title. Electron apps expose no focused element at all (measured: VS Code returns nil for\n`AXFocusedUIElement`), which is why the window id and title carry the check there — without\nthe title, switching editor tabs inside one window would go unnoticed.\n\nTwo rules hold it together:\n\n- **Volatile attributes stay out.** Window frame and the field's own value both change while\n  the user keeps working in exactly the right place, and every false alarm costs a manual\n  paste. What is in is stable for the few seconds that matter.\n- **No identifier means no verdict.** `focusTargetId()` returns nil if AX is unavailable or an\n  app is unresponsive, and a nil target skips the check entirely rather than refusing to type.\n\nThe target is **per job**, like everything else in the pipeline: it rides on the job through\n`pipelineFinalize` and through `pipeJobs.pending`, so a dictation that finishes behind a newer\nrecording is still judged against the place *it* was spoken into. Queued dictations aimed at\ndifferent places collapse to `\"\"`, which matches no focus — the whole batch takes the\nclipboard route. The one deliberate exception is text queued from an *older* dictation being\nprepended to the current one: it rides along to the current job's destination, because the\nuser is standing in it right now, having just spoken into it.\n\nCost at the two call sites is negligible — measured 1.8 ms average, 15 ms worst over ten warm\ncalls (~100 ms once, the first time `hs.axuielement` loads).\n\n'''\nassert s.count(anchor)==1\ns=s.replace(anchor, section+anchor, 1)\n\nold = \"| `emergencyStop` | emergency stop not cancelling a pending finalization |\"\nnew = (\"| `focus` | a transcript typed into whatever is focused when whisper answers rather than the place it was dictated into — the destination not captured at release, not carried by the job, or a mismatch still typing instead of taking the clipboard |\\n\"\n       + old)\nassert s.count(old)==1\ns=s.replace(old,new,1)\nio.open(p,'w',encoding='utf-8').write(s)\nprint('AGENTS.md updated')\nPY\n```\n\n```text\nAGENTS.md updated\n```\n"
+          },
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 1341,
+            "cacheCreationInputTokens": 449,
+            "cacheReadInputTokens": 101484
+          }
+        },
+        {
+          "id": "d0506ef1-c756-4828-acd7-82cbd41db19b",
+          "timestamp": "2026-08-27T17:43:53.822Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 1257,
+            "cacheCreationInputTokens": 1379,
+            "cacheReadInputTokens": 101933
+          }
+        },
+        {
+          "id": "f9741c08-5482-45ce-8d12-4a8ff79f559c",
+          "timestamp": "2026-08-27T17:43:55.400Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "tool": {
+            "name": "Bash",
+            "type": "shell",
+            "useId": "toolu_01Rram8RTAgyPVJpXDxybZhT",
+            "input": {
+              "_cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+              "command": "grep -n -i \"clipboard\\|буфер\" README.md | head -10",
+              "description": "Check README for insertion docs"
+            },
+            "output": {
+              "content": "139:| **PASTE** | Writes text to clipboard via `pbcopy`, then sends `Cmd+V` automatically. Default for normal use. |\n141:| **COPY** | Writes text to clipboard via `pbcopy` but does **not** send `Cmd+V`. Useful when working in **Microsoft Remote Desktop** or other remote-desktop/VM apps where clipboard sync to the guest OS is asynchronous — dictate, wait a moment for the clipboard to sync, then press `Ctrl+V` manually in the Windows window. |\n214:  → Text inserted at cursor via paste (Cmd+V), keystroke, or clipboard-only (COPY mode)",
+              "is_error": false
+            },
+            "formattedMarkdown": "Check README for insertion docs\n\n`grep -n -i \"clipboard\\|буфер\" README.md | head -10`\n\n```text\n139:| **PASTE** | Writes text to clipboard via `pbcopy`, then sends `Cmd+V` automatically. Default for normal use. |\n141:| **COPY** | Writes text to clipboard via `pbcopy` but does **not** send `Cmd+V`. Useful when working in **Microsoft Remote Desktop** or other remote-desktop/VM apps where clipboard sync to the guest OS is asynchronous — dictate, wait a moment for the clipboard to sync, then press `Ctrl+V` manually in the Windows window. |\n214:  → Text inserted at cursor via paste (Cmd+V), keystroke, or clipboard-only (COPY mode)\n```\n"
+          },
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 1257,
+            "cacheCreationInputTokens": 1379,
+            "cacheReadInputTokens": 101933
+          }
+        },
+        {
+          "id": "a168c695-5e9d-4160-b482-fb1ca9c225fd",
+          "timestamp": "2026-08-27T17:43:59.351Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "tool": {
+            "name": "Bash",
+            "type": "shell",
+            "useId": "toolu_0113sGwh4ZomYN2L7fcRNa5k",
+            "input": {
+              "_cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+              "command": "git diff --stat -- hammerspoon/init.lua tests/test_init.lua AGENTS.md",
+              "description": "Show diff stat for source changes"
+            },
+            "output": {
+              "content": " AGENTS.md            | 42 +++++++++++++++++++++-\n hammerspoon/init.lua | 95 +++++++++++++++++++++++++++++++++++++++++++-------\n tests/test_init.lua  | 98 ++++++++++++++++++++++++++++++++++++++++++++++++++++\n 3 files changed, 222 insertions(+), 13 deletions(-)",
+              "is_error": false
+            },
+            "formattedMarkdown": "Show diff stat for source changes\n\n`git diff --stat -- hammerspoon/init.lua tests/test_init.lua AGENTS.md`\n\n```text\n AGENTS.md            | 42 +++++++++++++++++++++-\n hammerspoon/init.lua | 95 +++++++++++++++++++++++++++++++++++++++++++-------\n tests/test_init.lua  | 98 ++++++++++++++++++++++++++++++++++++++++++++++++++++\n 3 files changed, 222 insertions(+), 13 deletions(-)\n```\n"
+          },
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 1257,
+            "cacheCreationInputTokens": 1379,
+            "cacheReadInputTokens": 101933
+          }
+        },
+        {
+          "id": "3040903c-d8a3-4afe-a972-206f3bcff151",
+          "timestamp": "2026-08-27T17:44:02.772Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 146,
+            "cacheCreationInputTokens": 1701,
+            "cacheReadInputTokens": 103312
+          }
+        },
+        {
+          "id": "c0af1001-1423-46b8-8cf6-444bff2bf694",
+          "timestamp": "2026-08-27T17:44:03.367Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "tool": {
+            "name": "Bash",
+            "type": "shell",
+            "useId": "toolu_01SbMuToBMFKq6fc6qvGnUit",
+            "input": {
+              "_cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+              "command": "sed -n 132,148p README.md; echo '=== 205..220'; sed -n 205,220p README.md",
+              "description": "Read README output-mode table and flow"
+            },
+            "output": {
+              "content": "### Output modes\n\nClick **Output** in the menu bar to cycle through three modes:\n\n| Mode | Behaviour |\n|------|-----------|\n| **PASTE** | Writes text to clipboard via `pbcopy`, then sends `Cmd+V` automatically. Default for normal use. |\n| **TYPE** | Types text character-by-character using keystroke events. Works in apps that block paste. Note: Cyrillic/non-ASCII may not work correctly in some apps. |\n| **COPY** | Writes text to clipboard via `pbcopy` but does **not** send `Cmd+V`. Useful when working in **Microsoft Remote Desktop** or other remote-desktop/VM apps where clipboard sync to the guest OS is asynchronous — dictate, wait a moment for the clipboard to sync, then press `Ctrl+V` manually in the Windows window. |\n\n## Custom vocabulary prompt\n\nCreate `~/.local-whisper/prompt` with terms whisper should recognize better:\n\n```\nClaude, Hammerspoon, whisper.cpp, ffmpeg, macOS, Lua, Anthropic\n=== 205..220\n  → every 3s: any finished ≤55s segment (cut at a pause) goes to whisper immediately,\n    while recording continues — several segments may transcribe concurrently\n  ↓  (key released)\n  → doFinalTranscription(): only the unclaimed tail is left to transcribe\n  → per segment: ffmpeg concat → whisper-cli (or the remote API), in order\n  → progress bar tracks transcribed seconds against recorded seconds\n  → join the segment texts, drop whisper's known silence hallucinations\n  → Post-processing: remove fillers, capitalize, app-aware adjustments\n  → Voice command hooks: beforeInsert → actions → text insertion → afterInsert\n  → Text inserted at cursor via paste (Cmd+V), keystroke, or clipboard-only (COPY mode)\n```\n\n## Troubleshooting\n\n- **No transcription output**: Check `$TMPDIR/whisper-dictate/whisper-dictate.log` for errors (run `echo $TMPDIR` to find the path)\n- **Words missing from the middle of sentences**: Check the capture health line — `grep \"recording: captured\"` in the log. It should read ~97% of wall clock; anything near 90% means capture regressed",
+              "is_error": false
+            },
+            "formattedMarkdown": "Read README output-mode table and flow\n\n`sed -n 132,148p README.md; echo '=== 205..220'; sed -n 205,220p README.md`\n\n```text\n### Output modes\n\nClick **Output** in the menu bar to cycle through three modes:\n\n| Mode | Behaviour |\n|------|-----------|\n| **PASTE** | Writes text to clipboard via `pbcopy`, then sends `Cmd+V` automatically. Default for normal use. |\n| **TYPE** | Types text character-by-character using keystroke events. Works in apps that block paste. Note: Cyrillic/non-ASCII may not work correctly in some apps. |\n| **COPY** | Writes text to clipboard via `pbcopy` but does **not** send `Cmd+V`. Useful when working in **Microsoft Remote Desktop** or other remote-desktop/VM apps where clipboard sync to the guest OS is asynchronous — dictate, wait a moment for the clipboard to sync, then press `Ctrl+V` manually in the Windows window. |\n\n## Custom vocabulary prompt\n\nCreate `~/.local-whisper/prompt` with terms whisper should recognize better:\n\n```\nClaude, Hammerspoon, whisper.cpp, ffmpeg, macOS, Lua, Anthropic\n=== 205..220\n  → every 3s: any finished ≤55s segment (cut at a pause) goes to whisper immediately,\n    while recording continues — several segments may transcribe concurrently\n  ↓  (key released)\n  → doFinalTranscription(): only the unclaimed tail is left to transcribe\n  → per segment: ffmpeg concat → whisper-cli (or the remote API), in order\n  → progress bar tracks transcribed seconds against recorded seconds\n  → join the segment texts, drop whisper's known silence hallucinations\n  → Post-processing: remove fillers, capitalize, app-aware adjustments\n  → Voice command hooks: beforeInsert → actions → text insertion → afterInsert\n  → Text inserted at cursor via paste (Cmd+V), keystroke, or clipboard-only (COPY mode)\n```\n\n## Troubleshooting\n\n- **No transcription output**: Check `$TMPDIR/whisper-dictate/whisper-dictate.log` for errors (run `echo $TMPDIR` to find the path)\n- **Words missing from the middle of sentences**: Check the capture health line — `grep \"recording: captured\"` in the log. It should read ~97% of wall clock; anything near 90% means capture regressed\n```\n"
+          },
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 146,
+            "cacheCreationInputTokens": 1701,
+            "cacheReadInputTokens": 103312
+          }
+        },
+        {
+          "id": "5dcf0366-c429-4c62-a9b3-259573dce963",
+          "timestamp": "2026-08-27T17:44:12.989Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "tool": {
+            "name": "Bash",
+            "type": "shell",
+            "useId": "toolu_01166GirMxQ1R7rNvWvhPN3y",
+            "input": {
+              "_cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+              "command": "python3 - \u003c\u003c'PY'\nimport io\np='README.md'\ns=io.open(p,encoding='utf-8').read()\n\nold = \"| **COPY** | Writes text to clipboard via `pbcopy` but does **not** send `Cmd+V`. Useful when working in **Microsoft Remote Desktop** or other remote-desktop/VM apps where clipboard sync to the guest OS is asynchronous — dictate, wait a moment for the clipboard to sync, then press `Ctrl+V` manually in the Windows window. |\"\nnew = old + \"\"\"\n\n**In every mode, the text only goes where you aimed it.** The spot your cursor was in when\nyou released the keys is remembered, and checked again just before the text is inserted. If\nyou clicked elsewhere, switched tabs or changed apps while whisper was still working, nothing\nis typed: the transcript goes to the clipboard, you hear **two** chimes instead of one, and\nthe overlay shows `CLIPBOARD:` — paste it wherever you actually want it.\"\"\"\nassert s.count(old)==1\ns=s.replace(old,new,1)\n\nold = \"  → Text inserted at cursor via paste (Cmd+V), keystroke, or clipboard-only (COPY mode)\"\nnew = (\"  → the cursor spot recorded at key release is re-checked; if it moved, clipboard only\\n\"\n       \"  → Text inserted at cursor via paste (Cmd+V), keystroke, or clipboard-only (COPY mode)\")\nassert s.count(old)==1\ns=s.replace(old,new,1)\nio.open(p,'w',encoding='utf-8').write(s)\nprint('README updated')\nPY\n./tests/test_init.sh 2\u003e\u00261 | tail -3",
+              "description": "Document in README and re-run the suite"
+            },
+            "output": {
+              "content": "README updated\n  \u001b[0;32mPASS\u001b[0m  focus: a dictation waiting in the queue keeps its own destination\n\n\u001b[0;32m\u001b[1mAll 112 checks passed.\u001b[0m",
+              "is_error": false
+            },
+            "formattedMarkdown": "Document in README and re-run the suite\n\n```bash\npython3 - \u003c\u003c'PY'\nimport io\np='README.md'\ns=io.open(p,encoding='utf-8').read()\n\nold = \"| **COPY** | Writes text to clipboard via `pbcopy` but does **not** send `Cmd+V`. Useful when working in **Microsoft Remote Desktop** or other remote-desktop/VM apps where clipboard sync to the guest OS is asynchronous — dictate, wait a moment for the clipboard to sync, then press `Ctrl+V` manually in the Windows window. |\"\nnew = old + \"\"\"\n\n**In every mode, the text only goes where you aimed it.** The spot your cursor was in when\nyou released the keys is remembered, and checked again just before the text is inserted. If\nyou clicked elsewhere, switched tabs or changed apps while whisper was still working, nothing\nis typed: the transcript goes to the clipboard, you hear **two** chimes instead of one, and\nthe overlay shows `CLIPBOARD:` — paste it wherever you actually want it.\"\"\"\nassert s.count(old)==1\ns=s.replace(old,new,1)\n\nold = \"  → Text inserted at cursor via paste (Cmd+V), keystroke, or clipboard-only (COPY mode)\"\nnew = (\"  → the cursor spot recorded at key release is re-checked; if it moved, clipboard only\\n\"\n       \"  → Text inserted at cursor via paste (Cmd+V), keystroke, or clipboard-only (COPY mode)\")\nassert s.count(old)==1\ns=s.replace(old,new,1)\nio.open(p,'w',encoding='utf-8').write(s)\nprint('README updated')\nPY\n./tests/test_init.sh 2\u003e\u00261 | tail -3\n```\n\n```text\nREADME updated\n  PASS  focus: a dictation waiting in the queue keeps its own destination\n\n**All 112 checks passed.\n```\n"
+          },
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 646,
+            "cacheCreationInputTokens": 970,
+            "cacheReadInputTokens": 105013
+          }
+        },
+        {
+          "id": "c8cab608-5da1-45ad-b35e-9f336523368c",
+          "timestamp": "2026-08-27T17:44:20.421Z",
+          "role": "agent",
+          "model": "claude-opus-5",
+          "tool": {
+            "name": "Bash",
+            "type": "shell",
+            "useId": "toolu_01WWwh17PnEN714q6yh3F7tq",
+            "input": {
+              "_cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+              "command": "git add -A \u0026\u0026 git commit -q -F - \u003c\u003c'MSG' \u0026\u0026 git log --oneline -1\nInsert only where the dictation was aimed\n\nWhisper answers seconds after the key comes up, and in those seconds the cursor\nmay have moved — another field, another tab, another app. The text was typed\nthere anyway, and keystrokes another app accepted have no undo.\n\nstopRecording() now pins the destination at release (focusTargetId(): bundle ID,\npid, focused-window id and title, plus the focused element's role/subrole/\nidentifier/title when the app exposes one — Electron apps expose none), and\nfinishInsertion() re-checks it right before inserting. On a mismatch nothing is\ntyped: output is forced to clipboard-only, two chimes play instead of one, and\nthe overlay marks the text CLIPBOARD:.\n\nThe target is per job like the rest of the pipeline, so a dictation that\nfinishes behind a newer recording is judged against the place it was spoken\ninto; queued dictations aimed at different places collapse to the clipboard\nroute. A nil target (AX unavailable) skips the check rather than refusing to\ntype. Measured 1.8 ms average per call.\n\nCo-Authored-By: Claude Opus 5 \u003cnoreply@anthropic.com\u003e\nMSG",
+              "description": "Commit the change"
+            },
+            "formattedMarkdown": "Commit the change\n\n```bash\ngit add -A \u0026\u0026 git commit -q -F - \u003c\u003c'MSG' \u0026\u0026 git log --oneline -1\nInsert only where the dictation was aimed\n\nWhisper answers seconds after the key comes up, and in those seconds the cursor\nmay have moved — another field, another tab, another app. The text was typed\nthere anyway, and keystrokes another app accepted have no undo.\n\nstopRecording() now pins the destination at release (focusTargetId(): bundle ID,\npid, focused-window id and title, plus the focused element's role/subrole/\nidentifier/title when the app exposes one — Electron apps expose none), and\nfinishInsertion() re-checks it right before inserting. On a mismatch nothing is\ntyped: output is forced to clipboard-only, two chimes play instead of one, and\nthe overlay marks the text CLIPBOARD:.\n\nThe target is per job like the rest of the pipeline, so a dictation that\nfinishes behind a newer recording is judged against the place it was spoken\ninto; queued dictations aimed at different places collapse to the clipboard\nroute. A nil target (AX unavailable) skips the check rather than refusing to\ntype. Measured 1.8 ms average per call.\n\nCo-Authored-By: Claude Opus 5 \u003cnoreply@anthropic.com\u003e\nMSG\n```\n"
+          },
+          "usage": {
+            "inputTokens": 2,
+            "outputTokens": 484,
+            "cacheCreationInputTokens": 735,
+            "cacheReadInputTokens": 105983
           }
         }
       ]

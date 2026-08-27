@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "### Output modes\n\nClick **Output** in the menu bar to cycle through three modes:\n\n| Mode | Behaviour |\n|------|-----------|\n| **PASTE** | Writes text to clipboard via `pbcopy`, then sends `Cmd+V` automatically. Default for normal use. |\n| **TYPE** | Types text character-by-character using keystroke events. Works in apps that block paste. Note: Cyrillic/non-ASCII may not work correctly in some apps. |\n| **COPY** | Writes text to clipboard via `pbcopy` but does **not** send `Cmd+V`. Useful when working in **Microsoft Remote Desktop** or other remote-desktop/VM apps where clipboard sync to the guest OS is asynchronous — dictate, wait a moment for the clipboard to sync, then press `Ctrl+V` manually in the Windows window. |\n\n## Custom vocabulary prompt\n\nCreate `~/.local-whisper/prompt` with terms whisper should recognize better:\n\n```\nClaude, Hammerspoon, whisper.cpp, ffmpeg, macOS, Lua, Anthropic\n=== 205..220\n  → every 3s: any finished ≤55s segment (cut at a pause) goes to whisper immediately,\n    while recording continues — several segments may transcribe concurrently\n  ↓  (key released)\n  → doFinalTranscription(): only the unclaimed tail is left to transcribe\n  → per segment: ffmpeg concat → whisper-cli (or the remote API), in order\n  → progress bar tracks transcribed seconds against recorded seconds\n  → join the segment texts, drop whisper's known silence hallucinations\n  → Post-processing: remove fillers, capitalize, app-aware adjustments\n  → Voice command hooks: beforeInsert → actions → text insertion → afterInsert\n  → Text inserted at cursor via paste (Cmd+V), keystroke, or clipboard-only (COPY mode)\n```\n\n## Troubleshooting\n\n- **No transcription output**: Check `$TMPDIR/whisper-dictate/whisper-dictate.log` for errors (run `echo $TMPDIR` to find the path)\n- **Words missing from the middle of sentences**: Check the capture health line — `grep \"recording: captured\"` in the log. It should read ~97% of wall clock; anything near 90% means capture regressed",
+        "is_error": false,
+        "tool_use_id": "toolu_01SbMuToBMFKq6fc6qvGnUit",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "c0af1001-1423-46b8-8cf6-444bff2bf694",
+  "promptId": "adbb2826-8b89-485d-b617-b75f37459d44",
+  "sessionId": "54bfbd56-fc25-436e-b6a0-a48ef272d56e",
+  "sourceToolAssistantUUID": "c0af1001-1423-46b8-8cf6-444bff2bf694",
+  "timestamp": "2026-08-27T17:44:03.367Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "### Output modes\n\nClick **Output** in the menu bar to cycle through three modes:\n\n| Mode | Behaviour |\n|------|-----------|\n| **PASTE** | Writes text to clipboard via `pbcopy`, then sends `Cmd+V` automatically. Default for normal use. |\n| **TYPE** | Types text character-by-character using keystroke events. Works in apps that block paste. Note: Cyrillic/non-ASCII may not work correctly in some apps. |\n| **COPY** | Writes text to clipboard via `pbcopy` but does **not** send `Cmd+V`. Useful when working in **Microsoft Remote Desktop** or other remote-desktop/VM apps where clipboard sync to the guest OS is asynchronous — dictate, wait a moment for the clipboard to sync, then press `Ctrl+V` manually in the Windows window. |\n\n## Custom vocabulary prompt\n\nCreate `~/.local-whisper/prompt` with terms whisper should recognize better:\n\n```\nClaude, Hammerspoon, whisper.cpp, ffmpeg, macOS, Lua, Anthropic\n=== 205..220\n  → every 3s: any finished ≤55s segment (cut at a pause) goes to whisper immediately,\n    while recording continues — several segments may transcribe concurrently\n  ↓  (key released)\n  → doFinalTranscription(): only the unclaimed tail is left to transcribe\n  → per segment: ffmpeg concat → whisper-cli (or the remote API), in order\n  → progress bar tracks transcribed seconds against recorded seconds\n  → join the segment texts, drop whisper's known silence hallucinations\n  → Post-processing: remove fillers, capitalize, app-aware adjustments\n  → Voice command hooks: beforeInsert → actions → text insertion → afterInsert\n  → Text inserted at cursor via paste (Cmd+V), keystroke, or clipboard-only (COPY mode)\n```\n\n## Troubleshooting\n\n- **No transcription output**: Check `$TMPDIR/whisper-dictate/whisper-dictate.log` for errors (run `echo $TMPDIR` to find the path)\n- **Words missing from the middle of sentences**: Check the capture health line — `grep \"recording: captured\"` in the log. It should read ~97% of wall clock; anything near 90% means capture regressed"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "2db14db9-d6e5-4780-b30d-7334a2e58b9c",
+  "version": "2.1.246"
+}

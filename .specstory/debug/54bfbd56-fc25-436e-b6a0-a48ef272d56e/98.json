@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "[19:42:40] warmup: probing audio device...\n[19:42:40] warmup: attempt 1/10\n[19:42:40] recording: app=Claude (com.anthropic.claudefordesktop)\n[19:42:41] warmup: device ready on attempt 1\n[19:42:41] recording: start (audio flowing)\n[19:42:42] actions: loaded /Users/vitaliy/.hammerspoon/local_whisper_actions.lua\n[19:42:42] actions: enabled\n[19:42:42] loaded (trigger=fnLeftCtrl, lang=auto, output=paste, model=large-v3-turbo-q5_0)",
+        "is_error": false,
+        "tool_use_id": "toolu_01MgeV7hGNCMqQGyNeGeLcmh",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "09092016-9553-4f81-96b6-42b7766e0a7b",
+  "promptId": "adbb2826-8b89-485d-b617-b75f37459d44",
+  "sessionId": "54bfbd56-fc25-436e-b6a0-a48ef272d56e",
+  "sourceToolAssistantUUID": "09092016-9553-4f81-96b6-42b7766e0a7b",
+  "timestamp": "2026-08-27T17:42:50.156Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "[19:42:40] warmup: probing audio device...\n[19:42:40] warmup: attempt 1/10\n[19:42:40] recording: app=Claude (com.anthropic.claudefordesktop)\n[19:42:41] warmup: device ready on attempt 1\n[19:42:41] recording: start (audio flowing)\n[19:42:42] actions: loaded /Users/vitaliy/.hammerspoon/local_whisper_actions.lua\n[19:42:42] actions: enabled\n[19:42:42] loaded (trigger=fnLeftCtrl, lang=auto, output=paste, model=large-v3-turbo-q5_0)"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "a1330192-311a-4089-a953-c743a9f6122a",
+  "version": "2.1.246"
+}

@@ -1,0 +1,72 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_012aUwwfXZbqZZSMoZqWGgDt",
+        "input": {
+          "command": "python3 - \u003c\u003c'PY'\nimport io\np='hammerspoon/init.lua'\ns=io.open(p,encoding='utf-8').read()\norig=s\n\n# 1. focusTargetId() — right after captureActiveApp()\nanchor = '''    else\n        capturedAppName = nil\n        capturedAppBundleID = nil\n    end\nend\n'''\nassert s.count(anchor)==1\nnew_fn = anchor + '''\n-- Where the dictated text is meant to land.\n--\n-- Whisper answers seconds after the key comes up, and in those seconds the user may have\n-- clicked into another field, switched a tab or moved to another app. Typing there is worse\n-- than not typing at all: the text lands in a chat, a search box or a terminal that was\n-- never the target, and there is no undo for keystrokes someone else's app received. So the\n-- destination is identified at release and re-checked right before insertion (finishInsertion).\n--\n-- It is a *signature*, not an object reference: AX hands back a fresh element on every query,\n-- and Electron apps (VS Code among them) expose no focused element at all -- there the app,\n-- the window id and the window title are all there is to go on. Volatile attributes are left\n-- out on purpose (window frame, the field's own value): they change while the user keeps\n-- working in exactly the right place, and a false alarm costs a manual paste every time.\n--\n-- Returns nil if AX is unavailable or an app is unresponsive -- no identifier at all means\n-- the check is skipped, which is the pre-existing behaviour rather than a wrong verdict.\nlocal function focusTargetId()\n    local parts = {}\n    local ok = pcall(function()\n        local app = hs.application.frontmostApplication()\n        parts[#parts + 1] = app and (app:bundleID() or app:name() or \"?\") or \"?\"\n        parts[#parts + 1] = app and tostring(app:pid()) or \"?\"\n\n        local win = hs.window.focusedWindow()\n        parts[#parts + 1] = win and tostring(win:id()) or \"-\"\n        parts[#parts + 1] = (win and win:title()) or \"\"\n\n        local ae   = app and hs.axuielement.applicationElement(app)\n        local elem = ae and ae:attributeValue(\"AXFocusedUIElement\")\n        if elem then\n            for _, attr in ipairs({ \"AXRole\", \"AXSubrole\", \"AXIdentifier\", \"AXDOMIdentifier\", \"AXTitle\" }) do\n                local v = elem:attributeValue(attr)\n                parts[#parts + 1] = (type(v) == \"string\") and v or \"\"\n            end\n        end\n    end)\n    if not ok then return nil end\n    return table.concat(parts, \"|\")\nend\n'''\ns = s.replace(anchor, new_fn, 1)\n\n# 2. finishInsertion\nold = '''local function finishInsertion(text, detectedLang)\n    -- Build action context and run pre-insert hooks\n    local ctx = buildActionContext(normalizeText(text), detectedLang or getLang(), getOutputMode())'''\nnew = '''local function finishInsertion(text, detectedLang, target)\n    -- The cursor may have moved while whisper was working. If the place the text was meant\n    -- for is no longer focused, nothing is typed: the transcript goes to the clipboard and\n    -- the user gets two chimes instead of one.\n    local mode, misdirected = getOutputMode(), false\n    if target and mode ~= \"copy\" then\n        local now = focusTargetId()\n        if now and now ~= target then\n            misdirected = true\n            mode = \"copy\"\n            log(\"insert: focus moved since the key was released -- clipboard only\\\\n\" ..\n                \"  target: \" .. target .. \"\\\\n  now:    \" .. now)\n        end\n    end\n\n    -- Build action context and run pre-insert hooks\n    local ctx = buildActionContext(normalizeText(text), detectedLang or getLang(), mode)'''\nassert s.count(old)==1\ns=s.replace(old,new,1)\n\nold = '''    local display = finalText\n    if detectedLang then display = display .. \" [\" .. detectedLang:upper() .. \"]\" end\n    setOverlayText(display)\n    playSound(\"Glass\")\n    hs.timer.doAfter(OVERLAY_LINGER, hideOverlay)\nend'''\nnew = '''    local display = finalText\n    if detectedLang then display = display .. \" [\" .. detectedLang:upper() .. \"]\" end\n    if misdirected then display = \"CLIPBOARD: \" .. display end\n    setOverlayText(display)\n    playSound(\"Glass\")\n    if misdirected then\n        -- Two chimes, not one: nothing was typed, the text is waiting on the clipboard.\n        hs.timer.doAfter(0.35, function() playSound(\"Glass\") end)\n    end\n    hs.timer.doAfter(misdirected and (OVERLAY_LINGER + 1.5) or OVERLAY_LINGER, hideOverlay)\nend'''\nassert s.count(old)==1\ns=s.replace(old,new,1)\n\n# 3. insertTranscribedText\nold = '''local function insertTranscribedText(text, detectedLang)\n    if text == \"\" or isHallucination(text) then\n        hideOverlay()\n        return\n    end\n\n    -- Apply app-aware post-processing\n    text = postProcess(text, capturedAppBundleID)\n    if text == \"\" then hideOverlay(); return end\n\n    finishInsertion(text, detectedLang)\nend'''\nnew = '''local function insertTranscribedText(text, detectedLang, target)\n    if text == \"\" or isHallucination(text) then\n        hideOverlay()\n        return\n    end\n\n    -- Apply app-aware post-processing\n    text = postProcess(text, capturedAppBundleID)\n    if text == \"\" then hideOverlay(); return end\n\n    finishInsertion(text, detectedLang, target)\nend'''\nassert s.count(old)==1\ns=s.replace(old,new,1)\n\nio.open(p,'w',encoding='utf-8').write(s)\nprint(\"part 1 ok\", len(orig), '-\u003e', len(s))\nPY",
+          "description": "Add focusTargetId and wire it into insertion"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011CeLtQrjFKZ1iyTYfP3tzm",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 1566,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 1566,
+      "cache_read_input_tokens": 79277,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1566,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 1566,
+          "cache_read_input_tokens": 79277,
+          "input_tokens": 2,
+          "output_tokens": 4875,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 4875,
+      "output_tokens_details": {
+        "thinking_tokens": 2666
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "2b9b3599-1aa9-4181-bf3d-b5cd94eb97e9",
+  "requestId": "req_011CeLtQpaWqGUfzmhBMg8h5",
+  "sessionId": "54bfbd56-fc25-436e-b6a0-a48ef272d56e",
+  "timestamp": "2026-08-24T03:47:18.504Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "f42ba1a7-36fa-4dd2-8841-cee1c76eb7db",
+  "version": "2.1.240"
+}

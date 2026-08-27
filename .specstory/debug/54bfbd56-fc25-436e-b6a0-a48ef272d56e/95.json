@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "error unregistering CLI instance with Hammerspoon: message port invalid (transport errors are normal if Hammerspoon is reloading)\nalive: ok",
+        "is_error": false,
+        "tool_use_id": "toolu_01YB8bvuXTXgFomg7XdpsX6s",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "a8f25561-3456-4a66-a034-3d1f16b54424",
+  "promptId": "adbb2826-8b89-485d-b617-b75f37459d44",
+  "sessionId": "54bfbd56-fc25-436e-b6a0-a48ef272d56e",
+  "sourceToolAssistantUUID": "a8f25561-3456-4a66-a034-3d1f16b54424",
+  "timestamp": "2026-08-27T17:42:44.896Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "error unregistering CLI instance with Hammerspoon: message port invalid (transport errors are normal if Hammerspoon is reloading)\nalive: ok"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "2785234e-10fd-4d82-b2ba-c8a1d9e0b15a",
+  "version": "2.1.246"
+}

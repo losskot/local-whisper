@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "local function buildActionContext(text, lang, mode)\n    local ctx = {\n        text = text,\n        textLower = text:lower(),\n        originalText = text,\n        lang = lang,\n        outputMode = mode,\n        appName = capturedAppName,\n        appBundleID = capturedAppBundleID,\n        insert = true,\n        inserted = false,\n        handled = false,\n        timestamp = os.time(),\n        isoTime = os.date(\"!%Y-%m-%dT%H:%M:%SZ\"),\n    }\n\n    function ctx:setText(newText)\n        if type(newText) ~= \"string\" then return end\n        self.text = normalizeText(newText)\n        self.textLower = self.text:lower()\n    end\n\n    function ctx:disableInsert()\n        self.insert = false\n    end\n\n    function ctx:enableInsert()\n        self.insert = true\n    end\n\n    function ctx:launchApp(appName)\n        if type(appName) ~= \"string\" or appName == \"\" then return false end\n        return hs.application.launchOrFocus(appName)\n    end\n\n    function ctx:appendToFile(path, line)\n        local resolved = expandPath(path)\n        if not resolved or resolved == \"\" then return false, \"invalid path\" end\n        if not ensureParentDir(resolved) then return false, \"mkdir failed\" end\n        local f = io.open(resolved, \"a\")\n        if not f then return false, \"open failed\" end\n        f:write(tostring(line or self.text or \"\") .. \"\\n\")\n        f:close()\n        return true\n    end\n\n    function ctx:runShell(command, inputText)\n        if type(command) ~= \"string\" or command == \"\" then\n            return false, \"\", \"invalid command\", 1\n        end\n        local token = tostring(os.time()) .. \"_\" .. tostring(math.random(1000000))\n        local stdinPath = WHISPER_TMP .. \"/action_stdin_\" .. token .. \".txt\"\n        writeFile(stdinPath, tostring(inputText or self.text or \"\"))\n        local output, ok, kind, rc = hs.execute(command .. \" \u003c \" .. shellQuote(stdinPath), true)\n        os.remove(stdinPath)\n        return ok, output, kind, rc\n    end\n\n    function ctx:keystroke(mods, key)\n        hs.eventtap.keyStroke(mods or {}, key)\n    end\n\n    function ctx:notify(message)\n        hs.notify.new({ title = \"local-whisper\", informativeText = tostring(message) }):send()\n    end\n\n    function ctx:log(message)\n        log(\"action: \" .. tostring(message))\n    end\n\n    return ctx\nend\n\nlocal function runActionList(actions, ctx)\n    if type(actions) ~= \"table\" then return end\n    for i, action in ipairs(actions) do\n        if ctx.handled then break end\n        if type(action) == \"function\" then\n            safeHookCall(\"actions[\" .. i .. \"]\", action, ctx)",
+        "is_error": false,
+        "tool_use_id": "toolu_01U5CuXMNiRfnDE9MSVv2oaP",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "693f6743-e69d-4dc8-ac8a-caa0d9edb3a6",
+  "promptId": "0871342d-3020-4172-a2c1-ab54a6234ac2",
+  "sessionId": "54bfbd56-fc25-436e-b6a0-a48ef272d56e",
+  "sourceToolAssistantUUID": "693f6743-e69d-4dc8-ac8a-caa0d9edb3a6",
+  "timestamp": "2026-08-24T03:46:25.843Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "local function buildActionContext(text, lang, mode)\n    local ctx = {\n        text = text,\n        textLower = text:lower(),\n        originalText = text,\n        lang = lang,\n        outputMode = mode,\n        appName = capturedAppName,\n        appBundleID = capturedAppBundleID,\n        insert = true,\n        inserted = false,\n        handled = false,\n        timestamp = os.time(),\n        isoTime = os.date(\"!%Y-%m-%dT%H:%M:%SZ\"),\n    }\n\n    function ctx:setText(newText)\n        if type(newText) ~= \"string\" then return end\n        self.text = normalizeText(newText)\n        self.textLower = self.text:lower()\n    end\n\n    function ctx:disableInsert()\n        self.insert = false\n    end\n\n    function ctx:enableInsert()\n        self.insert = true\n    end\n\n    function ctx:launchApp(appName)\n        if type(appName) ~= \"string\" or appName == \"\" then return false end\n        return hs.application.launchOrFocus(appName)\n    end\n\n    function ctx:appendToFile(path, line)\n        local resolved = expandPath(path)\n        if not resolved or resolved == \"\" then return false, \"invalid path\" end\n        if not ensureParentDir(resolved) then return false, \"mkdir failed\" end\n        local f = io.open(resolved, \"a\")\n        if not f then return false, \"open failed\" end\n        f:write(tostring(line or self.text or \"\") .. \"\\n\")\n        f:close()\n        return true\n    end\n\n    function ctx:runShell(command, inputText)\n        if type(command) ~= \"string\" or command == \"\" then\n            return false, \"\", \"invalid command\", 1\n        end\n        local token = tostring(os.time()) .. \"_\" .. tostring(math.random(1000000))\n        local stdinPath = WHISPER_TMP .. \"/action_stdin_\" .. token .. \".txt\"\n        writeFile(stdinPath, tostring(inputText or self.text or \"\"))\n        local output, ok, kind, rc = hs.execute(command .. \" \u003c \" .. shellQuote(stdinPath), true)\n        os.remove(stdinPath)\n        return ok, output, kind, rc\n    end\n\n    function ctx:keystroke(mods, key)\n        hs.eventtap.keyStroke(mods or {}, key)\n    end\n\n    function ctx:notify(message)\n        hs.notify.new({ title = \"local-whisper\", informativeText = tostring(message) }):send()\n    end\n\n    function ctx:log(message)\n        log(\"action: \" .. tostring(message))\n    end\n\n    return ctx\nend\n\nlocal function runActionList(actions, ctx)\n    if type(actions) ~= \"table\" then return end\n    for i, action in ipairs(actions) do\n        if ctx.handled then break end\n        if type(action) == \"function\" then\n            safeHookCall(\"actions[\" .. i .. \"]\", action, ctx)"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "0ebd0460-5864-443d-890c-791a6f1f32c3",
+  "version": "2.1.240"
+}

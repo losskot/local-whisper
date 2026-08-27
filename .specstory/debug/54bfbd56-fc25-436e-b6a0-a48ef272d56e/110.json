@@ -1,0 +1,72 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01GdagKEX83ehZiExBiBRamR",
+        "input": {
+          "command": "python3 - \u003c\u003c'PY'\nimport io\np='AGENTS.md'\ns=io.open(p,encoding='utf-8').read()\n\nold = \"  → Text insertion at cursor (paste or keystroke)\"\nnew = \"  → Text insertion at cursor (paste or keystroke — clipboard only if the cursor moved)\"\nassert s.count(old)==1\ns=s.replace(old,new,1)\n\nanchor = \"### Mixed-language speech (surzhyk, ru/uk/en)\"\nsection = '''### The text only goes where it was aimed\n\nWhisper answers seconds after the key comes up, and in those seconds the user may have\nclicked into another field, switched a browser tab or moved to another app. Typing there is\nworse than not typing at all: a paragraph lands in a chat, a terminal or a search box, and\nthere is no undo for keystrokes another app already accepted.\n\nSo `stopRecording()` pins the destination at release — `pipe.target = focusTargetId()` — and\n`finishInsertion()` re-checks it immediately before inserting. On a mismatch the output mode\nis forced to `copy` (clipboard only, nothing typed, no Enter) and **two** chimes play instead\nof one, so \"nothing was typed\" is audible without looking at the screen. The overlay prefixes\nthe text with `CLIPBOARD:` and lingers 1.5s longer.\n\n`focusTargetId()` is a **signature, not an object reference**: AX hands back a fresh element\non every query. It concatenates bundle ID, pid, focused-window id, window title and — when\nthe app exposes one — the focused element's role, subrole, `AXIdentifier`, `AXDOMIdentifier`\nand title. Electron apps expose no focused element at all (measured: VS Code returns nil for\n`AXFocusedUIElement`), which is why the window id and title carry the check there — without\nthe title, switching editor tabs inside one window would go unnoticed.\n\nTwo rules hold it together:\n\n- **Volatile attributes stay out.** Window frame and the field's own value both change while\n  the user keeps working in exactly the right place, and every false alarm costs a manual\n  paste. What is in is stable for the few seconds that matter.\n- **No identifier means no verdict.** `focusTargetId()` returns nil if AX is unavailable or an\n  app is unresponsive, and a nil target skips the check entirely rather than refusing to type.\n\nThe target is **per job**, like everything else in the pipeline: it rides on the job through\n`pipelineFinalize` and through `pipeJobs.pending`, so a dictation that finishes behind a newer\nrecording is still judged against the place *it* was spoken into. Queued dictations aimed at\ndifferent places collapse to `\"\"`, which matches no focus — the whole batch takes the\nclipboard route. The one deliberate exception is text queued from an *older* dictation being\nprepended to the current one: it rides along to the current job's destination, because the\nuser is standing in it right now, having just spoken into it.\n\nCost at the two call sites is negligible — measured 1.8 ms average, 15 ms worst over ten warm\ncalls (~100 ms once, the first time `hs.axuielement` loads).\n\n'''\nassert s.count(anchor)==1\ns=s.replace(anchor, section+anchor, 1)\n\nold = \"| `emergencyStop` | emergency stop not cancelling a pending finalization |\"\nnew = (\"| `focus` | a transcript typed into whatever is focused when whisper answers rather than the place it was dictated into — the destination not captured at release, not carried by the job, or a mismatch still typing instead of taking the clipboard |\\n\"\n       + old)\nassert s.count(old)==1\ns=s.replace(old,new,1)\nio.open(p,'w',encoding='utf-8').write(s)\nprint('AGENTS.md updated')\nPY",
+          "description": "Document the feature in AGENTS.md"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011CeTfeojKkUEd4DsaxA5aj",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 449,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 449,
+      "cache_read_input_tokens": 101484,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 449,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 449,
+          "cache_read_input_tokens": 101484,
+          "input_tokens": 2,
+          "output_tokens": 1341,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 1341,
+      "output_tokens_details": {
+        "thinking_tokens": 0
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "a1e6c51a-41bf-4289-8dac-0f95f8174c88",
+  "requestId": "req_011CeTfenpFr4znLKn48PoNx",
+  "sessionId": "54bfbd56-fc25-436e-b6a0-a48ef272d56e",
+  "timestamp": "2026-08-27T17:43:34.299Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "c26694a5-4a8c-4be4-955d-8cd0852d567d",
+  "version": "2.1.246"
+}

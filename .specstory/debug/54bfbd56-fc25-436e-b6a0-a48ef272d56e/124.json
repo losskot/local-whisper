@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "README updated\n  \u001b[0;32mPASS\u001b[0m  focus: a dictation waiting in the queue keeps its own destination\n\n\u001b[0;32m\u001b[1mAll 112 checks passed.\u001b[0m",
+        "is_error": false,
+        "tool_use_id": "toolu_01166GirMxQ1R7rNvWvhPN3y",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "5dcf0366-c429-4c62-a9b3-259573dce963",
+  "promptId": "adbb2826-8b89-485d-b617-b75f37459d44",
+  "sessionId": "54bfbd56-fc25-436e-b6a0-a48ef272d56e",
+  "sourceToolAssistantUUID": "5dcf0366-c429-4c62-a9b3-259573dce963",
+  "timestamp": "2026-08-27T17:44:12.989Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "README updated\n  \u001b[0;32mPASS\u001b[0m  focus: a dictation waiting in the queue keeps its own destination\n\n\u001b[0;32m\u001b[1mAll 112 checks passed.\u001b[0m"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "011bf672-2603-4dc2-999c-00fa4b2bd74f",
+  "version": "2.1.246"
+}

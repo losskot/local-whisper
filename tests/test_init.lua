@@ -1311,6 +1311,104 @@ if triggerKey and triggersSrc then
 end
 
 --------------------------------------------------------------------------------
+-- 16. The text lands where it was aimed (behavioral -- runs the real finishInsertion)
+--------------------------------------------------------------------------------
+-- Whisper answers seconds after the key comes up, and a cursor that moved in between used
+-- to receive the text anyway: a paragraph typed into a chat, a terminal or a search box,
+-- with no undo for keystrokes another app already accepted. The destination is pinned at
+-- release (focusTargetId) and re-checked right before insertion. A mismatch means clipboard
+-- only -- and two chimes instead of one, because "nothing was typed" has to be audible
+-- without looking at the screen.
+
+do
+    local env = baseEnv()
+    local HERE  = "com.editor|1|100|Doc.txt|AXTextArea||||"
+    local THERE = "com.chat|2|200|Chat|AXTextField||||"
+    local focusNow = HERE
+    local inserts, sounds = {}, {}
+
+    env.log                  = function() end
+    env.getLang              = function() return "ru" end
+    env.getEnterMode         = function() return false end
+    env.getOutputMode        = function() return "paste" end
+    env.focusTargetId        = function() return focusNow end
+    env.normalizeText        = function(t) return t end
+    env.buildActionContext   = function(text, lang, mode)
+        return { text = text, originalText = text, lang = lang, outputMode = mode,
+                 insert = true, inserted = false }
+    end
+    env.runPreInsertActions  = function() end
+    env.runPostInsertActions = function() end
+    env.insertTextAtCursor   = function(text, mode) inserts[#inserts + 1] = { text = text, mode = mode } end
+    env.playSound            = function(name) sounds[#sounds + 1] = name end
+    env.setOverlayText       = function() end
+    env.hideOverlay          = function() end
+    env.saveRecentDictations = function() end
+    env.recentDictations     = {}
+    env.MAX_RECENT           = 10
+    env.capturedAppName      = "Editor"
+    env.OVERLAY_LINGER       = 0.5
+    -- Deferred work runs inline, so the second chime is counted where it is scheduled.
+    env.hs = { timer = { doAfter = function(_, fn) if fn then fn() end end } }
+
+    local finish, fErr = liftFunction("finishInsertion", env)
+    check("focus: finishInsertion is liftable and compiles", finish ~= nil, tostring(fErr))
+
+    if finish then
+        finish("привет", "ru", HERE)
+        check("focus: an unmoved cursor still receives the text",
+              #inserts == 1 and inserts[1].mode == "paste",
+              "inserted " .. #inserts .. " time(s), mode=" .. tostring(inserts[1] and inserts[1].mode))
+        check("focus: one chime when the text went where it was aimed",
+              #sounds == 1, #sounds .. " sound(s) played")
+
+        inserts, sounds = {}, {}
+        focusNow = THERE
+        finish("привет", "ru", HERE)
+        check("focus: a cursor that moved gets the clipboard, not keystrokes",
+              #inserts == 1 and inserts[1].mode == "copy",
+              "mode=" .. tostring(inserts[1] and inserts[1].mode) ..
+              " -- the text was typed into whatever is focused now")
+        check("focus: two chimes say nothing was typed",
+              #sounds == 2, #sounds .. " sound(s) played, want 2")
+
+        -- No destination recorded (AX unavailable, or a path that never captured one):
+        -- behave exactly as before the check existed rather than refusing to type.
+        inserts, sounds = {}, {}
+        finish("привет", "ru", nil)
+        check("focus: no recorded destination still types, as before",
+              #inserts == 1 and inserts[1].mode == "paste" and #sounds == 1,
+              "mode=" .. tostring(inserts[1] and inserts[1].mode) .. ", " .. #sounds .. " sound(s)")
+    end
+
+    -- Wiring: the destination is only worth checking if it is captured at release and
+    -- carried by the job all the way to the insertion, including through the queue.
+    local stopSrc = extractFunction("stopRecording")
+    check("focus: stopRecording pins the destination when the key comes up",
+          stopSrc ~= nil and stripBlock(stopSrc):find("focusTargetId") ~= nil,
+          "stopRecording() never calls focusTargetId() -- nothing is recorded to check against")
+
+    local bare = {}
+    for _, s in ipairs(stripped) do
+        if not s:match("function%s+insertTranscribedText") then
+            local argsSrc = s:match("insertTranscribedText%s*(%b())")
+            if argsSrc then
+                local commas = select(2, argsSrc:gsub(",", ""))
+                if commas < 2 then bare[#bare + 1] = s:match("^%s*(.-)%s*$") end
+            end
+        end
+    end
+    check("focus: every insertion carries the destination it was aimed at",
+          #bare == 0,
+          "called without a target: " .. table.concat(bare, " | "))
+
+    check("focus: a dictation waiting in the queue keeps its own destination",
+          src:find("pipeJobs%.pending%s*,%s*{[^}]*target") ~= nil,
+          "queued transcripts drop their target -- a late insertion would type into " ..
+          "whatever window happens to be focused when it lands")
+end
+
+--------------------------------------------------------------------------------
 -- Emit results
 --------------------------------------------------------------------------------
 

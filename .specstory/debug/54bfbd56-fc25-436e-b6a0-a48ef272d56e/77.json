@@ -1,0 +1,72 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01SUd3iLX8T2wmWz4Mp4KZq3",
+        "input": {
+          "command": "python3 - \u003c\u003c'PY'\nimport io\np='tests/test_init.lua'\ns=io.open(p,encoding='utf-8').read()\nanchor = '''--------------------------------------------------------------------------------\n-- Emit results\n--------------------------------------------------------------------------------'''\nassert s.count(anchor)==1\n\nsection = r'''--------------------------------------------------------------------------------\n-- 16. The text lands where it was aimed (behavioral -- runs the real finishInsertion)\n--------------------------------------------------------------------------------\n-- Whisper answers seconds after the key comes up, and a cursor that moved in between used\n-- to receive the text anyway: a paragraph typed into a chat, a terminal or a search box,\n-- with no undo for keystrokes another app already accepted. The destination is pinned at\n-- release (focusTargetId) and re-checked right before insertion. A mismatch means clipboard\n-- only -- and two chimes instead of one, because \"nothing was typed\" has to be audible\n-- without looking at the screen.\n\ndo\n    local env = baseEnv()\n    local HERE  = \"com.editor|1|100|Doc.txt|AXTextArea||||\"\n    local THERE = \"com.chat|2|200|Chat|AXTextField||||\"\n    local focusNow = HERE\n    local inserts, sounds = {}, {}\n\n    env.log                  = function() end\n    env.getLang              = function() return \"ru\" end\n    env.getEnterMode         = function() return false end\n    env.getOutputMode        = function() return \"paste\" end\n    env.focusTargetId        = function() return focusNow end\n    env.normalizeText        = function(t) return t end\n    env.buildActionContext   = function(text, lang, mode)\n        return { text = text, originalText = text, lang = lang, outputMode = mode,\n                 insert = true, inserted = false }\n    end\n    env.runPreInsertActions  = function() end\n    env.runPostInsertActions = function() end\n    env.insertTextAtCursor   = function(text, mode) inserts[#inserts + 1] = { text = text, mode = mode } end\n    env.playSound            = function(name) sounds[#sounds + 1] = name end\n    env.setOverlayText       = function() end\n    env.hideOverlay          = function() end\n    env.saveRecentDictations = function() end\n    env.recentDictations     = {}\n    env.MAX_RECENT           = 10\n    env.capturedAppName      = \"Editor\"\n    env.OVERLAY_LINGER       = 0.5\n    -- Deferred work runs inline, so the second chime is counted where it is scheduled.\n    env.hs = { timer = { doAfter = function(_, fn) if fn then fn() end end } }\n\n    local finish, fErr = liftFunction(\"finishInsertion\", env)\n    check(\"focus: finishInsertion is liftable and compiles\", finish ~= nil, tostring(fErr))\n\n    if finish then\n        finish(\"привет\", \"ru\", HERE)\n        check(\"focus: an unmoved cursor still receives the text\",\n              #inserts == 1 and inserts[1].mode == \"paste\",\n              \"inserted \" .. #inserts .. \" time(s), mode=\" .. tostring(inserts[1] and inserts[1].mode))\n        check(\"focus: one chime when the text went where it was aimed\",\n              #sounds == 1, #sounds .. \" sound(s) played\")\n\n        inserts, sounds = {}, {}\n        focusNow = THERE\n        finish(\"привет\", \"ru\", HERE)\n        check(\"focus: a cursor that moved gets the clipboard, not keystrokes\",\n              #inserts == 1 and inserts[1].mode == \"copy\",\n              \"mode=\" .. tostring(inserts[1] and inserts[1].mode) ..\n              \" -- the text was typed into whatever is focused now\")\n        check(\"focus: two chimes say nothing was typed\",\n              #sounds == 2, #sounds .. \" sound(s) played, want 2\")\n\n        -- No destination recorded (AX unavailable, or a path that never captured one):\n        -- behave exactly as before the check existed rather than refusing to type.\n        inserts, sounds = {}, {}\n        finish(\"привет\", \"ru\", nil)\n        check(\"focus: no recorded destination still types, as before\",\n              #inserts == 1 and inserts[1].mode == \"paste\" and #sounds == 1,\n              \"mode=\" .. tostring(inserts[1] and inserts[1].mode) .. \", \" .. #sounds .. \" sound(s)\")\n    end\n\n    -- Wiring: the destination is only worth checking if it is captured at release and\n    -- carried by the job all the way to the insertion, including through the queue.\n    local stopSrc = extractFunction(\"stopRecording\")\n    check(\"focus: stopRecording pins the destination when the key comes up\",\n          stopSrc ~= nil and stripBlock(stopSrc):find(\"focusTargetId\") ~= nil,\n          \"stopRecording() never calls focusTargetId() -- nothing is recorded to check against\")\n\n    local bare = {}\n    for _, s in ipairs(stripped) do\n        if not s:match(\"function%s+insertTranscribedText\") then\n            local argsSrc = s:match(\"insertTranscribedText%s*(%b())\")\n            if argsSrc then\n                local commas = select(2, argsSrc:gsub(\",\", \"\"))\n                if commas \u003c 2 then bare[#bare + 1] = s:match(\"^%s*(.-)%s*$\") end\n            end\n        end\n    end\n    check(\"focus: every insertion carries the destination it was aimed at\",\n          #bare == 0,\n          \"called without a target: \" .. table.concat(bare, \" | \"))\n\n    check(\"focus: a dictation waiting in the queue keeps its own destination\",\n          src:find(\"pipeJobs%.pending%s*,%s*{[^}]*target\") ~= nil,\n          \"queued transcripts drop their target -- a late insertion would type into \" ..\n          \"whatever window happens to be focused when it lands\")\nend\n\n'''\ns = s.replace(anchor, section + anchor, 1)\nio.open(p,'w',encoding='utf-8').write(s)\nprint(\"ok\")\nPY\n./tests/test_init.sh 2\u003e\u00261 | tail -25",
+          "description": "Add focus test section and run the suite"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011CeLtZgJwJ4fssCeHJw9re",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 2460,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 2460,
+      "cache_read_input_tokens": 90673,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 2460,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 2460,
+          "cache_read_input_tokens": 90673,
+          "input_tokens": 2,
+          "output_tokens": 2138,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 2138,
+      "output_tokens_details": {
+        "thinking_tokens": 0
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "64184e3f-ca9e-4844-8455-cb9ca7b47753",
+  "requestId": "req_011CeLtZcxmizfncqwVpE7CG",
+  "sessionId": "54bfbd56-fc25-436e-b6a0-a48ef272d56e",
+  "timestamp": "2026-08-24T03:48:48.677Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "0f3f8ea7-83a3-44d7-987a-196fbf2f8294",
+  "version": "2.1.240"
+}

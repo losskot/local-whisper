@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "local HOME   = os.getenv(\"HOME\")\nlocal TARGET = _G.LW_TARGET or (HOME .. \"/Documents/GitHub/local-whisper/hammerspoon/init.lua\")\nlocal OUT    = _G.LW_OUT or \"/tmp/lw_test_init.txt\"\n\n--------------------------------------------------------------------------------\n-- Harness\n--------------------------------------------------------------------------------\n\nlocal results = {}\n\nlocal function record(name, passed, detail)\n    results[#results + 1] = {\n        name   = name,\n        passed = passed and true or false,\n        detail = detail or \"\",\n    }\nend\n\nlocal function check(name, passed, detail)\n    record(name, passed, passed and \"\" or (detail or \"\"))\nend\n\n--------------------------------------------------------------------------------\n-- Source loading + lexical helpers\n--------------------------------------------------------------------------------\n\nlocal function readSource(path)\n    local f = io.open(path, \"r\")\n    if not f then return nil end\n    local src = f:read(\"*a\")\n    f:close()\n    return src\nend\n\nlocal src = readSource(TARGET)\nif not src then\n    record(\"source readable\", false, \"cannot open \" .. TARGET)\n    local f = io.open(OUT, \"w\")\n    f:write(\"FAIL\\tsource readable\\tcannot open \" .. TARGET .. \"\\n\")\n    f:close()\n    return\nend\n\nlocal lines = {}\nfor line in (src .. \"\\n\"):gmatch(\"([^\\n]*)\\n\") do\n    lines[#lines + 1] = line\nend\n\n-- Blank out string literals and comments so scans don't match inside them.",
+        "is_error": false,
+        "tool_use_id": "toolu_01FjmoNEeQaNaFDcXdo2fXB7",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "48d4e7fa-d475-4714-a7c2-cf72403c50e8",
+  "promptId": "0871342d-3020-4172-a2c1-ab54a6234ac2",
+  "sessionId": "54bfbd56-fc25-436e-b6a0-a48ef272d56e",
+  "sourceToolAssistantUUID": "48d4e7fa-d475-4714-a7c2-cf72403c50e8",
+  "timestamp": "2026-08-24T03:48:25.190Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "local HOME   = os.getenv(\"HOME\")\nlocal TARGET = _G.LW_TARGET or (HOME .. \"/Documents/GitHub/local-whisper/hammerspoon/init.lua\")\nlocal OUT    = _G.LW_OUT or \"/tmp/lw_test_init.txt\"\n\n--------------------------------------------------------------------------------\n-- Harness\n--------------------------------------------------------------------------------\n\nlocal results = {}\n\nlocal function record(name, passed, detail)\n    results[#results + 1] = {\n        name   = name,\n        passed = passed and true or false,\n        detail = detail or \"\",\n    }\nend\n\nlocal function check(name, passed, detail)\n    record(name, passed, passed and \"\" or (detail or \"\"))\nend\n\n--------------------------------------------------------------------------------\n-- Source loading + lexical helpers\n--------------------------------------------------------------------------------\n\nlocal function readSource(path)\n    local f = io.open(path, \"r\")\n    if not f then return nil end\n    local src = f:read(\"*a\")\n    f:close()\n    return src\nend\n\nlocal src = readSource(TARGET)\nif not src then\n    record(\"source readable\", false, \"cannot open \" .. TARGET)\n    local f = io.open(OUT, \"w\")\n    f:write(\"FAIL\\tsource readable\\tcannot open \" .. TARGET .. \"\\n\")\n    f:close()\n    return\nend\n\nlocal lines = {}\nfor line in (src .. \"\\n\"):gmatch(\"([^\\n]*)\\n\") do\n    lines[#lines + 1] = line\nend\n\n-- Blank out string literals and comments so scans don't match inside them."
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "44fa7833-bb3d-45a4-86d0-ed2960262339",
+  "version": "2.1.240"
+}

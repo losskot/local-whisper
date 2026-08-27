@@ -1,0 +1,76 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_01QuycHmSeoa73UcxrnkzUeC",
+        "input": {
+          "command": "SP=/private/tmp/claude-502/-Users-vitaliy-Documents-GitHub-local-whisper/54bfbd56-fc25-436e-b6a0-a48ef272d56e/scratchpad \u0026\u0026 mkdir -p \"$SP\" \u0026\u0026 python3 - \u003c\u003c'PY'\nimport io\nsrc=io.open('hammerspoon/init.lua',encoding='utf-8').read()\n# mutation: the check exists but the mode is never switched to clipboard\nmut=src.replace('''            misdirected = true\n            mode = \"copy\"''','''            misdirected = true''',1)\nassert mut!=src\nio.open('/private/tmp/claude-502/-Users-vitaliy-Documents-GitHub-local-whisper/54bfbd56-fc25-436e-b6a0-a48ef272d56e/scratchpad/mut_nocopy.lua','w',encoding='utf-8').write(mut)\n# mutation: target never captured at release\nmut2=src.replace('    pipe.target = focusTargetId()\\n','    pipe.target = nil\\n',1)\nassert mut2!=src\nio.open('/private/tmp/claude-502/-Users-vitaliy-Documents-GitHub-local-whisper/54bfbd56-fc25-436e-b6a0-a48ef272d56e/scratchpad/mut_nocapture.lua','w',encoding='utf-8').write(mut2)\nprint('mutants written')\nPY\n./tests/test_init.sh \"$SP/mut_nocopy.lua\" 2\u003e\u00261 | grep -E \"FAIL|checks (passed|failed)|failed\\.\" | head -10\necho '--- mutant 2 ---'\n./tests/test_init.sh \"$SP/mut_nocapture.lua\" 2\u003e\u00261 | grep -E \"FAIL|checks (passed|failed)|failed\\.\" | head -10",
+          "description": "Verify the new guards fail on mutated copies"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": {
+      "cache_miss_reason": {
+        "type": "previous_message_not_found"
+      }
+    },
+    "id": "msg_011CeTfaC5M2X8vAHKqoVzzG",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 70366,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 70366,
+      "cache_read_input_tokens": 26965,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 70366,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 70366,
+          "cache_read_input_tokens": 26965,
+          "input_tokens": 2,
+          "output_tokens": 965,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 965,
+      "output_tokens_details": {
+        "thinking_tokens": 237
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "2d5600bb-6bdd-43fb-9fc6-3b0417dedc02",
+  "requestId": "req_011CeTfaBB2P3pEZtwQdUyad",
+  "sessionId": "54bfbd56-fc25-436e-b6a0-a48ef272d56e",
+  "timestamp": "2026-08-27T17:42:27.219Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "0d202226-00ed-4715-9460-3ac1a31bf24a",
+  "version": "2.1.246"
+}

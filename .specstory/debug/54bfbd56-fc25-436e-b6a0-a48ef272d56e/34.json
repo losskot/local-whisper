@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "app=Code pid=6568 fe=nil wtitle=Сообщение теряется при п… — local-whisper — Sane AZ",
+        "is_error": false,
+        "tool_use_id": "toolu_016ZDgJg4aL2cKPNLggLo4X5",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "d26fe38a-8ad0-442d-ab08-780b4adf33ee",
+  "promptId": "0871342d-3020-4172-a2c1-ab54a6234ac2",
+  "sessionId": "54bfbd56-fc25-436e-b6a0-a48ef272d56e",
+  "sourceToolAssistantUUID": "d26fe38a-8ad0-442d-ab08-780b4adf33ee",
+  "timestamp": "2026-08-24T03:44:50.535Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "app=Code pid=6568 fe=nil wtitle=Сообщение теряется при п… — local-whisper — Sane AZ"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "6286af37-e41d-409c-b1b7-d4601418d224",
+  "version": "2.1.240"
+}

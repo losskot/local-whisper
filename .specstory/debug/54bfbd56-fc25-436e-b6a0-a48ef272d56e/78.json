@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "ok\n  \u001b[0;32mPASS\u001b[0m  trigger: no single half of the combo fires on its own\n  \u001b[0;32mPASS\u001b[0m  trigger: the trigger is an actual combo (more than one modifier bit)\n  \u001b[0;32mPASS\u001b[0m  trigger: unrelated modifiers held at the same time do not block it\n  \u001b[0;32mPASS\u001b[0m  trigger: the right-hand twin of the modifier does not fire\n  \u001b[0;32mPASS\u001b[0m  trigger: the trigger defines a separate heldMask for polling\n  \u001b[0;32mPASS\u001b[0m  trigger: heldMask contains no device-specific bit (the poll API drops them)\n  \u001b[0;32mPASS\u001b[0m  trigger: heldMask describes the same combo as mask\n  \u001b[0;32mPASS\u001b[0m  trigger: triggerHeld is liftable and compiles\n  \u001b[0;32mPASS\u001b[0m  trigger: triggerHeld is true for the flags the poll API really returns\n  \u001b[0;32mPASS\u001b[0m  trigger: triggerHeld asks for the raw flag word\n  \u001b[0;32mPASS\u001b[0m  trigger: releasing either modifier reads as released\n  \u001b[0;32mPASS\u001b[0m  trigger: nothing held reads as released\n  \u001b[0;32mPASS\u001b[0m  trigger: the eventtap matches through triggerPressed(event:rawFlags())\n  \u001b[0;32mPASS\u001b[0m  trigger: the release poller re-checks the trigger through triggerHeld()\n  \u001b[0;32mPASS\u001b[0m  focus: finishInsertion is liftable and compiles\n  \u001b[0;32mPASS\u001b[0m  focus: an unmoved cursor still receives the text\n  \u001b[0;32mPASS\u001b[0m  focus: one chime when the text went where it was aimed\n  \u001b[0;32mPASS\u001b[0m  focus: a cursor that moved gets the clipboard, not keystrokes\n  \u001b[0;32mPASS\u001b[0m  focus: two chimes say nothing was typed\n  \u001b[0;32mPASS\u001b[0m  focus: no recorded destination still types, as before\n  \u001b[0;32mPASS\u001b[0m  focus: stopRecording pins the destination when the key comes up\n  \u001b[0;32mPASS\u001b[0m  focus: every insertion carries the destination it was aimed at\n  \u001b[0;32mPASS\u001b[0m  focus: a dictation waiting in the queue keeps its own destination\n\n\u001b[0;32m\u001b[1mAll 112 checks passed.\u001b[0m",
+        "is_error": false,
+        "tool_use_id": "toolu_01SUd3iLX8T2wmWz4Mp4KZq3",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "0f3f8ea7-83a3-44d7-987a-196fbf2f8294",
+  "promptId": "0871342d-3020-4172-a2c1-ab54a6234ac2",
+  "sessionId": "54bfbd56-fc25-436e-b6a0-a48ef272d56e",
+  "sourceToolAssistantUUID": "0f3f8ea7-83a3-44d7-987a-196fbf2f8294",
+  "timestamp": "2026-08-24T03:48:52.009Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "ok\n  \u001b[0;32mPASS\u001b[0m  trigger: no single half of the combo fires on its own\n  \u001b[0;32mPASS\u001b[0m  trigger: the trigger is an actual combo (more than one modifier bit)\n  \u001b[0;32mPASS\u001b[0m  trigger: unrelated modifiers held at the same time do not block it\n  \u001b[0;32mPASS\u001b[0m  trigger: the right-hand twin of the modifier does not fire\n  \u001b[0;32mPASS\u001b[0m  trigger: the trigger defines a separate heldMask for polling\n  \u001b[0;32mPASS\u001b[0m  trigger: heldMask contains no device-specific bit (the poll API drops them)\n  \u001b[0;32mPASS\u001b[0m  trigger: heldMask describes the same combo as mask\n  \u001b[0;32mPASS\u001b[0m  trigger: triggerHeld is liftable and compiles\n  \u001b[0;32mPASS\u001b[0m  trigger: triggerHeld is true for the flags the poll API really returns\n  \u001b[0;32mPASS\u001b[0m  trigger: triggerHeld asks for the raw flag word\n  \u001b[0;32mPASS\u001b[0m  trigger: releasing either modifier reads as released\n  \u001b[0;32mPASS\u001b[0m  trigger: nothing held reads as released\n  \u001b[0;32mPASS\u001b[0m  trigger: the eventtap matches through triggerPressed(event:rawFlags())\n  \u001b[0;32mPASS\u001b[0m  trigger: the release poller re-checks the trigger through triggerHeld()\n  \u001b[0;32mPASS\u001b[0m  focus: finishInsertion is liftable and compiles\n  \u001b[0;32mPASS\u001b[0m  focus: an unmoved cursor still receives the text\n  \u001b[0;32mPASS\u001b[0m  focus: one chime when the text went where it was aimed\n  \u001b[0;32mPASS\u001b[0m  focus: a cursor that moved gets the clipboard, not keystrokes\n  \u001b[0;32mPASS\u001b[0m  focus: two chimes say nothing was typed\n  \u001b[0;32mPASS\u001b[0m  focus: no recorded destination still types, as before\n  \u001b[0;32mPASS\u001b[0m  focus: stopRecording pins the destination when the key comes up\n  \u001b[0;32mPASS\u001b[0m  focus: every insertion carries the destination it was aimed at\n  \u001b[0;32mPASS\u001b[0m  focus: a dictation waiting in the queue keeps its own destination\n\n\u001b[0;32m\u001b[1mAll 112 checks passed.\u001b[0m"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "813dbc9e-d5b0-48f7-a97b-33148c2fbe80",
+  "version": "2.1.240"
+}

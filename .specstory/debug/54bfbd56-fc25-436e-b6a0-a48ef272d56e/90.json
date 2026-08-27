@@ -1,0 +1,31 @@
+{
+  "attachment": {
+    "addedLines": [],
+    "addedNames": [
+      "mcp__claude_ai_Image_Generator__edit_image",
+      "mcp__claude_ai_Image_Generator__generate_image"
+    ],
+    "needsAuthMcpServers": [
+      "claude.ai Slack",
+      "plugin:atlassian:atlassian"
+    ],
+    "pendingMcpServers": [],
+    "readdedNames": [
+      "mcp__claude_ai_Image_Generator__edit_image",
+      "mcp__claude_ai_Image_Generator__generate_image"
+    ],
+    "removedNames": [],
+    "type": "deferred_tools_delta"
+  },
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "parentUuid": "365f381c-7509-41c3-9cd9-cf7dfee7f10f",
+  "sessionId": "54bfbd56-fc25-436e-b6a0-a48ef272d56e",
+  "timestamp": "2026-08-27T17:42:32.436Z",
+  "type": "attachment",
+  "userType": "external",
+  "uuid": "89af28af-a57e-4143-9fcd-5da2f481f8c0",
+  "version": "2.1.246"
+}

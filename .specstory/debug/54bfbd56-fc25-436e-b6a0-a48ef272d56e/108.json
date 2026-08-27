@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "18:  → Text insertion at cursor (paste or keystroke)\n270:### Mixed-language speech (surzhyk, ru/uk/en)\n419:| `detach` | a new recording destroying the dictation still being transcribed — reset pipeline state, a wiped shared chunk directory, a whisper callback reporting into whatever job is current, or a finished transcript typed into a held trigger combo |\n420:| `emergencyStop` | emergency stop not cancelling a pending finalization |",
+        "is_error": false,
+        "tool_use_id": "toolu_01BRUCnJ5TDBVRqfa1SqfdXF",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "b3af8ca0-6e49-4176-86f8-cd5fdea70afc",
+  "promptId": "adbb2826-8b89-485d-b617-b75f37459d44",
+  "sessionId": "54bfbd56-fc25-436e-b6a0-a48ef272d56e",
+  "sourceToolAssistantUUID": "b3af8ca0-6e49-4176-86f8-cd5fdea70afc",
+  "timestamp": "2026-08-27T17:43:16.264Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "18:  → Text insertion at cursor (paste or keystroke)\n270:### Mixed-language speech (surzhyk, ru/uk/en)\n419:| `detach` | a new recording destroying the dictation still being transcribed — reset pipeline state, a wiped shared chunk directory, a whisper callback reporting into whatever job is current, or a finished transcript typed into a held trigger combo |\n420:| `emergencyStop` | emergency stop not cancelling a pending finalization |"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "25579e43-b3be-457e-8b34-ba917a26ae53",
+  "version": "2.1.246"
+}

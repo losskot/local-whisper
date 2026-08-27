@@ -1,0 +1,72 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "effort": "xhigh",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "caller": {
+          "type": "direct"
+        },
+        "id": "toolu_012mkqy1tc25ZJLiekNKAMqX",
+        "input": {
+          "command": "hs -c 'local function sig()\n    local parts = {}\n    pcall(function()\n        local app = hs.application.frontmostApplication()\n        parts[#parts+1] = app and (app:bundleID() or app:name() or \"?\") or \"?\"\n        parts[#parts+1] = app and tostring(app:pid()) or \"?\"\n        local win = hs.window.focusedWindow()\n        parts[#parts+1] = win and tostring(win:id()) or \"-\"\n        parts[#parts+1] = (win and win:title()) or \"\"\n        local ae = app and hs.axuielement.applicationElement(app)\n        local elem = ae and ae:attributeValue(\"AXFocusedUIElement\")\n        if elem then\n            for _, a in ipairs({\"AXRole\",\"AXSubrole\",\"AXIdentifier\",\"AXDOMIdentifier\",\"AXTitle\"}) do\n                local v = elem:attributeValue(a)\n                parts[#parts+1] = (type(v)==\"string\") and v or \"\"\n            end\n        end\n    end)\n    return table.concat(parts, \"|\")\nend\nlocal worst, total = 0, 0\nfor i = 1, 10 do\n  local t = hs.timer.absoluteTime(); sig(); local d = (hs.timer.absoluteTime()-t)/1e6\n  total = total + d; if d \u003e worst then worst = d end\nend\nreturn string.format(\"warm: avg %.1f ms, worst %.1f ms\", total/10, worst)' 2\u003e\u00261 | tail -1",
+          "description": "Measure warm cost of the signature"
+        },
+        "name": "Bash",
+        "type": "tool_use"
+      }
+    ],
+    "diagnostics": null,
+    "id": "msg_011CeTfdR43CXUvNhFWHiVxL",
+    "model": "claude-opus-5",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "tool_use",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 1238,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 1238,
+      "cache_read_input_tokens": 99296,
+      "inference_geo": "not_available",
+      "input_tokens": 2,
+      "iterations": [
+        {
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1238,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "cache_creation_input_tokens": 1238,
+          "cache_read_input_tokens": 99296,
+          "input_tokens": 2,
+          "output_tokens": 899,
+          "type": "message"
+        }
+      ],
+      "output_tokens": 899,
+      "output_tokens_details": {
+        "thinking_tokens": 329
+      },
+      "server_tool_use": {
+        "web_fetch_requests": 0,
+        "web_search_requests": 0
+      },
+      "service_tier": "standard",
+      "speed": "standard"
+    }
+  },
+  "parentUuid": "af0acd37-b527-4df9-90b7-ad67a5d55a85",
+  "requestId": "req_011CeTfdQK8hvMwH4mzvAh7X",
+  "sessionId": "54bfbd56-fc25-436e-b6a0-a48ef272d56e",
+  "timestamp": "2026-08-27T17:43:08.331Z",
+  "type": "assistant",
+  "userType": "external",
+  "uuid": "632e0a31-5c34-4b49-9991-0e496b5cc0e9",
+  "version": "2.1.246"
+}

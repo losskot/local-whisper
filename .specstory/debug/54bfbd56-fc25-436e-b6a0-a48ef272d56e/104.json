@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "warm: avg 1.8 ms, worst 15.2 ms",
+        "is_error": false,
+        "tool_use_id": "toolu_012mkqy1tc25ZJLiekNKAMqX",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "632e0a31-5c34-4b49-9991-0e496b5cc0e9",
+  "promptId": "adbb2826-8b89-485d-b617-b75f37459d44",
+  "sessionId": "54bfbd56-fc25-436e-b6a0-a48ef272d56e",
+  "sourceToolAssistantUUID": "632e0a31-5c34-4b49-9991-0e496b5cc0e9",
+  "timestamp": "2026-08-27T17:43:10.310Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "warm: avg 1.8 ms, worst 15.2 ms"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "0d69c523-1607-4da9-81c4-1f9d4dea9d4f",
+  "version": "2.1.246"
+}

@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "-- Loading extension: axuielement\n-- Some applications have alternate names which can also be checked if you enable Spotlight support with `hs.application.enableSpotlightForNameSearches(true)`.\nfirst=com.microsoft.VSCode|8512|130369|Запись голоса с отслежив… — local-whisper — Sane AZ (102.4 ms)\nafterFinder=com.apple.finder|700|127481|rdp-cloudflare|AXOutline||ListView||\ndiffer=true",
+        "is_error": false,
+        "tool_use_id": "toolu_019r7vvds1H1ExRAUrVxcDKk",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "8b141f7e-0bb8-44d3-8fe6-e813cfed2d90",
+  "promptId": "adbb2826-8b89-485d-b617-b75f37459d44",
+  "sessionId": "54bfbd56-fc25-436e-b6a0-a48ef272d56e",
+  "sourceToolAssistantUUID": "8b141f7e-0bb8-44d3-8fe6-e813cfed2d90",
+  "timestamp": "2026-08-27T17:42:57.381Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "-- Loading extension: axuielement\n-- Some applications have alternate names which can also be checked if you enable Spotlight support with `hs.application.enableSpotlightForNameSearches(true)`.\nfirst=com.microsoft.VSCode|8512|130369|Запись голоса с отслежив… — local-whisper — Sane AZ (102.4 ms)\nafterFinder=com.apple.finder|700|127481|rdp-cloudflare|AXOutline||ListView||\ndiffer=true"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "d0119d6b-423c-4ca0-ba82-006068470c20",
+  "version": "2.1.246"
+}
