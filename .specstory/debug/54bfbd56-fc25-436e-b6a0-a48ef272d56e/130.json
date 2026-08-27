@@ -1,0 +1,28 @@
+{
+  "classifierMetaLines": "{\"meta\":{\"repoVisibility\":{\"remote\":\"losskot/local-whisper\",\"branch\":\"main\",\"visibility\":\"public\"}}}\n",
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "Exit code 128\nerror: cannot pull with rebase: You have unstaged changes.\nerror: Please commit or stash them.",
+        "is_error": true,
+        "tool_use_id": "toolu_01XPtKppgwJj6YGAyqd3zPyB",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "0de4e737-c938-4880-9a98-023a2170535f",
+  "promptId": "adbb2826-8b89-485d-b617-b75f37459d44",
+  "sessionId": "54bfbd56-fc25-436e-b6a0-a48ef272d56e",
+  "sourceToolAssistantUUID": "0de4e737-c938-4880-9a98-023a2170535f",
+  "timestamp": "2026-08-27T17:44:30.476Z",
+  "toolUseResult": "Error: Exit code 128\nerror: cannot pull with rebase: You have unstaged changes.\nerror: Please commit or stash them.",
+  "type": "user",
+  "userType": "external",
+  "uuid": "5eb7f0e7-0d31-4c77-b71f-fc64e33e947a",
+  "version": "2.1.246"
+}

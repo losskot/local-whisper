@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": "71620ea Insert only where the dictation was aimed",
+        "is_error": false,
+        "tool_use_id": "toolu_01WWwh17PnEN714q6yh3F7tq",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "c8cab608-5da1-45ad-b35e-9f336523368c",
+  "promptId": "adbb2826-8b89-485d-b617-b75f37459d44",
+  "sessionId": "54bfbd56-fc25-436e-b6a0-a48ef272d56e",
+  "sourceToolAssistantUUID": "c8cab608-5da1-45ad-b35e-9f336523368c",
+  "timestamp": "2026-08-27T17:44:24.840Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": "71620ea Insert only where the dictation was aimed"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "9c392a94-1dfb-4d4d-b96d-f69b374e25db",
+  "version": "2.1.246"
+}

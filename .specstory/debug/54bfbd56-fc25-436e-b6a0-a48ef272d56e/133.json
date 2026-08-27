@@ -1,0 +1,33 @@
+{
+  "cwd": "/Users/vitaliy/Documents/GitHub/local-whisper",
+  "entrypoint": "claude-vscode",
+  "gitBranch": "main",
+  "isSidechain": false,
+  "message": {
+    "content": [
+      {
+        "content": " M .specstory/debug/54bfbd56-fc25-436e-b6a0-a48ef272d56e/session-data.json\n M .specstory/history/2026-08-24_03-43-45Z.md\n M .specstory/statistics.json\n?? .specstory/debug/54bfbd56-fc25-436e-b6a0-a48ef272d56e/127.json\n?? .specstory/debug/54bfbd56-fc25-436e-b6a0-a48ef272d56e/128.json\n?? .specstory/debug/54bfbd56-fc25-436e-b6a0-a48ef272d56e/129.json\n?? .specstory/debug/54bfbd56-fc25-436e-b6a0-a48ef272d56e/130.json\n?? .specstory/debug/54bfbd56-fc25-436e-b6a0-a48ef272d56e/131.json",
+        "is_error": false,
+        "tool_use_id": "toolu_01PwYF44JrGup3pPeBymUWLv",
+        "type": "tool_result"
+      }
+    ],
+    "role": "user"
+  },
+  "parentUuid": "17e0f4a0-77eb-4785-a14a-155515c19259",
+  "promptId": "adbb2826-8b89-485d-b617-b75f37459d44",
+  "sessionId": "54bfbd56-fc25-436e-b6a0-a48ef272d56e",
+  "sourceToolAssistantUUID": "17e0f4a0-77eb-4785-a14a-155515c19259",
+  "timestamp": "2026-08-27T17:44:33.245Z",
+  "toolUseResult": {
+    "interrupted": false,
+    "isImage": false,
+    "noOutputExpected": false,
+    "stderr": "",
+    "stdout": " M .specstory/debug/54bfbd56-fc25-436e-b6a0-a48ef272d56e/session-data.json\n M .specstory/history/2026-08-24_03-43-45Z.md\n M .specstory/statistics.json\n?? .specstory/debug/54bfbd56-fc25-436e-b6a0-a48ef272d56e/127.json\n?? .specstory/debug/54bfbd56-fc25-436e-b6a0-a48ef272d56e/128.json\n?? .specstory/debug/54bfbd56-fc25-436e-b6a0-a48ef272d56e/129.json\n?? .specstory/debug/54bfbd56-fc25-436e-b6a0-a48ef272d56e/130.json\n?? .specstory/debug/54bfbd56-fc25-436e-b6a0-a48ef272d56e/131.json"
+  },
+  "type": "user",
+  "userType": "external",
+  "uuid": "e59a140d-7dd9-4bec-8510-85709204e0ff",
+  "version": "2.1.246"
+}
