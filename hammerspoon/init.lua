@@ -19,6 +19,7 @@ local CHUNK_DIR = WHISPER_TMP .. "/chunks"
 
 -- Config directory (all user settings live here)
 local CONFIG_DIR = HOME .. "/.local-whisper"
+local VOICE_ARCHIVE_DIR = CONFIG_DIR .. "/voice-archive"
 os.execute("mkdir -p '" .. CONFIG_DIR .. "'")
 
 -- External binaries (absolute paths, with ARM/Intel fallback)
@@ -157,6 +158,9 @@ end
 --------------------------------------------------------------------------------
 
 os.execute("mkdir -p '" .. WHISPER_TMP .. "'")
+os.execute("mkdir -p '" .. VOICE_ARCHIVE_DIR .. "'")
+-- Prune voice archive entries older than 2 days
+os.execute("find '" .. VOICE_ARCHIVE_DIR .. "' -maxdepth 1 -mindepth 1 -mtime +2 -exec rm -rf {} \\; 2>/dev/null")
 
 -- Every dictation records into its own CHUNK_DIR/g<N> subdirectory and owns its own segment
 -- files, so a new recording can never delete audio a previous one is still transcribing.
@@ -490,24 +494,9 @@ end
 -- itself a sample of the mix biases it to reproduce the mix. Edit ~/.local-whisper/prompt to
 -- match how you actually speak — it is a writing sample, not an instruction.
 --
--- Declared above transcribeViaAPI on purpose: a local is only in scope for code that appears
--- after it, so a function defined earlier would silently read nil at runtime.
-local PROMPT_DEFAULT =
-    "Ок, давай подивимось: треба задеплоїти цей pull request, потім перевірити логи на сервері. " ..
-    "Я говорю суржиком — українська, русский и English терміни впереміш, наприклад: " ..
-    "закоміть зміни, зроби rebase, подивись у Slack, потом отправь в прод. Пиши саме так, як звучить."
-
 local function readPrompt()
     return readFile(PROMPT_FILE):gsub("%s+$", "")
 end
-
-local function ensurePromptFile()
-    if hs.fs.attributes(PROMPT_FILE) then return end
-    local f = io.open(PROMPT_FILE, "w")
-    if f then f:write(PROMPT_DEFAULT .. "\n"); f:close() end
-end
-
-ensurePromptFile()
 
 -- Transcribe a WAV file via the remote OpenAI-compatible API instead of local whisper-cli.
 -- Returns the hs.task so callers can terminate it on timeout if needed.
@@ -525,10 +514,6 @@ local function transcribeViaAPI(wavPath, lang, timeoutSecs, callback)
         -- won't climb its fallback ladder and start paraphrasing on a hard passage.
         "-F", "temperature=0",
     }
-    -- Same mixed-language anchor as the local path. The OpenAI transcription API takes the
-    -- style sample as 'prompt'; without it the remote model normalises the mix exactly as
-    -- whisper-cli did. There is no --carry-initial-prompt equivalent over the wire, which is
-    -- another reason segments are kept short.
     local promptText = readPrompt()
     if promptText ~= "" then
         table.insert(args, "-F")
@@ -555,13 +540,9 @@ local function transcribeViaAPI(wavPath, lang, timeoutSecs, callback)
     return task
 end
 
--- Read custom vocabulary prompt for whisper
 local function getPromptArgs()
     local content = readPrompt()
-    -- --carry-initial-prompt re-prepends the prompt to every 30s window whisper decodes
-    -- internally. Without it the style anchor only applies to the first window, so a long
-    -- segment drifts back to single-language output partway through.
-    if content ~= "" then return { "--prompt", content, "--carry-initial-prompt" } end
+    if content ~= "" then return { "--prompt", content } end
     return {}
 end
 
@@ -1422,7 +1403,10 @@ local pipe = pipeNewJob()
 local function pipeCleanup(job)
     pipeJobs.live[job.gen] = nil
     if job.timer then job.timer:stop(); job.timer = nil end
-    os.execute("rm -rf '" .. job.dir .. "' '" .. WHISPER_TMP .. "'/pipe_seg_g" .. job.gen ..
+    -- Archive chunks for 2 days instead of deleting: useful for diagnosing hallucinations
+    local archiveDest = VOICE_ARCHIVE_DIR .. "/" .. os.date("%Y%m%d_%H%M%S") .. "_g" .. job.gen
+    os.execute("mv '" .. job.dir .. "' '" .. archiveDest .. "' 2>/dev/null || rm -rf '" .. job.dir .. "'")
+    os.execute("rm -f '" .. WHISPER_TMP .. "'/pipe_seg_g" .. job.gen ..
                "_* '" .. WHISPER_TMP .. "'/pipe_concat_g" .. job.gen .. "_* 2>/dev/null")
 end
 
