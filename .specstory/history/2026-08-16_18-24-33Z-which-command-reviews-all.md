@@ -8487,3 +8487,14 @@ Two things worth knowing:
 **Not covered by tests:** the three fixes with no automated guard are the overlay X-button behavior, the `startRecording` re-press recovery, and the progress bar reaching 100%. All three need a live UI interaction that the suite can't drive. The static `scope` check does guard the *root cause* of the X-button bug, but not the click behavior itself — worth a manual pass: hold your trigger key, click the overlay X mid-recording, and confirm it now stops rather than recording on invisibly.
 
 `bd` is still not installed on this machine, so no issues were filed for that follow-up.
+
+---
+
+_**User (2026-08-27 19:25:40Z)**_
+
+<task-notification>
+<task-id>brafpuxse</task-id>
+<tool-use-id>toolu_01UzzST8y7SkD1Z2SMorjiwA</tool-use-id>
+<status>stopped</status>
+<summary>No completion record was found for this background shell command from the previous session. It may have been stopped (via the UI, Monitor timeout, or agent teardown — these leave no transcript marker), or it may have been running when the previous Claude Code process exited. Check the output file for partial results before assuming it completed.</summary>
+</task-notification>
