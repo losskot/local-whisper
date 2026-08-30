@@ -13,24 +13,31 @@
 // dropped. ffmpeg is still used everywhere else (segment concat, and tools/transcribe.sh
 // format conversion) — this binary only opens the microphone.
 //
-// Usage: lw-record <outDir> [chunkSecs] [sampleRate]
+// Usage: lw-record <outDir> [chunkSecs] [sampleRate] [deviceUID]
 // Writes chunk_000.wav, chunk_001.wav, … as 16-bit mono PCM WAV.
 // Prints "READY" on stdout once audio is actually flowing, then one line per chunk.
 // On SIGINT/SIGTERM: flushes the partial final chunk and exits 0.
+//
+// deviceUID, when given, pins capture to that CoreAudio device instead of the system
+// default input — e.g. picking the built-in mic explicitly stops macOS from downgrading a
+// paired Bluetooth output to its low-quality call profile (HFP) just because the same
+// Bluetooth device would otherwise have been used as the mic.
 
 import AVFoundation
+import CoreAudio
 import Foundation
 
 // MARK: - Arguments
 
 let args = CommandLine.arguments
 guard args.count >= 2 else {
-    FileHandle.standardError.write("usage: lw-record <outDir> [chunkSecs] [sampleRate]\n".data(using: .utf8)!)
+    FileHandle.standardError.write("usage: lw-record <outDir> [chunkSecs] [sampleRate] [deviceUID]\n".data(using: .utf8)!)
     exit(2)
 }
 let outDir = args[1]
 let chunkSecs = args.count > 2 ? (Double(args[2]) ?? 1.0) : 1.0
 let sampleRate = args.count > 3 ? (Double(args[3]) ?? 16000.0) : 16000.0
+let deviceUID: String? = (args.count > 4 && !args[4].isEmpty) ? args[4] : nil
 
 func fail(_ msg: String) -> Never {
     FileHandle.standardError.write("lw-record: \(msg)\n".data(using: .utf8)!)
@@ -90,8 +97,65 @@ var chunkIndex = 0
 var totalFrames = 0             // every sample we captured, for the health check
 let chunkFrames = Int(sampleRate * chunkSecs)
 
+// MARK: - Device selection
+
+/// Finds a CoreAudio device ID by its persistent UID (stable across reboots, unlike a
+/// device index). Returns nil if nothing currently connected matches.
+func findAudioDevice(uid target: String) -> AudioDeviceID? {
+    var address = AudioObjectPropertyAddress(
+        mSelector: kAudioHardwarePropertyDevices,
+        mScope: kAudioObjectPropertyScopeGlobal,
+        mElement: kAudioObjectPropertyElementMain)
+    var dataSize: UInt32 = 0
+    guard AudioObjectGetPropertyDataSize(AudioObjectID(kAudioObjectSystemObject), &address, 0, nil, &dataSize) == noErr else {
+        return nil
+    }
+    let count = Int(dataSize) / MemoryLayout<AudioDeviceID>.size
+    var deviceIDs = [AudioDeviceID](repeating: 0, count: count)
+    guard AudioObjectGetPropertyData(AudioObjectID(kAudioObjectSystemObject), &address, 0, nil, &dataSize, &deviceIDs) == noErr else {
+        return nil
+    }
+
+    for deviceID in deviceIDs {
+        var uidAddress = AudioObjectPropertyAddress(
+            mSelector: kAudioDevicePropertyDeviceUID,
+            mScope: kAudioObjectPropertyScopeGlobal,
+            mElement: kAudioObjectPropertyElementMain)
+        var uidRef: CFString? = nil
+        var uidSize = UInt32(MemoryLayout<CFString?>.size)
+        let status = withUnsafeMutablePointer(to: &uidRef) { ptr in
+            AudioObjectGetPropertyData(deviceID, &uidAddress, 0, nil, &uidSize, ptr)
+        }
+        if status == noErr, let deviceUID = uidRef as String?, deviceUID == target {
+            return deviceID
+        }
+    }
+    return nil
+}
+
 let engine = AVAudioEngine()
 let input = engine.inputNode
+
+if let uid = deviceUID {
+    guard let deviceID = findAudioDevice(uid: uid) else {
+        fail("input device with UID \(uid) not found — is it connected?")
+    }
+    guard let audioUnit = input.audioUnit else {
+        fail("could not access input audio unit to select device")
+    }
+    var mutableDeviceID = deviceID
+    let status = AudioUnitSetProperty(audioUnit,
+                                       kAudioOutputUnitProperty_CurrentDevice,
+                                       kAudioUnitScope_Global,
+                                       0,
+                                       &mutableDeviceID,
+                                       UInt32(MemoryLayout<AudioDeviceID>.size))
+    guard status == noErr else {
+        fail("failed to select input device \(uid): OSStatus \(status)")
+    }
+    FileHandle.standardError.write("lw-record: pinned input device to \(uid)\n".data(using: .utf8)!)
+}
+
 let inFormat = input.inputFormat(forBus: 0)
 
 guard inFormat.sampleRate > 0, inFormat.channelCount > 0 else {

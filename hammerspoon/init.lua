@@ -78,8 +78,11 @@ local function getModelPath()
 end
 
 -- Audio device: lw-record captures from the system default input (AVAudioEngine's input
--- node). The old AUDIO_DEVICE constant selected an ffmpeg avfoundation index and was
--- hardcoded to ":default", so nothing is lost by dropping it.
+-- node) unless MIC_FILE below pins it to a specific device UID. Pinning matters mainly for
+-- Bluetooth: macOS downgrades a paired Bluetooth output to its low-quality call profile
+-- (HFP) as soon as ANY app opens the mic, unless the mic in use is a different device (e.g.
+-- the built-in one) — so fixing capture to "MacBook Pro Microphone" keeps Bluetooth output
+-- at full quality through a dictation.
 
 -- Trigger: which modifier(s) must be held down to record. See TRIGGERS below.
 local TRIGGER_KEY = "fnLeftCtrl"
@@ -88,6 +91,7 @@ local TRIGGER_KEY = "fnLeftCtrl"
 local LANG_FILE = CONFIG_DIR .. "/lang"
 local OUTPUT_FILE = CONFIG_DIR .. "/output"
 local ENTER_FILE = CONFIG_DIR .. "/enter"
+local MIC_FILE = CONFIG_DIR .. "/mic"
 local PROMPT_FILE = CONFIG_DIR .. "/prompt"
 local RECENT_FILE = CONFIG_DIR .. "/recent.json"
 local LOG_FILE = WHISPER_TMP .. "/whisper-dictate.log"
@@ -248,6 +252,23 @@ end
 local function getEnterMode()
     local mode = readFile(ENTER_FILE):gsub("%s+", "")
     return mode == "on"
+end
+
+-- Pinned input device UID, or nil for "system default". A saved UID that no longer matches
+-- any connected device (unplugged since) is treated the same as unset, rather than handing
+-- lw-record a device it will fail to find.
+local function getMicDevice()
+    local uid = readFile(MIC_FILE):gsub("%s+", "")
+    if uid == "" then return nil end
+    if hs.audiodevice.findInputByUID(uid) then return uid end
+    return nil
+end
+
+local function getMicDeviceLabel()
+    local uid = getMicDevice()
+    if not uid then return "System Default" end
+    local dev = hs.audiodevice.findInputByUID(uid)
+    return dev and dev:name() or "System Default"
 end
 
 local function shellQuote(text)
@@ -438,6 +459,24 @@ end
 local function cycleEnter()
     local next = getEnterMode() and "off" or "on"
     writeFile(ENTER_FILE, next)
+    return next
+end
+
+-- Cycles: System Default -> each currently connected input device -> System Default.
+-- Built fresh from hs.audiodevice.allInputDevices() every call, so devices that came or
+-- went since the last cycle just fall in or out of the rotation.
+local function cycleMic()
+    local uids = { false }  -- false = "System Default"; nil can't live in a table slot reliably
+    for _, dev in ipairs(hs.audiodevice.allInputDevices()) do
+        table.insert(uids, dev:uid())
+    end
+    local current = getMicDevice() or false
+    local idx = 1
+    for i, u in ipairs(uids) do
+        if u == current then idx = i; break end
+    end
+    local next = uids[(idx % #uids) + 1]
+    writeFile(MIC_FILE, next or "")
     return next
 end
 
@@ -1072,6 +1111,13 @@ local function buildMenuBarMenu()
     table.insert(items, {
         title = "Enter after insert: " .. enterState,
         fn = function() cycleEnter(); updateMenuBar() end,
+    })
+
+    -- Mic device (pin to a specific input to stop Bluetooth output quality dropping to
+    -- call-quality whenever a dictation opens the mic)
+    table.insert(items, {
+        title = "Mic: " .. getMicDeviceLabel(),
+        fn = function() cycleMic(); updateMenuBar() end,
     })
 
     -- Recent dictations
@@ -1905,7 +1951,7 @@ tryWarmup = function()
             end
             return true
         end,
-        { jobDir, "1", "16000" })
+        { jobDir, "1", "16000", getMicDevice() or "" })
     recorderTask = thisTask
     recorderTask:start()
 
@@ -2103,7 +2149,7 @@ log("actions: " .. (actionsEnabled and "enabled" or "disabled"))
 
 local enterStatus = getEnterMode() and "⏎" or ""
 local actionsFlag = actionsEnabled and " +actions" or ""
-log("loaded (trigger=" .. TRIGGER_KEY .. ", lang=" .. getLang() .. ", output=" .. getOutputMode() .. ", model=" .. getModelName() .. ")")
+log("loaded (trigger=" .. TRIGGER_KEY .. ", lang=" .. getLang() .. ", output=" .. getOutputMode() .. ", model=" .. getModelName() .. ", mic=" .. getMicDeviceLabel() .. ")")
 hs.notify.new({
     title = "local-whisper",
     informativeText = "Loaded (" .. getLang():upper() .. " / " .. getOutputMode():upper() .. enterStatus .. " / " .. getModelName() .. actionsFlag .. ") — hold " .. trigger.label
