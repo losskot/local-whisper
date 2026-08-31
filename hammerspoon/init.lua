@@ -1687,8 +1687,20 @@ local function dispatchSegment(segN, group, job)
         log("pipeline: gen " .. job.gen .. " seg " .. segN .. " starting whisper lang=" .. effectiveLang ..
             " model=" .. getModelPath():match("([^/]+)$"))
 
+        -- Timestamps are requested from whisper-cli (no -nt) even though we discard them below:
+        -- disabling them isn't just a print-formatting toggle, it removes the timestamp tokens
+        -- the decoder itself relies on to keep advancing through pauses. Without them, whisper
+        -- can decide a mid-recording pause after a complete sentence is the end of the audio,
+        -- silently dropping everything spoken after it and replacing the tail with a short
+        -- hallucinated fragment. Stripping "[00:00:00.000 --> 00:00:01.000]" markers from the
+        -- text ourselves costs nothing and keeps that continuation logic intact.
+        local function stripTimestamps(s)
+            return (s or ""):gsub("%[[^%]]*%]", "")
+                :gsub("^%s+", ""):gsub("%s+$", ""):gsub("%s+", " ")
+        end
+
         if effectiveLang == "auto" then
-            local autoArgs = { "-m", getModelPath(), "-f", segWav, "-l", "auto", "-nt" }
+            local autoArgs = { "-m", getModelPath(), "-f", segWav, "-l", "auto" }
             for _, a in ipairs(promptArgs) do table.insert(autoArgs, a) end
             hs.task.new(WHISPER_BIN, function(code2, out2, err2)
                 log("pipeline: gen " .. job.gen .. " seg " .. segN .. " whisper(auto) exit=" .. tostring(code2) ..
@@ -1700,10 +1712,10 @@ local function dispatchSegment(segN, group, job)
                 end
                 local detected = (err2 or ""):match("auto%-detected language:%s*(%w+)")
                 log("pipeline: gen " .. job.gen .. " seg " .. segN .. " auto-detected: " .. tostring(detected))
-                onSegmentText((out2 or ""):gsub("^%s+", ""):gsub("%s+$", ""):gsub("%s+", " "), detected)
+                onSegmentText(stripTimestamps(out2), detected)
             end, autoArgs):start()
         else
-            local langArgs = { "-m", getModelPath(), "-f", segWav, "-l", effectiveLang, "-nt", "--no-prints" }
+            local langArgs = { "-m", getModelPath(), "-f", segWav, "-l", effectiveLang, "--no-prints" }
             for _, a in ipairs(promptArgs) do table.insert(langArgs, a) end
             hs.task.new(WHISPER_BIN, function(code2, out2)
                 log("pipeline: gen " .. job.gen .. " seg " .. segN .. " whisper(" .. effectiveLang .. ") exit=" .. tostring(code2) ..
@@ -1713,7 +1725,7 @@ local function dispatchSegment(segN, group, job)
                     onPipelineDone(job, segN, "", nil, nChunks)
                     return
                 end
-                onSegmentText((out2 or ""):gsub("^%s+", ""):gsub("%s+$", ""):gsub("%s+", " "), effectiveLang)
+                onSegmentText(stripTimestamps(out2), effectiveLang)
             end, langArgs):start()
         end
     end, { "-y", "-f", "concat", "-safe", "0", "-i", concatFile, "-c", "copy", segWav })
