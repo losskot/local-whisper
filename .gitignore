@@ -21,3 +21,6 @@ config.yaml
 # Dolt database files (added by bd init)
 *.db
 .specstory/
+
+# Model comparison harness — intermediate WAVs only
+tests/model-comparison/tmp/
