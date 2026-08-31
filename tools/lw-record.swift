@@ -9,21 +9,35 @@
 // -use_wallclock_as_timestamps, -capture_raw_data, a different device index, nor
 // dropping the segmenter/resampler changed it.
 //
-// AVAudioEngine's input tap hands us every buffer the device produces, so nothing is
-// dropped. ffmpeg is still used everywhere else (segment concat, and tools/transcribe.sh
-// format conversion) — this binary only opens the microphone.
+// Capture goes through a raw AUHAL unit (kAudioUnitSubType_HALOutput with input
+// enabled), NOT AVAudioEngine. AVAudioEngine's inputNode reliably taps only the current
+// system-default input: pointing it at another device via kAudioOutputUnitProperty_
+// CurrentDevice leaves the engine "running" and printing READY at the right sample rate,
+// but the tap never receives a single buffer — CAPTURED 0.000 — because the IO is never
+// actually retargeted. A bare AUHAL takes CurrentDevice directly and captures from any
+// device, default or not, so pinning the built-in mic works even while a Bluetooth
+// headset holds the system default input.
+//
+// The AUHAL hands us the device's NATIVE format; sample-rate conversion to 16 kHz is done
+// by AVAudioConverter, not by the unit. AUHAL's own client-format SRC on the input bus is
+// unreliable — asking it for 16 kHz off a 48 kHz device returned 48 kHz samples mislabelled
+// as 16 kHz (three seconds of audio counted as eleven). ffmpeg is still used everywhere
+// else (segment concat, and tools/transcribe.sh format conversion) — this binary only
+// opens the microphone.
 //
 // Usage: lw-record <outDir> [chunkSecs] [sampleRate] [deviceUID]
 // Writes chunk_000.wav, chunk_001.wav, … as 16-bit mono PCM WAV.
 // Prints "READY" on stdout once audio is actually flowing, then one line per chunk.
 // On SIGINT/SIGTERM: flushes the partial final chunk and exits 0.
 //
-// deviceUID, when given, pins capture to that CoreAudio device instead of the system
-// default input — e.g. picking the built-in mic explicitly stops macOS from downgrading a
-// paired Bluetooth output to its low-quality call profile (HFP) just because the same
-// Bluetooth device would otherwise have been used as the mic.
+// deviceUID, when given, pins capture to that CoreAudio device (matched by its persistent
+// UID) instead of the system default input — e.g. picking the built-in mic explicitly
+// stops macOS from downgrading a paired Bluetooth output to its low-quality call profile
+// (HFP) just because the same Bluetooth device would otherwise have been used as the mic.
+// The system default input is never touched: the AUHAL captures the pinned device directly.
 
 import AVFoundation
+import AudioToolbox
 import CoreAudio
 import Foundation
 
@@ -42,6 +56,10 @@ let deviceUID: String? = (args.count > 4 && !args[4].isEmpty) ? args[4] : nil
 func fail(_ msg: String) -> Never {
     FileHandle.standardError.write("lw-record: \(msg)\n".data(using: .utf8)!)
     exit(1)
+}
+
+func check(_ status: OSStatus, _ what: String) {
+    if status != noErr { fail("\(what) failed: OSStatus \(status)") }
 }
 
 try? FileManager.default.createDirectory(atPath: outDir, withIntermediateDirectories: true)
@@ -133,34 +151,39 @@ func findAudioDevice(uid target: String) -> AudioDeviceID? {
     return nil
 }
 
-let engine = AVAudioEngine()
-let input = engine.inputNode
-
-if let uid = deviceUID {
-    guard let deviceID = findAudioDevice(uid: uid) else {
-        fail("input device with UID \(uid) not found — is it connected?")
-    }
-    guard let audioUnit = input.audioUnit else {
-        fail("could not access input audio unit to select device")
-    }
-    var mutableDeviceID = deviceID
-    let status = AudioUnitSetProperty(audioUnit,
-                                       kAudioOutputUnitProperty_CurrentDevice,
-                                       kAudioUnitScope_Global,
-                                       0,
-                                       &mutableDeviceID,
-                                       UInt32(MemoryLayout<AudioDeviceID>.size))
-    guard status == noErr else {
-        fail("failed to select input device \(uid): OSStatus \(status)")
-    }
-    FileHandle.standardError.write("lw-record: pinned input device to \(uid)\n".data(using: .utf8)!)
+/// The current system-default input device — used only when no UID is pinned.
+func defaultInputDevice() -> AudioDeviceID? {
+    var address = AudioObjectPropertyAddress(
+        mSelector: kAudioHardwarePropertyDefaultInputDevice,
+        mScope: kAudioObjectPropertyScopeGlobal,
+        mElement: kAudioObjectPropertyElementMain)
+    var device = AudioDeviceID(0)
+    var size = UInt32(MemoryLayout<AudioDeviceID>.size)
+    let status = AudioObjectGetPropertyData(AudioObjectID(kAudioObjectSystemObject), &address, 0, nil, &size, &device)
+    return status == noErr ? device : nil
 }
 
-let inFormat = input.inputFormat(forBus: 0)
+let deviceID: AudioDeviceID = {
+    if let uid = deviceUID {
+        guard let d = findAudioDevice(uid: uid) else {
+            fail("input device with UID \(uid) not found — is it connected?")
+        }
+        return d
+    }
+    guard let d = defaultInputDevice() else {
+        fail("no system default input device — check microphone permission")
+    }
+    return d
+}()
 
-guard inFormat.sampleRate > 0, inFormat.channelCount > 0 else {
-    fail("input device unavailable (sampleRate=\(inFormat.sampleRate), channels=\(inFormat.channelCount)) — check microphone permission")
-}
+// MARK: - AUHAL + converter setup
+
+// Globals the C render callback reads. Assigned during setup below, before the unit starts,
+// and only touched afterwards on the single real-time render thread.
+var auHAL: AudioUnit!
+var converter: AVAudioConverter!
+var hwBuffer: AVAudioPCMBuffer!   // AUHAL renders the device's native format into this
+var outBuffer: AVAudioPCMBuffer!  // converter writes 16 kHz mono int16 here
 
 guard let outFormat = AVAudioFormat(commonFormat: .pcmFormatInt16,
                                     sampleRate: sampleRate,
@@ -168,40 +191,99 @@ guard let outFormat = AVAudioFormat(commonFormat: .pcmFormatInt16,
                                     interleaved: true) else {
     fail("could not build output format")
 }
-guard let converter = AVAudioConverter(from: inFormat, to: outFormat) else {
-    fail("could not build converter \(inFormat) -> \(outFormat)")
+
+var acd = AudioComponentDescription(
+    componentType: kAudioUnitType_Output,
+    componentSubType: kAudioUnitSubType_HALOutput,
+    componentManufacturer: kAudioUnitManufacturer_Apple,
+    componentFlags: 0,
+    componentFlagsMask: 0)
+guard let comp = AudioComponentFindNext(nil, &acd) else { fail("HALOutput component not found") }
+var unitOpt: AudioUnit?
+check(AudioComponentInstanceNew(comp, &unitOpt), "create audio unit")
+guard let unit = unitOpt else { fail("audio unit is nil") }
+auHAL = unit
+
+// Enable input (bus 1), disable output (bus 0): this is a capture-only unit.
+var enable: UInt32 = 1
+check(AudioUnitSetProperty(auHAL, kAudioOutputUnitProperty_EnableIO, kAudioUnitScope_Input, 1,
+                           &enable, UInt32(MemoryLayout<UInt32>.size)), "enable input")
+var disable: UInt32 = 0
+check(AudioUnitSetProperty(auHAL, kAudioOutputUnitProperty_EnableIO, kAudioUnitScope_Output, 0,
+                           &disable, UInt32(MemoryLayout<UInt32>.size)), "disable output")
+
+// Pin the device directly on the unit — the step AVAudioEngine could not make stick.
+var dev = deviceID
+check(AudioUnitSetProperty(auHAL, kAudioOutputUnitProperty_CurrentDevice, kAudioUnitScope_Global, 0,
+                           &dev, UInt32(MemoryLayout<AudioDeviceID>.size)), "set current device")
+
+// The device's native input format. We take it as-is (identity on the client/output scope of
+// bus 1) and let AVAudioConverter do the rate/channel/type conversion — see the header note.
+var hwFormat = AudioStreamBasicDescription()
+var hwSize = UInt32(MemoryLayout<AudioStreamBasicDescription>.size)
+check(AudioUnitGetProperty(auHAL, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 1,
+                           &hwFormat, &hwSize), "get hardware format")
+check(AudioUnitSetProperty(auHAL, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Output, 1,
+                           &hwFormat, hwSize), "set client format")
+
+guard let hwAV = AVAudioFormat(streamDescription: &hwFormat) else {
+    fail("could not build AVAudioFormat from device format")
 }
+guard let conv = AVAudioConverter(from: hwAV, to: outFormat) else {
+    fail("could not build converter \(hwAV) -> \(outFormat)")
+}
+converter = conv
 
-FileHandle.standardError.write(
-    "lw-record: input \(inFormat.sampleRate)Hz \(inFormat.channelCount)ch -> \(Int(sampleRate))Hz mono, chunk=\(chunkSecs)s\n"
-        .data(using: .utf8)!)
+// Size the render buffer to the unit's maximum slice so AudioUnitRender never overflows it.
+var maxFrames: UInt32 = 4096
+var maxFramesSize = UInt32(MemoryLayout<UInt32>.size)
+_ = AudioUnitGetProperty(auHAL, kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Global, 0,
+                         &maxFrames, &maxFramesSize)
+if maxFrames == 0 { maxFrames = 4096 }
 
-// The tap runs on a real-time audio thread: convert and hand off, never touch the disk here.
-input.installTap(onBus: 0, bufferSize: 4096, format: inFormat) { buffer, _ in
-    // Ratio-sized output buffer, plus headroom for the resampler's internal delay.
-    let capacity = AVAudioFrameCount(Double(buffer.frameLength) * sampleRate / inFormat.sampleRate) + 4096
-    guard let outBuf = AVAudioPCMBuffer(pcmFormat: outFormat, frameCapacity: capacity) else { return }
+guard let hb = AVAudioPCMBuffer(pcmFormat: hwAV, frameCapacity: maxFrames) else {
+    fail("could not allocate hardware buffer")
+}
+hwBuffer = hb
+// Output capacity: the rate-scaled frame count plus headroom for the resampler's delay.
+let outCapacity = AVAudioFrameCount(Double(maxFrames) * sampleRate / hwFormat.mSampleRate) + 4096
+guard let ob = AVAudioPCMBuffer(pcmFormat: outFormat, frameCapacity: outCapacity) else {
+    fail("could not allocate output buffer")
+}
+outBuffer = ob
 
-    // Feed this buffer exactly once; .noDataNow afterwards makes convert() return
-    // .inputRanDry instead of spinning on the same input forever.
+// MARK: - Render callback
+
+// Runs on a real-time audio thread. Render the device's native samples, convert them to
+// 16 kHz mono int16, then hand them to the writer — never touch the disk here.
+func inputCallback(inRefCon: UnsafeMutableRawPointer,
+                   ioActionFlags: UnsafeMutablePointer<AudioUnitRenderActionFlags>,
+                   inTimeStamp: UnsafePointer<AudioTimeStamp>,
+                   inBusNumber: UInt32,
+                   inNumberFrames: UInt32,
+                   ioData: UnsafeMutablePointer<AudioBufferList>?) -> OSStatus {
+    hwBuffer.frameLength = inNumberFrames
+    let status = AudioUnitRender(auHAL, ioActionFlags, inTimeStamp, 1, inNumberFrames,
+                                 hwBuffer.mutableAudioBufferList)
+    if status != noErr { return status }
+
+    // Feed the captured buffer to the converter exactly once; .noDataNow afterwards makes
+    // convert() return .inputRanDry instead of spinning on the same input forever.
     var consumed = false
     var convErr: NSError?
-    let status = converter.convert(to: outBuf, error: &convErr) { _, outStatus in
+    let convStatus = converter.convert(to: outBuffer, error: &convErr) { _, outStatus in
         if consumed {
             outStatus.pointee = .noDataNow
             return nil
         }
         consumed = true
         outStatus.pointee = .haveData
-        return buffer
+        return hwBuffer
     }
-    if status == .error {
-        FileHandle.standardError.write("lw-record: convert error \(convErr?.localizedDescription ?? "?")\n".data(using: .utf8)!)
-        return
-    }
-    guard outBuf.frameLength > 0, let ch = outBuf.int16ChannelData else { return }
+    if convStatus == .error { return noErr }
+    guard outBuffer.frameLength > 0, let ch = outBuffer.int16ChannelData else { return noErr }
 
-    let n = Int(outBuf.frameLength)
+    let n = Int(outBuffer.frameLength)
     let src = UnsafeBufferPointer(start: ch[0], count: n)
 
     var ready: [(Int, [Int16])] = []
@@ -218,7 +300,17 @@ input.installTap(onBus: 0, bufferSize: 4096, format: inFormat) { buffer, _ in
     for (idx, samples) in ready {
         writerQueue.async { writeChunk(index: idx, samples: samples) }
     }
+    return noErr
 }
+
+var callback = AURenderCallbackStruct(inputProc: inputCallback, inputProcRefCon: nil)
+check(AudioUnitSetProperty(auHAL, kAudioOutputUnitProperty_SetInputCallback, kAudioUnitScope_Global, 0,
+                           &callback, UInt32(MemoryLayout<AURenderCallbackStruct>.size)),
+      "set input callback")
+
+FileHandle.standardError.write(
+    "lw-record: input \(hwFormat.mSampleRate)Hz \(hwFormat.mChannelsPerFrame)ch -> \(Int(sampleRate))Hz mono, chunk=\(chunkSecs)s, device=\(deviceUID ?? "default")\n"
+        .data(using: .utf8)!)
 
 // MARK: - Shutdown
 
@@ -231,8 +323,9 @@ func finish() -> Never {
     finishing = true
     stateLock.unlock()
 
-    engine.inputNode.removeTap(onBus: 0)
-    engine.stop()
+    AudioOutputUnitStop(auHAL)
+    AudioUnitUninitialize(auHAL)
+    AudioComponentInstanceDispose(auHAL)
 
     stateLock.lock()
     let tail = pending
@@ -244,7 +337,7 @@ func finish() -> Never {
     if !tail.isEmpty {
         writerQueue.sync { writeChunk(index: idx, samples: tail) }
     }
-    writerQueue.sync {}  // drain anything still queued from the tap
+    writerQueue.sync {}  // drain anything still queued from the callback
 
     let secs = Double(captured) / sampleRate
     FileHandle.standardError.write(String(format: "lw-record: captured %.3fs (%d frames)\n", secs, captured).data(using: .utf8)!)
@@ -255,13 +348,6 @@ func finish() -> Never {
 
 // DispatchSourceSignal runs the handler on a normal queue, so it is safe to do real
 // work in it — unlike a raw signal(2) handler. SIG_IGN stops the default kill first.
-//
-// These fire on .main deliberately, which means a signal arriving before dispatchMain()
-// is reached — i.e. during engine.start() — kills the process outright instead of running
-// finish(). That is the right trade: the only caller that signals us that early is the
-// warmup-cancel path, which throws the audio away regardless, and moving the handlers to a
-// global queue would let finish() call engine.stop() concurrently with engine.start().
-// Normal stops arrive as SIGINT long after startup and exit cleanly through finish().
 signal(SIGINT, SIG_IGN)
 signal(SIGTERM, SIG_IGN)
 let sigint = DispatchSource.makeSignalSource(signal: SIGINT, queue: .main)
@@ -273,11 +359,10 @@ sigterm.resume()
 
 // MARK: - Go
 
-do {
-    engine.prepare()
-    try engine.start()
-} catch {
-    fail("engine start failed: \(error.localizedDescription) — check microphone permission for the parent app")
+check(AudioUnitInitialize(auHAL), "initialize audio unit")
+let startStatus = AudioOutputUnitStart(auHAL)
+if startStatus != noErr {
+    fail("start failed: OSStatus \(startStatus) — check microphone permission for the parent app")
 }
 
 print("READY")
