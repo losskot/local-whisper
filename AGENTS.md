@@ -17,6 +17,7 @@ local-whisper is a fully-local macOS dictation tool. Hold **fn + left Control** 
 - Long-lived Hammerspoon objects (eventtaps, timers, watchers) are rooted in a persistent global — anything left unreferenced is silently garbage-collected and stops working with no error.
 - `.specstory/` (session history) is tracked and committed like source — it's the record of how the code got here, never excluded to keep a diff clean.
 - Capture can pin a specific input device (menu bar → Mic) instead of always using the system default — opening any app's mic while a Bluetooth output is connected makes macOS downgrade that output to its low-quality call profile (HFP); pinning to the built-in mic keeps Bluetooth output at full quality through a dictation.
+- The "API" model setting is a combined mode, not a plain remote/local switch — the endpoint is probed in parallel with recording (started at key-down, not after release) so the answer is ready before the first segment needs it; if it doesn't respond, or a request to it fails mid-dictation, transcription silently drops to the local large-v3 model for the rest of that recording instead of erroring or waiting out the API's own timeout on every segment.
 
 ## Security
 

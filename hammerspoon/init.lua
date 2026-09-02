@@ -33,12 +33,21 @@ local RECORDER_BIN = CONFIG_DIR .. "/bin/lw-record"
 local MODELS_DIR = HOME .. "/whisper.cpp/models"
 local MODEL_FILE = CONFIG_DIR .. "/model"
 
--- Remote OpenAI-compatible transcription API (alternative to local whisper-cli)
+-- Remote OpenAI-compatible transcription API (alternative to local whisper-cli).
+--
+-- "API" is a combined mode, not a plain switch: every recording probes the endpoint in
+-- parallel with capturing audio (see checkApiAvailable, started at key-down) instead of
+-- waiting to find out at transcription time. If it answers, its segments go over the wire;
+-- if it doesn't — or a request to it fails mid-dictation — transcription silently drops to
+-- the local large-v3 model for the rest of that recording. Nothing here changes the saved
+-- setting or asks the user to choose; the fallback is invisible on purpose.
 local API = {
     MODEL_NAME = "API",  -- sentinel value stored in MODEL_FILE when API mode is selected
     URL = "http://192.168.0.13:13305/v1/audio/transcriptions",
     MODEL_ID = "Whisper-Large-v3",  -- must match the model id the server has loaded (GET /v1/models)
     CURL_BIN = "/usr/bin/curl",
+    FALLBACK_MODEL = "large-v3",  -- local model used whenever the endpoint doesn't respond
+    HEALTH_TIMEOUT_SECS = 2,
 }
 
 -- Scan available models
@@ -579,6 +588,26 @@ local function transcribeViaAPI(wavPath, lang, timeoutSecs, callback)
     return task
 end
 
+-- Probes the remote API endpoint without waiting for a segment to need it. Started at
+-- key-down (pipeStartJob) so it runs in parallel with recording; by the time the first
+-- segment is ready to dispatch, this has almost always already resolved. A HEAD request is
+-- enough — any HTTP response (even a 404/405 the endpoint gives a HEAD it doesn't like)
+-- proves the server is up, since curl only exits non-zero on a connection-level failure
+-- (refused, host unreachable, timed out). Result lands on job.apiAvailable; dispatchSegment
+-- reads it, and also flips it to false itself if an in-flight request later fails.
+local function checkApiAvailable(job)
+    local args = { "-s", "-o", "/dev/null", "-I", "-m", tostring(API.HEALTH_TIMEOUT_SECS), API.URL }
+    hs.task.new(API.CURL_BIN, function(code, _, err)
+        job.apiAvailable = (code == 0)
+        if job.apiAvailable then
+            log("api: gen " .. job.gen .. " endpoint check OK — using remote API")
+        else
+            log("api: gen " .. job.gen .. " endpoint check failed (" .. curlErrorMessage(code, err) ..
+                ") — falling back to local " .. API.FALLBACK_MODEL)
+        end
+    end, args):start()
+end
+
 local function getPromptArgs()
     local content = readPrompt()
     if content ~= "" then return { "--prompt", content } end
@@ -1096,7 +1125,7 @@ local function buildMenuBarMenu()
 
     -- Model
     table.insert(items, {
-        title = "Model: " .. (isApiMode() and "API (remote)" or getModelName()),
+        title = "Model: " .. (isApiMode() and "API (auto-fallback)" or getModelName()),
         fn = function() cycleModel(); updateMenuBar() end,
     })
 
@@ -1432,7 +1461,10 @@ local function pipeNewJob()
         finalizing = false, -- true once `total` is known
         inserted   = false, -- true once its text was inserted or queued, so it happens once
         abandoned  = false, -- emergency stop: its segments are dropped as they come back
-        apiError   = nil,
+        -- nil while the check is in flight, then true/false. In API mode only; dispatchSegment
+        -- treats nil like true (optimistic — the check almost always beats the first segment)
+        -- and a request failure can still flip it to false mid-job.
+        apiAvailable = nil,
         timer      = nil,   -- polls during recording for a segment that is ready to dispatch
     }
     pipeJobs.live[job.gen] = job
@@ -1510,6 +1542,9 @@ local function pipeStartJob()
         end
     end
     pipe = pipeNewJob()
+    if isApiMode() then
+        checkApiAvailable(pipe)  -- runs in parallel with the recording that's about to start
+    end
     log("pipeline: gen " .. pipe.gen .. " started")
 end
 
@@ -1574,13 +1609,7 @@ local function pipelineFinalize(job)
 
     if finalText == "" then
         hideProgressBar()
-        if job.apiError then
-            setOverlayText("API error: " .. job.apiError)
-            hs.notify.new({ title = "local-whisper", informativeText = "API error: " .. job.apiError }):send()
-            hs.timer.doAfter(2.5, hideOverlay)
-        else
-            hideOverlay()
-        end
+        hideOverlay()
         return
     end
     -- Flash the blue bar to 100% to confirm all audio was transcribed, then fade it
@@ -1669,24 +1698,6 @@ local function dispatchSegment(segN, group, job)
         -- forcing a later segment into an earlier segment's language would translate it.
         local effectiveLang = lang
 
-        if isApiMode() then
-            log("pipeline: gen " .. job.gen .. " seg " .. segN .. " starting API transcription lang=" .. effectiveLang)
-            transcribeViaAPI(segWav, effectiveLang, 60, function(text, detected, errMsg)
-                if errMsg then
-                    log("pipeline: gen " .. job.gen .. " seg " .. segN .. " API error: " .. errMsg)
-                    job.apiError = errMsg
-                    onSegmentText("", nil)
-                    return
-                end
-                text = (text or ""):gsub("^%s+", ""):gsub("%s+$", ""):gsub("%s+", " ")
-                onSegmentText(text, effectiveLang == "auto" and detected or effectiveLang)
-            end)
-            return
-        end
-
-        log("pipeline: gen " .. job.gen .. " seg " .. segN .. " starting whisper lang=" .. effectiveLang ..
-            " model=" .. getModelPath():match("([^/]+)$"))
-
         -- Timestamps are requested from whisper-cli (no -nt) even though we discard them below:
         -- disabling them isn't just a print-formatting toggle, it removes the timestamp tokens
         -- the decoder itself relies on to keep advancing through pauses. Without them, whisper
@@ -1699,35 +1710,71 @@ local function dispatchSegment(segN, group, job)
                 :gsub("^%s+", ""):gsub("%s+$", ""):gsub("%s+", " ")
         end
 
-        if effectiveLang == "auto" then
-            local autoArgs = { "-m", getModelPath(), "-f", segWav, "-l", "auto" }
-            for _, a in ipairs(promptArgs) do table.insert(autoArgs, a) end
-            hs.task.new(WHISPER_BIN, function(code2, out2, err2)
-                log("pipeline: gen " .. job.gen .. " seg " .. segN .. " whisper(auto) exit=" .. tostring(code2) ..
-                    " outlen=" .. #(out2 or ""))
-                if code2 ~= 0 then
-                    log("pipeline: gen " .. job.gen .. " seg " .. segN .. " whisper FAILED (auto)")
-                    onPipelineDone(job, segN, "", nil, nChunks)
-                    return
-                end
-                local detected = (err2 or ""):match("auto%-detected language:%s*(%w+)")
-                log("pipeline: gen " .. job.gen .. " seg " .. segN .. " auto-detected: " .. tostring(detected))
-                onSegmentText(stripTimestamps(out2), detected)
-            end, autoArgs):start()
-        else
-            local langArgs = { "-m", getModelPath(), "-f", segWav, "-l", effectiveLang, "--no-prints" }
-            for _, a in ipairs(promptArgs) do table.insert(langArgs, a) end
-            hs.task.new(WHISPER_BIN, function(code2, out2)
-                log("pipeline: gen " .. job.gen .. " seg " .. segN .. " whisper(" .. effectiveLang .. ") exit=" .. tostring(code2) ..
-                    " outlen=" .. #(out2 or ""))
-                if code2 ~= 0 then
-                    log("pipeline: gen " .. job.gen .. " seg " .. segN .. " whisper FAILED")
-                    onPipelineDone(job, segN, "", nil, nChunks)
-                    return
-                end
-                onSegmentText(stripTimestamps(out2), effectiveLang)
-            end, langArgs):start()
+        -- modelPath/modelLabel are parameterized so the API-mode fallback can force
+        -- large-v3 regardless of what MODEL_FILE holds (it holds the "API" sentinel there,
+        -- not a real model file) while normal local mode keeps using getModelPath().
+        local function runLocalWhisper(modelPath, modelLabel)
+            log("pipeline: gen " .. job.gen .. " seg " .. segN .. " starting whisper lang=" .. effectiveLang ..
+                " model=" .. modelLabel)
+            if effectiveLang == "auto" then
+                local autoArgs = { "-m", modelPath, "-f", segWav, "-l", "auto" }
+                for _, a in ipairs(promptArgs) do table.insert(autoArgs, a) end
+                hs.task.new(WHISPER_BIN, function(code2, out2, err2)
+                    log("pipeline: gen " .. job.gen .. " seg " .. segN .. " whisper(auto) exit=" .. tostring(code2) ..
+                        " outlen=" .. #(out2 or ""))
+                    if code2 ~= 0 then
+                        log("pipeline: gen " .. job.gen .. " seg " .. segN .. " whisper FAILED (auto)")
+                        onPipelineDone(job, segN, "", nil, nChunks)
+                        return
+                    end
+                    local detected = (err2 or ""):match("auto%-detected language:%s*(%w+)")
+                    log("pipeline: gen " .. job.gen .. " seg " .. segN .. " auto-detected: " .. tostring(detected))
+                    onSegmentText(stripTimestamps(out2), detected)
+                end, autoArgs):start()
+            else
+                local langArgs = { "-m", modelPath, "-f", segWav, "-l", effectiveLang, "--no-prints" }
+                for _, a in ipairs(promptArgs) do table.insert(langArgs, a) end
+                hs.task.new(WHISPER_BIN, function(code2, out2)
+                    log("pipeline: gen " .. job.gen .. " seg " .. segN .. " whisper(" .. effectiveLang .. ") exit=" .. tostring(code2) ..
+                        " outlen=" .. #(out2 or ""))
+                    if code2 ~= 0 then
+                        log("pipeline: gen " .. job.gen .. " seg " .. segN .. " whisper FAILED")
+                        onPipelineDone(job, segN, "", nil, nChunks)
+                        return
+                    end
+                    onSegmentText(stripTimestamps(out2), effectiveLang)
+                end, langArgs):start()
+            end
         end
+
+        if isApiMode() then
+            local fallbackPath = MODELS_DIR .. "/ggml-" .. API.FALLBACK_MODEL .. ".bin"
+
+            -- The parallel key-down probe already knows the endpoint is unreachable — skip
+            -- straight to local instead of paying transcribeViaAPI's own timeout again.
+            if job.apiAvailable == false then
+                runLocalWhisper(fallbackPath, API.FALLBACK_MODEL .. " (API unreachable)")
+                return
+            end
+
+            -- apiAvailable is true or still nil (probe pending — optimistic: it almost always
+            -- resolves before the first segment is ready). Either way, try the API first.
+            log("pipeline: gen " .. job.gen .. " seg " .. segN .. " starting API transcription lang=" .. effectiveLang)
+            transcribeViaAPI(segWav, effectiveLang, 60, function(text, detected, errMsg)
+                if errMsg then
+                    log("pipeline: gen " .. job.gen .. " seg " .. segN .. " API error: " .. errMsg ..
+                        " — falling back to local " .. API.FALLBACK_MODEL)
+                    job.apiAvailable = false  -- stop retrying the API for the rest of this dictation
+                    runLocalWhisper(fallbackPath, API.FALLBACK_MODEL .. " (API failed)")
+                    return
+                end
+                text = (text or ""):gsub("^%s+", ""):gsub("%s+$", ""):gsub("%s+", " ")
+                onSegmentText(text, effectiveLang == "auto" and detected or effectiveLang)
+            end)
+            return
+        end
+
+        runLocalWhisper(getModelPath(), getModelName())
     end, { "-y", "-f", "concat", "-safe", "0", "-i", concatFile, "-c", "copy", segWav })
     concatTask:start()
 end
