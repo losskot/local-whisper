@@ -39,14 +39,14 @@ local MODEL_FILE = CONFIG_DIR .. "/model"
 -- parallel with capturing audio (see checkApiAvailable, started at key-down) instead of
 -- waiting to find out at transcription time. If it answers, its segments go over the wire;
 -- if it doesn't — or a request to it fails mid-dictation — transcription silently drops to
--- the local large-v3 model for the rest of that recording. Nothing here changes the saved
+-- FALLBACK_MODEL locally for the rest of that recording. Nothing here changes the saved
 -- setting or asks the user to choose; the fallback is invisible on purpose.
 local API = {
     MODEL_NAME = "API",  -- sentinel value stored in MODEL_FILE when API mode is selected
     URL = "http://192.168.0.13:13305/v1/audio/transcriptions",
-    MODEL_ID = "Whisper-Large-v3",  -- must match the model id the server has loaded (GET /v1/models)
+    MODEL_ID = "Whisper-Large-v3-Turbo-Q5",  -- must match the model id the server has loaded (GET /v1/models)
     CURL_BIN = "/usr/bin/curl",
-    FALLBACK_MODEL = "large-v3",  -- local model used whenever the endpoint doesn't respond
+    FALLBACK_MODEL = "large-v3-turbo-q5_0",  -- local model used whenever the endpoint doesn't respond
     HEALTH_TIMEOUT_SECS = 2,
 }
 
@@ -871,76 +871,76 @@ local overlayPinned = false
 local isRecording = false
 local hideOverlay  -- assigned below
 
--- Element indices: 1=bg, 2=text, 3=dot, 4=timer, 5=bar_bg, 6=bar_rec, 7=bar_txn, 8=close
-local EL = { text = 2, dot = 3, timer = 4, bar_bg = 5, bar_rec = 6, bar_txn = 7, close = 8 }
+-- The window itself IS the progress bar: the background rectangle (1) is the track —
+-- its light fill is the empty portion, and the colored bars (2,3) fill over it, full
+-- window height. Text/dot/timer/close sit on top, centered on the single-line strip.
+-- Element indices: 1=bg(track), 2=bar_rec, 3=bar_txn, 4=text, 5=dot, 6=timer, 7=close
+local EL = { bg = 1, bar_rec = 2, bar_txn = 3, text = 4, dot = 5, timer = 6, close = 7 }
 
 local function createOverlay()
     local screen = hs.screen.mainScreen()
     local frame = screen:frame()  -- excludes menu bar, so y=frame.y sits right under it
-    local width, height = 420, 56
+    local width, height = 420, 28
     local padding = 20
     local x = frame.x + (frame.w - width) / 2  -- centered under the menu bar
     local y = frame.y + padding
 
     overlay = hs.canvas.new({ x = x, y = y, w = width, h = height })
 
-    -- 1: Background (click to pin overlay open)
+    -- 1: Background — this IS the progress track. Its light fill is the empty (unfilled)
+    -- portion of the bar; the colored bars below fill over it, full window height.
+    -- Click to pin overlay open.
     overlay:appendElements({
         id = "bg",
         type = "rectangle", action = "fill",
-        roundedRectRadii = { xRadius = 10, yRadius = 10 },
-        fillColor = { red = 0.93, green = 0.93, blue = 0.95, alpha = 0.92 },
+        roundedRectRadii = { xRadius = 8, yRadius = 8 },
+        fillColor = { red = 0.93, green = 0.93, blue = 0.95, alpha = 0.50 },
         trackMouseUp = true,
     })
 
-    -- 2: Transcript text — left side of the single-line strip
+    -- 2: Recording progress (red/orange) — total recorded duration, fills the whole
+    -- window (no inset — the window background is the bar) and grows left→right.
+    overlay:appendElements({
+        id = "bar_rec", type = "rectangle", action = "fill",
+        roundedRectRadii = { xRadius = 8, yRadius = 8 },
+        fillColor = { red = 1.0, green = 0.35, blue = 0.15, alpha = 0.0 },
+        frame = { x = 0, y = 0, w = 1, h = height },
+    })
+    -- 3: Transcription progress (blue) — chases the red bar as segments finish
+    overlay:appendElements({
+        id = "bar_txn", type = "rectangle", action = "fill",
+        roundedRectRadii = { xRadius = 8, yRadius = 8 },
+        fillColor = { red = 0.2, green = 0.75, blue = 1.0, alpha = 0.0 },
+        frame = { x = 0, y = 0, w = 1, h = height },
+    })
+
+    -- 4: Transcript text — left side, centered on the single-line strip, over the bar
     overlay:appendElements({
         id = "text", type = "text", text = "Listening...",
         textColor = { red = 0.12, green = 0.12, blue = 0.14, alpha = 1.0 },
-        textSize = 14,
-        frame = { x = "4%", y = "16%", w = "58%", h = "55%" },
+        textSize = 13,
+        frame = { x = "4%", y = "14%", w = "58%", h = "72%" },
     })
-    -- 3: Recording indicator (pulsing red dot) — right side
+    -- 5: Recording indicator (pulsing red dot) — right side, vertically centered
     overlay:appendElements({
         id = "dot", type = "oval", action = "fill",
         fillColor = { red = 0.85, green = 0.1, blue = 0.1, alpha = 0.0 },
-        frame = { x = "81%", y = "24%", w = "4%", h = "30%" },
+        frame = { x = 341, y = 10, w = 8, h = 8 },
     })
-    -- 4: Elapsed time display — right side
+    -- 6: Elapsed time display — right side
     overlay:appendElements({
         id = "timer", type = "text", text = "",
         textColor = { red = 0.75, green = 0.15, blue = 0.15, alpha = 0.0 },
         textSize = 10,
-        frame = { x = "64%", y = "18%", w = "16%", h = "45%" },
+        frame = { x = "63%", y = "18%", w = "16%", h = "64%" },
         textAlignment = "right",
     })
-    -- 5: Progress bar background (gray track) — thin strip along the bottom edge
-    overlay:appendElements({
-        id = "bar_bg", type = "rectangle", action = "fill",
-        roundedRectRadii = { xRadius = 2, yRadius = 2 },
-        fillColor = { red = 0.55, green = 0.55, blue = 0.58, alpha = 0.0 },
-        frame = { x = 17, y = 48, w = 386, h = 4 },
-    })
-    -- 6: Recording progress (red/orange) — total recorded duration
-    overlay:appendElements({
-        id = "bar_rec", type = "rectangle", action = "fill",
-        roundedRectRadii = { xRadius = 2, yRadius = 2 },
-        fillColor = { red = 1.0, green = 0.35, blue = 0.15, alpha = 0.0 },
-        frame = { x = 17, y = 48, w = 1, h = 4 },
-    })
-    -- 7: Transcription progress (blue) — chases the red bar as segments finish
-    overlay:appendElements({
-        id = "bar_txn", type = "rectangle", action = "fill",
-        roundedRectRadii = { xRadius = 2, yRadius = 2 },
-        fillColor = { red = 0.2, green = 0.75, blue = 1.0, alpha = 0.0 },
-        frame = { x = 17, y = 48, w = 1, h = 4 },
-    })
-    -- 8: Close button (X) — right edge, last element so it's on top and clickable
+    -- 7: Close button (X) — right edge, last element so it's on top and clickable
     overlay:appendElements({
         id = "close", type = "text", text = "✕",
         textColor = { red = 0.75, green = 0.15, blue = 0.15, alpha = 0.85 },
-        textSize = 16, textAlignment = "center",
-        frame = { x = "87%", y = "12%", w = "10%", h = "45%" },
+        textSize = 15, textAlignment = "center",
+        frame = { x = "87%", y = "8%", w = "10%", h = "84%" },
         trackMouseDown = true, trackMouseUp = true, trackMouseEnterExit = true,
     })
 
@@ -972,10 +972,10 @@ local function createOverlay()
         if event == "mouseUp" and id == "bg" then
             overlayPinned = not overlayPinned
             if overlayPinned then
-                canvas[1].fillColor = { red = 0.85, green = 0.89, blue = 0.97, alpha = 0.95 }
+                canvas[1].fillColor = { red = 0.85, green = 0.89, blue = 0.97, alpha = 0.55 }
                 log("overlay pinned")
             else
-                canvas[1].fillColor = { red = 0.93, green = 0.93, blue = 0.95, alpha = 0.92 }
+                canvas[1].fillColor = { red = 0.93, green = 0.93, blue = 0.95, alpha = 0.38 }
                 log("overlay unpinned")
                 if not isRecording then hideOverlay() end
             end
@@ -1207,22 +1207,22 @@ end
 
 local function updateProgressBar()
     if not overlay then return end
-    local BAR_MAX = 386  -- px, matches bar_bg width in createOverlay
+    local BAR_MAX = 420  -- px, full window width — the bar fills the window edge to edge
     -- Freeze at the final duration once recording stops. Left live, this keeps climbing
     -- during transcription and re-trips the auto-expand below on every segment, so
     -- barMaxSecs outruns transcribedSecs and the blue bar never reaches 100%.
     local elapsed = recordedSecs or (hs.timer.secondsSinceEpoch() - recordingStartTime)
-    -- Auto-expand: when recording reaches 90% of max, extend by another 3 min
-    if elapsed >= barMaxSecs * 0.9 then barMaxSecs = barMaxSecs + 180 end
+    -- Auto-expand: when recording reaches 5s before the max, extend by another 60s.
+    -- Starts at 60s, so the first bounce is at 0:55, then 1:55, 2:55, …
+    if elapsed >= barMaxSecs - 5 then barMaxSecs = barMaxSecs + 60 end
     local recFrac = math.min(elapsed / barMaxSecs, 1.0)
     local txnFrac = math.min(transcribedSecs / barMaxSecs, 1.0)
-    overlay[EL.bar_rec].frame = { x = 17, y = 48, w = math.max(1, math.floor(recFrac * BAR_MAX)), h = 4 }
-    overlay[EL.bar_txn].frame = { x = 17, y = 48, w = math.max(1, math.floor(txnFrac * BAR_MAX)), h = 4 }
+    overlay[EL.bar_rec].frame = { x = 0, y = 0, w = math.max(1, math.floor(recFrac * BAR_MAX)), h = 28 }
+    overlay[EL.bar_txn].frame = { x = 0, y = 0, w = math.max(1, math.floor(txnFrac * BAR_MAX)), h = 28 }
 end
 
 local function hideProgressBar()
     if not overlay then return end
-    overlay[EL.bar_bg].fillColor  = { red = 0.3, green = 0.3, blue = 0.3, alpha = 0.0 }
     overlay[EL.bar_rec].fillColor = { red = 1.0, green = 0.35, blue = 0.15, alpha = 0.0 }
     overlay[EL.bar_txn].fillColor = { red = 0.2, green = 0.75, blue = 1.0, alpha = 0.0 }
 end
@@ -1232,7 +1232,7 @@ local function startRecordingIndicator()
     recordingStartTime = hs.timer.secondsSinceEpoch()
     recordedSecs = nil
     transcribedSecs = 0
-    barMaxSecs = 180
+    barMaxSecs = 60
     pulseAlpha = 1.0
     pulseFading = true
 
@@ -1240,10 +1240,9 @@ local function startRecordingIndicator()
     overlay[EL.dot].fillColor = { red = 0.85, green = 0.1, blue = 0.1, alpha = 1.0 }
     overlay[EL.timer].textColor = { red = 0.75, green = 0.15, blue = 0.15, alpha = 1.0 }
 
-    -- Show progress bar track
-    overlay[EL.bar_bg].fillColor  = { red = 0.3, green = 0.3, blue = 0.3, alpha = 0.6 }
-    overlay[EL.bar_rec].fillColor = { red = 1.0, green = 0.35, blue = 0.15, alpha = 0.85 }
-    overlay[EL.bar_txn].fillColor = { red = 0.2, green = 0.75, blue = 1.0, alpha = 0.9 }
+    -- Fill the bar over the track (the light window background)
+    overlay[EL.bar_rec].fillColor = { red = 1.0, green = 0.35, blue = 0.15, alpha = 0.50 }
+    overlay[EL.bar_txn].fillColor = { red = 0.2, green = 0.75, blue = 1.0, alpha = 0.50 }
     updateProgressBar()
 
     -- Pulse the red dot
