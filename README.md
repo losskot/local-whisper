@@ -162,9 +162,28 @@ Then enable it from the menu bar: **Voice trigger**. **Wake word** cycles betwee
 `hey mycroft`, `hey jarvis` and `hey rhasspy` — all three ship pretrained, so switching is
 instant. ("alexa" also ships but is left out: a television sets it off.)
 
-Pick one you will actually say. The model matches sound, not spelling, and a near miss is not
-a near miss to it — a Russian speaker reaching for "mycroft" tends to land on "Minecraft"
-(майн-крафт instead of май-крофт), which scores **zero**, not "slightly too low".
+Pick one you will actually say, and measure rather than guess — the model matches sound, and
+a word that feels close can score zero rather than "slightly too low":
+
+```bash
+./tools/lw-wake-score.sh 30      # say each candidate a few times, read the table
+```
+
+It deliberately does not transcribe you. A transcript is text, and whisper normalises
+whatever it hears into the nearest familiar word, so it says nothing about the sounds you
+actually produced. The wake model's own score is the measurement.
+
+Measured for this repo's author (native Russian speaker), 120 s of real attempts:
+
+| Word | Peak | Frames ≥ 0.95 | |
+|---|---|---|---|
+| hey mycroft | 1.000 | 10 | fires every time |
+| hey jarvis | 0.968 | 1 | scrapes the line, unreliable |
+| hey rhasspy | <0.05 | 0 | not recognised at all |
+
+A solid word holds above the threshold for several consecutive frames. One frame over the
+line is a coin flip in a real room. Note also that only the *selected* word is armed —
+saying a different one cannot fire anything, however well the model would score it.
 
 **How it ends.** Tapping the trigger combo ends a voice-started dictation immediately — that
 is the normal way to finish. The silence timeout is a safety net for when you forget: 8 s of
