@@ -26,6 +26,7 @@ import collections
 import os
 import subprocess
 import sys
+import threading
 import time
 
 FRAME_SAMPLES = 1280          # 80 ms at 16 kHz — the frame size openWakeWord expects
@@ -42,6 +43,36 @@ FRAME_BYTES = FRAME_SAMPLES * 2
 # and score it far below a phrase it had heard the approach to.
 GATE_HOLD_FRAMES = 25         # ~2 s of inference after any sound crosses the gate
 PREROLL_FRAMES = 13           # ~1 s of context replayed on the way in
+
+
+# Firing goes through a hammerspoon:// URL, not the `hs` CLI. The CLI is a synchronous
+# round-trip over a CFMessagePort to Hammerspoon's main thread, and it blocks for seconds
+# exactly when this fires -- while Hammerspoon is busy starting a recording -- sometimes
+# never returning at all ("CFMessagePort: dropping corrupt reply Mach message"). A URL open
+# is delivered asynchronously by the system and returns immediately whether or not
+# Hammerspoon has got to it yet.
+#
+# It still runs on a thread. `open` is a process spawn, and the read loop must never stall:
+# lw-record keeps producing 80 ms frames throughout, so any stall makes the daemon deaf for
+# its duration -- which is precisely when a user who saw nothing happen says the word again.
+_firing = threading.Lock()
+
+
+def fire(args, when):
+    def run():
+        if not _firing.acquire(blocking=False):
+            log(args.log, "a trigger is still in flight, skipping this one")
+            return
+        try:
+            # -g: do not bring Hammerspoon to the foreground, which would steal focus from
+            # whatever the dictation is about to be typed into.
+            subprocess.run(["/usr/bin/open", "-g", args.url], timeout=10,
+                           stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        except (OSError, subprocess.SubprocessError) as e:
+            log(args.log, f"trigger failed: {e}")
+        finally:
+            _firing.release()
+    threading.Thread(target=run, daemon=True).start()
 
 
 def log(path, msg):
@@ -63,8 +94,7 @@ def main():
     # keeps scoring for a moment after the trigger fires. Without a refractory window a
     # single "hey mycroft" would start several dictations.
     ap.add_argument("--refractory", type=float, default=3.0)
-    ap.add_argument("--hs", default="/usr/local/bin/hs")
-    ap.add_argument("--command", default="LocalWhisper.voiceTrigger()")
+    ap.add_argument("--url", default="hammerspoon://lw-voice-trigger")
     ap.add_argument("--log", default="")
     # Frame RMS below which the room counts as quiet. The noise floor on this machine measures
     # 15-19 and speech 400-700, so 40 sits clear of both. Deliberately permissive: a frame
@@ -129,16 +159,12 @@ def main():
         now = time.monotonic()
         if score >= args.threshold and (now - last_fire) >= args.refractory:
             last_fire = now
-            log(args.log, f"DETECTED {args.model} score={score:.3f} -> {args.command}")
+            log(args.log, f"DETECTED {args.model} score={score:.3f} -> {args.url}")
             # The model's internal feature buffer still holds the phrase that just fired.
             # Without this reset the following frames keep scoring high and the refractory
             # window becomes the only thing standing between one word and many triggers.
             model.reset()
-            try:
-                subprocess.run([args.hs, "-c", args.command], timeout=5,
-                               stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-            except (OSError, subprocess.SubprocessError) as e:
-                log(args.log, f"hs call failed: {e}")
+            fire(args, last_fire)
 
 
 if __name__ == "__main__":

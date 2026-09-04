@@ -158,7 +158,13 @@ model is selected. Off by default.
 ./tools/lw-wake-setup.sh          # one-time: builds ~/.local-whisper/wake-venv (~200 MB)
 ```
 
-Then enable it from the menu bar: **Voice trigger**.
+Then enable it from the menu bar: **Voice trigger**. **Wake word** cycles between
+`hey mycroft`, `hey jarvis` and `hey rhasspy` — all three ship pretrained, so switching is
+instant. ("alexa" also ships but is left out: a television sets it off.)
+
+Pick one you will actually say. The model matches sound, not spelling, and a near miss is not
+a near miss to it — a Russian speaker reaching for "mycroft" tends to land on "Minecraft"
+(майн-крафт instead of май-крофт), which scores **zero**, not "slightly too low".
 
 **How it ends.** Tapping the trigger combo ends a voice-started dictation immediately — that
 is the normal way to finish. The silence timeout is a safety net for when you forget: 8 s of

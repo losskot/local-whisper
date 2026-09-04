@@ -11,6 +11,7 @@
 # takes the other with it.
 #
 # Usage: lw-wake-run.sh <lw-record> <micUID|""> <python> <lw-wake.py> <log> <model> <threshold>
+# The detector fires through a hammerspoon:// URL; nothing here needs the `hs` CLI.
 set -u
 
 REC="$1"; MIC="$2"; PY="$3"; WAKE="$4"; LOG="$5"; MODEL="$6"; THRESH="$7"

@@ -103,6 +103,7 @@ local ENTER_FILE = CONFIG_DIR .. "/enter"
 local MIC_FILE = CONFIG_DIR .. "/mic"
 local PROMPT_FILE = CONFIG_DIR .. "/prompt"
 local WAKE_FILE = CONFIG_DIR .. "/wake"
+local WAKE_MODEL_FILE = CONFIG_DIR .. "/wake-model"
 local RECENT_FILE = CONFIG_DIR .. "/recent.json"
 local LOG_FILE = WHISPER_TMP .. "/whisper-dictate.log"
 
@@ -1112,7 +1113,7 @@ end
 
 -- The voice trigger lives next to the recording functions it drives, far below, but the
 -- menu is built here. Same forward-declaration pattern as pipelineReset and tryWarmup.
-local getWakeEnabled, cycleWake, wakeStatusLabel
+local getWakeEnabled, cycleWake, wakeStatusLabel, cycleWakeWord, wakeWordLabel
 
 local function buildMenuBarMenu()
     local items = {}
@@ -1159,6 +1160,10 @@ local function buildMenuBarMenu()
     table.insert(items, {
         title = "Voice trigger: " .. (wakeStatusLabel and wakeStatusLabel() or "OFF"),
         fn = function() if cycleWake then cycleWake() end; updateMenuBar() end,
+    })
+    table.insert(items, {
+        title = "Wake word: " .. (wakeWordLabel and wakeWordLabel() or "hey mycroft"),
+        fn = function() if cycleWakeWord then cycleWakeWord() end; updateMenuBar() end,
     })
 
     -- Recent dictations
@@ -2164,7 +2169,11 @@ end
 
 local WAKE = {
     VENV_PY   = CONFIG_DIR .. "/wake-venv/bin/python",
-    MODEL     = "hey_mycroft",
+    -- Pretrained models that ship with openWakeWord. "alexa" is deliberately absent: a
+    -- television or someone else's speaker sets it off. Which word suits a given voice is
+    -- not something the code can know -- a Russian speaker reaching for "mycroft" tends to
+    -- land on "Minecraft", which scores zero -- so this is switchable from the menu.
+    WORDS     = { "hey_mycroft", "hey_jarvis", "hey_rhasspy" },
     -- Not the documented default of 0.5. Measured against 114 minutes of this machine's own
     -- archived dictation (85,500 frames of real ru/uk/en speech): exactly two frames ever
     -- crossed 0.5, scoring 0.564 and 0.900, while a genuine "hey mycroft" scores 0.998-1.000
@@ -2206,6 +2215,18 @@ end
 
 getWakeEnabled = function()
     return (readFile(WAKE_FILE):gsub("%s+", "")) == "on"
+end
+
+local function getWakeWord()
+    local saved = (readFile(WAKE_MODEL_FILE):gsub("%s+", ""))
+    for _, w in ipairs(WAKE.WORDS) do
+        if w == saved then return w end
+    end
+    return WAKE.WORDS[1]
+end
+
+wakeWordLabel = function()
+    return (getWakeWord():gsub("_", " "))
 end
 
 local wakeTask = nil
@@ -2310,14 +2331,14 @@ local function wakeStart(reason)
         return
     end
 
-    log("wake: starting listener (" .. reason .. ", model=" .. WAKE.MODEL .. ")")
+    log("wake: starting listener (" .. reason .. ", model=" .. getWakeWord() .. ")")
     wakeTask = hs.task.new(runner, function(code)
         log("wake: listener exited, code=" .. tostring(code))
         wakeTask = nil
         LocalWhisper.wakeTask = nil
     end, {
         RECORDER_BIN, getMicDevice() or "", WAKE.VENV_PY, script,
-        LOG_FILE, WAKE.MODEL, WAKE.THRESHOLD,
+        LOG_FILE, getWakeWord(), WAKE.THRESHOLD,
     })
     if wakeTask then
         wakeTask:start()
@@ -2330,7 +2351,20 @@ wakeStatusLabel = function()
     if not hs.fs.attributes(WAKE.VENV_PY) then return "ON — run lw-wake-setup.sh" end
     if not wakeOnPower() then return "ON \u{00B7} on battery" end
     if not wakeIsRunning() then return "ON \u{00B7} paused" end
-    return "ON \u{00B7} " .. WAKE.MODEL:gsub("_", " ")
+    return "ON \u{00B7} " .. wakeWordLabel()
+end
+
+-- Changing the word means restarting the listener: the model is loaded once at startup.
+cycleWakeWord = function()
+    local cur, nextWord = getWakeWord(), nil
+    for i, w in ipairs(WAKE.WORDS) do
+        if w == cur then nextWord = WAKE.WORDS[(i % #WAKE.WORDS) + 1] break end
+    end
+    writeFile(WAKE_MODEL_FILE, nextWord or WAKE.WORDS[1])
+    if getWakeEnabled() then
+        wakeStop("switching wake word")
+        wakeStart("wake word changed to " .. getWakeWord())
+    end
 end
 
 cycleWake = function()
@@ -2339,8 +2373,9 @@ cycleWake = function()
     if on then wakeStart("enabled from menu") else wakeStop("disabled from menu") end
 end
 
--- Called by lw-wake.py over hs.ipc when the phrase is heard. Named on the persistent global
--- because that is the only namespace the `hs` CLI can reach.
+-- Called when the phrase is heard. Kept on the persistent global so it can be invoked by
+-- hand from the console or the `hs` CLI, but the daemon reaches it through the URL handler
+-- below rather than the CLI.
 function LocalWhisper.voiceTrigger()
     if not getWakeEnabled() then return end
     if isRecording or isWarmingUp then
@@ -2352,6 +2387,15 @@ function LocalWhisper.voiceTrigger()
     startRecording()
     wakeStartSilenceWatch()
 end
+
+-- The daemon fires through this rather than `hs -c`. The CLI is a synchronous round-trip to
+-- this process's main thread and blocks for seconds exactly when a trigger arrives -- while
+-- a recording is being started -- sometimes never returning ("CFMessagePort: dropping
+-- corrupt reply Mach message" in the log). A URL event is delivered asynchronously by the
+-- system, so a busy Hammerspoon delays the trigger instead of losing it.
+hs.urlevent.bind("lw-voice-trigger", function()
+    LocalWhisper.voiceTrigger()
+end)
 
 -- The listener follows the screen, not the system. screensDidSleep is the point where an
 -- open microphone would start costing something nobody is there to benefit from, and where
