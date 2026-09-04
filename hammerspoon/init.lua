@@ -2211,6 +2211,17 @@ end
 local wakeTask = nil
 local wakeSilenceTimer = nil
 
+-- On battery the listener does not run at all. The microphone is the expensive half of this
+-- feature (see the section header), and this is a fanless Air whose battery is the one
+-- resource a background listener can visibly eat. A machine with no battery at all reports
+-- nil, which is a desktop: always treat that as plugged in.
+local function wakeOnPower()
+    local src = hs.battery.powerSource()
+    return src == nil or src ~= "Battery Power"
+end
+
+local wakeLastPower = wakeOnPower()
+
 local function wakeIsRunning()
     return wakeTask ~= nil and wakeTask:isRunning()
 end
@@ -2283,6 +2294,10 @@ end
 
 local function wakeStart(reason)
     if wakeIsRunning() or not getWakeEnabled() then return end
+    if not wakeOnPower() then
+        log("wake: on battery, listener stays down (" .. reason .. ")")
+        return
+    end
 
     local runner = repoPath("tools/lw-wake-run.sh")
     local script = repoPath("tools/lw-wake.py")
@@ -2313,6 +2328,7 @@ end
 wakeStatusLabel = function()
     if not getWakeEnabled() then return "OFF" end
     if not hs.fs.attributes(WAKE.VENV_PY) then return "ON — run lw-wake-setup.sh" end
+    if not wakeOnPower() then return "ON \u{00B7} on battery" end
     if not wakeIsRunning() then return "ON \u{00B7} paused" end
     return "ON \u{00B7} " .. WAKE.MODEL:gsub("_", " ")
 end
@@ -2349,6 +2365,19 @@ local screenWatcher = hs.caffeinate.watcher.new(function(event)
 end)
 screenWatcher:start()
 LocalWhisper.wakeScreenWatcher = screenWatcher  -- see LocalWhisper.modTap on rooting
+
+-- Unplugging kills the listener, plugging back in revives it. hs.battery.watcher fires on
+-- every battery change including each percentage tick, so the callback acts only on an
+-- actual change of power source -- otherwise it would log a line a minute forever.
+local batteryWatcher = hs.battery.watcher.new(function()
+    local onPower = wakeOnPower()
+    if onPower == wakeLastPower then return end
+    wakeLastPower = onPower
+    if onPower then wakeStart("power connected") else wakeStop("running on battery") end
+    updateMenuBar()
+end)
+batteryWatcher:start()
+LocalWhisper.wakeBatteryWatcher = batteryWatcher  -- see LocalWhisper.modTap on rooting
 
 if getWakeEnabled() then wakeStart("enabled at load") end
 

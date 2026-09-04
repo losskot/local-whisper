@@ -1443,11 +1443,32 @@ do
 
     -- Same garbage-collection bug class as LocalWhisper.modTap: an unrooted watcher is
     -- collected, and collecting it unregisters it with nothing logged.
-    for _, name in ipairs({ "wakeScreenWatcher", "wakeTask", "wakeSilenceTimer" }) do
+    for _, name in ipairs({ "wakeScreenWatcher", "wakeBatteryWatcher", "wakeTask", "wakeSilenceTimer" }) do
         check("wake: " .. name .. " is rooted in the persistent global",
               src:find("LocalWhisper%." .. name .. "%s*=") ~= nil,
               name .. " is never rooted -- Hammerspoon collects it and it silently stops")
     end
+
+    -- The microphone is the expensive half, and this is a fanless laptop: on battery the
+    -- listener must not run at all.
+    check("wake: the listener refuses to start on battery",
+          src:find("function%s+wakeStart.-wakeOnPower") ~= nil,
+          "wakeStart does not check the power source -- the listener would hold the " ..
+          "microphone open on battery")
+
+    check("wake: unplugging tears the listener down",
+          src:find("wakeStop%(\"running on battery\"%)") ~= nil,
+          "nothing stops the listener when the power source changes to battery")
+
+    check("wake: a machine with no battery counts as plugged in",
+          src:find("function%s+wakeOnPower.-src%s*==%s*nil") ~= nil,
+          "hs.battery.powerSource() returns nil on a desktop; treating that as battery " ..
+          "would disable the trigger on every machine without a battery")
+
+    check("wake: the power watcher acts only on a real change of source",
+          src:find("onPower%s*==%s*wakeLastPower") ~= nil,
+          "hs.battery.watcher fires on every percentage tick -- without this guard the " ..
+          "listener would be restarted, and logged, once a minute forever")
 
     check("wake: a reload terminates the previous run's listener",
           src:find("LocalWhisper%.wakeTask.-terminate") ~= nil,

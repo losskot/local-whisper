@@ -173,7 +173,12 @@ so the cap is set well clear of both.
 When your hands are already on the keyboard the key trigger is still the better tool — a
 keyboard click reads as speech and holds the dictation open.
 
-**It only listens while the screen is on.** An open microphone makes macOS hold a
+**It only listens on mains power, while the screen is on.** On battery the listener does not
+run at all — the microphone is the expensive half of the feature and a fanless laptop's
+battery is the one resource it can visibly eat. Unplugging tears it down, plugging back in
+revives it; the menu bar says `ON · on battery` while it is held down.
+
+ An open microphone makes macOS hold a
 `PreventUserIdleSystemSleep` assertion, so the listener is torn down the moment the screen
 sleeps and the microphone is released. Voice deliberately cannot wake a sleeping Mac; that
 would mean holding the microphone open around the clock to save a keypress.
