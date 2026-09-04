@@ -25,8 +25,10 @@
 // else (segment concat, and tools/transcribe.sh format conversion) — this binary only
 // opens the microphone.
 //
-// Usage: lw-record <outDir> [chunkSecs] [sampleRate] [deviceUID]
+// Usage: lw-record <outDir|-> [chunkSecs] [sampleRate] [deviceUID]
 // Writes chunk_000.wav, chunk_001.wav, … as 16-bit mono PCM WAV.
+// An outDir of "-" streams raw 16-bit mono PCM to stdout instead: the wake-word daemon
+// needs a continuous sample feed, not files, and must not pay a disk write every 80 ms.
 // Prints "READY" on stdout once audio is actually flowing, then one line per chunk.
 // On SIGINT/SIGTERM: flushes the partial final chunk and exits 0.
 //
@@ -45,10 +47,14 @@ import Foundation
 
 let args = CommandLine.arguments
 guard args.count >= 2 else {
-    FileHandle.standardError.write("usage: lw-record <outDir> [chunkSecs] [sampleRate] [deviceUID]\n".data(using: .utf8)!)
+    FileHandle.standardError.write("usage: lw-record <outDir|-> [chunkSecs] [sampleRate] [deviceUID]\n".data(using: .utf8)!)
     exit(2)
 }
 let outDir = args[1]
+// Streaming mode: stdout carries nothing but raw samples, so every status line that would
+// normally go there (READY, chunk N, CAPTURED) moves to stderr or the reader sees garbage
+// spliced into its audio.
+let streamMode = (outDir == "-")
 let chunkSecs = args.count > 2 ? (Double(args[2]) ?? 1.0) : 1.0
 let sampleRate = args.count > 3 ? (Double(args[3]) ?? 16000.0) : 16000.0
 let deviceUID: String? = (args.count > 4 && !args[4].isEmpty) ? args[4] : nil
@@ -62,7 +68,9 @@ func check(_ status: OSStatus, _ what: String) {
     if status != noErr { fail("\(what) failed: OSStatus \(status)") }
 }
 
-try? FileManager.default.createDirectory(atPath: outDir, withIntermediateDirectories: true)
+if !streamMode {
+    try? FileManager.default.createDirectory(atPath: outDir, withIntermediateDirectories: true)
+}
 
 // MARK: - WAV writing
 
@@ -91,6 +99,19 @@ func wavHeader(dataBytes: Int, rate: Double, channels: Int = 1) -> Data {
 let writerQueue = DispatchQueue(label: "lw-record.writer")
 
 func writeChunk(index: Int, samples: [Int16]) {
+    if streamMode {
+        var raw = Data()
+        samples.withUnsafeBufferPointer { raw.append(UnsafeRawBufferPointer($0).bindMemory(to: UInt8.self)) }
+        do {
+            try FileHandle.standardOutput.write(contentsOf: raw)
+        } catch {
+            // The reader is gone (daemon exited or was killed). Route through the normal
+            // signal path so the audio unit is stopped and the microphone released, rather
+            // than holding the device open streaming to nobody.
+            kill(getpid(), SIGTERM)
+        }
+        return
+    }
     let path = String(format: "%@/chunk_%03d.wav", outDir, index)
     var data = wavHeader(dataBytes: samples.count * 2, rate: sampleRate)
     samples.withUnsafeBufferPointer { data.append(UnsafeRawBufferPointer($0).bindMemory(to: UInt8.self)) }
@@ -341,8 +362,12 @@ func finish() -> Never {
 
     let secs = Double(captured) / sampleRate
     FileHandle.standardError.write(String(format: "lw-record: captured %.3fs (%d frames)\n", secs, captured).data(using: .utf8)!)
-    print(String(format: "CAPTURED %.3f", secs))
-    fflush(stdout)
+    if streamMode {
+        FileHandle.standardError.write(String(format: "CAPTURED %.3f\n", secs).data(using: .utf8)!)
+    } else {
+        print(String(format: "CAPTURED %.3f", secs))
+        fflush(stdout)
+    }
     exit(0)
 }
 
@@ -365,7 +390,11 @@ if startStatus != noErr {
     fail("start failed: OSStatus \(startStatus) — check microphone permission for the parent app")
 }
 
-print("READY")
-fflush(stdout)
+if streamMode {
+    FileHandle.standardError.write("READY\n".data(using: .utf8)!)
+} else {
+    print("READY")
+    fflush(stdout)
+}
 
 dispatchMain()

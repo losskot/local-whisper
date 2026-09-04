@@ -249,8 +249,14 @@ local REMOVED = {
       patterns = { "%f[%w]refine", "ollama" } },
     { name = "preferred",   what = "preferred-languages",
       patterns = { "preferred" } },
+    -- The old subsystem stays deleted: it auto-stopped *every* dictation, and it was
+    -- removed as pure ballast (checkSilence() was never called, silenceTimer never
+    -- created). The voice trigger since brought back a deliberately narrower version
+    -- under its own name -- a dictation started by the wake word has no key to release,
+    -- so something has to end it. The frontier pattern below still catches a bare
+    -- `silenceTimer` while allowing `wakeSilenceTimer`, so the guard keeps its teeth.
     { name = "autostop",    what = "silence auto-stop",
-      patterns = { "checksilence", "silentchunk", "silencetimer",
+      patterns = { "checksilence", "silentchunk", "%f[%w]silencetimer",
                    "lastcheckedchunk", "auto_stop", "volumedetect" } },
     { name = "undo",        what = "undo tracking",
       patterns = { "lastinsertedtext" } },
@@ -1406,6 +1412,55 @@ do
           src:find("pipeJobs%.pending%s*,%s*{[^}]*target") ~= nil,
           "queued transcripts drop their target -- a late insertion would type into " ..
           "whatever window happens to be focused when it lands")
+end
+
+--------------------------------------------------------------------------------
+-- 9. Voice trigger (wake word)
+--------------------------------------------------------------------------------
+-- The listener holds the microphone open for as long as it runs, which is the whole
+-- cost of the feature and the reason for every guard below.
+
+do
+    check("wake: the trigger entry point hangs off the persistent global",
+          src:find("function%s+LocalWhisper%.voiceTrigger") ~= nil,
+          "lw-wake.py reaches Hammerspoon through the `hs` CLI, which can only see " ..
+          "globals -- a local function is unreachable and the daemon fires into nothing")
+
+    check("wake: a detection cannot start a second dictation over a live one",
+          src:find("function%s+LocalWhisper%.voiceTrigger.-isRecording%s+or%s+isWarmingUp") ~= nil,
+          "voiceTrigger does not bail out while a dictation is already running")
+
+    -- The microphone is what costs something, so it must be released the moment the
+    -- screen sleeps -- see AGENTS.md on the PreventUserIdleSystemSleep assertion.
+    check("wake: the listener is torn down when the screen sleeps",
+          src:find("screensDidSleep.-wakeStop") ~= nil,
+          "nothing stops the listener on screensDidSleep -- the microphone would stay " ..
+          "open, and its sleep assertion with it, while nobody is at the machine")
+
+    check("wake: the listener comes back when the screen wakes",
+          src:find("screensDidWake.-wakeStart") ~= nil,
+          "the listener never restarts, so the trigger dies at the first screen sleep")
+
+    -- Same garbage-collection bug class as LocalWhisper.modTap: an unrooted watcher is
+    -- collected, and collecting it unregisters it with nothing logged.
+    for _, name in ipairs({ "wakeScreenWatcher", "wakeTask", "wakeSilenceTimer" }) do
+        check("wake: " .. name .. " is rooted in the persistent global",
+              src:find("LocalWhisper%." .. name .. "%s*=") ~= nil,
+              name .. " is never rooted -- Hammerspoon collects it and it silently stops")
+    end
+
+    check("wake: a reload terminates the previous run's listener",
+          src:find("LocalWhisper%.wakeTask.-terminate") ~= nil,
+          "reloading would leave the old listener holding the microphone, invisible " ..
+          "to the new instance")
+
+    -- A voice-started dictation has no key release, so every path out of it has to be
+    -- bounded: silence, nobody speaking at all, and a hard cap.
+    for _, field in ipairs({ "SILENCE_SECS", "LEAD_SECS", "MAX_SECS" }) do
+        check("wake: " .. field .. " bounds a voice-started dictation",
+              src:find("%f[%w]" .. field .. "%s*=") ~= nil,
+              field .. " is gone -- a voice-started dictation could run unbounded")
+    end
 end
 
 --------------------------------------------------------------------------------

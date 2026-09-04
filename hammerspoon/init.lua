@@ -102,6 +102,7 @@ local OUTPUT_FILE = CONFIG_DIR .. "/output"
 local ENTER_FILE = CONFIG_DIR .. "/enter"
 local MIC_FILE = CONFIG_DIR .. "/mic"
 local PROMPT_FILE = CONFIG_DIR .. "/prompt"
+local WAKE_FILE = CONFIG_DIR .. "/wake"
 local RECENT_FILE = CONFIG_DIR .. "/recent.json"
 local LOG_FILE = WHISPER_TMP .. "/whisper-dictate.log"
 
@@ -1109,6 +1110,10 @@ function updateMenuBar()
     end
 end
 
+-- The voice trigger lives next to the recording functions it drives, far below, but the
+-- menu is built here. Same forward-declaration pattern as pipelineReset and tryWarmup.
+local getWakeEnabled, cycleWake, wakeStatusLabel
+
 local function buildMenuBarMenu()
     local items = {}
 
@@ -1147,6 +1152,13 @@ local function buildMenuBarMenu()
     table.insert(items, {
         title = "Mic: " .. getMicDeviceLabel(),
         fn = function() cycleMic(); updateMenuBar() end,
+    })
+
+    -- Voice trigger (wake word). Listens only while the screen is on — see the Voice
+    -- trigger section for why the microphone, not the model, is what that gate protects.
+    table.insert(items, {
+        title = "Voice trigger: " .. (wakeStatusLabel and wakeStatusLabel() or "OFF"),
+        fn = function() if cycleWake then cycleWake() end; updateMenuBar() end,
     })
 
     -- Recent dictations
@@ -2115,6 +2127,221 @@ local function stopRecording()
 
     playSound("Tink")
 end
+
+--------------------------------------------------------------------------------
+-- Voice trigger (wake word)
+--------------------------------------------------------------------------------
+-- A second, far smaller model listens for one phrase and starts a dictation exactly as the
+-- key does. Transcription is untouched: it still goes to whichever model is selected, API
+-- or local. The listener is a ~860 KB binary classifier over a mel spectrogram, not a
+-- recognizer. whisper-tiny on a rolling window was the obvious alternative and is the wrong
+-- tool twice over — measured here it costs ~3% of a core against a fraction of that, and it
+-- invents words on near-silence, which is the failure HALLUCINATIONS above already exists to
+-- clean up after. Running that generator 24/7 would make it constant instead of occasional.
+--
+-- The model is not what costs anything; the open microphone is. Measured on this machine:
+-- holding capture open adds ~4.5 pp to coreaudiod plus ~0.9 pp for lw-record itself (~5.4%
+-- of one core), and macOS takes a sleep assertion named
+-- "com.apple.audio.BuiltInMicrophoneDevice.context.preventuseridlesleep" for exactly as long
+-- as the device stays open. That assertion is the whole reason the listener is gated on the
+-- screen: while the screen is on, powerd already holds the identical assertion ("Prevent
+-- sleep while display is on"), so an open microphone adds nothing to it. The moment the
+-- screen sleeps the daemon goes down and the device is released. A sleeping machine is never
+-- woken by voice, deliberately — that would mean holding the microphone open around the clock
+-- to save a keypress.
+
+LocalWhisper = LocalWhisper or {}
+
+-- A reload re-runs this file while the previous run's listener is still alive and still
+-- holding the microphone, invisible to the new instance. Unrooted Hammerspoon objects are
+-- garbage-collected, but a live hs.task is not — it has to be terminated explicitly.
+if LocalWhisper.wakeTask then
+    pcall(function()
+        if LocalWhisper.wakeTask:isRunning() then LocalWhisper.wakeTask:terminate() end
+    end)
+    LocalWhisper.wakeTask = nil
+end
+
+local WAKE = {
+    VENV_PY   = CONFIG_DIR .. "/wake-venv/bin/python",
+    MODEL     = "hey_mycroft",
+    -- Not the documented default of 0.5. Measured against 114 minutes of this machine's own
+    -- archived dictation (85,500 frames of real ru/uk/en speech): exactly two frames ever
+    -- crossed 0.5, scoring 0.564 and 0.900, while a genuine "hey mycroft" scores 0.998-1.000
+    -- and holds it for eight consecutive frames. 0.95 clears both false positives with margin
+    -- and still sits far below the real thing. If a live voice turns out to score lower than
+    -- that test did, this is the number to lower — nothing else.
+    THRESHOLD = "0.95",
+    -- A voice-started dictation has no key to release, so it must end itself. Measured on
+    -- this machine rather than guessed: this room's noise floor runs 15-19 RMS per frame,
+    -- archived dictation seconds sit at 42 (10th percentile) and 141 (20th), and speech
+    -- averages 400-700. 100 falls in the gap with margin on both sides. Note that a keyboard
+    -- click peaks near 900, so typing through a voice-started dictation holds it open until
+    -- the cap — the key trigger is the better tool when hands are already on the keyboard.
+    SILENCE_RMS  = 100,
+    SILENCE_SECS = 2.5,   -- consecutive quiet seconds that end the dictation
+    LEAD_SECS    = 6,     -- if nobody starts talking at all, give up and release
+    MAX_SECS     = 90,    -- hard cap; a stuck detection must not record forever
+}
+
+-- Same resolution trick ensureRecorder uses: find the repo this init.lua was loaded from,
+-- following the symlink Hammerspoon is usually configured with.
+local function repoPath(rel)
+    local this = debug.getinfo(1, "S").source:match("^@(.*)$")
+    if not this then return nil end
+    local real = hs.fs.symlinkAttributes(this, "target") or this
+    local root = real:match("^(.*)/hammerspoon/init%.lua$")
+    if not root then return nil end
+    return root .. "/" .. rel
+end
+
+getWakeEnabled = function()
+    return (readFile(WAKE_FILE):gsub("%s+", "")) == "on"
+end
+
+local wakeTask = nil
+local wakeSilenceTimer = nil
+
+local function wakeIsRunning()
+    return wakeTask ~= nil and wakeTask:isRunning()
+end
+
+local function wakeStopSilenceWatch()
+    if wakeSilenceTimer then wakeSilenceTimer:stop(); wakeSilenceTimer = nil end
+    LocalWhisper.wakeSilenceTimer = nil
+end
+
+-- Ends a voice-started dictation on silence, because there is no key release to end it.
+-- Only finished chunks are judged: the one the recorder is writing right now is short and
+-- would read as silence every time.
+local function wakeStartSilenceWatch()
+    wakeStopSilenceWatch()
+    local job = pipe
+    local startedAt = hs.timer.secondsSinceEpoch()
+    local heardSpeech = false
+    local quietSince = nil
+
+    wakeSilenceTimer = hs.timer.doEvery(0.5, function()
+        -- The dictation ended some other way: key press, emergency stop, or a newer
+        -- recording took over. Nothing left for this watcher to end.
+        if not (isRecording or isWarmingUp) or pipe ~= job then
+            wakeStopSilenceWatch()
+            return
+        end
+
+        local now = hs.timer.secondsSinceEpoch()
+        local elapsed = now - startedAt
+
+        if elapsed >= WAKE.MAX_SECS then
+            log("wake: hit the " .. WAKE.MAX_SECS .. "s cap, stopping")
+            wakeStopSilenceWatch(); stopRecording(); return
+        end
+
+        local chunks = getChunkFiles(job.dir)
+        if #chunks >= 2 then
+            local rms = getWavRMS(chunks[#chunks - 1])
+            if rms >= WAKE.SILENCE_RMS then
+                heardSpeech = true
+                quietSince = nil
+            elseif heardSpeech then
+                quietSince = quietSince or now
+                if now - quietSince >= WAKE.SILENCE_SECS then
+                    log(string.format("wake: %.1fs of silence, stopping", now - quietSince))
+                    wakeStopSilenceWatch(); stopRecording(); return
+                end
+            end
+        end
+
+        if not heardSpeech and elapsed >= WAKE.LEAD_SECS then
+            log("wake: nothing was said within " .. WAKE.LEAD_SECS .. "s, stopping")
+            wakeStopSilenceWatch(); stopRecording()
+        end
+    end)
+    LocalWhisper.wakeSilenceTimer = wakeSilenceTimer  -- see LocalWhisper.modTap on rooting
+end
+
+local function wakeStop(reason)
+    if wakeTask then
+        if wakeTask:isRunning() then
+            log("wake: stopping listener (" .. reason .. ")")
+            wakeTask:terminate()
+        end
+        wakeTask = nil
+        LocalWhisper.wakeTask = nil
+    end
+    wakeStopSilenceWatch()
+end
+
+local function wakeStart(reason)
+    if wakeIsRunning() or not getWakeEnabled() then return end
+
+    local runner = repoPath("tools/lw-wake-run.sh")
+    local script = repoPath("tools/lw-wake.py")
+    if not runner or not script then
+        log("wake: cannot locate tools/ from " .. tostring(debug.getinfo(1, "S").source))
+        return
+    end
+    if not hs.fs.attributes(WAKE.VENV_PY) then
+        log("wake: venv missing at " .. WAKE.VENV_PY .. " — run tools/lw-wake-setup.sh")
+        return
+    end
+
+    log("wake: starting listener (" .. reason .. ", model=" .. WAKE.MODEL .. ")")
+    wakeTask = hs.task.new(runner, function(code)
+        log("wake: listener exited, code=" .. tostring(code))
+        wakeTask = nil
+        LocalWhisper.wakeTask = nil
+    end, {
+        RECORDER_BIN, getMicDevice() or "", WAKE.VENV_PY, script,
+        LOG_FILE, WAKE.MODEL, WAKE.THRESHOLD,
+    })
+    if wakeTask then
+        wakeTask:start()
+        LocalWhisper.wakeTask = wakeTask
+    end
+end
+
+wakeStatusLabel = function()
+    if not getWakeEnabled() then return "OFF" end
+    if not hs.fs.attributes(WAKE.VENV_PY) then return "ON — run lw-wake-setup.sh" end
+    if not wakeIsRunning() then return "ON \u{00B7} paused" end
+    return "ON \u{00B7} " .. WAKE.MODEL:gsub("_", " ")
+end
+
+cycleWake = function()
+    local on = not getWakeEnabled()
+    writeFile(WAKE_FILE, on and "on" or "off")
+    if on then wakeStart("enabled from menu") else wakeStop("disabled from menu") end
+end
+
+-- Called by lw-wake.py over hs.ipc when the phrase is heard. Named on the persistent global
+-- because that is the only namespace the `hs` CLI can reach.
+function LocalWhisper.voiceTrigger()
+    if not getWakeEnabled() then return end
+    if isRecording or isWarmingUp then
+        log("wake: detection ignored, a dictation is already running")
+        return
+    end
+    log("wake: detected, starting dictation")
+    playSound("Morse", 0.3)
+    startRecording()
+    wakeStartSilenceWatch()
+end
+
+-- The listener follows the screen, not the system. screensDidSleep is the point where an
+-- open microphone would start costing something nobody is there to benefit from, and where
+-- its sleep assertion stops being masked by powerd's.
+local screenWatcher = hs.caffeinate.watcher.new(function(event)
+    if event == hs.caffeinate.watcher.screensDidSleep then
+        wakeStop("screen off")
+    elseif event == hs.caffeinate.watcher.screensDidWake then
+        wakeStart("screen on")
+    end
+end)
+screenWatcher:start()
+LocalWhisper.wakeScreenWatcher = screenWatcher  -- see LocalWhisper.modTap on rooting
+
+if getWakeEnabled() then wakeStart("enabled at load") end
 
 --------------------------------------------------------------------------------
 -- Key detection (replaces Karabiner)

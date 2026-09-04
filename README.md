@@ -7,6 +7,7 @@ Hold **fn + left Control**, speak, release — text appears at your cursor.
 ## Features
 
 - **Hold-to-dictate**: Hold the trigger combo to record, release to transcribe and insert
+- **Voice trigger (optional)**: Say "hey mycroft" to start a dictation hands-free; it ends itself after ~2.5 s of silence. Off by default — see [Voice trigger](#voice-trigger)
 - **Segmented transcription**: Recordings are cut into 55-second segments and transcribed one after another, keeping each whisper call inside the model's sweet spot no matter how long you talk
 - **Progress bar**: A two-colour strip shows recorded audio (red) against transcribed audio (blue), so long dictations report real progress
 - **Voice commands**: Say "voice command note buy coffee" to save a note, "voice command open app Safari" to launch apps, and more — fully customizable
@@ -124,6 +125,7 @@ A waveform icon in the menu bar shows recording status (turns red when recording
 
 - See current language, model, output mode, and enter mode
 - Click any setting to cycle it
+- Toggle the voice trigger on and off
 - View and re-paste recent dictations
 - Reload voice commands
 - Emergency stop
@@ -145,6 +147,50 @@ you released the keys is remembered, and checked again just before the text is i
 you clicked elsewhere, switched tabs or changed apps while whisper was still working, nothing
 is typed: the transcript goes to the clipboard, you hear **two** chimes instead of one, and
 the overlay shows `CLIPBOARD:` — paste it wherever you actually want it.
+
+## Voice trigger
+
+Optional hands-free start. A small wake-word model listens for **"hey mycroft"** and starts
+a dictation exactly as the key does — transcription is unchanged and still goes to whichever
+model is selected. Off by default.
+
+```bash
+./tools/lw-wake-setup.sh          # one-time: builds ~/.local-whisper/wake-venv (~200 MB)
+```
+
+Then enable it from the menu bar: **Voice trigger**.
+
+**How it ends.** There is no key to release, so a voice-started dictation stops itself after
+2.5 s of silence, or after 6 s if you never start talking, with a hard cap at 90 s. When your
+hands are already on the keyboard the key trigger is still the better tool — a keyboard click
+reads as speech and holds the dictation open.
+
+**It only listens while the screen is on.** An open microphone makes macOS hold a
+`PreventUserIdleSystemSleep` assertion, so the listener is torn down the moment the screen
+sleeps and the microphone is released. Voice deliberately cannot wake a sleeping Mac; that
+would mean holding the microphone open around the clock to save a keypress.
+
+**What it costs.** Measured on an M2 MacBook Air, screen on, quiet room:
+
+| | % of one core |
+|---|---|
+| detector (`lw-wake.py`) | 4.8 |
+| capture (`lw-record`) | 0.8 |
+| `coreaudiod`, extra for the open mic | 4.5 |
+| **total** | **~10% of one core ≈ 1.3% of an 8-core M2** |
+
+**Accuracy.** The detection threshold is 0.95 rather than openWakeWord's documented 0.5.
+Across 114 minutes of archived ru/uk/en dictation from this machine (85,500 frames), exactly
+two frames crossed 0.5 — at 0.564 and 0.900 — while a real "hey mycroft" scores 0.998-1.000
+and holds it for eight consecutive frames. If your own voice scores below 0.95 in practice,
+lower `WAKE.THRESHOLD` in `hammerspoon/init.lua`; that is the only knob that should move.
+
+To watch what the model is actually scoring:
+
+```bash
+~/.local-whisper/bin/lw-record - 0.08 16000 \
+  | ~/.local-whisper/wake-venv/bin/python tools/lw-wake.py --scores
+```
 
 ## Custom vocabulary prompt
 
