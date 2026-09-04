@@ -2179,9 +2179,18 @@ local WAKE = {
     -- click peaks near 900, so typing through a voice-started dictation holds it open until
     -- the cap — the key trigger is the better tool when hands are already on the keyboard.
     SILENCE_RMS  = 100,
-    SILENCE_SECS = 2.5,   -- consecutive quiet seconds that end the dictation
-    LEAD_SECS    = 6,     -- if nobody starts talking at all, give up and release
-    MAX_SECS     = 90,    -- hard cap; a stuck detection must not record forever
+    -- All three come from 182 archived dictations on this machine, not from taste.
+    -- Pauses *inside* a dictation: median 1 s, 95th percentile 4 s, longest 11 s. A 2.5 s
+    -- timeout would have cut roughly one pause in five; 8 s cuts one in 134. The timeout is
+    -- meant as a safety net rather than the normal way to finish — tapping the trigger key
+    -- ends a voice-started dictation immediately — so it is set long enough to never
+    -- interrupt a thought.
+    SILENCE_SECS = 8,     -- consecutive quiet seconds that end the dictation
+    LEAD_SECS    = 12,    -- if nobody starts talking at all, give up and release the mic
+    -- Recorded dictations run to 122 s here and 5.4% pass 90 s, so a 90 s cap would have
+    -- truncated one in eighteen. Voice-started ones run longer still, since an 8 s pause no
+    -- longer ends them. This is a stuck-detection backstop, nothing more.
+    MAX_SECS     = 240,
 }
 
 -- Same resolution trick ensureRecorder uses: find the repo this init.lua was loaded from,

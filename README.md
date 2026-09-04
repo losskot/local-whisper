@@ -7,7 +7,7 @@ Hold **fn + left Control**, speak, release — text appears at your cursor.
 ## Features
 
 - **Hold-to-dictate**: Hold the trigger combo to record, release to transcribe and insert
-- **Voice trigger (optional)**: Say "hey mycroft" to start a dictation hands-free; it ends itself after ~2.5 s of silence. Off by default — see [Voice trigger](#voice-trigger)
+- **Voice trigger (optional)**: Say "hey mycroft" to start a dictation hands-free; tap the trigger key to finish, or let it time out. Off by default — see [Voice trigger](#voice-trigger)
 - **Segmented transcription**: Recordings are cut into 55-second segments and transcribed one after another, keeping each whisper call inside the model's sweet spot no matter how long you talk
 - **Progress bar**: A two-colour strip shows recorded audio (red) against transcribed audio (blue), so long dictations report real progress
 - **Voice commands**: Say "voice command note buy coffee" to save a note, "voice command open app Safari" to launch apps, and more — fully customizable
@@ -160,10 +160,18 @@ model is selected. Off by default.
 
 Then enable it from the menu bar: **Voice trigger**.
 
-**How it ends.** There is no key to release, so a voice-started dictation stops itself after
-2.5 s of silence, or after 6 s if you never start talking, with a hard cap at 90 s. When your
-hands are already on the keyboard the key trigger is still the better tool — a keyboard click
-reads as speech and holds the dictation open.
+**How it ends.** Tapping the trigger combo ends a voice-started dictation immediately — that
+is the normal way to finish. The silence timeout is a safety net for when you forget: 8 s of
+silence, or 12 s if you never start talking, with a 240 s cap.
+
+Those numbers come from 182 archived dictations on this machine rather than from taste.
+Pauses *inside* a dictation run to a median of 1 s but a 95th percentile of 4 s and a maximum
+of 11 s, so a short timeout cuts people off mid-thought: 2.5 s would have ended roughly one
+pause in five, while 8 s ends one in 134. Recorded dictations reach 122 s and 5.4% pass 90 s,
+so the cap is set well clear of both.
+
+When your hands are already on the keyboard the key trigger is still the better tool — a
+keyboard click reads as speech and holds the dictation open.
 
 **It only listens while the screen is on.** An open microphone makes macOS hold a
 `PreventUserIdleSystemSleep` assertion, so the listener is torn down the moment the screen
