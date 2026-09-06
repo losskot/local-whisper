@@ -282,6 +282,43 @@ local function getMicDeviceLabel()
     return dev and dev:name() or "System Default"
 end
 
+-- macOS holds a Bluetooth headset in its low-quality call profile (HFP) for as long as that
+-- headset is the system's default *input*: any app opening "the default mic" is what drags it
+-- there, and the pin above covers only lw-record -- not Teams, Zoom, or the Sound settings
+-- pane, which holds the input open the whole time it is on screen. Measured here, the headset
+-- returns to A2DP the instant the default input moves to another device, without the app
+-- holding it closing its stream. So on the way out we hand the default input to a
+-- non-Bluetooth device: whatever is left selected is what the next app to open a mic takes,
+-- and by then we are not running to fix it.
+local function releaseBluetoothInput()
+    local current = hs.audiodevice.defaultInputDevice()
+    if not current or current:transportType() ~= "Bluetooth" then return end
+
+    -- Prefer the user's pinned mic (that is the device they already chose to dictate through);
+    -- fall back to whatever built-in input this Mac has, rather than a hardcoded UID.
+    local target
+    local pinned = getMicDevice()
+    if pinned then
+        local dev = hs.audiodevice.findInputByUID(pinned)
+        if dev and dev:transportType() ~= "Bluetooth" then target = dev end
+    end
+    if not target then
+        for _, dev in ipairs(hs.audiodevice.allInputDevices()) do
+            if dev:transportType() == "Built-in" then target = dev; break end
+        end
+    end
+    if not target then
+        log("exit: default input is " .. current:name() .. ", no non-Bluetooth input to hand it to")
+        return
+    end
+
+    if target:setDefaultInputDevice() then
+        log("exit: default input " .. current:name() .. " -> " .. target:name() .. " (releasing call profile)")
+    else
+        log("exit: could not move default input off " .. current:name())
+    end
+end
+
 local function shellQuote(text)
     return "'" .. tostring(text):gsub("'", "'\\''") .. "'"
 end
@@ -2496,6 +2533,15 @@ local sleepWatcher = hs.caffeinate.watcher.new(function(eventType)
 end)
 sleepWatcher:start()
 LocalWhisper.sleepWatcher = sleepWatcher  -- see LocalWhisper.modTap: unrooted watchers are collected
+
+-- Quitting or reloading must not leave Bluetooth stuck in the call profile. Order matters:
+-- the listener goes down first so the microphone is genuinely free, then the default input
+-- moves off the headset. hs.shutdownCallback fires for both quit and reload, and must stay
+-- synchronous -- anything asynchronous here never runs, the Lua environment is already going.
+hs.shutdownCallback = function()
+    wakeStop("shutting down")
+    pcall(releaseBluetoothInput)
+end
 
 --------------------------------------------------------------------------------
 -- Startup
