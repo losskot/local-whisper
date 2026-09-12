@@ -634,23 +634,40 @@ local function transcribeViaAPI(wavPath, lang, modelId, timeoutSecs, callback)
     return task
 end
 
+-- True for a model id or checkpoint carrying a quantization marker — "-Q5", "q4_K_M",
+-- "ggml-large-v3-turbo-q5_0.bin". Matched on a Q followed by a digit at a word boundary, so
+-- a plain "Whisper-Large-v3" or an "-F16" weight is not mistaken for one.
+local function isQuantized(name)
+    if type(name) ~= "string" then return false end
+    return name:match("[^%w][Qq]%d") ~= nil
+end
+
 -- Picks the transcription model the server already has resident, out of a /api/v1/health
 -- body. Only an entry that is loaded AND of type "transcription" counts: the server holds
 -- several kinds of model at once, and its top-level "model_loaded" is simply the last one
 -- touched — an LLM as often as not, which would fail or evict the whisper model if sent as
--- the id of a transcription request. Returns nil when nothing suitable is loaded.
+-- the id of a transcription request.
+--
+-- Among the ones that do count, an unquantized model wins over a quantized one however the
+-- server lists them: quantization is a concession to the machine running the model, and the
+-- remote box is the one place here where it doesn't have to be made. The name is checked
+-- against the checkpoint too, since a server can list "Whisper-Large-v3" for
+-- ggml-large-v3-turbo-q5_0.bin. Returns nil when nothing suitable is loaded.
 local function loadedTranscriptionModel(healthBody)
     local ok, decoded = pcall(hs.json.decode, healthBody or "")
     if not ok or type(decoded) ~= "table" then return nil end
-    if type(decoded.all_models_loaded) == "table" then
-        for _, m in ipairs(decoded.all_models_loaded) do
-            if type(m) == "table" and m.loaded and m.type == "transcription"
-                and type(m.model_name) == "string" and m.model_name ~= "" then
+    if type(decoded.all_models_loaded) ~= "table" then return nil end
+    local fallback = nil
+    for _, m in ipairs(decoded.all_models_loaded) do
+        if type(m) == "table" and m.loaded and m.type == "transcription"
+            and type(m.model_name) == "string" and m.model_name ~= "" then
+            if not (isQuantized(m.model_name) or isQuantized(m.checkpoint)) then
                 return m.model_name
             end
+            fallback = fallback or m.model_name
         end
     end
-    return nil
+    return fallback
 end
 
 -- Probes the remote API endpoint without waiting for a segment to need it. Started at
