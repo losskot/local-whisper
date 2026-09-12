@@ -44,7 +44,14 @@ local MODEL_FILE = CONFIG_DIR .. "/model"
 local API = {
     MODEL_NAME = "API",  -- sentinel value stored in MODEL_FILE when API mode is selected
     URL = "http://192.168.0.13:13305/v1/audio/transcriptions",
-    MODEL_ID = "Whisper-Large-v3-Turbo-Q5",  -- must match the model id the server has loaded (GET /v1/models)
+    HEALTH_URL = "http://192.168.0.13:13305/api/v1/health",
+    -- The model id sent with every request. The server (lemonade) rejects a request with no
+    -- 'model' field outright ("Missing 'model' field in request"), so there is no way to say
+    -- "whatever you have loaded" — the id has to be named. checkApiAvailable reads the one
+    -- actually loaded from HEALTH_URL and the job uses that; this constant is only the
+    -- answer for a server that doesn't report one (no transcription model resident yet), and
+    -- naming a model that isn't loaded makes the server load it while the first segment waits.
+    MODEL_ID = "Whisper-Large-v3-Turbo-Q5",
     CURL_BIN = "/usr/bin/curl",
     FALLBACK_MODEL = "large-v3-turbo-q5_0",  -- local model used whenever the endpoint doesn't respond
     HEALTH_TIMEOUT_SECS = 2,
@@ -588,11 +595,11 @@ end
 -- Transcribe a WAV file via the remote OpenAI-compatible API instead of local whisper-cli.
 -- Returns the hs.task so callers can terminate it on timeout if needed.
 -- callback(text, detectedLang, errMsg) — errMsg is set (and text empty) on failure.
-local function transcribeViaAPI(wavPath, lang, timeoutSecs, callback)
+local function transcribeViaAPI(wavPath, lang, modelId, timeoutSecs, callback)
     local args = {
         "-s", "-S", "-f", "-m", tostring(timeoutSecs or 30),
         "-F", "file=@" .. wavPath,
-        "-F", "model=" .. API.MODEL_ID,
+        "-F", "model=" .. (modelId or API.MODEL_ID),
         "-F", "response_format=verbose_json",
         -- Server translates to English if 'language' is omitted entirely (even with
         -- task=transcribe) — always send it, "auto" included, to force transcription.
@@ -627,19 +634,41 @@ local function transcribeViaAPI(wavPath, lang, timeoutSecs, callback)
     return task
 end
 
+-- Picks the transcription model the server already has resident, out of a /api/v1/health
+-- body. Only an entry that is loaded AND of type "transcription" counts: the server holds
+-- several kinds of model at once, and its top-level "model_loaded" is simply the last one
+-- touched — an LLM as often as not, which would fail or evict the whisper model if sent as
+-- the id of a transcription request. Returns nil when nothing suitable is loaded.
+local function loadedTranscriptionModel(healthBody)
+    local ok, decoded = pcall(hs.json.decode, healthBody or "")
+    if not ok or type(decoded) ~= "table" then return nil end
+    if type(decoded.all_models_loaded) == "table" then
+        for _, m in ipairs(decoded.all_models_loaded) do
+            if type(m) == "table" and m.loaded and m.type == "transcription"
+                and type(m.model_name) == "string" and m.model_name ~= "" then
+                return m.model_name
+            end
+        end
+    end
+    return nil
+end
+
 -- Probes the remote API endpoint without waiting for a segment to need it. Started at
 -- key-down (pipeStartJob) so it runs in parallel with recording; by the time the first
--- segment is ready to dispatch, this has almost always already resolved. A HEAD request is
--- enough — any HTTP response (even a 404/405 the endpoint gives a HEAD it doesn't like)
--- proves the server is up, since curl only exits non-zero on a connection-level failure
--- (refused, host unreachable, timed out). Result lands on job.apiAvailable; dispatchSegment
--- reads it, and also flips it to false itself if an in-flight request later fails.
+-- segment is ready to dispatch, this has almost always already resolved. Reaching the
+-- server at all is what proves it available — curl only exits non-zero on a connection-level
+-- failure (refused, host unreachable, timed out), so a body that doesn't parse still counts
+-- as up, just without a model name. Results land on job.apiAvailable and job.apiModel;
+-- dispatchSegment reads both, and also flips apiAvailable to false itself if an in-flight
+-- request later fails.
 local function checkApiAvailable(job)
-    local args = { "-s", "-o", "/dev/null", "-I", "-m", tostring(API.HEALTH_TIMEOUT_SECS), API.URL }
-    hs.task.new(API.CURL_BIN, function(code, _, err)
+    local args = { "-s", "-m", tostring(API.HEALTH_TIMEOUT_SECS), API.HEALTH_URL }
+    hs.task.new(API.CURL_BIN, function(code, out, err)
         job.apiAvailable = (code == 0)
         if job.apiAvailable then
-            log("api: gen " .. job.gen .. " endpoint check OK — using remote API")
+            job.apiModel = loadedTranscriptionModel(out)
+            log("api: gen " .. job.gen .. " endpoint check OK — using remote API with model " ..
+                (job.apiModel or (API.MODEL_ID .. " (server named none)")))
         else
             log("api: gen " .. job.gen .. " endpoint check failed (" .. curlErrorMessage(code, err) ..
                 ") — falling back to local " .. API.FALLBACK_MODEL)
@@ -1518,6 +1547,10 @@ local function pipeNewJob()
         -- treats nil like true (optimistic — the check almost always beats the first segment)
         -- and a request failure can still flip it to false mid-job.
         apiAvailable = nil,
+        -- The transcription model the server reported as loaded, read by the same probe.
+        -- nil means "nobody told us" (probe pending, unparseable body, or no transcription
+        -- model resident) and transcribeViaAPI sends API.MODEL_ID instead.
+        apiModel = nil,
         timer      = nil,   -- polls during recording for a segment that is ready to dispatch
     }
     pipeJobs.live[job.gen] = job
@@ -1812,8 +1845,9 @@ local function dispatchSegment(segN, group, job)
 
             -- apiAvailable is true or still nil (probe pending — optimistic: it almost always
             -- resolves before the first segment is ready). Either way, try the API first.
-            log("pipeline: gen " .. job.gen .. " seg " .. segN .. " starting API transcription lang=" .. effectiveLang)
-            transcribeViaAPI(segWav, effectiveLang, 60, function(text, detected, errMsg)
+            log("pipeline: gen " .. job.gen .. " seg " .. segN .. " starting API transcription lang=" ..
+                effectiveLang .. " model=" .. (job.apiModel or API.MODEL_ID))
+            transcribeViaAPI(segWav, effectiveLang, job.apiModel, 60, function(text, detected, errMsg)
                 if errMsg then
                     log("pipeline: gen " .. job.gen .. " seg " .. segN .. " API error: " .. errMsg ..
                         " — falling back to local " .. API.FALLBACK_MODEL)
