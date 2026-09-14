@@ -592,6 +592,32 @@ local function readPrompt()
     return readFile(PROMPT_FILE):gsub("%s+$", "")
 end
 
+-- Joins a verbose_json response into one line of text.
+--
+-- The server runs whisper.cpp with a segment length cap (measured at 60 characters) and
+-- without split-on-word, so it cuts a segment wherever the cap falls — mid-word as often as
+-- not: "…в папку кеш" / "ирования, где мы храним…". Its "text" field glues those pieces with
+-- a newline, and treating that newline as whitespace is what put a space inside the word
+-- ("кеш ирования", "рекорд ером", "наш им") on every long dictation in API mode.
+--
+-- The pieces are therefore concatenated verbatim, with no separator of our own: whisper
+-- carries a leading space on any token that actually starts a word, so a genuine segment
+-- break brings its own (" или ты хочешь…") and a mid-word break brings none. The newline is
+-- the server's line wrapping, never a word boundary. Local whisper-cli needs none of this —
+-- on the same audio it cuts only at sentence ends.
+local function joinApiText(decoded)
+    if type(decoded.segments) == "table" and #decoded.segments > 0 then
+        local parts = {}
+        for _, seg in ipairs(decoded.segments) do
+            if type(seg) == "table" and type(seg.text) == "string" then
+                table.insert(parts, seg.text)
+            end
+        end
+        if #parts > 0 then return table.concat(parts) end
+    end
+    return (decoded.text or ""):gsub("[\r\n]+", "")
+end
+
 -- Transcribe a WAV file via the remote OpenAI-compatible API instead of local whisper-cli.
 -- Returns the hs.task so callers can terminate it on timeout if needed.
 -- callback(text, detectedLang, errMsg) — errMsg is set (and text empty) on failure.
@@ -628,7 +654,7 @@ local function transcribeViaAPI(wavPath, lang, modelId, timeoutSecs, callback)
             callback("", nil, "unexpected server response")
             return
         end
-        callback(decoded.text, normalizeApiLang(decoded.language), nil)
+        callback(joinApiText(decoded), normalizeApiLang(decoded.language), nil)
     end, args)
     task:start()
     return task
