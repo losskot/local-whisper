@@ -33,7 +33,8 @@ local RECORDER_BIN = CONFIG_DIR .. "/bin/lw-record"
 local MODELS_DIR = HOME .. "/whisper.cpp/models"
 local MODEL_FILE = CONFIG_DIR .. "/model"
 
--- Remote OpenAI-compatible transcription API (alternative to local whisper-cli).
+-- Remote transcription server (alternative to local whisper-cli) — whisper.cpp's own
+-- examples/server running on the LAN box, not an OpenAI-compatible wrapper.
 --
 -- "API" is a combined mode, not a plain switch: every recording probes the endpoint in
 -- parallel with capturing audio (see checkApiAvailable, started at key-down) instead of
@@ -43,15 +44,11 @@ local MODEL_FILE = CONFIG_DIR .. "/model"
 -- setting or asks the user to choose; the fallback is invisible on purpose.
 local API = {
     MODEL_NAME = "API",  -- sentinel value stored in MODEL_FILE when API mode is selected
-    URL = "http://192.168.0.13:13305/v1/audio/transcriptions",
-    HEALTH_URL = "http://192.168.0.13:13305/api/v1/health",
-    -- The model id sent with every request. The server (lemonade) rejects a request with no
-    -- 'model' field outright ("Missing 'model' field in request"), so there is no way to say
-    -- "whatever you have loaded" — the id has to be named. checkApiAvailable reads the one
-    -- actually loaded from HEALTH_URL and the job uses that; this constant is only the
-    -- answer for a server that doesn't report one (no transcription model resident yet), and
-    -- naming a model that isn't loaded makes the server load it while the first segment waits.
-    MODEL_ID = "Whisper-Large-v3-Turbo-Q5",
+    -- whisper.cpp's own server (examples/server), not an OpenAI-compatible wrapper: no
+    -- 'model' field on the request, no model listing on the health check — the server always
+    -- transcribes with whatever it was launched with (or last handed to /load).
+    URL = "http://192.168.0.13:8002/inference",
+    HEALTH_URL = "http://192.168.0.13:8002/health",
     CURL_BIN = "/usr/bin/curl",
     FALLBACK_MODEL = "large-v3-turbo-q5_0",  -- local model used whenever the endpoint doesn't respond
     HEALTH_TIMEOUT_SECS = 2,
@@ -618,14 +615,13 @@ local function joinApiText(decoded)
     return (decoded.text or ""):gsub("[\r\n]+", "")
 end
 
--- Transcribe a WAV file via the remote OpenAI-compatible API instead of local whisper-cli.
+-- Transcribe a WAV file via the remote whisper-server instead of local whisper-cli.
 -- Returns the hs.task so callers can terminate it on timeout if needed.
 -- callback(text, detectedLang, errMsg) — errMsg is set (and text empty) on failure.
-local function transcribeViaAPI(wavPath, lang, modelId, timeoutSecs, callback)
+local function transcribeViaAPI(wavPath, lang, timeoutSecs, callback)
     local args = {
         "-s", "-S", "-f", "-m", tostring(timeoutSecs or 30),
         "-F", "file=@" .. wavPath,
-        "-F", "model=" .. (modelId or API.MODEL_ID),
         "-F", "response_format=verbose_json",
         -- Server translates to English if 'language' is omitted entirely (even with
         -- task=transcribe) — always send it, "auto" included, to force transcription.
@@ -660,58 +656,20 @@ local function transcribeViaAPI(wavPath, lang, modelId, timeoutSecs, callback)
     return task
 end
 
--- True for a model id or checkpoint carrying a quantization marker — "-Q5", "q4_K_M",
--- "ggml-large-v3-turbo-q5_0.bin". Matched on a Q followed by a digit at a word boundary, so
--- a plain "Whisper-Large-v3" or an "-F16" weight is not mistaken for one.
-local function isQuantized(name)
-    if type(name) ~= "string" then return false end
-    return name:match("[^%w][Qq]%d") ~= nil
-end
-
--- Picks the transcription model the server already has resident, out of a /api/v1/health
--- body. Only an entry that is loaded AND of type "transcription" counts: the server holds
--- several kinds of model at once, and its top-level "model_loaded" is simply the last one
--- touched — an LLM as often as not, which would fail or evict the whisper model if sent as
--- the id of a transcription request.
---
--- Among the ones that do count, an unquantized model wins over a quantized one however the
--- server lists them: quantization is a concession to the machine running the model, and the
--- remote box is the one place here where it doesn't have to be made. The name is checked
--- against the checkpoint too, since a server can list "Whisper-Large-v3" for
--- ggml-large-v3-turbo-q5_0.bin. Returns nil when nothing suitable is loaded.
-local function loadedTranscriptionModel(healthBody)
-    local ok, decoded = pcall(hs.json.decode, healthBody or "")
-    if not ok or type(decoded) ~= "table" then return nil end
-    if type(decoded.all_models_loaded) ~= "table" then return nil end
-    local fallback = nil
-    for _, m in ipairs(decoded.all_models_loaded) do
-        if type(m) == "table" and m.loaded and m.type == "transcription"
-            and type(m.model_name) == "string" and m.model_name ~= "" then
-            if not (isQuantized(m.model_name) or isQuantized(m.checkpoint)) then
-                return m.model_name
-            end
-            fallback = fallback or m.model_name
-        end
-    end
-    return fallback
-end
-
--- Probes the remote API endpoint without waiting for a segment to need it. Started at
--- key-down (pipeStartJob) so it runs in parallel with recording; by the time the first
--- segment is ready to dispatch, this has almost always already resolved. Reaching the
--- server at all is what proves it available — curl only exits non-zero on a connection-level
--- failure (refused, host unreachable, timed out), so a body that doesn't parse still counts
--- as up, just without a model name. Results land on job.apiAvailable and job.apiModel;
--- dispatchSegment reads both, and also flips apiAvailable to false itself if an in-flight
--- request later fails.
+-- Probes the remote whisper-server endpoint without waiting for a segment to need it. Started
+-- at key-down (pipeStartJob) so it runs in parallel with recording; by the time the first
+-- segment is ready to dispatch, this has almost always already resolved. Reaching the server
+-- at all is what proves it available — curl only exits non-zero on a connection-level failure
+-- (refused, host unreachable, timed out); the health body itself is just {"status":"ok"}, no
+-- model to read since the server always transcribes with whatever it was launched with.
+-- Results land on job.apiAvailable; dispatchSegment reads it, and also flips it to false
+-- itself if an in-flight request later fails.
 local function checkApiAvailable(job)
     local args = { "-s", "-m", tostring(API.HEALTH_TIMEOUT_SECS), API.HEALTH_URL }
     hs.task.new(API.CURL_BIN, function(code, out, err)
         job.apiAvailable = (code == 0)
         if job.apiAvailable then
-            job.apiModel = loadedTranscriptionModel(out)
-            log("api: gen " .. job.gen .. " endpoint check OK — using remote API with model " ..
-                (job.apiModel or (API.MODEL_ID .. " (server named none)")))
+            log("api: gen " .. job.gen .. " endpoint check OK — using remote whisper-server")
         else
             log("api: gen " .. job.gen .. " endpoint check failed (" .. curlErrorMessage(code, err) ..
                 ") — falling back to local " .. API.FALLBACK_MODEL)
@@ -1042,8 +1000,8 @@ local function createOverlay()
     overlay:appendElements({
         id = "timer", type = "text", text = "",
         textColor = { red = 0.75, green = 0.15, blue = 0.15, alpha = 0.0 },
-        textSize = 10,
-        frame = { x = "63%", y = "18%", w = "16%", h = "64%" },
+        textSize = 20,
+        frame = { x = "63%", y = "4%", w = "16%", h = "92%" },
         textAlignment = "right",
     })
     -- 7: Close button (X) — right edge, last element so it's on top and clickable
@@ -1223,6 +1181,7 @@ end
 -- The voice trigger lives next to the recording functions it drives, far below, but the
 -- menu is built here. Same forward-declaration pattern as pipelineReset and tryWarmup.
 local getWakeEnabled, cycleWake, wakeStatusLabel, cycleWakeWord, wakeWordLabel
+local WAKE, getWakeWord, wakeStop, wakeStart
 
 local function buildMenuBarMenu()
     local items = {}
@@ -1231,48 +1190,105 @@ local function buildMenuBarMenu()
     table.insert(items, { title = isRecording and "● Recording..." or "Idle", disabled = true })
     table.insert(items, { title = "-" })
 
-    -- Language
-    local langDisplay = getLang():upper()
-    table.insert(items, {
-        title = "Language: " .. langDisplay,
-        fn = function() cycleLang(); updateMenuBar() end,
-    })
+    -- Language — submenu so any value is one click away instead of cycling past the
+    -- others (each click on a top-level item closes the whole menu; a wrong value in the
+    -- cycle order meant reopening the menu N times to get where you meant to go).
+    local curLang = getLang()
+    local langSubmenu = {}
+    for _, l in ipairs({ "en", "ru", "uk", "auto" }) do
+        table.insert(langSubmenu, {
+            title = l:upper(),
+            checked = (l == curLang),
+            fn = function() writeFile(LANG_FILE, l); updateMenuBar() end,
+        })
+    end
+    table.insert(items, { title = "Language: " .. curLang:upper(), menu = langSubmenu })
 
     -- Model
+    local models = getAvailableModels()
+    table.insert(models, API.MODEL_NAME)
+    local curModel = getModelName()
+    local modelSubmenu = {}
+    for _, m in ipairs(models) do
+        table.insert(modelSubmenu, {
+            title = (m == API.MODEL_NAME) and "API (auto-fallback)" or m,
+            checked = (m == curModel),
+            fn = function() writeFile(MODEL_FILE, m); updateMenuBar() end,
+        })
+    end
     table.insert(items, {
-        title = "Model: " .. (isApiMode() and "API (auto-fallback)" or getModelName()),
-        fn = function() cycleModel(); updateMenuBar() end,
+        title = "Model: " .. (isApiMode() and "API (auto-fallback)" or curModel),
+        menu = modelSubmenu,
     })
 
     -- Output mode
-    table.insert(items, {
-        title = "Output: " .. getOutputMode():upper(),
-        fn = function() cycleOutput(); updateMenuBar() end,
-    })
+    local curOutput = getOutputMode()
+    local outputSubmenu = {}
+    for _, o in ipairs({ "paste", "type", "copy" }) do
+        table.insert(outputSubmenu, {
+            title = o:upper(),
+            checked = (o == curOutput),
+            fn = function() writeFile(OUTPUT_FILE, o); updateMenuBar() end,
+        })
+    end
+    table.insert(items, { title = "Output: " .. curOutput:upper(), menu = outputSubmenu })
 
-    -- Enter mode
-    local enterState = getEnterMode() and "ON" or "OFF"
+    -- Enter mode — plain binary, a single click already lands on the only other value
+    local enterOn = getEnterMode()
     table.insert(items, {
-        title = "Enter after insert: " .. enterState,
+        title = "Enter after insert: " .. (enterOn and "ON" or "OFF"),
+        checked = enterOn,
         fn = function() cycleEnter(); updateMenuBar() end,
     })
 
     -- Mic device (pin to a specific input to stop Bluetooth output quality dropping to
     -- call-quality whenever a dictation opens the mic)
-    table.insert(items, {
-        title = "Mic: " .. getMicDeviceLabel(),
-        fn = function() cycleMic(); updateMenuBar() end,
-    })
+    local curMic = getMicDevice()
+    local micSubmenu = {
+        {
+            title = "System Default",
+            checked = (curMic == nil),
+            fn = function() writeFile(MIC_FILE, ""); updateMenuBar() end,
+        },
+    }
+    for _, dev in ipairs(hs.audiodevice.allInputDevices()) do
+        local uid = dev:uid()
+        table.insert(micSubmenu, {
+            title = dev:name(),
+            checked = (curMic == uid),
+            fn = function() writeFile(MIC_FILE, uid); updateMenuBar() end,
+        })
+    end
+    table.insert(items, { title = "Mic: " .. getMicDeviceLabel(), menu = micSubmenu })
 
     -- Voice trigger (wake word). Listens only while the screen is on — see the Voice
     -- trigger section for why the microphone, not the model, is what that gate protects.
+    local wakeOn = getWakeEnabled and getWakeEnabled()
     table.insert(items, {
         title = "Voice trigger: " .. (wakeStatusLabel and wakeStatusLabel() or "OFF"),
+        checked = wakeOn or false,
         fn = function() if cycleWake then cycleWake() end; updateMenuBar() end,
     })
+    local curWakeWord = getWakeEnabled and (wakeWordLabel and wakeWordLabel())
+    local wakeWordSubmenu = {}
+    for _, w in ipairs(WAKE.WORDS) do
+        local label = (w:gsub("_", " "))
+        table.insert(wakeWordSubmenu, {
+            title = label,
+            checked = (label == curWakeWord),
+            fn = function()
+                writeFile(WAKE_MODEL_FILE, w)
+                if getWakeEnabled() then
+                    wakeStop("switching wake word")
+                    wakeStart("wake word changed to " .. getWakeWord())
+                end
+                updateMenuBar()
+            end,
+        })
+    end
     table.insert(items, {
         title = "Wake word: " .. (wakeWordLabel and wakeWordLabel() or "hey mycroft"),
-        fn = function() if cycleWakeWord then cycleWakeWord() end; updateMenuBar() end,
+        menu = wakeWordSubmenu,
     })
 
     -- Recent dictations
@@ -1590,10 +1606,6 @@ local function pipeNewJob()
         -- treats nil like true (optimistic — the check almost always beats the first segment)
         -- and a request failure can still flip it to false mid-job.
         apiAvailable = nil,
-        -- The transcription model the server reported as loaded, read by the same probe.
-        -- nil means "nobody told us" (probe pending, unparseable body, or no transcription
-        -- model resident) and transcribeViaAPI sends API.MODEL_ID instead.
-        apiModel = nil,
         timer      = nil,   -- polls during recording for a segment that is ready to dispatch
     }
     pipeJobs.live[job.gen] = job
@@ -1889,8 +1901,8 @@ local function dispatchSegment(segN, group, job)
             -- apiAvailable is true or still nil (probe pending — optimistic: it almost always
             -- resolves before the first segment is ready). Either way, try the API first.
             log("pipeline: gen " .. job.gen .. " seg " .. segN .. " starting API transcription lang=" ..
-                effectiveLang .. " model=" .. (job.apiModel or API.MODEL_ID))
-            transcribeViaAPI(segWav, effectiveLang, job.apiModel, 60, function(text, detected, errMsg)
+                effectiveLang)
+            transcribeViaAPI(segWav, effectiveLang, 60, function(text, detected, errMsg)
                 if errMsg then
                     log("pipeline: gen " .. job.gen .. " seg " .. segN .. " API error: " .. errMsg ..
                         " — falling back to local " .. API.FALLBACK_MODEL)
@@ -2281,7 +2293,7 @@ if LocalWhisper.wakeTask then
     LocalWhisper.wakeTask = nil
 end
 
-local WAKE = {
+WAKE = {
     VENV_PY   = CONFIG_DIR .. "/wake-venv/bin/python",
     -- Pretrained models that ship with openWakeWord. "alexa" is deliberately absent: a
     -- television or someone else's speaker sets it off. Which word suits a given voice is
@@ -2331,7 +2343,7 @@ getWakeEnabled = function()
     return (readFile(WAKE_FILE):gsub("%s+", "")) == "on"
 end
 
-local function getWakeWord()
+getWakeWord = function()
     local saved = (readFile(WAKE_MODEL_FILE):gsub("%s+", ""))
     for _, w in ipairs(WAKE.WORDS) do
         if w == saved then return w end
@@ -2415,7 +2427,7 @@ local function wakeStartSilenceWatch()
     LocalWhisper.wakeSilenceTimer = wakeSilenceTimer  -- see LocalWhisper.modTap on rooting
 end
 
-local function wakeStop(reason)
+wakeStop = function(reason)
     if wakeTask then
         if wakeTask:isRunning() then
             log("wake: stopping listener (" .. reason .. ")")
@@ -2427,7 +2439,7 @@ local function wakeStop(reason)
     wakeStopSilenceWatch()
 end
 
-local function wakeStart(reason)
+wakeStart = function(reason)
     if wakeIsRunning() or not getWakeEnabled() then return end
     if not wakeOnPower() then
         log("wake: on battery, listener stays down (" .. reason .. ")")
