@@ -188,7 +188,7 @@ saying a different one cannot fire anything, however well the model would score 
 
 **How it ends.** Tapping the trigger combo ends a voice-started dictation immediately — that
 is the normal way to finish. The silence timeout is a safety net for when you forget: 8 s of
-silence, or 12 s if you never start talking, with a 240 s cap.
+silence, or 12 s if you never start talking, with a 10 min cap.
 
 Those numbers come from 182 archived dictations on this machine rather than from taste.
 Pauses *inside* a dictation run to a median of 1 s but a 95th percentile of 4 s and a maximum

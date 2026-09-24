@@ -2408,8 +2408,9 @@ WAKE = {
     LEAD_SECS    = 12,    -- if nobody starts talking at all, give up and release the mic
     -- Recorded dictations run to 122 s here and 5.4% pass 90 s, so a 90 s cap would have
     -- truncated one in eighteen. Voice-started ones run longer still, since an 8 s pause no
-    -- longer ends them. This is a stuck-detection backstop, nothing more.
-    MAX_SECS     = 240,
+    -- longer ends them. This is a stuck-detection backstop, nothing more. Raised from 240 s
+    -- to 10 min at the user's request, for long dictations.
+    MAX_SECS     = 600,
 }
 
 getWakeEnabled = function()
