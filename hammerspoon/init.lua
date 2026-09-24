@@ -939,12 +939,30 @@ local overlay = nil
 local overlayPinned = false
 local isRecording = false
 local hideOverlay  -- assigned below
+local stopRecording  -- assigned below; the lock button ends a locked dictation through it
+
+-- Hands-free lock, toggled by the pin button on the overlay's left edge. While it is on,
+-- releasing the trigger does not end the recording, and neither does the voice trigger's
+-- silence watch: the dictation ends only when the pin is clicked again (or on X / emergency
+-- stop). Lives only for the current recording — every stop path clears it.
+local recordingLocked = false
 
 -- The window itself IS the progress bar: the background rectangle (1) is the track —
 -- its light fill is the empty portion, and the colored bars (2,3) fill over it, full
 -- window height. Text/dot/timer/close sit on top, centered on the single-line strip.
--- Element indices: 1=bg(track), 2=bar_rec, 3=bar_txn, 4=text, 5=dot, 6=timer, 7=close
-local EL = { bg = 1, bar_rec = 2, bar_txn = 3, text = 4, dot = 5, timer = 6, close = 7 }
+-- Element indices: 1=bg(track), 2=bar_rec, 3=bar_txn, 4=text, 5=dot, 6=timer, 7=close,
+-- 8=lock_bg, 9=lock (the pin button at the left edge)
+local EL = { bg = 1, bar_rec = 2, bar_txn = 3, text = 4, dot = 5, timer = 6, close = 7,
+             lock_bg = 8, lock = 9 }
+
+local LOCK_BG_OFF = { red = 1.0, green = 1.0, blue = 1.0, alpha = 0.0 }
+local LOCK_BG_ON  = { red = 1.0, green = 0.62, blue = 0.1, alpha = 0.95 }
+
+-- The emoji ignores textColor alpha (checked by rendering it), so the lit background is
+-- the only thing that tells locked from unlocked.
+local function setLockLook(canvas)
+    canvas[EL.lock_bg].fillColor = recordingLocked and LOCK_BG_ON or LOCK_BG_OFF
+end
 
 local function createOverlay()
     local screen = hs.screen.mainScreen()
@@ -983,12 +1001,12 @@ local function createOverlay()
         frame = { x = 0, y = 0, w = 1, h = height },
     })
 
-    -- 4: Transcript text — left side, centered on the single-line strip, over the bar
+    -- 4: Transcript text — left side (right of the pin), centered on the single-line strip
     overlay:appendElements({
         id = "text", type = "text", text = "Listening...",
         textColor = { red = 0.12, green = 0.12, blue = 0.14, alpha = 1.0 },
         textSize = 13,
-        frame = { x = "4%", y = "14%", w = "58%", h = "72%" },
+        frame = { x = 36, y = "14%", w = 224, h = "72%" },
     })
     -- 5: Recording indicator (pulsing red dot) — right side, vertically centered
     overlay:appendElements({
@@ -1012,6 +1030,21 @@ local function createOverlay()
         frame = { x = "87%", y = "8%", w = "10%", h = "84%" },
         trackMouseDown = true, trackMouseUp = true, trackMouseEnterExit = true,
     })
+    -- 8, 9: Lock (pin) button — left edge. Highlighted while the dictation is locked.
+    overlay:appendElements({
+        id = "lock_bg", type = "rectangle", action = "fill",
+        roundedRectRadii = { xRadius = 6, yRadius = 6 },
+        fillColor = LOCK_BG_OFF,
+        frame = { x = 4, y = 3, w = 26, h = 22 },
+        trackMouseDown = true,
+    })
+    overlay:appendElements({
+        id = "lock", type = "text", text = "📌",
+        textSize = 13, textAlignment = "center",
+        frame = { x = 4, y = 5, w = 26, h = 20 },
+        trackMouseDown = true,
+    })
+    setLockLook(overlay)
 
     -- High level + join-all-spaces/fullscreen-auxiliary so it shows above every app,
     -- fullscreen space, and display — same as the system volume/brightness HUD.
@@ -1038,6 +1071,25 @@ local function createOverlay()
             return
         end
 
+        -- Pin: lock the dictation hands-free, or end a locked one. Only while recording —
+        -- once it stops, the button is hidden and the overlay belongs to transcription.
+        if id == "lock" or id == "lock_bg" then
+            if event ~= "mouseDown" or not (isRecording or isWarmingUp) then return end
+            recordingLocked = not recordingLocked
+            setLockLook(canvas)
+            if recordingLocked then
+                log("overlay: dictation locked (hands-free)")
+            else
+                log("overlay: dictation unlocked")
+                -- Still holding the trigger: its release ends the dictation as usual.
+                -- Otherwise unlocking is the release.
+                if not triggerHeld() then
+                    hs.timer.doAfter(0.01, function() stopRecording() end)
+                end
+            end
+            return
+        end
+
         if event == "mouseUp" and id == "bg" then
             overlayPinned = not overlayPinned
             if overlayPinned then
@@ -1054,6 +1106,7 @@ end
 
 local function showOverlay()
     overlayPinned = false
+    recordingLocked = false
     if overlay then overlay:delete() end
     createOverlay()
     overlay:show()
@@ -1420,6 +1473,9 @@ local function stopRecordingIndicator()
         overlay[EL.dot].fillColor = { red = 0.85, green = 0.1, blue = 0.1, alpha = 0.0 }
         overlay[EL.timer].textColor = { red = 0.75, green = 0.15, blue = 0.15, alpha = 0.0 }
         overlay[EL.timer].text = ""
+        -- The pin only means something while recording.
+        overlay[EL.lock_bg].fillColor = LOCK_BG_OFF
+        overlay[EL.lock].text = ""
     end
 end
 
@@ -1436,6 +1492,7 @@ local pipelineReset
 function emergencyStop()
     log("emergency stop")
     isRecording = false
+    recordingLocked = false
     -- Cancel any in-flight finalization, otherwise the timer armed by stopRecording()
     -- still fires and pastes the transcript into whatever is focused after the stop.
     finalizationPending = false
@@ -2203,7 +2260,8 @@ local function startRecording()
     tryWarmup()
 end
 
-local function stopRecording()
+stopRecording = function()
+    recordingLocked = false
     -- Cancel warmup if key released before device was ready
     if isWarmingUp then
         isWarmingUp = false
@@ -2396,6 +2454,9 @@ local function wakeStartSilenceWatch()
             return
         end
 
+        -- Locked from the overlay: the user ends it with the pin, not with a pause.
+        if recordingLocked then quietSince = nil; heardSpeech = true; return end
+
         local now = hs.timer.secondsSinceEpoch()
         local elapsed = now - startedAt
 
@@ -2567,13 +2628,15 @@ local modTap = hs.eventtap.new({ hs.eventtap.event.types.flagsChanged }, functio
             -- Poll for release since flagsChanged doesn't fire on key-up
             if releasePoller then releasePoller:stop() end
             releasePoller = hs.timer.doEvery(0.1, function()
-                if not triggerHeld() then
+                -- Locked: the release is ignored, the poller keeps running so a later
+                -- unlock-while-held still ends the dictation on release.
+                if not triggerHeld() and not recordingLocked then
                     releasePoller:stop()
                     releasePoller = nil
                     stopRecording()
                 end
             end)
-        elseif not triggered and (isRecording or isWarmingUp) then
+        elseif not triggered and (isRecording or isWarmingUp) and not recordingLocked then
             if releasePoller then releasePoller:stop(); releasePoller = nil end
             stopRecording()
         end
