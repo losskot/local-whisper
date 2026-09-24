@@ -149,6 +149,17 @@ you clicked elsewhere, switched tabs or changed apps while whisper was still wor
 is typed: the transcript goes to the clipboard, you hear **two** chimes instead of one, and
 the overlay shows `CLIPBOARD:` — paste it wherever you actually want it.
 
+### Hands-free lock
+
+For long dictations, click the pin at the overlay's left edge while recording. A gray outlined
+pin means "ready", a filled black one means "locked". While it is locked you can let go of
+the keys: the dictation keeps running, with no time limit, until you click the pin again —
+that click is the release. If you are still holding the keys when you unlock, their release
+ends it as usual. ✕ still cancels everything.
+
+Clicking the overlay does not steal your cursor: focus is handed straight back to the window
+you were in, and a dictation ended from the pin goes to where you were when you clicked.
+
 ## Voice trigger
 
 Optional hands-free start. A small wake-word model listens for **"hey mycroft"** and starts
@@ -188,13 +199,14 @@ saying a different one cannot fire anything, however well the model would score 
 
 **How it ends.** Tapping the trigger combo ends a voice-started dictation immediately — that
 is the normal way to finish. The silence timeout is a safety net for when you forget: 8 s of
-silence, or 12 s if you never start talking, with a 10 min cap.
+silence, or 12 s if you never start talking, with a 10 min cap. None of these apply while the
+dictation is [locked](#hands-free-lock) — then only the pin ends it.
 
 Those numbers come from 182 archived dictations on this machine rather than from taste.
 Pauses *inside* a dictation run to a median of 1 s but a 95th percentile of 4 s and a maximum
 of 11 s, so a short timeout cuts people off mid-thought: 2.5 s would have ended roughly one
 pause in five, while 8 s ends one in 134. Recorded dictations reach 122 s and 5.4% pass 90 s,
-so the cap is set well clear of both.
+so the cap sits well clear of both; it was later raised to 10 min for long dictations.
 
 When your hands are already on the keyboard the key trigger is still the better tool — a
 keyboard click reads as speech and holds the dictation open.
