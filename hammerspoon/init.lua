@@ -927,6 +927,17 @@ function WhisperActions.reload()
     end
 end
 
+-- Same resolution trick ensureRecorder uses: find the repo this init.lua was loaded from,
+-- following the symlink Hammerspoon is usually configured with.
+local function repoPath(rel)
+    local this = debug.getinfo(1, "S").source:match("^@(.*)$")
+    if not this then return nil end
+    local real = hs.fs.symlinkAttributes(this, "target") or this
+    local root = real:match("^(.*)/hammerspoon/init%.lua$")
+    if not root then return nil end
+    return root .. "/" .. rel
+end
+
 --------------------------------------------------------------------------------
 -- Overlay UI
 --------------------------------------------------------------------------------
@@ -951,17 +962,21 @@ local recordingLocked = false
 -- its light fill is the empty portion, and the colored bars (2,3) fill over it, full
 -- window height. Text/dot/timer/close sit on top, centered on the single-line strip.
 -- Element indices: 1=bg(track), 2=bar_rec, 3=bar_txn, 4=text, 5=dot, 6=timer, 7=close,
--- 8=lock_bg, 9=lock (the pin button at the left edge)
-local EL = { bg = 1, bar_rec = 2, bar_txn = 3, text = 4, dot = 5, timer = 6, close = 7,
-             lock_bg = 8, lock = 9 }
+-- 8=lock (the pin button at the left edge)
+local EL = { bg = 1, bar_rec = 2, bar_txn = 3, text = 4, dot = 5, timer = 6, close = 7, lock = 8 }
 
-local LOCK_BG_OFF = { red = 1.0, green = 1.0, blue = 1.0, alpha = 0.0 }
-local LOCK_BG_ON  = { red = 1.0, green = 0.62, blue = 0.1, alpha = 0.95 }
+-- Monochrome SF Symbols baked to PNG by tools/lw-pin-icons.swift (hs.image cannot load
+-- SF Symbols by name): outlined gray pin = ready to lock, filled dark pin = locked.
+local function loadIcon(name)
+    local path = repoPath("hammerspoon/icons/" .. name)
+    return path and hs.image.imageFromPath(path) or nil
+end
+local LOCK_ICON_OFF = loadIcon("pin-off.png")
+local LOCK_ICON_ON  = loadIcon("pin-on.png")
 
--- The emoji ignores textColor alpha (checked by rendering it), so the lit background is
--- the only thing that tells locked from unlocked.
 local function setLockLook(canvas)
-    canvas[EL.lock_bg].fillColor = recordingLocked and LOCK_BG_ON or LOCK_BG_OFF
+    canvas[EL.lock].image = recordingLocked and LOCK_ICON_ON or LOCK_ICON_OFF
+    canvas[EL.lock].imageAlpha = 1.0
 end
 
 local function createOverlay()
@@ -1030,19 +1045,13 @@ local function createOverlay()
         frame = { x = "87%", y = "8%", w = "10%", h = "84%" },
         trackMouseDown = true, trackMouseUp = true, trackMouseEnterExit = true,
     })
-    -- 8, 9: Lock (pin) button — left edge. Highlighted while the dictation is locked.
+    -- 8: Lock (pin) button — left edge. Tracks mouseUp too, so the click does not fall
+    -- through to the background's own click-to-keep-open handler.
     overlay:appendElements({
-        id = "lock_bg", type = "rectangle", action = "fill",
-        roundedRectRadii = { xRadius = 6, yRadius = 6 },
-        fillColor = LOCK_BG_OFF,
-        frame = { x = 4, y = 3, w = 26, h = 22 },
-        trackMouseDown = true,
-    })
-    overlay:appendElements({
-        id = "lock", type = "text", text = "📌",
-        textSize = 13, textAlignment = "center",
-        frame = { x = 4, y = 5, w = 26, h = 20 },
-        trackMouseDown = true,
+        id = "lock", type = "image", image = LOCK_ICON_OFF,
+        imageScaling = "scaleProportionally",
+        frame = { x = 7, y = 5, w = 18, h = 18 },
+        trackMouseDown = true, trackMouseUp = true,
     })
     setLockLook(overlay)
 
@@ -1053,7 +1062,20 @@ local function createOverlay()
 
     -- Mouse handler: click bg to pin, X to close (settings live in the menu bar only)
     overlay:canvasMouseEvents(true, true, false, false)  -- mouseDown + mouseUp
+    -- A click on the overlay makes Hammerspoon the active app (at mouseUp, even with
+    -- clickActivating off — checked with synthetic clicks), which would move the insert
+    -- target away from where the user is dictating. So the focused window is taken at
+    -- mouseDown, while it is still the user's, and handed back after mouseUp.
+    overlay:clickActivating(false)
+    local clickWin, clickTarget, stopOnUp = nil, nil, false
     overlay:mouseCallback(function(canvas, event, id, mx, my)
+        if event == "mouseDown" then
+            clickWin, clickTarget = hs.window.focusedWindow(), focusTargetId()
+        elseif clickWin then
+            local w = clickWin
+            clickWin = nil
+            hs.timer.doAfter(0.05, function() w:focus() end)
+        end
         -- Close button — hide immediately, delete deferred
         if id == "close" then
             if event == "mouseDown" then
@@ -1073,20 +1095,23 @@ local function createOverlay()
 
         -- Pin: lock the dictation hands-free, or end a locked one. Only while recording —
         -- once it stops, the button is hidden and the overlay belongs to transcription.
-        if id == "lock" or id == "lock_bg" then
-            if event ~= "mouseDown" or not (isRecording or isWarmingUp) then return end
+        if id == "lock" then
+            if event == "mouseUp" then
+                -- Unlocking is the release, unless the trigger is still held — then its
+                -- release ends the dictation as usual. The target is the one taken at
+                -- mouseDown, before the click pulled focus onto Hammerspoon.
+                if stopOnUp then
+                    stopOnUp = false
+                    local target = clickTarget
+                    hs.timer.doAfter(0.01, function() stopRecording(target) end)
+                end
+                return
+            end
+            if not (isRecording or isWarmingUp) then return end
             recordingLocked = not recordingLocked
             setLockLook(canvas)
-            if recordingLocked then
-                log("overlay: dictation locked (hands-free)")
-            else
-                log("overlay: dictation unlocked")
-                -- Still holding the trigger: its release ends the dictation as usual.
-                -- Otherwise unlocking is the release.
-                if not triggerHeld() then
-                    hs.timer.doAfter(0.01, function() stopRecording() end)
-                end
-            end
+            log("overlay: dictation " .. (recordingLocked and "locked (hands-free)" or "unlocked"))
+            stopOnUp = not recordingLocked and not triggerHeld()
             return
         end
 
@@ -1474,8 +1499,7 @@ local function stopRecordingIndicator()
         overlay[EL.timer].textColor = { red = 0.75, green = 0.15, blue = 0.15, alpha = 0.0 }
         overlay[EL.timer].text = ""
         -- The pin only means something while recording.
-        overlay[EL.lock_bg].fillColor = LOCK_BG_OFF
-        overlay[EL.lock].text = ""
+        overlay[EL.lock].imageAlpha = 0.0
     end
 end
 
@@ -2260,7 +2284,9 @@ local function startRecording()
     tryWarmup()
 end
 
-stopRecording = function()
+-- `target` overrides where the text belongs, for a stop that did not come from the
+-- keyboard (the overlay's pin) and so cannot trust whatever is focused right now.
+stopRecording = function(target)
     recordingLocked = false
     -- Cancel warmup if key released before device was ready
     if isWarmingUp then
@@ -2281,7 +2307,7 @@ stopRecording = function()
 
     -- Pin down where this dictation is meant to go, while the user is still there. It is
     -- re-checked just before insertion; if it moved, the text goes to the clipboard.
-    pipe.target = focusTargetId()
+    pipe.target = target or focusTargetId()
     log("insert: target at release: " .. tostring(pipe.target))
 
     stopRecordingIndicator()
@@ -2385,17 +2411,6 @@ WAKE = {
     -- longer ends them. This is a stuck-detection backstop, nothing more.
     MAX_SECS     = 240,
 }
-
--- Same resolution trick ensureRecorder uses: find the repo this init.lua was loaded from,
--- following the symlink Hammerspoon is usually configured with.
-local function repoPath(rel)
-    local this = debug.getinfo(1, "S").source:match("^@(.*)$")
-    if not this then return nil end
-    local real = hs.fs.symlinkAttributes(this, "target") or this
-    local root = real:match("^(.*)/hammerspoon/init%.lua$")
-    if not root then return nil end
-    return root .. "/" .. rel
-end
 
 getWakeEnabled = function()
     return (readFile(WAKE_FILE):gsub("%s+", "")) == "on"

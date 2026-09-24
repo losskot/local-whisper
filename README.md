@@ -12,7 +12,7 @@ Hold **fn + left Control**, speak, release — text appears at your cursor.
 - **Progress bar**: A two-colour strip shows recorded audio (red) against transcribed audio (blue), so long dictations report real progress
 - **Voice commands**: Say "voice command note buy coffee" to save a note, "voice command open app Safari" to launch apps, and more — fully customizable
 - **Recording indicator**: Pulsing red dot and elapsed timer in the overlay
-- **Hands-free lock**: Click the 📌 at the overlay's left edge while recording and you can let go of the keys — the dictation keeps running (voice-started ones ignore pauses too) until you click the pin again
+- **Hands-free lock**: Click the pin at the overlay's left edge (gray outline = ready, filled black = locked) while recording and you can let go of the keys — the dictation keeps running (voice-started ones ignore pauses too) until you click the pin again
 - **Multi-language**: English, Russian, Ukrainian, and auto-detect (per segment, so mixed-language speech is not "translated")
 - **App-aware processing**: Auto-capitalizes in most apps, skips in terminals and code editors
 - **Text post-processing**: Remove filler words (um, uh, hmm), clean whitespace
