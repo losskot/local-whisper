@@ -6772,7 +6772,7 @@ _**Agent (claude-opus-5 2026-08-16 19:33:30Z)**_
 <summary>Tool use: **Read**</summary>
  `./AGENTS.md`
 
-```text
+````text
 72	### Lua 200-local-per-function hard ceiling
 73	
 74	Lua 5.4 (Hammerspoon's runtime) enforces a **hard limit of 200 locals per function**. The top-level chunk of `init.lua` counts as one function. This limit is a compiler error — exceeding it prevents the file from loading at all.
@@ -6795,7 +6795,7 @@ _**Agent (claude-opus-5 2026-08-16 19:33:30Z)**_
 91	
 92	## Testing & debugging
 93
-```
+````
 </details></tool-use>
 
 _**Agent (claude-opus-5 2026-08-16 19:33:35Z)**_
@@ -8079,7 +8079,7 @@ _**Agent (claude-opus-5 2026-08-16 20:09:16Z)**_
 <summary>Tool use: **Read**</summary>
  `./AGENTS.md`
 
-```text
+````text
 92	### Slash commands
 93	- `/debug` — check logs, config state, Ollama status, and recent errors
 94	- `/test-refine` — run the LLM refinement eval suite
@@ -8108,7 +8108,7 @@ _**Agent (claude-opus-5 2026-08-16 20:09:16Z)**_
 117	- **Refine not working**: Check `refine: failed` in logs — common causes: Ollama not running, wrong model name, missing `$HOME` env
 118	- **Voice commands not matching**: Check `final (auto/...)` log line — whisper may have transcribed differently than expected
 119	- **X button not closing overlay**: `hs.canvas:delete()` inside its own mouse callback is silently ignored — must use `canvas:hide()` immediately then defer deletion with `hs.timer.doAfter(0.01, ...)`
-```
+````
 </details></tool-use>
 
 _**Agent (claude-opus-5 2026-08-16 20:09:29Z)**_
