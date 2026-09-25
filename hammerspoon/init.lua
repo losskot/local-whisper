@@ -1550,7 +1550,24 @@ local function insertTextAtCursor(text, mode)
         -- Note: we intentionally don't save/restore clipboard — getContents() can block
         -- for 60+ seconds if another app holds a large object on the clipboard.
         hs.pasteboard.setContents(text)
-        hs.eventtap.keyStroke({"cmd"}, 9)  -- keycode 9 = V (ANSI), works regardless of keyboard layout
+        local front = hs.application.frontmostApplication()
+        if front and front:bundleID() == "com.lemonmojo.RoyalTSX.App" then
+            -- Royal TSX: keyStroke's Cmd+V (or Ctrl+V) arrives as a bare "v". The modifier
+            -- has to be posted as its own key event (keycode 55 = left Cmd), unbound to any pid.
+            -- It also syncs the clipboard into the remote session asynchronously; pasting
+            -- right away delivers the previous clipboard, so the sync gets time first.
+            hs.timer.usleep(400000)
+            local ev = hs.eventtap.event
+            ev.newKeyEvent(hs.keycodes.map.cmd, true):post()
+            hs.timer.usleep(20000)
+            ev.newKeyEvent({"cmd"}, 9, true):post()
+            hs.timer.usleep(20000)
+            ev.newKeyEvent({"cmd"}, 9, false):post()
+            hs.timer.usleep(20000)
+            ev.newKeyEvent(hs.keycodes.map.cmd, false):post()
+        else
+            hs.eventtap.keyStroke({"cmd"}, 9)  -- keycode 9 = V (ANSI), works regardless of keyboard layout
+        end
     elseif mode == "copy" then
         -- Clipboard only, no auto-paste — user pastes manually when ready.
         hs.pasteboard.setContents(text)
