@@ -1556,7 +1556,7 @@ local function insertTextAtCursor(text, mode)
             -- has to be posted as its own key event (keycode 55 = left Cmd), unbound to any pid.
             -- It also syncs the clipboard into the remote session asynchronously; pasting
             -- right away delivers the previous clipboard, so the sync gets time first.
-            hs.timer.usleep(400000)
+            hs.timer.usleep(800000)
             local ev = hs.eventtap.event
             ev.newKeyEvent(hs.keycodes.map.cmd, true):post()
             hs.timer.usleep(20000)
