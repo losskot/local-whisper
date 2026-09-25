@@ -1261,6 +1261,29 @@ end
 local getWakeEnabled, cycleWake, wakeStatusLabel, cycleWakeWord, wakeWordLabel
 local WAKE, getWakeWord, wakeStop, wakeStart
 
+-- Put text on the clipboard and paste it into the frontmost app.
+local function pasteText(text)
+    hs.pasteboard.setContents(text)
+    local front = hs.application.frontmostApplication()
+    if front and front:bundleID() == "com.lemonmojo.RoyalTSX.App" then
+        -- Royal TSX: keyStroke's Cmd+V (or Ctrl+V) arrives as a bare "v". The modifier
+        -- has to be posted as its own key event (keycode 55 = left Cmd), unbound to any pid.
+        -- It also syncs the clipboard into the remote session asynchronously; pasting
+        -- right away delivers the previous clipboard, so the sync gets time first.
+        hs.timer.usleep(800000)
+        local ev = hs.eventtap.event
+        ev.newKeyEvent(hs.keycodes.map.cmd, true):post()
+        hs.timer.usleep(20000)
+        ev.newKeyEvent({"cmd"}, 9, true):post()
+        hs.timer.usleep(20000)
+        ev.newKeyEvent({"cmd"}, 9, false):post()
+        hs.timer.usleep(20000)
+        ev.newKeyEvent(hs.keycodes.map.cmd, false):post()
+    else
+        hs.eventtap.keyStroke({"cmd"}, 9)  -- keycode 9 = V (ANSI), works regardless of keyboard layout
+    end
+end
+
 local function buildMenuBarMenu()
     local items = {}
 
@@ -1386,8 +1409,7 @@ local function buildMenuBarMenu()
             table.insert(items, {
                 title = icon .. " " .. preview .. "  " .. timeStr,
                 fn = function()
-                    hs.pasteboard.setContents(entry.text)
-                    hs.eventtap.keyStroke({"cmd"}, 9)  -- keycode 9 = V (ANSI)
+                    pasteText(entry.text)
                     hs.notify.new({ title = "Pasted", informativeText = entry.text }):send()
                 end,
             })
@@ -1549,25 +1571,7 @@ local function insertTextAtCursor(text, mode)
     if mode == "paste" then
         -- Note: we intentionally don't save/restore clipboard — getContents() can block
         -- for 60+ seconds if another app holds a large object on the clipboard.
-        hs.pasteboard.setContents(text)
-        local front = hs.application.frontmostApplication()
-        if front and front:bundleID() == "com.lemonmojo.RoyalTSX.App" then
-            -- Royal TSX: keyStroke's Cmd+V (or Ctrl+V) arrives as a bare "v". The modifier
-            -- has to be posted as its own key event (keycode 55 = left Cmd), unbound to any pid.
-            -- It also syncs the clipboard into the remote session asynchronously; pasting
-            -- right away delivers the previous clipboard, so the sync gets time first.
-            hs.timer.usleep(800000)
-            local ev = hs.eventtap.event
-            ev.newKeyEvent(hs.keycodes.map.cmd, true):post()
-            hs.timer.usleep(20000)
-            ev.newKeyEvent({"cmd"}, 9, true):post()
-            hs.timer.usleep(20000)
-            ev.newKeyEvent({"cmd"}, 9, false):post()
-            hs.timer.usleep(20000)
-            ev.newKeyEvent(hs.keycodes.map.cmd, false):post()
-        else
-            hs.eventtap.keyStroke({"cmd"}, 9)  -- keycode 9 = V (ANSI), works regardless of keyboard layout
-        end
+        pasteText(text)
     elseif mode == "copy" then
         -- Clipboard only, no auto-paste — user pastes manually when ready.
         hs.pasteboard.setContents(text)
