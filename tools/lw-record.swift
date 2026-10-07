@@ -118,13 +118,14 @@ func writeChunk(index: Int, samples: [Int16]) {
     // Write to a temp name and rename: init.lua polls this directory while we record,
     // and must never see a half-written header.
     let tmp = path + ".part"
-    if FileManager.default.createFile(atPath: tmp, contents: data) {
-        try? FileManager.default.removeItem(atPath: path)
-        try? FileManager.default.moveItem(atPath: tmp, toPath: path)
+    do {
+        // Never replace existing audio, even if a caller accidentally reuses a directory.
+        try data.write(to: URL(fileURLWithPath: tmp), options: .withoutOverwriting)
+        try FileManager.default.moveItem(atPath: tmp, toPath: path)
         print("chunk \(index) \(samples.count)")
         fflush(stdout)
-    } else {
-        FileHandle.standardError.write("lw-record: failed to write \(path)\n".data(using: .utf8)!)
+    } catch {
+        FileHandle.standardError.write("lw-record: failed to publish \(path): \(error); existing files kept\n".data(using: .utf8)!)
     }
 }
 

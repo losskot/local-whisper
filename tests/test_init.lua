@@ -744,14 +744,9 @@ do
         for line in rawBody:gmatch("[^\n]+") do
             if line:find("rm %-rf") then wipes[#wipes + 1] = line end
         end
-        local perJob = #wipes > 0
-        for _, line in ipairs(wipes) do
-            if not line:find("pipe%.dir") then perJob = false end
-        end
-        check("detach: a new recording only clears its own chunk directory",
-              perJob,
-              "tryWarmup() clears " .. (#wipes == 0 and "nothing" or table.concat(wipes, " | ")) ..
-              " -- clearing the shared directory deletes audio another dictation is still reading")
+        check("archive: starting or retrying a recording does not delete audio",
+              #wipes == 0 and body:find("os%.remove") == nil,
+              "tryWarmup() deletes recorded audio: " .. table.concat(wipes, " | "))
     end
 
     local srcStart = extractFunction("startRecording")
@@ -771,6 +766,94 @@ do
               body:find("onPipelineDone%(segN") == nil,
               "a whisper callback that reports into `pipe` writes into whatever dictation is " ..
               "current when it finishes, not the one it belongs to")
+    end
+end
+
+--------------------------------------------------------------------------------
+-- 8g. Audio survives timestamp collisions, cleanup and failed recovery moves
+--------------------------------------------------------------------------------
+
+do
+    -- Lift only the helpers under test; all filesystem operations are mocked.
+    local base = "/archive/20261007_120000_g1"
+    local files = {
+        [base] = "existing recording",
+        [base .. "_1"] = "another existing recording",
+        ["/archive/job7/chunk_0001.wav"] = "captured audio",
+        ["/archive/job7/concat.wav"] = "concatenated audio",
+        ["/archive/job7/segment.wav"] = "segment audio",
+        ["/tmp/old.wav"] = "unrecovered audio",
+    }
+    local renameCalls, destructiveCalls, stopped = 0, 0, 0
+    local logs = {}
+    local env = setmetatable({
+        VOICE_ARCHIVE_DIR = "/archive",
+        hs = { fs = { attributes = function(path)
+            return files[path] and { mode = "file" } or nil
+        end } },
+        os = {
+            date = function() return "20261007_120000" end,
+            rename = function()
+                renameCalls = renameCalls + 1
+                return nil, "simulated rename failure"
+            end,
+            remove = function(path)
+                destructiveCalls = destructiveCalls + 1
+                files[path] = nil
+            end,
+            execute = function()
+                destructiveCalls = destructiveCalls + 1
+                error("unexpected shell operation during archive preservation")
+            end,
+        },
+        log = function(message) logs[#logs + 1] = message end,
+    }, { __index = _G })
+
+    local newPath = liftFunction("newArchivePath", env)
+    local cleanup = liftFunction("pipeCleanup", env)
+    local preserve = liftFunction("preserveOldAudio", env)
+    check("archive: preservation helpers are liftable and compile",
+          newPath ~= nil and cleanup ~= nil and preserve ~= nil,
+          "could not lift newArchivePath(), pipeCleanup() or preserveOldAudio()")
+
+    if newPath and cleanup and preserve then
+        env.newArchivePath = newPath
+        local first = newPath("g1")
+        files[first] = "new recording"
+        local second = newPath("g1")
+        check("archive: repeated timestamps choose unused paths without overwriting",
+              first == base .. "_2" and second == base .. "_3" and
+              files[base] == "existing recording" and
+              files[base .. "_1"] == "another existing recording" and
+              files[first] == "new recording",
+              "an existing archive path was reused or overwritten")
+
+        local job = { gen = 7, dir = "/archive/job7", timer = {
+            stop = function() stopped = stopped + 1 end,
+        } }
+        local otherJob = { gen = 8 }
+        env.pipeJobs = { live = { [7] = job, [8] = otherJob } }
+        local ok, err = pcall(cleanup, job)
+        check("archive: cleanup releases only the finished job's runtime state",
+              ok and env.pipeJobs.live[7] == nil and
+              env.pipeJobs.live[8] == otherJob and job.timer == nil and stopped == 1,
+              tostring(err))
+        check("archive: cleanup preserves captured and intermediate audio in place",
+              ok and renameCalls == 0 and destructiveCalls == 0 and
+              files["/archive/job7/chunk_0001.wav"] == "captured audio" and
+              files["/archive/job7/concat.wav"] == "concatenated audio" and
+              files["/archive/job7/segment.wav"] == "segment audio",
+              "cleanup moved, deleted or replaced an audio file")
+
+        local recoveredPath = newPath("recovered")
+        ok, err = pcall(preserve, "/tmp/old.wav", "recovered")
+        check("archive: failed recovery leaves the source intact and logs its location",
+              ok and renameCalls == 1 and destructiveCalls == 0 and
+              files["/tmp/old.wav"] == "unrecovered audio" and
+              files[recoveredPath] == nil and #logs == 1 and
+              logs[1]:find("/tmp/old.wav", 1, true) ~= nil and
+              logs[1]:find("kept in place", 1, true) ~= nil,
+              tostring(err) .. "; failed rename must not fall back to deleting the source")
     end
 end
 

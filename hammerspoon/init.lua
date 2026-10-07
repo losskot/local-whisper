@@ -176,23 +176,42 @@ end
 -- Utilities
 --------------------------------------------------------------------------------
 
-os.execute("mkdir -p '" .. WHISPER_TMP .. "'")
-os.execute("mkdir -p '" .. VOICE_ARCHIVE_DIR .. "'")
--- Prune voice archive entries older than 2 days
-os.execute("find '" .. VOICE_ARCHIVE_DIR .. "' -maxdepth 1 -mindepth 1 -mtime +2 -exec rm -rf {} \\; 2>/dev/null")
-
--- Every dictation records into its own CHUNK_DIR/g<N> subdirectory and owns its own segment
--- files, so a new recording can never delete audio a previous one is still transcribing.
--- Generation numbers restart at 1 on every load, so clear what an earlier instance left.
-os.execute("rm -rf '" .. CHUNK_DIR .. "' '" .. WHISPER_TMP .. "'/pipe_seg_* '" ..
-           WHISPER_TMP .. "'/pipe_concat_* 2>/dev/null")
-os.execute("mkdir -p '" .. CHUNK_DIR .. "'")
-
 local function log(msg)
     local f = io.open(LOG_FILE, "a")
     if f then
         f:write(os.date("[%H:%M:%S] ") .. msg .. "\n")
         f:close()
+    end
+end
+
+-- Record directly into the permanent archive. Generation numbers restart on reload,
+-- so reserve a fresh path even if a recording with the same timestamp already exists.
+local function newArchivePath(label)
+    local base = VOICE_ARCHIVE_DIR .. "/" .. os.date("%Y%m%d_%H%M%S") .. "_" .. label
+    local dest, suffix = base, 0
+    while hs.fs.attributes(dest) do
+        suffix = suffix + 1
+        dest = base .. "_" .. suffix
+    end
+    return dest
+end
+
+local function preserveOldAudio(path, label)
+    if not hs.fs.attributes(path) then return end
+    local ok, err = os.rename(path, newArchivePath(label))
+    if not ok then
+        log("archive: could not move " .. path .. ": " .. tostring(err) .. "; kept in place")
+    end
+end
+
+os.execute("mkdir -p '" .. WHISPER_TMP .. "'")
+os.execute("mkdir -p '" .. VOICE_ARCHIVE_DIR .. "'")
+-- Keep recordings indefinitely, including files left by the older temporary pipeline.
+-- A failed move leaves the original untouched; new recordings never reuse those paths.
+preserveOldAudio(CHUNK_DIR, "recovered_chunks")
+for name in hs.fs.dir(WHISPER_TMP) do
+    if name:match("^pipe_seg_") or name:match("^pipe_concat_") then
+        preserveOldAudio(WHISPER_TMP .. "/" .. name, "recovered_" .. name)
     end
 end
 
@@ -392,7 +411,7 @@ local function isHallucination(text)
     return false
 end
 
--- Chunks live in a per-dictation subdirectory of CHUNK_DIR (see pipeNewJob), so the caller
+-- Chunks live in a per-dictation archive directory (see pipeNewJob), so the caller
 -- always names the recording it means. A dictation that is still being transcribed keeps its
 -- own directory, which is what stops the next recording from deleting audio out from under it.
 local function getChunkFiles(dir)
@@ -1545,10 +1564,10 @@ function emergencyStop()
     if finalizeTimers.timer then finalizeTimers.timer:stop(); finalizeTimers.timer = nil end
     if finalizeTimers.watchdog then finalizeTimers.watchdog:stop(); finalizeTimers.watchdog = nil end
     stopRecordingIndicator()
-    -- terminate(), not interrupt(): emergency stop throws the audio away, so there is no
-    -- reason to let the recorder flush a final chunk first. The handle is left for the
+    -- terminate(), not interrupt(): emergency stop abandons transcription immediately;
+    -- recorded audio stays in its archive directory. The handle is left for the
     -- termination callback to clear, so a re-press can still detect a slow exit. Killed
-    -- before the cleanup below, which deletes the directory it is writing into.
+    -- before the runtime cleanup below; the recorder may still flush its tail to disk.
     if recorderTask and recorderTask:isRunning() then recorderTask:terminate() end
     -- Stop dispatching, and drop the segments already transcribed: emergency stop must not
     -- paste a partial transcript a moment later. This abandons every job still in flight,
@@ -1693,7 +1712,7 @@ local function pipeNewJob()
     pipeJobs.lastGen = pipeJobs.lastGen + 1
     local job = {
         gen        = pipeJobs.lastGen,
-        dir        = CHUNK_DIR .. "/g" .. pipeJobs.lastGen,  -- this dictation's audio, nobody else's
+        dir        = newArchivePath("g" .. pipeJobs.lastGen), -- permanent, unique to this dictation
         results    = {},    -- [segN] = text, filled as each segment completes (order preserved)
         lang       = nil,   -- first detected language across all segments
         target     = nil,   -- focusTargetId() of where the text belongs, taken at key release
@@ -1719,16 +1738,11 @@ end
 -- everything already in flight holds its own job reference instead of reading this.
 local pipe = pipeNewJob()
 
--- A job's audio and intermediates are removed only when nothing can still read them.
--- Deleting them early is exactly the bug this rework fixes.
+-- Release runtime state only. Audio and intermediates stay in the permanent archive,
+-- including abandoned recordings and any tail the recorder is still flushing.
 local function pipeCleanup(job)
     pipeJobs.live[job.gen] = nil
     if job.timer then job.timer:stop(); job.timer = nil end
-    -- Archive chunks for 2 days instead of deleting: useful for diagnosing hallucinations
-    local archiveDest = VOICE_ARCHIVE_DIR .. "/" .. os.date("%Y%m%d_%H%M%S") .. "_g" .. job.gen
-    os.execute("mv '" .. job.dir .. "' '" .. archiveDest .. "' 2>/dev/null || rm -rf '" .. job.dir .. "'")
-    os.execute("rm -f '" .. WHISPER_TMP .. "'/pipe_seg_g" .. job.gen ..
-               "_* '" .. WHISPER_TMP .. "'/pipe_concat_g" .. job.gen .. "_* 2>/dev/null")
 end
 
 -- Transcripts that finished while a newer recording was running, oldest first.
@@ -1781,7 +1795,7 @@ local function pipeStartJob()
         if prev.nextSeg > 1 or prev.finalizing then
             log("pipeline: gen " .. prev.gen .. " still transcribing — detached, it delivers its own text")
         else
-            pipeCleanup(prev)   -- nothing was ever dispatched from it: its audio is dead weight
+            pipeCleanup(prev)   -- no transcription is in flight; keep any recorded audio
         end
     end
     pipe = pipeNewJob()
@@ -1902,8 +1916,8 @@ local function dispatchSegment(segN, group, job)
     local lang       = getLang()
     local promptArgs = getPromptArgs()
     local nChunks    = #group
-    local concatFile = WHISPER_TMP .. "/pipe_concat_g" .. job.gen .. "_" .. segN .. ".txt"
-    local segWav     = WHISPER_TMP .. "/pipe_seg_g" .. job.gen .. "_" .. segN .. ".wav"
+    local concatFile = job.dir .. "/concat_" .. segN .. ".txt"
+    local segWav     = job.dir .. "/seg_" .. segN .. ".wav"
 
     local f, ferr = io.open(concatFile, "w")
     if not f then
@@ -2176,11 +2190,11 @@ tryWarmup = function()
     end
     recorderTask = nil
 
-    -- Each attempt records from scratch: a stale chunk from a failed attempt would be
-    -- concatenated into the front of the transcript. Only *this* dictation's directory is
-    -- cleared. The shared one used to be wiped here, which deleted audio a previous dictation
-    -- was still concatenating — ffmpeg exited 254 and that transcript was lost whole.
-    os.execute("rm -rf '" .. pipe.dir .. "'")
+    -- A retry gets a fresh archive directory: failed attempts are preserved without
+    -- mixing their chunks into the transcript or overwriting a recorder's late flush.
+    if warmupAttempt > 1 then
+        pipe.dir = newArchivePath("g" .. pipe.gen .. "_attempt" .. warmupAttempt)
+    end
     os.execute("mkdir -p '" .. pipe.dir .. "'")
 
     -- Chunk indices restart at 0 along with the directory, so the claim cursors go back too.
@@ -2339,7 +2353,7 @@ stopRecording = function(target)
     end
     -- Deliberately keep the handle: the process is still flushing. Its termination callback
     -- clears it, and until then tryWarmup() needs it to detect and kill a slow predecessor
-    -- before wiping CHUNK_DIR out from under it.
+    -- before opening the microphone for the next recording.
 
     -- Brief delay for the recorder to finalize last chunk. A short timer scheduled right as the
     -- system suspends can be silently dropped across sleep (see sleepWatcher below), so track

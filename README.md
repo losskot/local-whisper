@@ -23,6 +23,7 @@ Hold **fn + left Control**, speak, release — text appears at your cursor.
 - **Sleep recovery**: A dictation interrupted by system sleep is finalized on wake instead of being silently lost
 - **Menu bar**: Waveform icon shows recording status (turns red), click for settings and recent dictations
 - **Recent dictations**: View and re-paste your last 10 dictations from the menu bar
+- **Permanent audio archive**: Recordings, failed capture attempts, and transcription segments stay in `~/.local-whisper/voice-archive/` without automatic deletion. Each recording has its own directory; reloads preserve audio left by older versions too
 - **Fully local**: All processing on-device via whisper.cpp — nothing leaves your machine
 
 ## Voice Commands
