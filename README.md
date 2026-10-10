@@ -322,6 +322,7 @@ Trigger combo hold/release (detected by Hammerspoon eventtap on raw device flags
 ## Troubleshooting
 
 - **No transcription output**: Check `$TMPDIR/whisper-dictate/whisper-dictate.log` for errors (run `echo $TMPDIR` to find the path)
+- **Local fallback cannot start after migrating Macs**: Check `file ~/whisper.cpp/build/bin/whisper-cli`. An Intel (`x86_64`) build cannot run on Apple Silicon without Rosetta; rebuild whisper.cpp natively for the current Mac. Failed launches now show a notification and finish the pending segment; the recorded audio remains in `~/.local-whisper/voice-archive/`.
 - **Words missing from the middle of sentences**: Check the capture health line — `grep "recording: captured"` in the log. It should read ~97% of wall clock; anything near 90% means capture regressed
 - **Wrong microphone**: Change the input device in System Settings → Sound → Input. local-whisper follows the system default
 - **`lw-record` build failed**: Needs the Xcode command line tools (`xcode-select --install`). init.lua rebuilds it automatically when the source changes; errors land in the log

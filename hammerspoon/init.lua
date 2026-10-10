@@ -1968,39 +1968,42 @@ local function dispatchSegment(segN, group, job)
         end
 
         -- modelPath/modelLabel are parameterized so the API-mode fallback can force
-        -- large-v3 regardless of what MODEL_FILE holds (it holds the "API" sentinel there,
+        -- the fallback model regardless of what MODEL_FILE holds (it holds the "API" sentinel there,
         -- not a real model file) while normal local mode keeps using getModelPath().
         local function runLocalWhisper(modelPath, modelLabel)
             log("pipeline: gen " .. job.gen .. " seg " .. segN .. " starting whisper lang=" .. effectiveLang ..
                 " model=" .. modelLabel)
-            if effectiveLang == "auto" then
-                local autoArgs = { "-m", modelPath, "-f", segWav, "-l", "auto" }
-                for _, a in ipairs(promptArgs) do table.insert(autoArgs, a) end
-                hs.task.new(WHISPER_BIN, function(code2, out2, err2)
-                    log("pipeline: gen " .. job.gen .. " seg " .. segN .. " whisper(auto) exit=" .. tostring(code2) ..
-                        " outlen=" .. #(out2 or ""))
-                    if code2 ~= 0 then
-                        log("pipeline: gen " .. job.gen .. " seg " .. segN .. " whisper FAILED (auto)")
-                        onPipelineDone(job, segN, "", nil, nChunks)
-                        return
-                    end
-                    local detected = (err2 or ""):match("auto%-detected language:%s*(%w+)")
+            local args = { "-m", modelPath, "-f", segWav, "-l", effectiveLang }
+            if effectiveLang ~= "auto" then table.insert(args, "--no-prints") end
+            for _, a in ipairs(promptArgs) do table.insert(args, a) end
+            -- Keep the task alive with its dictation until the termination callback runs.
+            job.localTasks = job.localTasks or {}
+            local task = hs.task.new(WHISPER_BIN, function(code2, out2, err2)
+                job.localTasks[segN] = nil
+                log("pipeline: gen " .. job.gen .. " seg " .. segN .. " whisper(" .. effectiveLang .. ") exit=" .. tostring(code2) ..
+                    " outlen=" .. #(out2 or ""))
+                if code2 ~= 0 then
+                    log("pipeline: gen " .. job.gen .. " seg " .. segN .. " whisper FAILED: " .. tostring(err2))
+                    onPipelineDone(job, segN, "", nil, nChunks)
+                    return
+                end
+                local detected = effectiveLang
+                if effectiveLang == "auto" then
+                    detected = (err2 or ""):match("auto%-detected language:%s*(%w+)")
                     log("pipeline: gen " .. job.gen .. " seg " .. segN .. " auto-detected: " .. tostring(detected))
-                    onSegmentText(stripTimestamps(out2), detected)
-                end, autoArgs):start()
-            else
-                local langArgs = { "-m", modelPath, "-f", segWav, "-l", effectiveLang, "--no-prints" }
-                for _, a in ipairs(promptArgs) do table.insert(langArgs, a) end
-                hs.task.new(WHISPER_BIN, function(code2, out2)
-                    log("pipeline: gen " .. job.gen .. " seg " .. segN .. " whisper(" .. effectiveLang .. ") exit=" .. tostring(code2) ..
-                        " outlen=" .. #(out2 or ""))
-                    if code2 ~= 0 then
-                        log("pipeline: gen " .. job.gen .. " seg " .. segN .. " whisper FAILED")
-                        onPipelineDone(job, segN, "", nil, nChunks)
-                        return
-                    end
-                    onSegmentText(stripTimestamps(out2), effectiveLang)
-                end, langArgs):start()
+                end
+                onSegmentText(stripTimestamps(out2), detected)
+            end, args)
+            job.localTasks[segN] = task
+            -- A launch failure (e.g. an Intel binary on an ARM Mac without Rosetta)
+            -- returns false and never calls the termination callback. Finish the segment
+            -- ourselves so the overlay cannot remain stuck on "Transcribing..." forever.
+            if not task or not task:start() then
+                job.localTasks[segN] = nil
+                log("pipeline: gen " .. job.gen .. " seg " .. segN .. " whisper FAILED to start: " .. WHISPER_BIN)
+                hs.notify.new({ title = "local-whisper", informativeText =
+                    "Local transcription could not start. Check the whisper-cli installation; audio is saved." }):send()
+                onPipelineDone(job, segN, "", nil, nChunks)
             end
         end
 

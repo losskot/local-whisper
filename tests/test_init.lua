@@ -770,7 +770,99 @@ do
 end
 
 --------------------------------------------------------------------------------
--- 8g. Audio survives timestamp collisions, cleanup and failed recovery moves
+-- 8g. API fallback and local task launch failures
+--------------------------------------------------------------------------------
+
+-- Exercise the real dispatch path without launching processes or inserting text.
+do
+    local tasks, completed, notices, logs = {}, {}, {}, {}
+    local apiCalls, apiCallback, launchFailure = 0, nil, nil
+    local lang = "auto"
+    local env = setmetatable({
+        FFMPEG = "/ffmpeg", WHISPER_BIN = "/whisper-cli", MODELS_DIR = "/models",
+        API = { FALLBACK_MODEL = "large-v3-turbo-q5_0" },
+        io = { open = function() return { write = function() end, close = function() end } end },
+        getLang = function() return lang end,
+        getPromptArgs = function() return { "--prompt", "mixed-language sample" } end,
+        isApiMode = function() return true end,
+        isHallucination = function() return false end,
+        log = function(message) logs[#logs + 1] = message end,
+        onPipelineDone = function(job, n, text, detected, count)
+            completed[#completed + 1] = { job = job, n = n, text = text, lang = detected, count = count }
+        end,
+        transcribeViaAPI = function(_, _, _, callback)
+            apiCalls = apiCalls + 1
+            apiCallback = callback
+        end,
+        hs = {
+            fs = { attributes = function() return { size = 100 } end },
+            notify = { new = function(message)
+                return { send = function() notices[#notices + 1] = message end }
+            end },
+            task = { new = function(path, callback, args)
+                if path == "/whisper-cli" and launchFailure == "new" then return nil end
+                local task = { path = path, callback = callback, args = args }
+                function task:start()
+                    if path == "/whisper-cli" and launchFailure == "start" then return false end
+                    return self
+                end
+                tasks[#tasks + 1] = task
+                return task
+            end },
+        },
+    }, { __index = _G })
+    local dispatch, err = liftFunction("dispatchSegment", env)
+    check("fallback: dispatchSegment is liftable and compiles", dispatch ~= nil, tostring(err))
+    if dispatch then
+        local job = { gen = 71, dir = "/archive/job71", apiAvailable = false }
+        dispatch(1, { "/chunk1.wav", "/chunk2.wav" }, job)
+        tasks[#tasks].callback(0)
+        local localTask = tasks[#tasks]
+        check("fallback: offline probe skips API and starts the configured local model",
+              apiCalls == 0 and localTask.path == "/whisper-cli" and
+              localTask.args[2] == "/models/ggml-large-v3-turbo-q5_0.bin" and
+              localTask.args[6] == "auto" and localTask.args[7] == "--prompt")
+        check("fallback: local task stays rooted in its dictation", job.localTasks[1] == localTask)
+        localTask.callback(0, "[00:00:00.000 --> 00:00:01.000] Привет world", "auto-detected language: ru")
+        check("fallback: local result completes the original job with timestamps stripped",
+              #completed == 1 and completed[1].job == job and completed[1].text == "Привет world" and
+              completed[1].lang == "ru" and completed[1].count == 2 and job.localTasks[1] == nil)
+
+        lang = "uk"
+        job = { gen = 72, dir = "/archive/job72", apiAvailable = true }
+        dispatch(1, { "/chunk1.wav" }, job)
+        tasks[#tasks].callback(0)
+        apiCallback("", nil, "request timed out")
+        localTask = tasks[#tasks]
+        check("fallback: API request failure retries the same segment locally",
+              apiCalls == 1 and job.apiAvailable == false and localTask.path == "/whisper-cli" and
+              localTask.args[2] == "/models/ggml-large-v3-turbo-q5_0.bin" and localTask.args[6] == "uk")
+        localTask.callback(0, "[00:00:00.000 --> 00:00:01.000] Вітаю", "")
+        check("fallback: fixed language is preserved", completed[2].text == "Вітаю" and completed[2].lang == "uk")
+        dispatch(2, { "/chunk2.wav" }, job)
+        tasks[#tasks].callback(0)
+        check("fallback: later segments stay local after API failure", apiCalls == 1 and tasks[#tasks].path == "/whisper-cli")
+        tasks[#tasks].callback(1, "", "failed to load model")
+        check("fallback: local exit failure completes and logs stderr",
+              #completed == 3 and completed[3].text == "" and job.localTasks[2] == nil and
+              table.concat(logs, "\n"):find("failed to load model", 1, true) ~= nil)
+
+        for _, failure in ipairs({ "start", "new" }) do
+            launchFailure = failure
+            local before = #completed
+            dispatch(3, { "/chunk3.wav" }, job)
+            local ok, failureErr = pcall(tasks[#tasks].callback, 0)
+            check("fallback: task " .. failure .. " failure finishes instead of hanging",
+                  ok and #completed == before + 1 and completed[#completed].text == "" and
+                  job.localTasks[3] == nil, tostring(failureErr))
+        end
+        check("fallback: failed launches notify the user that audio is saved",
+              #notices == 2 and notices[1].informativeText:find("audio is saved", 1, true) ~= nil)
+    end
+end
+
+--------------------------------------------------------------------------------
+-- Audio survives timestamp collisions, cleanup and failed recovery moves
 --------------------------------------------------------------------------------
 
 do
