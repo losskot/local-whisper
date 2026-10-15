@@ -39,9 +39,8 @@ local MODEL_FILE = CONFIG_DIR .. "/model"
 -- "API" is a combined mode, not a plain switch: every recording probes the endpoint in
 -- parallel with capturing audio (see checkApiAvailable, started at key-down) instead of
 -- waiting to find out at transcription time. If it answers, its segments go over the wire;
--- if it doesn't — or a request to it fails mid-dictation — transcription silently drops to
--- FALLBACK_MODEL locally for the rest of that recording. Nothing here changes the saved
--- setting or asks the user to choose; the fallback is invisible on purpose.
+-- if it doesn't, use Azure, then FALLBACK_MODEL locally. Each dictation snapshots its
+-- settings and can only move down that chain; later chunks never reselect a provider.
 local API = {
     MODEL_NAME = "API",  -- sentinel value stored in MODEL_FILE when API mode is selected
     -- whisper.cpp's own server (examples/server), not an OpenAI-compatible wrapper: no
@@ -52,6 +51,7 @@ local API = {
     CURL_BIN = "/usr/bin/curl",
     FALLBACK_MODEL = "large-v3-turbo-q5_0",  -- local model used whenever the endpoint doesn't respond
     HEALTH_TIMEOUT_SECS = 2,
+    AZURE_CONFIG = CONFIG_DIR .. "/azure.json", -- private endpoint/deployment/apiKey, never in git
 }
 
 -- Scan available models
@@ -637,7 +637,7 @@ end
 -- Transcribe a WAV file via the remote whisper-server instead of local whisper-cli.
 -- Returns the hs.task so callers can terminate it on timeout if needed.
 -- callback(text, detectedLang, errMsg) — errMsg is set (and text empty) on failure.
-local function transcribeViaAPI(wavPath, lang, timeoutSecs, callback)
+local function transcribeViaAPI(wavPath, lang, timeoutSecs, callback, promptText)
     local args = {
         "-s", "-S", "-f", "-m", tostring(timeoutSecs or 30),
         "-F", "file=@" .. wavPath,
@@ -649,9 +649,9 @@ local function transcribeViaAPI(wavPath, lang, timeoutSecs, callback)
         -- won't climb its fallback ladder and start paraphrasing on a hard passage.
         "-F", "temperature=0",
     }
-    local promptText = readPrompt()
+    promptText = promptText or readPrompt()
     if promptText ~= "" then
-        table.insert(args, "-F")
+        table.insert(args, "--form-string")
         table.insert(args, "prompt=" .. promptText)
     end
     table.insert(args, API.URL)
@@ -664,36 +664,75 @@ local function transcribeViaAPI(wavPath, lang, timeoutSecs, callback)
             return
         end
         local ok, decoded = pcall(hs.json.decode, out or "")
-        if not ok or type(decoded) ~= "table" or not decoded.text then
+        if not ok or type(decoded) ~= "table" or type(decoded.text) ~= "string" then
             log("api: unexpected response: " .. tostring(out))
             callback("", nil, "unexpected server response")
             return
         end
         callback(joinApiText(decoded), normalizeApiLang(decoded.language), nil)
     end, args)
-    task:start()
+    if not task or not task:start() then callback("", nil, "could not start LAN request") end
     return task
 end
 
--- Probes the remote whisper-server endpoint without waiting for a segment to need it. Started
--- at key-down (pipeStartJob) so it runs in parallel with recording; by the time the first
--- segment is ready to dispatch, this has almost always already resolved. Reaching the server
--- at all is what proves it available — curl only exits non-zero on a connection-level failure
--- (refused, host unreachable, timed out); the health body itself is just {"status":"ok"}, no
--- model to read since the server always transcribes with whatever it was launched with.
--- Results land on job.apiAvailable; dispatchSegment reads it, and also flips it to false
--- itself if an in-flight request later fails.
-local function checkApiAvailable(job)
-    local args = { "-s", "-m", tostring(API.HEALTH_TIMEOUT_SECS), API.HEALTH_URL }
-    hs.task.new(API.CURL_BIN, function(code, out, err)
-        job.apiAvailable = (code == 0)
-        if job.apiAvailable then
-            log("api: gen " .. job.gen .. " endpoint check OK — using remote whisper-server")
-        else
-            log("api: gen " .. job.gen .. " endpoint check failed (" .. curlErrorMessage(code, err) ..
-                ") — falling back to local " .. API.FALLBACK_MODEL)
+local function readAzureConfig()
+    local f = io.open(API.AZURE_CONFIG, "r")
+    if not f then return nil end
+    local raw = f:read("*a"); f:close()
+    local ok, cfg = pcall(hs.json.decode, raw)
+    if not ok or type(cfg) ~= "table" or type(cfg.endpoint) ~= "string" or
+        (not cfg.endpoint:match("^https://[%w%-%.]+%.openai%.azure%.com/?$") and
+        not cfg.endpoint:match("^https://[%w%-%.]+%.cognitiveservices%.azure%.com/?$")) or
+        type(cfg.deployment) ~= "string" or not cfg.deployment:match("^[%w%._%-]+$") or
+        type(cfg.apiKey) ~= "string" or not cfg.apiKey:match("^[%w%-_]+$") then
+        log("azure: invalid azure.json — skipping cloud fallback")
+        return nil
+    end
+    cfg.endpoint = cfg.endpoint:gsub("/+$", "")
+    return cfg
+end
+
+local function transcribeViaAzure(wavPath, lang, promptText, cfg, callback)
+    -- The key is supplied on stdin, never in process arguments or the audio archive.
+    local args = { "--config", "-", "-s", "-S", "-f", "--connect-timeout", "3", "-m", "60",
+        "-F", "file=@" .. wavPath, "-F", "response_format=json",
+        "--form-string", "model=" .. cfg.deployment }
+    if lang ~= "auto" then
+        table.insert(args, "--form-string"); table.insert(args, "language=" .. lang)
+    end
+    if promptText ~= "" then
+        table.insert(args, "--form-string"); table.insert(args, "prompt=" .. promptText)
+    end
+    table.insert(args, cfg.endpoint .. "/openai/deployments/" .. cfg.deployment ..
+        "/audio/transcriptions?api-version=2025-04-01-preview")
+    local task = hs.task.new(API.CURL_BIN, function(code, out, err)
+        if code ~= 0 then callback("", nil, curlErrorMessage(code, err)); return end
+        local ok, decoded = pcall(hs.json.decode, out or "")
+        if not ok or type(decoded) ~= "table" or type(decoded.text) ~= "string" then
+            callback("", nil, "unexpected Azure transcription response"); return
         end
-    end, args):start()
+        callback(decoded.text, normalizeApiLang(decoded.language), nil)
+    end, args)
+    if task then task:setInput('header = "api-key: ' .. cfg.apiKey .. '"\n') end
+    if not task or not task:start() then callback("", nil, "could not start Azure request") end
+    return task
+end
+
+-- Probe at key-down. Segments that become ready early wait for this bounded check;
+-- a late callback never overwrites a provider already selected by this dictation.
+local function checkApiAvailable(job)
+    local function resolve(available)
+        job.probeTask = nil
+        if job.abandoned or job.backend then return end
+        job.backend = available and "lan" or (job.azure and "azure" or "local")
+        log("pipeline: gen " .. job.gen .. " selected " .. job.backend)
+        local waiting = job.backendWaiters
+        job.backendWaiters = {}
+        for _, run in ipairs(waiting) do run() end
+    end
+    local args = { "-f", "-s", "-m", tostring(API.HEALTH_TIMEOUT_SECS), API.HEALTH_URL }
+    job.probeTask = hs.task.new(API.CURL_BIN, function(code) resolve(code == 0) end, args)
+    if not job.probeTask or not job.probeTask:start() then resolve(false) end
 end
 
 local function getPromptArgs()
@@ -978,11 +1017,9 @@ local stopRecording  -- assigned below; the lock button ends a locked dictation 
 local recordingLocked = false
 
 -- The window itself IS the progress bar: the background rectangle (1) is the track —
--- its light fill is the empty portion, and the colored bars (2,3) fill over it, full
+-- its light fill is the empty portion, and the colored bars fill over it, full
 -- window height. Text/dot/timer/close sit on top, centered on the single-line strip.
--- Element indices: 1=bg(track), 2=bar_rec, 3=bar_txn, 4=text, 5=dot, 6=timer, 7=close,
--- 8=lock (the pin button at the left edge)
-local EL = { bg = 1, bar_rec = 2, bar_txn = 3, text = 4, dot = 5, timer = 6, close = 7, lock = 8 }
+local EL = { bg = 1, bar_rec = 2, bar_txn = 3, bar_done = 4, text = 5, dot = 6, timer = 7, close = 8, lock = 9 }
 
 -- Monochrome SF Symbols baked to PNG by tools/lw-pin-icons.swift (hs.image cannot load
 -- SF Symbols by name): outlined gray pin = ready to lock, filled dark pin = locked.
@@ -1027,28 +1064,34 @@ local function createOverlay()
         fillColor = { red = 1.0, green = 0.35, blue = 0.15, alpha = 0.0 },
         frame = { x = 0, y = 0, w = 1, h = height },
     })
-    -- 3: Transcription progress (blue) — chases the red bar as segments finish
+    -- Submitted audio is gray-blue; completed audio covers it in gray.
     overlay:appendElements({
         id = "bar_txn", type = "rectangle", action = "fill",
         roundedRectRadii = { xRadius = 8, yRadius = 8 },
-        fillColor = { red = 0.2, green = 0.75, blue = 1.0, alpha = 0.0 },
-        frame = { x = 0, y = 0, w = 1, h = height },
+        fillColor = { red = 0.48, green = 0.63, blue = 0.74, alpha = 0.0 },
+        frame = { x = 0, y = 0, w = 0, h = height },
+    })
+    overlay:appendElements({
+        id = "bar_done", type = "rectangle", action = "fill",
+        roundedRectRadii = { xRadius = 8, yRadius = 8 },
+        fillColor = { red = 0.62, green = 0.62, blue = 0.64, alpha = 0.0 },
+        frame = { x = 0, y = 0, w = 0, h = height },
     })
 
-    -- 4: Transcript text — left side (right of the pin), centered on the single-line strip
+    -- Transcript text — left side (right of the pin), centered on the single-line strip
     overlay:appendElements({
         id = "text", type = "text", text = "Listening...",
         textColor = { red = 0.12, green = 0.12, blue = 0.14, alpha = 1.0 },
         textSize = 13,
         frame = { x = 36, y = "14%", w = 224, h = "72%" },
     })
-    -- 5: Recording indicator (pulsing red dot) — right side, vertically centered
+    -- Recording indicator (pulsing red dot) — right side, vertically centered
     overlay:appendElements({
         id = "dot", type = "oval", action = "fill",
         fillColor = { red = 0.85, green = 0.1, blue = 0.1, alpha = 0.0 },
         frame = { x = 341, y = 10, w = 8, h = 8 },
     })
-    -- 6: Elapsed time display — right side
+    -- Elapsed time display — right side
     overlay:appendElements({
         id = "timer", type = "text", text = "",
         textColor = { red = 0.75, green = 0.15, blue = 0.15, alpha = 0.0 },
@@ -1056,7 +1099,7 @@ local function createOverlay()
         frame = { x = "63%", y = "4%", w = "16%", h = "92%" },
         textAlignment = "right",
     })
-    -- 7: Close button (X) — right edge, last element so it's on top and clickable
+    -- Close button (X) — right edge
     overlay:appendElements({
         id = "close", type = "text", text = "✕",
         textColor = { red = 0.75, green = 0.15, blue = 0.15, alpha = 0.85 },
@@ -1064,7 +1107,7 @@ local function createOverlay()
         frame = { x = "87%", y = "8%", w = "10%", h = "84%" },
         trackMouseDown = true, trackMouseUp = true, trackMouseEnterExit = true,
     })
-    -- 8: Lock (pin) button — left edge. Tracks mouseUp too, so the click does not fall
+    -- Lock (pin) button — left edge. Tracks mouseUp too, so the click does not fall
     -- through to the background's own click-to-keep-open handler.
     overlay:appendElements({
         id = "lock", type = "image", image = LOCK_ICON_OFF,
@@ -1205,6 +1248,7 @@ local pulseFading = true
 
 -- Progress bar state
 local transcribedSecs = 0   -- seconds of audio fully transcribed so far
+local submittedSecs = 0     -- seconds handed to a transcription provider
 local barMaxSecs = 180       -- current max duration displayed (expands at 90%)
 
 -- Recent dictations (newest first, max 10)
@@ -1477,15 +1521,18 @@ local function updateProgressBar()
     -- Starts at 60s, so the first bounce is at 0:55, then 1:55, 2:55, …
     if elapsed >= barMaxSecs - 5 then barMaxSecs = barMaxSecs + 60 end
     local recFrac = math.min(elapsed / barMaxSecs, 1.0)
-    local txnFrac = math.min(transcribedSecs / barMaxSecs, 1.0)
+    local txnFrac = math.min(submittedSecs / barMaxSecs, 1.0)
+    local doneFrac = math.min(transcribedSecs / barMaxSecs, 1.0)
     overlay[EL.bar_rec].frame = { x = 0, y = 0, w = math.max(1, math.floor(recFrac * BAR_MAX)), h = 28 }
-    overlay[EL.bar_txn].frame = { x = 0, y = 0, w = math.max(1, math.floor(txnFrac * BAR_MAX)), h = 28 }
+    overlay[EL.bar_txn].frame = { x = 0, y = 0, w = math.floor(txnFrac * BAR_MAX), h = 28 }
+    overlay[EL.bar_done].frame = { x = 0, y = 0, w = math.floor(doneFrac * BAR_MAX), h = 28 }
 end
 
 local function hideProgressBar()
     if not overlay then return end
     overlay[EL.bar_rec].fillColor = { red = 1.0, green = 0.35, blue = 0.15, alpha = 0.0 }
-    overlay[EL.bar_txn].fillColor = { red = 0.2, green = 0.75, blue = 1.0, alpha = 0.0 }
+    overlay[EL.bar_txn].fillColor = { red = 0.48, green = 0.63, blue = 0.74, alpha = 0.0 }
+    overlay[EL.bar_done].fillColor = { red = 0.62, green = 0.62, blue = 0.64, alpha = 0.0 }
 end
 
 local function startRecordingIndicator()
@@ -1493,6 +1540,7 @@ local function startRecordingIndicator()
     recordingStartTime = hs.timer.secondsSinceEpoch()
     recordedSecs = nil
     transcribedSecs = 0
+    submittedSecs = 0
     barMaxSecs = 60
     pulseAlpha = 1.0
     pulseFading = true
@@ -1503,7 +1551,8 @@ local function startRecordingIndicator()
 
     -- Fill the bar over the track (the light window background)
     overlay[EL.bar_rec].fillColor = { red = 1.0, green = 0.35, blue = 0.15, alpha = 0.50 }
-    overlay[EL.bar_txn].fillColor = { red = 0.2, green = 0.75, blue = 1.0, alpha = 0.50 }
+    overlay[EL.bar_txn].fillColor = { red = 0.48, green = 0.63, blue = 0.74, alpha = 0.95 }
+    overlay[EL.bar_done].fillColor = { red = 0.62, green = 0.62, blue = 0.64, alpha = 1.0 }
     updateProgressBar()
 
     -- Pulse the red dot
@@ -1710,6 +1759,7 @@ local pipeJobs = {
 
 local function pipeNewJob()
     pipeJobs.lastGen = pipeJobs.lastGen + 1
+    local model = getModelName()
     local job = {
         gen        = pipeJobs.lastGen,
         dir        = newArchivePath("g" .. pipeJobs.lastGen), -- permanent, unique to this dictation
@@ -1723,10 +1773,14 @@ local function pipeNewJob()
         finalizing = false, -- true once `total` is known
         inserted   = false, -- true once its text was inserted or queued, so it happens once
         abandoned  = false, -- emergency stop: its segments are dropped as they come back
-        -- nil while the check is in flight, then true/false. In API mode only; dispatchSegment
-        -- treats nil like true (optimistic — the check almost always beats the first segment)
-        -- and a request failure can still flip it to false mid-job.
-        apiAvailable = nil,
+        model      = model,
+        language   = getLang(),
+        prompt     = readPrompt(),
+        azure      = model == API.MODEL_NAME and readAzureConfig() or nil,
+        backend    = model ~= API.MODEL_NAME and "local" or nil,
+        backendWaiters = {},
+        remoteTasks = {},
+        concatTasks = {},
         timer      = nil,   -- polls during recording for a segment that is ready to dispatch
     }
     pipeJobs.live[job.gen] = job
@@ -1799,7 +1853,7 @@ local function pipeStartJob()
         end
     end
     pipe = pipeNewJob()
-    if isApiMode() then
+    if pipe.model == API.MODEL_NAME then
         checkApiAvailable(pipe)  -- runs in parallel with the recording that's about to start
     end
     log("pipeline: gen " .. pipe.gen .. " started")
@@ -1869,10 +1923,11 @@ local function pipelineFinalize(job)
         hideOverlay()
         return
     end
-    -- Flash the blue bar to 100% to confirm all audio was transcribed, then fade it
+    -- Flash the gray completion bar, then fade it.
+    submittedSecs = barMaxSecs
     transcribedSecs = barMaxSecs
     if overlay then updateProgressBar() end
-    hs.timer.doAfter(0.4, hideProgressBar)
+    hs.timer.doAfter(0.4, function() if job == pipe then hideProgressBar() end end)
     insertTranscribedText(finalText, job.lang, job.target)
 end
 
@@ -1913,8 +1968,8 @@ end
 -- and writing the result there is how a finished transcript vanished.
 local function dispatchSegment(segN, group, job)
     job = job or pipe
-    local lang       = getLang()
-    local promptArgs = getPromptArgs()
+    local lang       = job.language
+    local promptArgs = job.prompt ~= "" and { "--prompt", job.prompt } or {}
     local nChunks    = #group
     local concatFile = job.dir .. "/concat_" .. segN .. ".txt"
     local segWav     = job.dir .. "/seg_" .. segN .. ".wav"
@@ -1933,6 +1988,8 @@ local function dispatchSegment(segN, group, job)
     log("pipeline: gen " .. job.gen .. " seg " .. segN .. " concat " .. nChunks .. " chunks (" .. gfirst .. " … " .. glast .. ")")
 
     local concatTask = hs.task.new(FFMPEG, function(code)
+        job.concatTasks[segN] = nil
+        if job.abandoned then return end
         if code ~= 0 then
             log("pipeline: gen " .. job.gen .. " seg " .. segN .. " concat FAILED (code=" .. tostring(code) .. ")")
             onPipelineDone(job, segN, "", nil, nChunks)
@@ -1942,6 +1999,7 @@ local function dispatchSegment(segN, group, job)
         log("pipeline: gen " .. job.gen .. " seg " .. segN .. " concat OK — wav size=" .. wavSize .. " bytes")
 
         local function onSegmentText(text, detected)
+            job.remoteTasks[segN] = nil
             if text ~= "" and not isHallucination(text) then
                 log("pipeline: gen " .. job.gen .. " seg " .. segN .. " accepted: '" .. text:sub(1, 120) .. "'")
             else
@@ -1969,7 +2027,7 @@ local function dispatchSegment(segN, group, job)
 
         -- modelPath/modelLabel are parameterized so the API-mode fallback can force
         -- the fallback model regardless of what MODEL_FILE holds (it holds the "API" sentinel there,
-        -- not a real model file) while normal local mode keeps using getModelPath().
+        -- not a real model file). Local mode uses the dictation's snapshotted model.
         local function runLocalWhisper(modelPath, modelLabel)
             log("pipeline: gen " .. job.gen .. " seg " .. segN .. " starting whisper lang=" .. effectiveLang ..
                 " model=" .. modelLabel)
@@ -2007,37 +2065,60 @@ local function dispatchSegment(segN, group, job)
             end
         end
 
-        if isApiMode() then
-            local fallbackPath = MODELS_DIR .. "/ggml-" .. API.FALLBACK_MODEL .. ".bin"
-
-            -- The parallel key-down probe already knows the endpoint is unreachable — skip
-            -- straight to local instead of paying transcribeViaAPI's own timeout again.
-            if job.apiAvailable == false then
-                runLocalWhisper(fallbackPath, API.FALLBACK_MODEL .. " (API unreachable)")
+        local submitted = false
+        local function runBackend()
+            if job.abandoned then return end
+            if not job.backend then
+                table.insert(job.backendWaiters, runBackend)
                 return
             end
-
-            -- apiAvailable is true or still nil (probe pending — optimistic: it almost always
-            -- resolves before the first segment is ready). Either way, try the API first.
-            log("pipeline: gen " .. job.gen .. " seg " .. segN .. " starting API transcription lang=" ..
-                effectiveLang)
-            transcribeViaAPI(segWav, effectiveLang, 60, function(text, detected, errMsg)
+            if not submitted then
+                submitted = true
+                if job == pipe then
+                    submittedSecs = submittedSecs + nChunks
+                    updateProgressBar()
+                end
+            end
+            local backend = job.backend
+            if backend == "local" then
+                local model = job.model == API.MODEL_NAME and API.FALLBACK_MODEL or job.model
+                runLocalWhisper(MODELS_DIR .. "/ggml-" .. model .. ".bin", model)
+                return
+            end
+            local function onRemote(text, detected, errMsg)
+                job.remoteTasks[segN] = nil
+                if job.abandoned then return end
                 if errMsg then
-                    log("pipeline: gen " .. job.gen .. " seg " .. segN .. " API error: " .. errMsg ..
-                        " — falling back to local " .. API.FALLBACK_MODEL)
-                    job.apiAvailable = false  -- stop retrying the API for the rest of this dictation
-                    runLocalWhisper(fallbackPath, API.FALLBACK_MODEL .. " (API failed)")
+                    -- Concurrent failures can only move the shared choice downwards.
+                    if job.backend == backend then
+                        job.backend = backend == "lan" and job.azure and "azure" or "local"
+                    end
+                    log("pipeline: gen " .. job.gen .. " seg " .. segN .. " " .. backend ..
+                        " failed: " .. errMsg .. " — using " .. job.backend)
+                    runBackend()
                     return
                 end
                 text = (text or ""):gsub("^%s+", ""):gsub("%s+$", ""):gsub("%s+", " ")
                 onSegmentText(text, effectiveLang == "auto" and detected or effectiveLang)
-            end)
-            return
+            end
+            -- A failed launch calls onRemote synchronously and may already have started
+            -- its fallback. Do not overwrite that newer task when this call returns.
+            local token, task = {}, nil
+            job.remoteTasks[segN] = token
+            if backend == "lan" then
+                task = transcribeViaAPI(segWav, effectiveLang, 60, onRemote, job.prompt)
+            else
+                task = transcribeViaAzure(segWav, effectiveLang, job.prompt, job.azure, onRemote)
+            end
+            if job.remoteTasks[segN] == token then job.remoteTasks[segN] = task end
         end
-
-        runLocalWhisper(getModelPath(), getModelName())
+        runBackend()
     end, { "-y", "-f", "concat", "-safe", "0", "-i", concatFile, "-c", "copy", segWav })
-    concatTask:start()
+    job.concatTasks[segN] = concatTask
+    if not concatTask or not concatTask:start() then
+        job.concatTasks[segN] = nil
+        onPipelineDone(job, segN, "", nil, nChunks)
+    end
 end
 
 -- Polled during recording. Dispatches at most one segment per tick, and only when enough

@@ -1,6 +1,6 @@
 # local-whisper
 
-A fast, fully-local speech-to-text dictation tool for macOS with voice commands, powered by [whisper.cpp](https://github.com/ggml-org/whisper.cpp). No subscriptions, no cloud — just local transcription optimized for Apple Silicon.
+A fast speech-to-text dictation tool for macOS with voice commands, powered by [whisper.cpp](https://github.com/ggml-org/whisper.cpp). Run on-device, or use a LAN whisper server with optional Azure fallback.
 
 Hold **fn + left Control**, speak, release — text appears at your cursor.
 
@@ -9,7 +9,8 @@ Hold **fn + left Control**, speak, release — text appears at your cursor.
 - **Hold-to-dictate**: Hold the trigger combo to record, release to transcribe and insert
 - **Voice trigger (optional)**: Say "hey mycroft" to start a dictation hands-free; tap the trigger key to finish, or let it time out. Off by default — see [Voice trigger](#voice-trigger)
 - **Segmented transcription**: Recordings are cut into 55-second segments and transcribed one after another, keeping each whisper call inside the model's sweet spot no matter how long you talk
-- **Progress bar**: A two-colour strip shows recorded audio (red) against transcribed audio (blue), so long dictations report real progress
+- **Progress bar**: Orange shows recorded audio awaiting transcription, gray-blue shows audio submitted for transcription, and gray shows completed audio
+- **API fallback**: API mode uses the LAN whisper server first, Azure second when configured, then local `large-v3-turbo-q5_0`. Model, language, prompt and Azure settings are captured once per dictation; failures move only down the chain for its remaining chunks
 - **Voice commands**: Say "voice command note buy coffee" to save a note, "voice command open app Safari" to launch apps, and more — fully customizable
 - **Recording indicator**: Pulsing red dot and elapsed timer in the overlay
 - **Hands-free lock**: Click the pin at the overlay's left edge (gray outline = ready, filled black = locked) while recording and you can let go of the keys — the dictation keeps running (voice-started ones ignore pauses too) until you click the pin again
@@ -24,7 +25,23 @@ Hold **fn + left Control**, speak, release — text appears at your cursor.
 - **Menu bar**: Waveform icon shows recording status (turns red), click for settings and recent dictations
 - **Recent dictations**: View and re-paste your last 10 dictations from the menu bar
 - **Permanent audio archive**: Recordings, failed capture attempts, and transcription segments stay in `~/.local-whisper/voice-archive/` without automatic deletion. Each recording has its own directory; reloads preserve audio left by older versions too
-- **Fully local**: All processing on-device via whisper.cpp — nothing leaves your machine
+- **Local mode**: Selecting a local model keeps all audio on-device. API mode sends segments to the LAN server and, if it fails, to the configured Azure endpoint
+
+## Azure fallback
+
+Choose **API** in the Model menu to use LAN → Azure → local Whisper. Configure Azure in `~/.local-whisper/azure.json` (keep this file private with `chmod 600`):
+
+```json
+{
+  "endpoint": "https://YOUR_RESOURCE.cognitiveservices.azure.com",
+  "deployment": "gpt-4o-mini-transcribe",
+  "apiKey": "YOUR_RESOURCE_KEY"
+}
+```
+
+The deployment must support audio transcription; GPT-5.4 mini does not accept audio. The integration uses Azure's [audio transcription API](https://learn.microsoft.com/en-us/azure/foundry/openai/reference-preview#transcriptions---create), with a WAV for each existing pause-bounded segment. Auto language detection omits the language field so mixed ru/uk/en speech stays in its original languages. The key is passed to curl on stdin, outside process arguments and the audio archive.
+
+Without valid Azure settings, API mode falls back directly to local Whisper. The LAN health check starts with recording; an early segment waits for it. Once a provider fails, later segments in that dictation keep using the next provider. A new dictation checks the LAN again. Changes to Model, Language, prompt or Azure settings apply to the next dictation.
 
 ## Voice Commands
 
@@ -310,8 +327,8 @@ Trigger combo hold/release (detected by Hammerspoon eventtap on raw device flags
     while recording continues — several segments may transcribe concurrently
   ↓  (key released)
   → doFinalTranscription(): only the unclaimed tail is left to transcribe
-  → per segment: ffmpeg concat → whisper-cli (or the remote API), in order
-  → progress bar tracks transcribed seconds against recorded seconds
+  → per segment: ffmpeg concat → selected provider (LAN → Azure → local on failure)
+  → progress bar tracks recorded, submitted and completed audio
   → join the segment texts, drop whisper's known silence hallucinations
   → Post-processing: remove fillers, capitalize, app-aware adjustments
   → Voice command hooks: beforeInsert → actions → text insertion → afterInsert

@@ -770,29 +770,21 @@ do
 end
 
 --------------------------------------------------------------------------------
--- 8g. API fallback and local task launch failures
+-- 8g. Per-dictation provider selection, cloud fallback, and failed launches
 --------------------------------------------------------------------------------
-
--- Exercise the real dispatch path without launching processes or inserting text.
 do
-    local tasks, completed, notices, logs = {}, {}, {}, {}
-    local apiCalls, apiCallback, launchFailure = 0, nil, nil
-    local lang = "auto"
+    local tasks, completed, notices, requests = {}, {}, {}, {}
+    local launchFailure
     local env = setmetatable({
         FFMPEG = "/ffmpeg", WHISPER_BIN = "/whisper-cli", MODELS_DIR = "/models",
-        API = { FALLBACK_MODEL = "large-v3-turbo-q5_0" },
+        API = { MODEL_NAME = "API", FALLBACK_MODEL = "large-v3-turbo-q5_0", CURL_BIN = "/curl", HEALTH_TIMEOUT_SECS = 2 },
         io = { open = function() return { write = function() end, close = function() end } end },
-        getLang = function() return lang end,
-        getPromptArgs = function() return { "--prompt", "mixed-language sample" } end,
-        isApiMode = function() return true end,
         isHallucination = function() return false end,
-        log = function(message) logs[#logs + 1] = message end,
+        log = function() end,
+        updateProgressBar = function() end,
+        submittedSecs = 0,
         onPipelineDone = function(job, n, text, detected, count)
             completed[#completed + 1] = { job = job, n = n, text = text, lang = detected, count = count }
-        end,
-        transcribeViaAPI = function(_, _, _, callback)
-            apiCalls = apiCalls + 1
-            apiCallback = callback
         end,
         hs = {
             fs = { attributes = function() return { size = 100 } end },
@@ -811,54 +803,170 @@ do
             end },
         },
     }, { __index = _G })
+    env.transcribeViaAPI = function(wav, lang, timeout, callback, prompt)
+        requests[#requests + 1] = { backend = "lan", callback = callback, lang = lang, prompt = prompt }
+        return requests[#requests]
+    end
+    env.transcribeViaAzure = function(wav, lang, prompt, cfg, callback)
+        requests[#requests + 1] = { backend = "azure", callback = callback, lang = lang, prompt = prompt, cfg = cfg }
+        return requests[#requests]
+    end
+    local function job(backend, model)
+        return { gen = 71, dir = "/archive/job71", backend = backend, model = model or "API",
+            language = "uk", prompt = "mixed-language sample", azure = { deployment = "mini-transcribe" },
+            backendWaiters = {}, remoteTasks = {}, concatTasks = {} }
+    end
     local dispatch, err = liftFunction("dispatchSegment", env)
     check("fallback: dispatchSegment is liftable and compiles", dispatch ~= nil, tostring(err))
     if dispatch then
-        local job = { gen = 71, dir = "/archive/job71", apiAvailable = false }
-        dispatch(1, { "/chunk1.wav", "/chunk2.wav" }, job)
-        tasks[#tasks].callback(0)
+        local function send(j, n)
+            dispatch(n or 1, { "/chunk1.wav", "/chunk2.wav" }, j)
+            tasks[#tasks].callback(0)
+        end
+        local j = job("lan")
+        env.pipe = j
+        send(j)
+        check("fallback: LAN is tried first with snapshotted language and prompt",
+            #requests == 1 and requests[1].backend == "lan" and requests[1].lang == "uk" and
+            requests[1].prompt == j.prompt)
+        check("progress: submission advances before any transcript returns", env.submittedSecs == 2 and #completed == 0)
+        requests[1].callback("", nil, "LAN unavailable")
+        check("fallback: LAN failure retries the same audio through Azure",
+            j.backend == "azure" and #requests == 2 and requests[2].backend == "azure" and requests[2].cfg == j.azure)
+        requests[2].callback("", nil, "Azure unavailable")
         local localTask = tasks[#tasks]
-        check("fallback: offline probe skips API and starts the configured local model",
-              apiCalls == 0 and localTask.path == "/whisper-cli" and
-              localTask.args[2] == "/models/ggml-large-v3-turbo-q5_0.bin" and
-              localTask.args[6] == "auto" and localTask.args[7] == "--prompt")
-        check("fallback: local task stays rooted in its dictation", job.localTasks[1] == localTask)
-        localTask.callback(0, "[00:00:00.000 --> 00:00:01.000] Привет world", "auto-detected language: ru")
-        check("fallback: local result completes the original job with timestamps stripped",
-              #completed == 1 and completed[1].job == job and completed[1].text == "Привет world" and
-              completed[1].lang == "ru" and completed[1].count == 2 and job.localTasks[1] == nil)
-
-        lang = "uk"
-        job = { gen = 72, dir = "/archive/job72", apiAvailable = true }
-        dispatch(1, { "/chunk1.wav" }, job)
-        tasks[#tasks].callback(0)
-        apiCallback("", nil, "request timed out")
-        localTask = tasks[#tasks]
-        check("fallback: API request failure retries the same segment locally",
-              apiCalls == 1 and job.apiAvailable == false and localTask.path == "/whisper-cli" and
-              localTask.args[2] == "/models/ggml-large-v3-turbo-q5_0.bin" and localTask.args[6] == "uk")
-        localTask.callback(0, "[00:00:00.000 --> 00:00:01.000] Вітаю", "")
-        check("fallback: fixed language is preserved", completed[2].text == "Вітаю" and completed[2].lang == "uk")
-        dispatch(2, { "/chunk2.wav" }, job)
-        tasks[#tasks].callback(0)
-        check("fallback: later segments stay local after API failure", apiCalls == 1 and tasks[#tasks].path == "/whisper-cli")
+        check("fallback: Azure failure finally starts the local fallback",
+            j.backend == "local" and localTask.path == "/whisper-cli" and
+            localTask.args[2] == "/models/ggml-large-v3-turbo-q5_0.bin" and localTask.args[6] == "uk")
+        check("progress: provider retries never count the same audio twice", env.submittedSecs == 2)
+        check("fallback: local task stays rooted in its dictation", j.localTasks[1] == localTask)
+        localTask.callback(0, "[00:00:00.000 --> 00:00:01.000] Вітаю world", "")
+        check("fallback: local completion strips timestamps and preserves the original job",
+            #completed == 1 and completed[1].job == j and completed[1].text == "Вітаю world" and
+            completed[1].lang == "uk" and j.localTasks[1] == nil)
+        send(j, 2)
+        check("fallback: later chunks stay local without probing either remote again",
+            #requests == 2 and tasks[#tasks].path == "/whisper-cli")
         tasks[#tasks].callback(1, "", "failed to load model")
-        check("fallback: local exit failure completes and logs stderr",
-              #completed == 3 and completed[3].text == "" and job.localTasks[2] == nil and
-              table.concat(logs, "\n"):find("failed to load model", 1, true) ~= nil)
-
+        check("fallback: local exit failure completes instead of hanging", #completed == 2 and completed[2].text == "")
         for _, failure in ipairs({ "start", "new" }) do
             launchFailure = failure
             local before = #completed
-            dispatch(3, { "/chunk3.wav" }, job)
-            local ok, failureErr = pcall(tasks[#tasks].callback, 0)
-            check("fallback: task " .. failure .. " failure finishes instead of hanging",
-                  ok and #completed == before + 1 and completed[#completed].text == "" and
-                  job.localTasks[3] == nil, tostring(failureErr))
+            send(j, 3)
+            check("fallback: local task " .. failure .. " failure finishes instead of hanging",
+                #completed == before + 1 and j.localTasks[3] == nil)
         end
-        check("fallback: failed launches notify the user that audio is saved",
-              #notices == 2 and notices[1].informativeText:find("audio is saved", 1, true) ~= nil)
+        check("fallback: failed local launches notify that audio is saved", #notices == 2)
+        launchFailure = nil
+
+        -- Two LAN requests fail in the reverse order around an Azure failure.
+        j = job("lan"); env.pipe = j
+        send(j, 1); local first = requests[#requests]
+        send(j, 2); local second = requests[#requests]
+        first.callback("", nil, "offline")
+        requests[#requests].callback("", nil, "quota")
+        second.callback("", nil, "late LAN error")
+        check("fallback: a late LAN failure cannot upgrade local back to Azure",
+            j.backend == "local" and tasks[#tasks].path == "/whisper-cli" and requests[#requests].backend == "azure")
+
+        j = job("azure"); j.language = "auto"; env.pipe = j
+        send(j)
+        requests[#requests].callback("  Привет   world  ", "ru", nil)
+        check("fallback: Azure success preserves mixed-language text and completes normally",
+            completed[#completed].text == "Привет world" and completed[#completed].lang == "ru" and j.backend == "azure")
+
+        j = job("local", "medium"); env.pipe = j
+        send(j)
+        check("fallback: explicitly selected local model is pinned to the dictation",
+            tasks[#tasks].args[2] == "/models/ggml-medium.bin")
+
+        j = job(nil); env.pipe = j
+        local before = #requests
+        send(j)
+        check("fallback: a segment waits for the initial probe instead of optimistically selecting LAN",
+            #requests == before and #j.backendWaiters == 1)
+        local probe = liftFunction("checkApiAvailable", env)
+        probe(j); tasks[#tasks].callback(22)
+        check("fallback: unhealthy HTTP response selects Azure and releases waiting audio",
+            j.backend == "azure" and #requests == before + 1 and requests[#requests].backend == "azure")
+        local stopped = job(nil); stopped.abandoned = true
+        before = #requests
+        send(stopped)
+        check("fallback: an abandoned job never starts a new transcription", #requests == before)
+        j = job("lan"); env.pipe = j
+        send(j); j.abandoned = true; before = #requests
+        requests[#requests].callback("", nil, "offline")
+        check("fallback: emergency stop prevents a remote error from launching fallback", #requests == before)
+
+        j = job("lan"); env.pipe = j
+        env.transcribeViaAPI = function(_, _, _, callback)
+            callback("", nil, "could not start")
+            return nil
+        end
+        send(j)
+        check("fallback: synchronous LAN launch failure keeps the Azure task rooted",
+            j.backend == "azure" and j.remoteTasks[1] == requests[#requests])
     end
+end
+
+do
+    local settings = { model = "API", language = "auto", prompt = "ru/uk/en" }
+    local env = setmetatable({
+        API = { MODEL_NAME = "API" }, pipeJobs = { lastGen = 0, live = {} },
+        getModelName = function() return settings.model end,
+        getLang = function() return settings.language end,
+        readPrompt = function() return settings.prompt end,
+        readAzureConfig = function() return { deployment = "mini-transcribe" } end,
+        newArchivePath = function() return "/archive/test" end,
+        os = { execute = function() end },
+    }, { __index = _G })
+    local newJob = liftFunction("pipeNewJob", env)
+    local first = newJob()
+    settings.model, settings.language, settings.prompt = "medium", "uk", "changed"
+    local second = newJob()
+    check("fallback: settings changes leave an existing dictation's model, language and prompt intact",
+        first.model == "API" and first.language == "auto" and first.prompt == "ru/uk/en")
+    check("fallback: new settings apply only to the next dictation",
+        second.model == "medium" and second.language == "uk" and second.prompt == "changed" and
+        second.backend == "local" and second.azure == nil)
+end
+
+--------------------------------------------------------------------------------
+-- Azure request format and private credentials
+--------------------------------------------------------------------------------
+do
+    local created, result
+    local env = setmetatable({
+        API = { CURL_BIN = "/curl" },
+        curlErrorMessage = function() return "HTTP request failed" end,
+        normalizeApiLang = function(lang) return lang end,
+        hs = {
+            json = hs.json,
+            task = { new = function(path, callback, args)
+                created = { args = args, callback = callback }
+                function created:setInput(data) self.input = data; return self end
+                function created:start() return self end
+                return created
+            end },
+        },
+    }, { __index = _G })
+    local transcribe = liftFunction("transcribeViaAzure", env)
+    local cfg = { endpoint = "https://example.openai.azure.com", deployment = "gpt-4o-mini-transcribe", apiKey = "private-test-key" }
+    transcribe("/audio.wav", "auto", "@mixed language;type=text/plain", cfg,
+        function(text, lang, err) result = { text = text, err = err } end)
+    local args = table.concat(created.args, "|")
+    check("azure: credential travels on stdin and never in process arguments",
+        not args:find(cfg.apiKey, 1, true) and created.input:find(cfg.apiKey, 1, true) ~= nil)
+    check("azure: auto language is omitted and prompt is literal form text",
+        not args:find("language=", 1, true) and args:find("--form-string|prompt=@mixed language;type=text/plain", 1, true) ~= nil)
+    check("azure: request targets audio transcriptions with JSON response",
+        args:find("response_format=json", 1, true) and args:find("/audio/transcriptions?api-version=", 1, true))
+    created.callback(0, '{"text":"Привет world"}', '')
+    check("azure: a valid response preserves transcription", result.text == "Привет world" and result.err == nil)
+    created.callback(0, '{"text":{}}', '')
+    check("azure: malformed successful response triggers fallback", result.err ~= nil)
+    created.callback(22, '', '')
+    check("azure: HTTP failure triggers fallback", result.err ~= nil)
 end
 
 --------------------------------------------------------------------------------
@@ -1194,10 +1302,11 @@ if type(EL) == "table" then
         local env  = baseEnv()
         local now  = 0
         env.EL     = EL
-        env.overlay = { [EL.bar_rec] = {}, [EL.bar_txn] = {} }
+        env.overlay = { [EL.bar_rec] = {}, [EL.bar_txn] = {}, [EL.bar_done] = {} }
         env.recordingStartTime = 0
         env.recordedSecs       = recordedSecs
         env.transcribedSecs    = 0
+        env.submittedSecs      = 0
         env.barMaxSecs         = 180
         env.hs = { timer = { secondsSinceEpoch = function() return now end } }
 
@@ -1206,6 +1315,7 @@ if type(EL) == "table" then
         for _, step in ipairs(steps) do
             now = step[1]
             env.transcribedSecs = step[2]
+            env.submittedSecs = step[4] or step[2]
             if step[3] ~= nil then env.recordedSecs = step[3] end
             local ok, runErr = pcall(fn)
             if not ok then return nil, "updateProgressBar() errored: " .. tostring(runErr) end
@@ -1213,6 +1323,7 @@ if type(EL) == "table" then
         return {
             rec = env.overlay[EL.bar_rec].frame.w,
             txn = env.overlay[EL.bar_txn].frame.w,
+            done = env.overlay[EL.bar_done].frame.w,
             barMaxSecs = env.barMaxSecs,
             env = env,
         }
@@ -1230,28 +1341,28 @@ if type(EL) == "table" then
     check("progress: updateProgressBar is liftable and compiles", bar ~= nil, tostring(barErr))
 
     if bar then
-        check("progress: the blue bar reaches the red bar when transcription completes",
-              bar.txn == bar.rec,
+        check("progress: completed gray and submitted gray-blue reach the recorded duration",
+              bar.txn == bar.rec and bar.done == bar.rec,
               "transcribed bar w=" .. bar.txn .. ", recorded bar w=" .. bar.rec)
         check("progress: the bar scale stops expanding once recording stops",
               bar.barMaxSecs == 180,
               "barMaxSecs grew to " .. bar.barMaxSecs .. " after the recording ended")
         check("progress: the bars are drawn at a visible width",
-              bar.rec == math.floor((100 / 180) * 386),
-              "recorded bar w=" .. bar.rec .. ", want " .. math.floor((100 / 180) * 386))
+              bar.rec == math.floor((100 / 180) * 420),
+              "recorded bar w=" .. bar.rec .. ", want " .. math.floor((100 / 180) * 420))
 
         -- Half-transcribed audio must still read as half, not as full.
-        local partial = runBar({ { 100, 0 }, { 300, 50, 100 } })
-        check("progress: a partially transcribed recording shows a partial blue bar",
-              partial and partial.txn < partial.rec and partial.txn > 1,
+        local partial = runBar({ { 100, 0 }, { 300, 50, 100, 75 } })
+        check("progress: recording, submitted audio, and completed audio have distinct widths",
+              partial and partial.txn < partial.rec and partial.done < partial.txn and partial.done > 0,
               "transcribed w=" .. tostring(partial and partial.txn) ..
               ", recorded w=" .. tostring(partial and partial.rec))
 
         -- The freeze must not disable the auto-expand for genuinely long recordings.
-        local long = runBar({ { 60, 0 }, { 170, 0 } })
+        local long = runBar({ { 60, 0 }, { 190, 0 } })
         check("progress: the bar still auto-expands during a long recording",
-              long and long.barMaxSecs == 360,
-              "barMaxSecs = " .. tostring(long and long.barMaxSecs) .. " at 170s recorded (want 360)")
+              long and long.barMaxSecs == 240,
+              "barMaxSecs = " .. tostring(long and long.barMaxSecs) .. " at 190s recorded (want 240)")
     end
 
     -- The two halves of the freeze contract that updateProgressBar depends on.
@@ -1267,8 +1378,8 @@ if type(EL) == "table" then
     -- BAR_MAX in updateProgressBar and the bar_bg track width in createOverlay are
     -- separate literals; drifting apart would misreport progress at the right edge.
     local barMax  = src:match("local%s+BAR_MAX%s*=%s*(%d+)")
-    local trackW  = src:match('id%s*=%s*"bar_bg".-w%s*=%s*(%d+)')
-    check("progress: BAR_MAX matches the bar_bg track width",
+    local trackW  = src:match("local width, height = (%d+), 28")
+    check("progress: BAR_MAX matches the overlay track width",
           barMax ~= nil and barMax == trackW,
           "BAR_MAX=" .. tostring(barMax) .. ", bar_bg w=" .. tostring(trackW))
 end
