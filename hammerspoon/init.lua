@@ -17,8 +17,15 @@ local TMPDIR = os.getenv("TMPDIR") or "/tmp"
 local WHISPER_TMP = TMPDIR .. "/whisper-dictate"
 local CHUNK_DIR = WHISPER_TMP .. "/chunks"
 
--- Config directory (all user settings live here)
-local CONFIG_DIR = HOME .. "/.local-whisper"
+-- Config directory: state/ inside the repo this file's symlink points to (gitignored —
+-- settings, keys, the voice archive, built binaries, the wake venv). Falls back to
+-- ~/.local-whisper only if the repo cannot be resolved.
+local CONFIG_DIR = (function()
+    local this = debug.getinfo(1, "S").source:match("^@(.*)$")
+    local real = this and (hs.fs.symlinkAttributes(this, "target") or this)
+    local repo = real and real:match("^(.*)/hammerspoon/init%.lua$")
+    return repo and (repo .. "/state") or (HOME .. "/.local-whisper")
+end)()
 local VOICE_ARCHIVE_DIR = CONFIG_DIR .. "/voice-archive"
 os.execute("mkdir -p '" .. CONFIG_DIR .. "'")
 
@@ -609,7 +616,7 @@ end
 -- itself it picks the dominant one and normalises everything else into it, which rewrites
 -- Ukrainian words as Russian and transliterates English terms. The initial prompt is the only
 -- real lever: whisper continues in whatever style the prompt establishes, so a prompt that is
--- itself a sample of the mix biases it to reproduce the mix. Edit ~/.local-whisper/prompt to
+-- itself a sample of the mix biases it to reproduce the mix. Edit state/prompt to
 -- match how you actually speak — it is a writing sample, not an instruction.
 --
 local function readPrompt()

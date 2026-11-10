@@ -22,5 +22,9 @@ config.yaml
 *.db
 .specstory/
 
+# Runtime state: settings, API keys, voice archive, built binaries, wake venv.
+# Never commit it. Note: `git clean -x` would delete it.
+state/
+
 # Model comparison harness — intermediate WAVs only
 tests/model-comparison/tmp/

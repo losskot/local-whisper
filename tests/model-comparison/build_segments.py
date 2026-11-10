@@ -9,7 +9,7 @@ import sys, os, struct, glob, subprocess, math, json
 FINAL_SEGMENT_SECS = 55
 LOOKBACK_SECS = 8
 FFMPEG = "/usr/local/bin/ffmpeg"
-ARCHIVE = os.path.expanduser("~/.local-whisper/voice-archive")
+ARCHIVE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "state", "voice-archive")
 TMP = os.path.join(os.path.dirname(__file__), "tmp")
 
 SESSIONS = [

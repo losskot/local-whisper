@@ -17,19 +17,19 @@ Hold **fn + left Control**, speak, release — text appears at your cursor.
 - **Multi-language**: English, Russian, Ukrainian, and auto-detect (per segment, so mixed-language speech is not "translated")
 - **App-aware processing**: Auto-capitalizes in most apps, skips in terminals and code editors
 - **Text post-processing**: Remove filler words (um, uh, hmm), clean whitespace
-- **Custom vocabulary / mixed-language anchor**: `~/.local-whisper/prompt` is a *writing sample*, not an instruction — whisper continues in whatever style it establishes. Seeded with a ru/uk/en example on first run; edit it to match how you actually speak. Applied to both the local model (with `--carry-initial-prompt`) and the remote API
+- **Custom vocabulary / mixed-language anchor**: `state/prompt` is a *writing sample*, not an instruction — whisper continues in whatever style it establishes. Seeded with a ru/uk/en example on first run; edit it to match how you actually speak. Applied to both the local model (with `--carry-initial-prompt`) and the remote API
 - **Pipelined transcription**: Segments are transcribed while you are still talking, so the wait after releasing the key does not grow with the length of the dictation — only the tail segment is left. Text is inserted once all segments are back
 - **Lossless capture**: A native AVAudioEngine recorder (`lw-record`) opens the microphone. ffmpeg's avfoundation input silently dropped ~10% of every recording, which swallowed whole words; the recorder logs captured-vs-wall-clock seconds after every dictation so a regression is visible
 - **Warmup probe**: The recorder signals when audio is genuinely flowing; if the device never responds within 10 seconds, recording aborts with an error sound
 - **Sleep recovery**: A dictation interrupted by system sleep is finalized on wake instead of being silently lost
 - **Menu bar**: Waveform icon shows recording status (turns red), click for settings and recent dictations
 - **Recent dictations**: View and re-paste your last 10 dictations from the menu bar
-- **Permanent audio archive**: Recordings, failed capture attempts, and transcription segments stay in `~/.local-whisper/voice-archive/` without automatic deletion. Each recording has its own directory; reloads preserve audio left by older versions too
+- **Permanent audio archive**: Recordings, failed capture attempts, and transcription segments stay in `state/voice-archive/` without automatic deletion. Each recording has its own directory; reloads preserve audio left by older versions too
 - **Local mode**: Selecting a local model keeps all audio on-device. ElevenLabs mode sends segments to ElevenLabs first; API mode sends segments to the LAN server and, if it fails, to the configured Azure endpoint
 
 ## ElevenLabs (default)
 
-**ElevenLabs** is the default Model and goes first in the chain: ElevenLabs Scribe, then the LAN server (only if its health check answered), then Azure, then local `large-v3-turbo-q5_0`. Put the key in `~/.local-whisper/elevenlabs.json` (`chmod 600`):
+**ElevenLabs** is the default Model and goes first in the chain: ElevenLabs Scribe, then the LAN server (only if its health check answered), then Azure, then local `large-v3-turbo-q5_0`. Put the key in `state/elevenlabs.json` (`chmod 600`):
 
 ```json
 { "apiKey": "sk_...", "model": "scribe_v2" }
@@ -39,7 +39,7 @@ Hold **fn + left Control**, speak, release — text appears at your cursor.
 
 ## Azure fallback
 
-Choose **API** in the Model menu to use LAN → Azure → local Whisper. Configure Azure in `~/.local-whisper/azure.json` (keep this file private with `chmod 600`):
+Choose **API** in the Model menu to use LAN → Azure → local Whisper. Configure Azure in `state/azure.json` (keep this file private with `chmod 600`):
 
 ```json
 {
@@ -121,7 +121,7 @@ cp hammerspoon/init.lua ~/.hammerspoon/init.lua
 ./uninstall.sh
 ```
 
-Removes Hammerspoon config, `~/.local-whisper/` settings, and temp files. Optionally removes `~/whisper.cpp`. Does not uninstall Homebrew packages.
+Removes Hammerspoon config, `state/` settings, and temp files. Optionally removes `~/whisper.cpp`. Does not uninstall Homebrew packages.
 
 ## Setup
 
@@ -195,7 +195,7 @@ a dictation exactly as the key does — transcription is unchanged and still goe
 model is selected. Off by default.
 
 ```bash
-./tools/lw-wake-setup.sh          # one-time: builds ~/.local-whisper/wake-venv (~200 MB)
+./tools/lw-wake-setup.sh          # one-time: builds state/wake-venv (~200 MB)
 ```
 
 Then enable it from the menu bar: **Voice trigger**. **Wake word** cycles between
@@ -267,13 +267,13 @@ lower `WAKE.THRESHOLD` in `hammerspoon/init.lua`; that is the only knob that sho
 To watch what the model is actually scoring:
 
 ```bash
-~/.local-whisper/bin/lw-record - 0.08 16000 \
-  | ~/.local-whisper/wake-venv/bin/python tools/lw-wake.py --scores
+state/bin/lw-record - 0.08 16000 \
+  | state/wake-venv/bin/python tools/lw-wake.py --scores
 ```
 
 ## Custom vocabulary prompt
 
-Create `~/.local-whisper/prompt` with terms whisper should recognize better:
+Create `state/prompt` with terms whisper should recognize better:
 
 ```
 Claude, Hammerspoon, whisper.cpp, ffmpeg, macOS, Lua, Anthropic
@@ -349,14 +349,14 @@ Trigger combo hold/release (detected by Hammerspoon eventtap on raw device flags
 ## Troubleshooting
 
 - **No transcription output**: Check `$TMPDIR/whisper-dictate/whisper-dictate.log` for errors (run `echo $TMPDIR` to find the path)
-- **Local fallback cannot start after migrating Macs**: Check `file ~/whisper.cpp/build/bin/whisper-cli`. An Intel (`x86_64`) build cannot run on Apple Silicon without Rosetta; rebuild whisper.cpp natively for the current Mac. Failed launches now show a notification and finish the pending segment; the recorded audio remains in `~/.local-whisper/voice-archive/`.
+- **Local fallback cannot start after migrating Macs**: Check `file ~/whisper.cpp/build/bin/whisper-cli`. An Intel (`x86_64`) build cannot run on Apple Silicon without Rosetta; rebuild whisper.cpp natively for the current Mac. Failed launches now show a notification and finish the pending segment; the recorded audio remains in `state/voice-archive/`.
 - **Words missing from the middle of sentences**: Check the capture health line — `grep "recording: captured"` in the log. It should read ~97% of wall clock; anything near 90% means capture regressed
 - **Wrong microphone**: Change the input device in System Settings → Sound → Input. local-whisper follows the system default
 - **`lw-record` build failed**: Needs the Xcode command line tools (`xcode-select --install`). init.lua rebuilds it automatically when the source changes; errors land in the log
 - **Trigger key does nothing**: Accessibility permission may need toggling. Go to System Settings > Privacy & Security > Accessibility, toggle Hammerspoon **OFF then ON**, then run `hs.reload()` in the Hammerspoon console
 - **External keyboard mapping**: Some keyboards (e.g., Logitech MX Keys) send non-standard modifier flags, and most non-Apple keyboards have no `fn` key at all. Pick a different `TRIGGER_KEY` in init.lua — `fnLeftCtrl` (default), `rightCmd`, `rightAlt`, or `rightCtrl` — or add your own entry to the `TRIGGERS` table
 - **`hs` command not found**: Run `hs.ipc.cliInstall()` in Hammerspoon console
-- **Voice commands not triggering**: Check the log to see what whisper transcribed — add command words to `~/.local-whisper/prompt`
+- **Voice commands not triggering**: Check the log to see what whisper transcribed — add command words to `state/prompt`
 - **Overlay not appearing**: Hammerspoon may need Accessibility permission re-granted after updates
 
 ## Disclaimer

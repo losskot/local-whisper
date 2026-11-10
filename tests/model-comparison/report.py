@@ -30,7 +30,7 @@ SESSIONS_META = {
 MODEL_Q5 = "large-v3-turbo-q5_0"
 MODEL_LV3 = "large-v3"
 
-RECENT_JSON = os.path.expanduser("~/.local-whisper/recent.json")
+RECENT_JSON = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "state", "recent.json")
 RECENT_TIMESTAMPS = {
     # session -> unix timestamp (seconds) — filled from recent.json by matching
 }

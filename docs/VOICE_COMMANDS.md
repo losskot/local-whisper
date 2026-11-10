@@ -47,7 +47,7 @@ The key challenge: whisper needs to transcribe your command phrase reliably. Her
 
 ### Tip: add commands to your vocabulary prompt
 
-If whisper keeps mishearing your command word, add it to `~/.local-whisper/prompt`:
+If whisper keeps mishearing your command word, add it to `state/prompt`:
 
 ```
 note, todo, journal, rewrite, open app, search

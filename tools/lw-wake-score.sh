@@ -16,10 +16,11 @@
 set -euo pipefail
 
 SECS="${1:-30}"
-VENV="$HOME/.local-whisper/wake-venv"
-REC="$HOME/.local-whisper/bin/lw-record"
+STATE="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/state"
+VENV="$STATE/wake-venv"
+REC="$STATE/bin/lw-record"
 RAW="$(mktemp -t lw-wake-score).raw"
-MIC="$(cat "$HOME/.local-whisper/mic" 2>/dev/null || true)"
+MIC="$(cat "$STATE/mic" 2>/dev/null || true)"
 
 [ -x "$VENV/bin/python" ] || { echo "run tools/lw-wake-setup.sh first"; exit 1; }
 

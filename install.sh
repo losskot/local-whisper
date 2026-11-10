@@ -142,7 +142,7 @@ info "Step 4/5: Setting up Hammerspoon..."
 mkdir -p "$HAMMERSPOON_DIR"
 
 # Create config directory for user settings
-CONFIG_DIR="$HOME/.local-whisper"
+CONFIG_DIR="$SCRIPT_DIR/state"
 mkdir -p "$CONFIG_DIR"
 ok "Config directory: $CONFIG_DIR"
 

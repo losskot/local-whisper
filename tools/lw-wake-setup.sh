@@ -7,14 +7,15 @@
 # works here, so it is installed explicitly and lw-wake.py forces inference_framework
 # ="onnx". Do not drop either half of that pairing.
 #
-# The venv lives beside the rest of the runtime state, not in the repo: it is generated,
-# ~200 MB, and must survive a git clean.
+# The venv lives beside the rest of the runtime state in the repo's gitignored state/:
+# it is generated (~200 MB). `git clean -x` would delete it.
 set -euo pipefail
 
-VENV="$HOME/.local-whisper/wake-venv"
+STATE="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/state"
+VENV="$STATE/wake-venv"
 
 echo "==> creating venv at $VENV"
-mkdir -p "$HOME/.local-whisper"
+mkdir -p "$STATE"
 python3 -m venv "$VENV"
 
 echo "==> installing openwakeword + onnxruntime"
