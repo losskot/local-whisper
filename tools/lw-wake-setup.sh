@@ -7,8 +7,8 @@
 # works here, so it is installed explicitly and lw-wake.py forces inference_framework
 # ="onnx". Do not drop either half of that pairing.
 #
-# The venv lives beside the rest of the runtime state in the repo's gitignored state/:
-# it is generated (~200 MB). `git clean -x` would delete it.
+# The venv lives in the repo's state/ beside the rest of the runtime state, gitignored:
+# it is generated (~200 MB) and rebuilt by this script on any Mac.
 set -euo pipefail
 
 STATE="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/state"

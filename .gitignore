@@ -22,9 +22,18 @@ config.yaml
 *.db
 .specstory/
 
-# Runtime state: settings, API keys, voice archive, built binaries, wake venv.
-# Never commit it. Note: `git clean -x` would delete it.
-state/
+# Runtime state. Menu settings, the prompt and voice commands are tracked so the app
+# moves with a clone; keys, recordings, dictation text, built binaries, the wake venv
+# and the machine-specific mic are not.
+state/*
+!state/model
+!state/lang
+!state/output
+!state/enter
+!state/wake
+!state/wake-model
+!state/prompt
+!state/actions.lua
 
 # Model comparison harness — intermediate WAVs only
 tests/model-comparison/tmp/

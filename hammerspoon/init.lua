@@ -17,8 +17,9 @@ local TMPDIR = os.getenv("TMPDIR") or "/tmp"
 local WHISPER_TMP = TMPDIR .. "/whisper-dictate"
 local CHUNK_DIR = WHISPER_TMP .. "/chunks"
 
--- Config directory: state/ inside the repo this file's symlink points to (gitignored —
--- settings, keys, the voice archive, built binaries, the wake venv). Falls back to
+-- Config directory: state/ inside the repo this file's symlink points to. Menu settings,
+-- prompt and voice commands are tracked; keys, the voice archive, recent.json, built
+-- binaries, the wake venv and the mic pin are gitignored. Falls back to
 -- ~/.local-whisper only if the repo cannot be resolved.
 local CONFIG_DIR = (function()
     local this = debug.getinfo(1, "S").source:match("^@(.*)$")
