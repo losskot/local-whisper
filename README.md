@@ -68,7 +68,7 @@ Voice commands turn dictation into actions. All commands start with **"voice com
 | "voice command undo" | Fires Cmd+Z |
 | "voice command cancel" | Discards the current dictation (works mid-sentence) |
 
-Voice commands are fully customizable — edit `~/.hammerspoon/local_whisper_actions.lua` to add your own. The config auto-reloads when you save.
+Voice commands are fully customizable — edit `state/actions.lua` to add your own. The config auto-reloads when you save.
 
 For a full guide on writing custom commands, see **[docs/VOICE_COMMANDS.md](docs/VOICE_COMMANDS.md)**.
 
@@ -293,7 +293,7 @@ The active app is also available in voice command hooks as `ctx.appName` and `ct
 
 ## Writing custom voice commands
 
-Edit `~/.hammerspoon/local_whisper_actions.lua` to add your own commands. The file returns a table with hooks that run on each dictation:
+Edit `state/actions.lua` to add your own commands. The file returns a table with hooks that run on each dictation:
 
 ```lua
 return {

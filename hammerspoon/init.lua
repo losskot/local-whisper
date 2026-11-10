@@ -126,7 +126,7 @@ local RECENT_FILE = CONFIG_DIR .. "/recent.json"
 local LOG_FILE = WHISPER_TMP .. "/whisper-dictate.log"
 
 -- Action hooks config
-local ACTIONS_FILE = HOME .. "/.hammerspoon/local_whisper_actions.lua"
+local ACTIONS_FILE = CONFIG_DIR .. "/actions.lua"  -- voice commands, user-editable
 
 -- Timing
 local OVERLAY_LINGER = 0.5     -- seconds to show final text before closing

@@ -1,4 +1,4 @@
--- Copy to: ~/.hammerspoon/local_whisper_actions.lua
+-- Copy to: state/actions.lua
 -- Voice commands for local-whisper dictation.
 -- All commands start with "voice command" to prevent false matches on normal speech.
 --

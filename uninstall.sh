@@ -46,9 +46,9 @@ else
     info "No local-whisper init.lua found (skipped)"
 fi
 
-if [[ -f "$HAMMERSPOON_DIR/local_whisper_actions.lua" ]]; then
+if [[ -f "$HAMMERSPOON_DIR/local_whisper_actions.lua" ]]; then  # pre-state/ location
     rm "$HAMMERSPOON_DIR/local_whisper_actions.lua"
-    ok "Removed ~/.hammerspoon/local_whisper_actions.lua"
+    ok "Removed legacy ~/.hammerspoon/local_whisper_actions.lua"
 fi
 
 # ─── Legacy: aggregate audio device from the removed meeting mode ───────────

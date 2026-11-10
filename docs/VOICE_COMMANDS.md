@@ -9,10 +9,10 @@ This guide explains how to create your own voice commands.
 1. Copy the example config:
 
 ```bash
-cp hammerspoon/local_whisper_actions.example.lua ~/.hammerspoon/local_whisper_actions.lua
+cp hammerspoon/local_whisper_actions.example.lua state/actions.lua
 ```
 
-2. Edit `~/.hammerspoon/local_whisper_actions.lua` with your rules
+2. Edit `state/actions.lua` with your rules
 3. The config auto-reloads when you save (or use menu bar > Reload Actions)
 
 ## How it works
@@ -57,7 +57,7 @@ This biases whisper toward recognizing these exact words.
 
 ## Writing your first command
 
-Open `~/.hammerspoon/local_whisper_actions.lua`. The file returns a table with three optional hooks:
+Open `state/actions.lua`. The file returns a table with three optional hooks:
 
 ```lua
 return {

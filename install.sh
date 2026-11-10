@@ -168,10 +168,10 @@ else
 fi
 
 # Install example voice commands if user doesn't have a config yet
-if [[ ! -f "$HAMMERSPOON_DIR/local_whisper_actions.lua" ]]; then
+if [[ ! -f "$CONFIG_DIR/actions.lua" ]]; then
     if [[ -f "$SCRIPT_DIR/hammerspoon/local_whisper_actions.example.lua" ]]; then
-        cp "$SCRIPT_DIR/hammerspoon/local_whisper_actions.example.lua" "$HAMMERSPOON_DIR/local_whisper_actions.lua"
-        ok "Voice commands config installed (edit ~/.hammerspoon/local_whisper_actions.lua to customize)"
+        cp "$SCRIPT_DIR/hammerspoon/local_whisper_actions.example.lua" "$CONFIG_DIR/actions.lua"
+        ok "Voice commands config installed (edit state/actions.lua to customize)"
     fi
 fi
 
