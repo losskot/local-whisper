@@ -25,7 +25,17 @@ Hold **fn + left Control**, speak, release — text appears at your cursor.
 - **Menu bar**: Waveform icon shows recording status (turns red), click for settings and recent dictations
 - **Recent dictations**: View and re-paste your last 10 dictations from the menu bar
 - **Permanent audio archive**: Recordings, failed capture attempts, and transcription segments stay in `~/.local-whisper/voice-archive/` without automatic deletion. Each recording has its own directory; reloads preserve audio left by older versions too
-- **Local mode**: Selecting a local model keeps all audio on-device. API mode sends segments to the LAN server and, if it fails, to the configured Azure endpoint
+- **Local mode**: Selecting a local model keeps all audio on-device. ElevenLabs mode sends segments to ElevenLabs first; API mode sends segments to the LAN server and, if it fails, to the configured Azure endpoint
+
+## ElevenLabs (default)
+
+**ElevenLabs** is the default Model and goes first in the chain: ElevenLabs Scribe, then the LAN server (only if its health check answered), then Azure, then local `large-v3-turbo-q5_0`. Put the key in `~/.local-whisper/elevenlabs.json` (`chmod 600`):
+
+```json
+{ "apiKey": "sk_...", "model": "scribe_v2" }
+```
+
+`model` is optional and defaults to `scribe_v2`. The key is sent to curl on stdin as the `xi-api-key` header. Scribe has no free-text prompt, so the dictation prompt does not apply to it. "Auto" leaves `language_code` out and Scribe detects the language itself. If the file is missing or invalid, ElevenLabs mode works the same as API mode.
 
 ## Azure fallback
 

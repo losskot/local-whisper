@@ -52,7 +52,18 @@ local API = {
     FALLBACK_MODEL = "large-v3-turbo-q5_0",  -- local model used whenever the endpoint doesn't respond
     HEALTH_TIMEOUT_SECS = 2,
     AZURE_CONFIG = CONFIG_DIR .. "/azure.json", -- private endpoint/deployment/apiKey, never in git
+    -- "ElevenLabs" mode puts ElevenLabs Scribe in front of the same chain:
+    -- ElevenLabs -> LAN (if its probe answered) -> Azure -> FALLBACK_MODEL locally.
+    ELEVENLABS_NAME = "ElevenLabs", -- sentinel value stored in MODEL_FILE; also the default
+    ELEVENLABS_URL = "https://api.elevenlabs.io/v1/speech-to-text",
+    ELEVENLABS_CONFIG = CONFIG_DIR .. "/elevenlabs.json", -- private apiKey (+ optional model), never in git
+    ELEVENLABS_DEFAULT_MODEL = "scribe_v2",
 }
+
+-- True for the modes that transcribe remotely and fall back down the provider chain.
+local function isRemoteModel(model)
+    return model == API.MODEL_NAME or model == API.ELEVENLABS_NAME
+end
 
 -- Scan available models
 local function getAvailableModels()
@@ -72,18 +83,14 @@ local function getModelName()
     local saved = ""
     local f = io.open(MODEL_FILE, "r")
     if f then saved = f:read("*a"):gsub("%s+", ""); f:close() end
-    if saved == API.MODEL_NAME then return API.MODEL_NAME end
+    if isRemoteModel(saved) then return saved end
     if saved ~= "" then
         -- Verify model file exists
         local path = MODELS_DIR .. "/ggml-" .. saved .. ".bin"
         local attr = hs.fs.attributes(path)
         if attr then return saved end
     end
-    return "medium"  -- default
-end
-
-local function isApiMode()
-    return getModelName() == API.MODEL_NAME
+    return API.ELEVENLABS_NAME  -- default
 end
 
 local function getModelPath()
@@ -505,7 +512,8 @@ end
 
 local function cycleModel()
     local models = getAvailableModels()
-    table.insert(models, API.MODEL_NAME)  -- remote API is the last stop in the cycle
+    table.insert(models, API.MODEL_NAME)  -- remote modes are the last stops in the cycle
+    table.insert(models, API.ELEVENLABS_NAME)
     if #models == 0 then return getModelName() end
     local current = getModelName()
     local next = models[1]
@@ -718,11 +726,64 @@ local function transcribeViaAzure(wavPath, lang, promptText, cfg, callback)
     return task
 end
 
+local function readElevenLabsConfig()
+    local f = io.open(API.ELEVENLABS_CONFIG, "r")
+    if not f then return nil end
+    local raw = f:read("*a"); f:close()
+    local ok, cfg = pcall(hs.json.decode, raw)
+    -- The shipped placeholder has an empty key: not configured yet, not an error.
+    if ok and type(cfg) == "table" and cfg.apiKey == "" then return nil end
+    if not ok or type(cfg) ~= "table" or type(cfg.apiKey) ~= "string" or
+        not cfg.apiKey:match("^[%w%-_]+$") or
+        (cfg.model ~= nil and (type(cfg.model) ~= "string" or not cfg.model:match("^[%w%._%-]+$"))) then
+        log("elevenlabs: invalid elevenlabs.json — skipping ElevenLabs")
+        return nil
+    end
+    cfg.model = cfg.model or API.ELEVENLABS_DEFAULT_MODEL
+    return cfg
+end
+
+-- ElevenLabs reports ISO 639-3 codes; the rest of the pipeline speaks whisper's 639-1.
+local ISO3_TO_1 = { eng = "en", rus = "ru", ukr = "uk", deu = "de", fra = "fr", spa = "es",
+    pol = "pl", ita = "it", por = "pt", bel = "be", tur = "tr" }
+
+local function transcribeViaElevenLabs(wavPath, lang, cfg, callback)
+    -- The key is supplied on stdin, never in process arguments or the audio archive.
+    -- Scribe has no free-text prompt; tag_audio_events=false keeps "(laughter)" out of text.
+    local args = { "--config", "-", "-s", "-S", "-f", "--connect-timeout", "3", "-m", "60",
+        "-F", "file=@" .. wavPath, "--form-string", "model_id=" .. cfg.model,
+        "--form-string", "tag_audio_events=false" }
+    if lang ~= "auto" then
+        table.insert(args, "--form-string"); table.insert(args, "language_code=" .. lang)
+    end
+    table.insert(args, API.ELEVENLABS_URL)
+    local task = hs.task.new(API.CURL_BIN, function(code, out, err)
+        if code ~= 0 then callback("", nil, curlErrorMessage(code, err)); return end
+        local ok, decoded = pcall(hs.json.decode, out or "")
+        if not ok or type(decoded) ~= "table" or type(decoded.text) ~= "string" then
+            callback("", nil, "unexpected ElevenLabs transcription response"); return
+        end
+        local detected = type(decoded.language_code) == "string" and decoded.language_code:lower() or nil
+        callback(decoded.text, detected and (ISO3_TO_1[detected] or detected) or nil, nil)
+    end, args)
+    if task then task:setInput('header = "xi-api-key: ' .. cfg.apiKey .. '"\n') end
+    if not task or not task:start() then callback("", nil, "could not start ElevenLabs request") end
+    return task
+end
+
+-- Where a dictation goes after `failed` gave up: only ever further down the chain.
+local function nextBackend(job, failed)
+    if failed == "elevenlabs" and job.lanUp then return "lan" end
+    if (failed == "elevenlabs" or failed == "lan") and job.azure then return "azure" end
+    return "local"
+end
+
 -- Probe at key-down. Segments that become ready early wait for this bounded check;
 -- a late callback never overwrites a provider already selected by this dictation.
 local function checkApiAvailable(job)
     local function resolve(available)
         job.probeTask = nil
+        job.lanUp = available  -- read by nextBackend when ElevenLabs fails later
         if job.abandoned or job.backend then return end
         job.backend = available and "lan" or (job.azure and "azure" or "local")
         log("pipeline: gen " .. job.gen .. " selected " .. job.backend)
@@ -1371,17 +1432,23 @@ local function buildMenuBarMenu()
     -- Model
     local models = getAvailableModels()
     table.insert(models, API.MODEL_NAME)
+    table.insert(models, API.ELEVENLABS_NAME)
     local curModel = getModelName()
+    local function modelTitle(m)
+        if m == API.MODEL_NAME then return "API (auto-fallback)" end
+        if m == API.ELEVENLABS_NAME then return "ElevenLabs (auto-fallback)" end
+        return m
+    end
     local modelSubmenu = {}
     for _, m in ipairs(models) do
         table.insert(modelSubmenu, {
-            title = (m == API.MODEL_NAME) and "API (auto-fallback)" or m,
+            title = modelTitle(m),
             checked = (m == curModel),
             fn = function() writeFile(MODEL_FILE, m); updateMenuBar() end,
         })
     end
     table.insert(items, {
-        title = "Model: " .. (isApiMode() and "API (auto-fallback)" or curModel),
+        title = "Model: " .. modelTitle(curModel),
         menu = modelSubmenu,
     })
 
@@ -1776,13 +1843,18 @@ local function pipeNewJob()
         model      = model,
         language   = getLang(),
         prompt     = readPrompt(),
-        azure      = model == API.MODEL_NAME and readAzureConfig() or nil,
-        backend    = model ~= API.MODEL_NAME and "local" or nil,
+        azure      = isRemoteModel(model) and readAzureConfig() or nil,
+        elevenlabs = model == API.ELEVENLABS_NAME and readElevenLabsConfig() or nil,
+        backend    = not isRemoteModel(model) and "local" or nil,
         backendWaiters = {},
         remoteTasks = {},
+        lanUp      = nil,   -- LAN probe result; nil until it answers
         concatTasks = {},
         timer      = nil,   -- polls during recording for a segment that is ready to dispatch
     }
+    -- ElevenLabs needs no probe: with a key it starts immediately, without one this
+    -- dictation waits for the LAN probe like plain API mode.
+    if job.elevenlabs then job.backend = "elevenlabs" end
     pipeJobs.live[job.gen] = job
     os.execute("mkdir -p '" .. job.dir .. "'")
     return job
@@ -1853,7 +1925,7 @@ local function pipeStartJob()
         end
     end
     pipe = pipeNewJob()
-    if pipe.model == API.MODEL_NAME then
+    if isRemoteModel(pipe.model) then
         checkApiAvailable(pipe)  -- runs in parallel with the recording that's about to start
     end
     log("pipeline: gen " .. pipe.gen .. " started")
@@ -2081,7 +2153,7 @@ local function dispatchSegment(segN, group, job)
             end
             local backend = job.backend
             if backend == "local" then
-                local model = job.model == API.MODEL_NAME and API.FALLBACK_MODEL or job.model
+                local model = isRemoteModel(job.model) and API.FALLBACK_MODEL or job.model
                 runLocalWhisper(MODELS_DIR .. "/ggml-" .. model .. ".bin", model)
                 return
             end
@@ -2091,7 +2163,7 @@ local function dispatchSegment(segN, group, job)
                 if errMsg then
                     -- Concurrent failures can only move the shared choice downwards.
                     if job.backend == backend then
-                        job.backend = backend == "lan" and job.azure and "azure" or "local"
+                        job.backend = nextBackend(job, backend)
                     end
                     log("pipeline: gen " .. job.gen .. " seg " .. segN .. " " .. backend ..
                         " failed: " .. errMsg .. " — using " .. job.backend)
@@ -2105,7 +2177,9 @@ local function dispatchSegment(segN, group, job)
             -- its fallback. Do not overwrite that newer task when this call returns.
             local token, task = {}, nil
             job.remoteTasks[segN] = token
-            if backend == "lan" then
+            if backend == "elevenlabs" then
+                task = transcribeViaElevenLabs(segWav, effectiveLang, job.elevenlabs, onRemote)
+            elseif backend == "lan" then
                 task = transcribeViaAPI(segWav, effectiveLang, 60, onRemote, job.prompt)
             else
                 task = transcribeViaAzure(segWav, effectiveLang, job.prompt, job.azure, onRemote)

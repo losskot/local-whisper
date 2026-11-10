@@ -777,7 +777,8 @@ do
     local launchFailure
     local env = setmetatable({
         FFMPEG = "/ffmpeg", WHISPER_BIN = "/whisper-cli", MODELS_DIR = "/models",
-        API = { MODEL_NAME = "API", FALLBACK_MODEL = "large-v3-turbo-q5_0", CURL_BIN = "/curl", HEALTH_TIMEOUT_SECS = 2 },
+        API = { MODEL_NAME = "API", ELEVENLABS_NAME = "ElevenLabs", FALLBACK_MODEL = "large-v3-turbo-q5_0",
+            CURL_BIN = "/curl", HEALTH_TIMEOUT_SECS = 2 },
         io = { open = function() return { write = function() end, close = function() end } end },
         isHallucination = function() return false end,
         log = function() end,
@@ -811,6 +812,12 @@ do
         requests[#requests + 1] = { backend = "azure", callback = callback, lang = lang, prompt = prompt, cfg = cfg }
         return requests[#requests]
     end
+    env.transcribeViaElevenLabs = function(wav, lang, cfg, callback)
+        requests[#requests + 1] = { backend = "elevenlabs", callback = callback, lang = lang, cfg = cfg }
+        return requests[#requests]
+    end
+    env.isRemoteModel = liftFunction("isRemoteModel", env)
+    env.nextBackend = liftFunction("nextBackend", env)
     local function job(backend, model)
         return { gen = 71, dir = "/archive/job71", backend = backend, model = model or "API",
             language = "uk", prompt = "mixed-language sample", azure = { deployment = "mini-transcribe" },
@@ -869,6 +876,32 @@ do
         check("fallback: a late LAN failure cannot upgrade local back to Azure",
             j.backend == "local" and tasks[#tasks].path == "/whisper-cli" and requests[#requests].backend == "azure")
 
+        -- ElevenLabs mode: ElevenLabs -> LAN (only if its probe answered) -> Azure -> local.
+        j = job("elevenlabs", "ElevenLabs"); j.elevenlabs = { model = "scribe_v2" }; j.lanUp = true
+        env.pipe = j
+        send(j)
+        check("elevenlabs: tried first with the snapshotted language",
+            requests[#requests].backend == "elevenlabs" and requests[#requests].lang == "uk" and
+            requests[#requests].cfg == j.elevenlabs)
+        requests[#requests].callback("", nil, "quota")
+        check("elevenlabs: failure falls to LAN when its probe answered",
+            j.backend == "lan" and requests[#requests].backend == "lan")
+        requests[#requests].callback("", nil, "offline")
+        check("elevenlabs: LAN failure continues to Azure", j.backend == "azure" and requests[#requests].backend == "azure")
+        requests[#requests].callback("", nil, "quota")
+        check("elevenlabs: final fallback is the local fallback model",
+            j.backend == "local" and tasks[#tasks].args[2] == "/models/ggml-large-v3-turbo-q5_0.bin")
+        j = job("elevenlabs", "ElevenLabs"); j.elevenlabs = { model = "scribe_v2" }; env.pipe = j
+        send(j)
+        requests[#requests].callback("", nil, "quota")
+        check("elevenlabs: failure skips LAN that did not answer its probe",
+            j.backend == "azure" and requests[#requests].backend == "azure")
+        j = job("elevenlabs", "ElevenLabs"); j.elevenlabs = { model = "scribe_v2" }; j.language = "auto"; env.pipe = j
+        send(j)
+        requests[#requests].callback(" Привет  world ", "ru", nil)
+        check("elevenlabs: success completes with detected language",
+            completed[#completed].text == "Привет world" and completed[#completed].lang == "ru" and j.backend == "elevenlabs")
+
         j = job("azure"); j.language = "auto"; env.pipe = j
         send(j)
         requests[#requests].callback("  Привет   world  ", "ru", nil)
@@ -912,7 +945,8 @@ end
 do
     local settings = { model = "API", language = "auto", prompt = "ru/uk/en" }
     local env = setmetatable({
-        API = { MODEL_NAME = "API" }, pipeJobs = { lastGen = 0, live = {} },
+        API = { MODEL_NAME = "API", ELEVENLABS_NAME = "ElevenLabs" }, pipeJobs = { lastGen = 0, live = {} },
+        readElevenLabsConfig = function() return settings.elevenKey and { apiKey = "k", model = "scribe_v2" } or nil end,
         getModelName = function() return settings.model end,
         getLang = function() return settings.language end,
         readPrompt = function() return settings.prompt end,
@@ -920,6 +954,7 @@ do
         newArchivePath = function() return "/archive/test" end,
         os = { execute = function() end },
     }, { __index = _G })
+    env.isRemoteModel = liftFunction("isRemoteModel", env)
     local newJob = liftFunction("pipeNewJob", env)
     local first = newJob()
     settings.model, settings.language, settings.prompt = "medium", "uk", "changed"
@@ -929,6 +964,51 @@ do
     check("fallback: new settings apply only to the next dictation",
         second.model == "medium" and second.language == "uk" and second.prompt == "changed" and
         second.backend == "local" and second.azure == nil)
+    settings.model, settings.elevenKey = "ElevenLabs", true
+    local eleven = newJob()
+    check("elevenlabs: a configured key starts the dictation on ElevenLabs without waiting for the probe",
+        eleven.backend == "elevenlabs" and eleven.elevenlabs ~= nil and eleven.azure ~= nil)
+    settings.elevenKey = false
+    local nokey = newJob()
+    check("elevenlabs: without a key the dictation waits for the LAN probe",
+        nokey.backend == nil and nokey.elevenlabs == nil)
+end
+
+--------------------------------------------------------------------------------
+-- ElevenLabs request format and private credentials
+--------------------------------------------------------------------------------
+do
+    local created, result
+    local env = setmetatable({
+        API = { CURL_BIN = "/curl", ELEVENLABS_URL = "https://api.elevenlabs.io/v1/speech-to-text" },
+        ISO3_TO_1 = { rus = "ru", ukr = "uk", eng = "en" },
+        curlErrorMessage = function() return "HTTP request failed" end,
+        hs = {
+            json = hs.json,
+            task = { new = function(path, callback, args)
+                created = { args = args, callback = callback }
+                function created:setInput(data) self.input = data; return self end
+                function created:start() return self end
+                return created
+            end },
+        },
+    }, { __index = _G })
+    local transcribe = liftFunction("transcribeViaElevenLabs", env)
+    local cfg = { apiKey = "sk_private_test_key", model = "scribe_v2" }
+    transcribe("/audio.wav", "auto", cfg, function(text, lang, err) result = { text = text, lang = lang, err = err } end)
+    local args = table.concat(created.args, "|")
+    check("elevenlabs: credential travels on stdin and never in process arguments",
+        not args:find(cfg.apiKey, 1, true) and created.input:find("xi-api-key: " .. cfg.apiKey, 1, true) ~= nil)
+    check("elevenlabs: auto language omits language_code; model and audio-event tags are set",
+        not args:find("language_code=", 1, true) and args:find("model_id=scribe_v2", 1, true) and
+        args:find("tag_audio_events=false", 1, true) and args:find("/v1/speech-to-text", 1, true))
+    created.callback(0, '{"text":"Привет world","language_code":"rus"}', '')
+    check("elevenlabs: ISO 639-3 language is mapped to whisper's code",
+        result.text == "Привет world" and result.lang == "ru" and result.err == nil)
+    created.callback(0, '{"detail":"bad"}', '')
+    check("elevenlabs: malformed successful response triggers fallback", result.err ~= nil)
+    transcribe("/audio.wav", "uk", cfg, function() end)
+    check("elevenlabs: a fixed language is sent", table.concat(created.args, "|"):find("language_code=uk", 1, true) ~= nil)
 end
 
 --------------------------------------------------------------------------------
